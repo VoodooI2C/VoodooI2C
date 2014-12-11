@@ -7,23 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */ = {isa = PBXBuildFile; fileRef = AC45AFEC1A32543B008E6857 /* VoodooI2C.h */; };
-		AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */; };
-		ACE7CCA51A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7CCA31A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp */; };
-		ACE7CCA61A38D9A60004DB4C /* VoodooI2CRMI4Device.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE7CCA41A38D9A60004DB4C /* VoodooI2CRMI4Device.h */; };
+		ACE7CC951A38D4470004DB4C /* VoodooRMI4Device.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE7CC941A38D4470004DB4C /* VoodooRMI4Device.h */; };
+		ACE7CC971A38D4470004DB4C /* VoodooRMI4Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7CC961A38D4470004DB4C /* VoodooRMI4Device.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AC45AFE71A32543B008E6857 /* VoodooI2C.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2C.kext; sourceTree = BUILT_PRODUCTS_DIR; };
-		AC45AFEB1A32543B008E6857 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AC45AFEC1A32543B008E6857 /* VoodooI2C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2C.h; sourceTree = "<group>"; };
-		AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2C.cpp; sourceTree = "<group>"; };
-		ACE7CCA31A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CRMI4Device.cpp; sourceTree = "<group>"; };
-		ACE7CCA41A38D9A60004DB4C /* VoodooI2CRMI4Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CRMI4Device.h; sourceTree = "<group>"; };
+		ACE7CC8F1A38D4470004DB4C /* VoodooRMI4Device.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooRMI4Device.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACE7CC931A38D4470004DB4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ACE7CC941A38D4470004DB4C /* VoodooRMI4Device.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooRMI4Device.h; sourceTree = "<group>"; };
+		ACE7CC961A38D4470004DB4C /* VoodooRMI4Device.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooRMI4Device.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AC45AFE31A32543B008E6857 /* Frameworks */ = {
+		ACE7CC8B1A38D4470004DB4C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,38 +29,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AC45AFDD1A32543B008E6857 = {
+		ACE7CC851A38D4460004DB4C = {
 			isa = PBXGroup;
 			children = (
-				AC45AFE91A32543B008E6857 /* VoodooI2C */,
-				AC45AFE81A32543B008E6857 /* Products */,
+				ACE7CC911A38D4470004DB4C /* VoodooRMI4Device */,
+				ACE7CC901A38D4470004DB4C /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		AC45AFE81A32543B008E6857 /* Products */ = {
+		ACE7CC901A38D4470004DB4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AC45AFE71A32543B008E6857 /* VoodooI2C.kext */,
+				ACE7CC8F1A38D4470004DB4C /* VoodooRMI4Device.kext */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AC45AFE91A32543B008E6857 /* VoodooI2C */ = {
+		ACE7CC911A38D4470004DB4C /* VoodooRMI4Device */ = {
 			isa = PBXGroup;
 			children = (
-				AC45AFEC1A32543B008E6857 /* VoodooI2C.h */,
-				AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */,
-				AC45AFEA1A32543B008E6857 /* Supporting Files */,
-				ACE7CCA31A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp */,
-				ACE7CCA41A38D9A60004DB4C /* VoodooI2CRMI4Device.h */,
+				ACE7CC941A38D4470004DB4C /* VoodooRMI4Device.h */,
+				ACE7CC961A38D4470004DB4C /* VoodooRMI4Device.cpp */,
+				ACE7CC921A38D4470004DB4C /* Supporting Files */,
 			);
-			path = VoodooI2C;
+			path = VoodooRMI4Device;
 			sourceTree = "<group>";
 		};
-		AC45AFEA1A32543B008E6857 /* Supporting Files */ = {
+		ACE7CC921A38D4470004DB4C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AC45AFEB1A32543B008E6857 /* Info.plist */,
+				ACE7CC931A38D4470004DB4C /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -72,69 +66,68 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		AC45AFE41A32543B008E6857 /* Headers */ = {
+		ACE7CC8C1A38D4470004DB4C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
-				ACE7CCA61A38D9A60004DB4C /* VoodooI2CRMI4Device.h in Headers */,
+				ACE7CC951A38D4470004DB4C /* VoodooRMI4Device.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		AC45AFE61A32543B008E6857 /* VoodooI2C */ = {
+		ACE7CC8E1A38D4470004DB4C /* VoodooRMI4Device */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AC45AFF21A32543B008E6857 /* Build configuration list for PBXNativeTarget "VoodooI2C" */;
+			buildConfigurationList = ACE7CC9A1A38D4470004DB4C /* Build configuration list for PBXNativeTarget "VoodooRMI4Device" */;
 			buildPhases = (
-				AC45AFE21A32543B008E6857 /* Sources */,
-				AC45AFE31A32543B008E6857 /* Frameworks */,
-				AC45AFE41A32543B008E6857 /* Headers */,
-				AC45AFE51A32543B008E6857 /* Resources */,
+				ACE7CC8A1A38D4470004DB4C /* Sources */,
+				ACE7CC8B1A38D4470004DB4C /* Frameworks */,
+				ACE7CC8C1A38D4470004DB4C /* Headers */,
+				ACE7CC8D1A38D4470004DB4C /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = VoodooI2C;
-			productName = VoodooI2C;
-			productReference = AC45AFE71A32543B008E6857 /* VoodooI2C.kext */;
+			name = VoodooRMI4Device;
+			productName = VoodooRMI4Device;
+			productReference = ACE7CC8F1A38D4470004DB4C /* VoodooRMI4Device.kext */;
 			productType = "com.apple.product-type.kernel-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		AC45AFDE1A32543B008E6857 /* Project object */ = {
+		ACE7CC861A38D4460004DB4C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Alexandre Daoud";
 				TargetAttributes = {
-					AC45AFE61A32543B008E6857 = {
+					ACE7CC8E1A38D4470004DB4C = {
 						CreatedOnToolsVersion = 6.2;
 					};
 				};
 			};
-			buildConfigurationList = AC45AFE11A32543B008E6857 /* Build configuration list for PBXProject "VoodooI2C" */;
+			buildConfigurationList = ACE7CC891A38D4460004DB4C /* Build configuration list for PBXProject "VoodooRMI4Device" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = AC45AFDD1A32543B008E6857;
-			productRefGroup = AC45AFE81A32543B008E6857 /* Products */;
+			mainGroup = ACE7CC851A38D4460004DB4C;
+			productRefGroup = ACE7CC901A38D4470004DB4C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AC45AFE61A32543B008E6857 /* VoodooI2C */,
+				ACE7CC8E1A38D4470004DB4C /* VoodooRMI4Device */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		AC45AFE51A32543B008E6857 /* Resources */ = {
+		ACE7CC8D1A38D4470004DB4C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -144,19 +137,18 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		AC45AFE21A32543B008E6857 /* Sources */ = {
+		ACE7CC8A1A38D4470004DB4C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACE7CCA51A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp in Sources */,
-				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
+				ACE7CC971A38D4470004DB4C /* VoodooRMI4Device.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		AC45AFF01A32543B008E6857 /* Debug */ = {
+		ACE7CC981A38D4470004DB4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -196,7 +188,7 @@
 			};
 			name = Debug;
 		};
-		AC45AFF11A32543B008E6857 /* Release */ = {
+		ACE7CC991A38D4470004DB4C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -230,33 +222,27 @@
 			};
 			name = Release;
 		};
-		AC45AFF31A32543B008E6857 /* Debug */ = {
+		ACE7CC9B1A38D4470004DB4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
-				INFOPLIST_FILE = VoodooI2C/Info.plist;
-				MODULE_NAME = com.alexandred.VoodooI2C;
+				INFOPLIST_FILE = VoodooRMI4Device/Info.plist;
+				MODULE_NAME = com.alexandred.VoodooRMI4Device;
 				MODULE_VERSION = 1.0.0d1;
-				OTHER_CFLAGS = "";
-				OTHER_CPLUSPLUSFLAGS = "-I/System/Library/Frameworks/IOKit.framework/Versions/Current/Headers";
-				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-I/System/Library/Frameworks/IOKit.framework/Versions/Current/Headers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
 			};
 			name = Debug;
 		};
-		AC45AFF41A32543B008E6857 /* Release */ = {
+		ACE7CC9C1A38D4470004DB4C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0d1;
-				INFOPLIST_FILE = VoodooI2C/Info.plist;
-				MODULE_NAME = com.alexandred.VoodooI2C;
+				INFOPLIST_FILE = VoodooRMI4Device/Info.plist;
+				MODULE_NAME = com.alexandred.VoodooRMI4Device;
 				MODULE_VERSION = 1.0.0d1;
-				OTHER_CFLAGS = "";
-				OTHER_CPLUSPLUSFLAGS = "-I/System/Library/Frameworks/IOKit.framework/Versions/Current/Headers";
-				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-I/System/Library/Frameworks/IOKit.framework/Versions/Current/Headers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
 			};
@@ -265,25 +251,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AC45AFE11A32543B008E6857 /* Build configuration list for PBXProject "VoodooI2C" */ = {
+		ACE7CC891A38D4460004DB4C /* Build configuration list for PBXProject "VoodooRMI4Device" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AC45AFF01A32543B008E6857 /* Debug */,
-				AC45AFF11A32543B008E6857 /* Release */,
+				ACE7CC981A38D4470004DB4C /* Debug */,
+				ACE7CC991A38D4470004DB4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AC45AFF21A32543B008E6857 /* Build configuration list for PBXNativeTarget "VoodooI2C" */ = {
+		ACE7CC9A1A38D4470004DB4C /* Build configuration list for PBXNativeTarget "VoodooRMI4Device" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AC45AFF31A32543B008E6857 /* Debug */,
-				AC45AFF41A32543B008E6857 /* Release */,
+				ACE7CC9B1A38D4470004DB4C /* Debug */,
+				ACE7CC9C1A38D4470004DB4C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = AC45AFDE1A32543B008E6857 /* Project object */;
+	rootObject = ACE7CC861A38D4460004DB4C /* Project object */;
 }

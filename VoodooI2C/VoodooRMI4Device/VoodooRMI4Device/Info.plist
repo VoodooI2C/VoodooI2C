@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.alexandred.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>KEXT</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+    <key>IOKitPersonalities</key>
+    <dict>
+        <key>VoodooRMI4Device</key>
+        <dict>
+            <key>CFBundleIdentifier</key>
+            <string>com.alexandred.VoodooRMI4Device</string>
+            <key>IOClass</key>
+            <string>VoodooRMI4Device</string>
+            <key>IOProviderClass</key>
+            <string>IOACPIPlatformDevice</string>
+            <key>IONameMatch</key>
+            <array>
+                <string>SYNA7500</string>
+            </array>
+        </dict>
+    </dict>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2014 Alexandre Daoud. All rights reserved.</string>
+    <key>OSBundleLibraries</key>
+    <dict>
+        <key>com.apple.kpi.iokit</key>
+        <string>14.0</string>
+        <key>com.apple.kpi.libkern</key>
+        <string>14.0</string>
+    </dict>
+</dict>
+</plist>
