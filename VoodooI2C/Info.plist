@@ -22,17 +22,6 @@
 	<string>1</string>
 	<key>IOKitPersonalities</key>
 	<dict>
-		<key>VoodooI2CRMI4Device</key>
-		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>com.alexandred.VoodooI2C</string>
-			<key>IOClass</key>
-			<string>VoodooI2CRMI4Device</string>
-			<key>IOProviderClass</key>
-			<string>IOACPIPlatformDevice</string>
-			<key>IONameMatch</key>
-			<string>SYNA7500</string>
-		</dict>
 		<key>VoodooI2C</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
@@ -43,21 +32,22 @@
 			<string>IOACPIPlatformDevice</string>
 			<key>IONameMatch</key>
 			<array>
-				<string>INT33C2</string>
 				<string>INT33C3</string>
 			</array>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2014 Alexandre Daoud. All rights reserved.</string>
-	<key>OSBundleLibraries</key>
-	<dict>
-		<key>com.apple.iokit.IOACPIFamily</key>
-		<string>1.4</string>
-		<key>com.apple.kpi.iokit</key>
-		<string>14.0</string>
-		<key>com.apple.kpi.libkern</key>
-		<string>14.0</string>
-	</dict>
+    <key>OSBundleLibraries</key>
+    <dict>
+        <key>com.apple.iokit.IOACPIFamily</key>
+        <string>1.4</string>
+        <key>com.apple.kpi.iokit</key>
+        <string>14.0</string>
+        <key>com.apple.kpi.libkern</key>
+        <string>14.0</string>
+        <key>com.apple.kpi.mach</key>
+        <string>14.0</string>
+    </dict>
 </dict>
 </plist>

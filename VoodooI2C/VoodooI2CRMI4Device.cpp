@@ -57,6 +57,12 @@ bool VoodooI2CRMI4Device::start(IOService* provider) {
     }
     
     _dev->interruptSource->enable();
+    
+    int error = rmi_set_page(_dev, 0);
+    if (error < 0) {
+        IOLog("error setting page\n");
+        return false;
+    }
 
     
     registerService();
@@ -74,7 +80,7 @@ void VoodooI2CRMI4Device::stop() {
     _dev->workLoop->release();
     _dev->workLoop = NULL;
     
-    _dev->provider->close(this);
+    _dev->provider->close(_dev->provider);
     OSSafeReleaseNULL(_dev->provider);
     
     IOFree(_dev, sizeof(I2CDevice));
@@ -119,7 +125,7 @@ int VoodooI2CRMI4Device::rmi_i2c_write_block(I2CDevice *phys, UInt16 addr, UInt8
             goto exit;
     }
     
-    rc = VoodooI2C::i2c_smbus_write_i2c_block_data(phys->bus_provider, addr & 0xff, sizeof(buf), buf);
+    //rc = VoodooI2C::i2c_smbus_write_i2c_block_data(phys->bus_provider, addr & 0xff, sizeof(buf), buf);
     
 exit:
     IOLockUnlock(data->page_mutex);

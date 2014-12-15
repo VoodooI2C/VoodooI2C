@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */ = {isa = PBXBuildFile; fileRef = AC45AFEC1A32543B008E6857 /* VoodooI2C.h */; };
 		AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */; };
-		ACE7CCA51A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACE7CCA31A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp */; };
-		ACE7CCA61A38D9A60004DB4C /* VoodooI2CRMI4Device.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE7CCA41A38D9A60004DB4C /* VoodooI2CRMI4Device.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,8 +16,6 @@
 		AC45AFEB1A32543B008E6857 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC45AFEC1A32543B008E6857 /* VoodooI2C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2C.h; sourceTree = "<group>"; };
 		AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2C.cpp; sourceTree = "<group>"; };
-		ACE7CCA31A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CRMI4Device.cpp; sourceTree = "<group>"; };
-		ACE7CCA41A38D9A60004DB4C /* VoodooI2CRMI4Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CRMI4Device.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,8 +51,6 @@
 				AC45AFEC1A32543B008E6857 /* VoodooI2C.h */,
 				AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */,
 				AC45AFEA1A32543B008E6857 /* Supporting Files */,
-				ACE7CCA31A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp */,
-				ACE7CCA41A38D9A60004DB4C /* VoodooI2CRMI4Device.h */,
 			);
 			path = VoodooI2C;
 			sourceTree = "<group>";
@@ -77,7 +71,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
-				ACE7CCA61A38D9A60004DB4C /* VoodooI2CRMI4Device.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,7 +141,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACE7CCA51A38D9A60004DB4C /* VoodooI2CRMI4Device.cpp in Sources */,
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
