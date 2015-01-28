@@ -14,14 +14,33 @@
 #define TIMEOUT 20
 
 #define DW_IC_CON_MASTER 0x1
+#define DW_IC_CON_SPEED_STD 0x2
 #define DW_IC_CON_SPEED_FAST 0x4
+#define DW_IC_CON_10BITADDR_MASTER 0x10
 #define DW_IC_CON_RESTART_EN 0x20
+#define DW_IC_CON_SLAVE_DISABLE 0x40
 
 #define I2C_FUNC_I2C 0x00000001
+#define I2C_FUNC_10BIT_ADDR 0x00000002
+#define I2C_FUNC_SMBUS_READ_BYTE 0x00020000
+#define I2C_FUNC_SMBUS_WRITE_BYTE 0x00040000
+#define I2C_FUNC_SMBUS_READ_BYTE_DATA 0x00080000
+#define I2C_FUNC_SMBUS_WRITE_BYTE_DATA 0x00100000
+#define I2C_FUNC_SMBUS_READ_WORD_DATA 0x00200000
+#define I2C_FUNC_SMBUS_WRITE_WORD_DATA 0x00400000
+#define I2C_FUNC_SMBUS_READ_I2C_BLOCK 0x04000000
+#define I2C_FUNC_SMBUS_WRITE_I2C_BLOCK 0x08000000
+
+#define I2C_FUNC_SMBUS_BYTE (I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE)
+#define I2C_FUNC_SMBUS_BYTE_DATA (I2C_FUNC_SMBUS_READ_BYTE_DATA | I2C_FUNC_SMBUS_WRITE_BYTE_DATA)
+#define I2C_FUNC_SMBUS_WORD_DATA (I2C_FUNC_SMBUS_READ_WORD_DATA | I2C_FUNC_SMBUS_WRITE_WORD_DATA)
+#define I2C_FUNC_SMBUS_I2C_BLOCK (I2C_FUNC_SMBUS_READ_I2C_BLOCK | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK)
+
 
 
 #define DW_IC_CON 0x0
 #define DW_IC_TAR 0x4
+#define DW_IC_SAR 0x8
 #define DW_IC_DATA_CMD 0x10
 #define DW_IC_SS_SCL_HCNT 0x14
 #define DW_IC_SS_SCL_LCNT 0x18
@@ -49,7 +68,13 @@
 #define DW_IC_RXFLR 0x78
 #define DW_IC_SDA_HOLD 0x7c
 #define DW_IC_TX_ABRT_SOURCE 0x80
+#define DW_IC_DMA_CR 0x88
+#define DW_IC_DMA_TDLR 0x8c
+#define DW_IC_DMA_RDLR 0x90
+#define DW_IC_SDA_SETUP 0x94
 #define DW_IC_ENABLE_STATUS 0x9c
+#define DW_IC_FS_SPKLEN 0xA0
+#define DW_IC_COMP_PARAM_1 0xf4
 #define DW_IC_COMP_VERSION 0xf8
 #define DW_IC_SDA_HOLD_MIN_VERS 0x3131312A
 #define DW_IC_COMP_TYPE 0xfc
@@ -77,7 +102,8 @@
 #define DW_IC_INTR_DEFAULT_MASK     (DW_IC_INTR_RX_FULL | \
                                      DW_IC_INTR_TX_EMPTY | \
                                      DW_IC_INTR_TX_ABRT | \
-                                     DW_IC_INTR_STOP_DET)
+                                     DW_IC_INTR_STOP_DET | \
+                                     DW_IC_INTR_START_DET)
 
 
 #define BIT(nr) (1UL << (nr))
@@ -113,6 +139,15 @@
 
 #define RMI_PRODUCT_ID_LENGTH 10
 
+#define __le16 SInt16
+#define __le32 SInt32
+
+#define HID_MIN_BUFFER_SIZE 64
+
+#define I2C_HID_PWR_ON 0x00
+#define I2C_HID_PWR_SLEEP 0x01
+
+
 class VoodooI2C : public IOService {
     
     OSDeclareDefaultStructors(VoodooI2C);
@@ -130,6 +165,12 @@ public:
 #define I2C_M_TEN 0x0010
 #define I2C_M_RD 0x0001
 #define I2C_M_RECV_LEN 0x0400
+        
+#define I2C_HID_READ_PENDING (1 << 2);
+        
+#define I2C_HID_CMD(opcode_) \
+        .opcode = opcode_, .length = 4,\
+        .registerIndex = offsetof(struct i2c_hid_desc, wCommandRegister)
     };
     
 
@@ -264,7 +305,91 @@ public:
         
     } RMI4Device;
     
-    RMI4Device* _rmidev;
+    //RMI4Device* _rmidev;
+    
+    typedef struct {
+        
+        unsigned short addr;
+        
+        I2CBus* _dev;
+        
+        IOACPIPlatformDevice* provider;
+        
+        IOWorkLoop* workLoop;
+        IOCommandGate* commandGate;
+        
+        IOInterruptEventSource *interruptSource;
+        
+        rmi_driver_data *driver_data;
+        
+    } I2CDevice;
+    
+    I2CDevice* hid_device;
+    
+    union command {
+        UInt8 data[0];
+        struct cmd {
+            __le16 reg;
+            UInt8 reportTypeID;
+            UInt8 opcode;
+        } c;
+    };
+    
+    struct i2c_hid_desc {
+        __le16 wHIDDescLength;
+        __le16 bcdVersion;
+        __le16 wReportDescLength;
+        __le16 wReportDescRegister;
+        __le16 wInputRegister;
+        __le16 wMaxInputRegister;
+        __le16 wOutputRegister;
+        __le16 wMaxOutputLength;
+        __le16 wCommandRegister;
+        __le16 wDataRegister;
+        __le16 wVendorID;
+        __le16 wProductID;
+        __le16 wVersionID;
+        __le32 reserved;
+    } __packed;
+    
+    struct i2c_hid_platform_data {
+        UInt16 hid_descriptor_address;
+    };
+    
+    typedef struct {
+        I2CDevice *client;
+        
+        
+        union {
+            UInt8 hdesc_buffer[sizeof(struct i2c_hid_desc)];
+            struct i2c_hid_desc hdesc;
+        };
+        
+        __le16 wHIDDescRegister;
+        
+        UInt bufsize;
+        char *inbuf;
+        char *rawbuf;
+        char *cmdbuf;
+        char *argsbuf;
+        
+        unsigned long flags;
+        
+        struct i2c_hid_platform_data pdata;
+    } i2c_hid;
+    
+    i2c_hid *ihid;
+    
+    struct i2c_hid_cmd {
+        UInt registerIndex;
+        UInt8 opcode;
+        UInt length;
+        bool wait;
+    };
+    
+    struct i2c_hid_cmd hid_descr_cmd = { .length = 2};
+    
+    struct i2c_hid_cmd hid_set_power_cmd = { I2C_HID_CMD(0x08) };
     
     
     static void getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
@@ -290,7 +415,7 @@ public:
     void xferMsgI2C(I2CBus* _dev);
     
     void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
-    void RMI4InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
+    void HIDInterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     
     //static I2CBus* getBusByName(char* name );
     
@@ -305,6 +430,7 @@ public:
     SInt32 i2c_smbus_write_i2c_block_data(I2CBus* phys, UInt16 addr, UInt8 command, UInt8 length, const UInt8 *values);
     
     int i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num);
+    int i2c_transfer_gated(I2CBus* phys, i2c_msg *msgs, int *num);
     int __i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num);
     //static int i2c_smbus_write_i2c_block_data;
     
@@ -315,9 +441,23 @@ public:
     
     void clearI2CInt(I2CBus* _dev);
     
-    int initRMI4Device(RMI4Device* _rmidev);
+    int initHIDDevice(I2CDevice *hid_device);
     
     int probeRMI4Device(RMI4Device *phys);
+    
+    int i2c_hid_acpi_pdata(i2c_hid *ihid);
+    
+    int i2c_hid_alloc_buffers(i2c_hid *ihid, UInt report_size);
+    
+    void i2c_hid_free_buffers(i2c_hid *ihid, UInt report_size);
+    
+    int i2c_hid_fetch_hid_descriptor(i2c_hid *ihid);
+    
+    int i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, unsigned char *buf_recv, int data_len);
+    
+    int __i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len);
+    
+    int i2c_hid_set_power(i2c_hid *ihid, int power_state);
     
     int rmi_driver_f01_init(RMI4Device *rmi_dev);
     
