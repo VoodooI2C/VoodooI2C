@@ -6,6 +6,7 @@
 #include <IOKit/IOLocks.h>
 #include <IOKit/IOCommandGate.h>
 #include <string.h>
+#include "VoodooI2CHIDDevice.h"
 
 #define STATUS_IDLE 0x0
 #define STATUS_WRITE_IN_PROGRESS 0x1
@@ -245,67 +246,10 @@ public:
         i2c_smbus_data *data;
     } commandGateTransaction;
     
-    typedef struct {
-        int page;
-    } rmi_i2c_data;
     
-    struct rmi_function_descriptor {
-        UInt16 query_base_addr;
-        UInt16 command_base_addr;
-        UInt16 control_base_addr;
-        UInt16 data_base_addr;
-        UInt8 interrupt_source_count;
-        UInt8 function_number;
-    };
     
-    struct rmi_function_container {
-        //struct list_head list;
-        
-        struct rmi_function_descriptor fd;
-        //RMI4Device *rmi_dev;
-        struct rmi_function_handler *fh;
-        int num_of_irqs;
-        int irq_pos;
-        
-        void *data;
-        
-    };
-    
-    struct rmi_driver_data {
-        struct rmi_function_container rmi_functions;
-        
-        struct rmi_function_descriptor f01_fd;
-        int f01_num_of_irqs;
-        int f01_irq_pos;
-        
-        UInt8 manufacturer_id;
-        
-        UInt8 product_id[RMI_PRODUCT_ID_LENGTH + 1];
-        
-    };
-    
-    typedef struct {
-        
-        unsigned short addr;
-        
-        rmi_i2c_data *data;
-        
-        char* name;
-        
-        I2CBus* _dev;
-        
-        IOACPIPlatformDevice* provider;
-        
-        IOWorkLoop* workLoop;
-        IOCommandGate* commandGate;
-        
-        IOInterruptEventSource *interruptSource;
-        
-        rmi_driver_data *driver_data;
-        
-    } RMI4Device;
-    
-    //RMI4Device* _rmidev;
+    VoodooI2CHIDDevice* bus_devices[2];
+    int bus_devices_number;
     
     typedef struct {
         
@@ -319,8 +263,6 @@ public:
         IOCommandGate* commandGate;
         
         IOInterruptEventSource *interruptSource;
-        
-        rmi_driver_data *driver_data;
         
     } I2CDevice;
     
@@ -437,6 +379,8 @@ public:
     //static char* getName();
     
     int rmi_set_page(RMI4Device *phys, UInt page);
+    
+    void registerDump(I2CBus* _dev);
     
     
     void clearI2CInt(I2CBus* _dev);

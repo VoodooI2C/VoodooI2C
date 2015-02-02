@@ -17,8 +17,8 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 
 bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
     
-    _dev->tx_fifo_depth = 64;
-    _dev->rx_fifo_depth = 64;
+    _dev->tx_fifo_depth = 32;
+    _dev->rx_fifo_depth = 32;
     
     getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL);
     getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time);
@@ -216,7 +216,6 @@ bool VoodooI2C::mapI2CMemory(I2CBus* _dev) {
 }
 
 void VoodooI2C::readI2C(I2CBus* _dev) {
-    IOLog("Test!!\n");
     struct i2c_msg *msgs = _dev->msgs;
     int rx_valid;
     
@@ -401,6 +400,8 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
+    writel(_dev, 1, 0x800);
+    
     disableI2CInt(_dev);
     
     
@@ -412,11 +413,11 @@ bool VoodooI2C::start(IOService * provider) {
     IORegistryIterator* children;
     IORegistryEntry* child;
     
-    hid_device = (I2CDevice *)IOMalloc(sizeof(I2CDevice));
+    //hid_device = (I2CDevice *)IOMalloc(sizeof(I2CDevice));
     
 
-    hid_device->addr = 0x002c;
-    hid_device->_dev = _dev;
+    //hid_device->addr = 0x002c;
+    //hid_device->_dev = _dev;
     
     
     children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
@@ -426,10 +427,15 @@ bool VoodooI2C::start(IOService * provider) {
             OSIterator *iter = OSCollectionIterator::withCollection(set);
             if (iter != 0) {
                 while( (child = (IORegistryEntry*)iter->getNextObject()) ) {
-                        child->attachToParent(this, gIOServicePlane);
-                    if (!strcmp((getMatchedName((IOService*)child)),(char*)"SYNA7500")){
-                        hid_device->provider = OSDynamicCast(IOACPIPlatformDevice, child);
-                    }
+                    //if (!strcmp((getMatchedName((IOService*)child)),(char*)"SYNA7500")){
+                        bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
+                        if ( !bus_devices[bus_devices_number]               ||
+                            !bus_devices[bus_devices_number]->init()       ||
+                            !bus_devices[bus_devices_number]->attach(this, (IOService*)child) )
+                        {
+                            OSSafeReleaseNULL(bus_devices[bus_devices_number]);
+                        }
+                    //}
                 }
                 iter->release();
             }
@@ -439,8 +445,8 @@ bool VoodooI2C::start(IOService * provider) {
     children->release();
     
     
-    if (initHIDDevice(hid_device))
-        IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
+    //if (initHIDDevice(hid_device))
+    //    IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
     
     
     return true;
@@ -567,12 +573,12 @@ int VoodooI2C::i2c_hid_fetch_hid_descriptor(i2c_hid *ihid) {
         return -1;
     }
     
-    dsize = (UInt16)(hdesc->wHIDDescLength);
+    //dsize = (UInt16)(hdesc->wHIDDescLength);
     
-    if (dsize != sizeof(struct i2c_hid_desc)) {
-        IOLog("%s::%s::weird size of HID descriptor\n", getName(), _dev->name);
-        return -1;
-    }
+    //if (dsize != sizeof(struct i2c_hid_desc)) {
+    //    IOLog("%s::%s::weird size of HID descriptor\n", getName(), _dev->name);
+    //    return -1;
+    //}
     
     return 0;
 }
@@ -605,8 +611,6 @@ int VoodooI2C::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UIn
     
     memcpy(cmd->data + length, args, args_len);
     length += args_len;
-    
-    IOLog("cmd=%*ph\n", length, cmd->data);
     
     
     msg[0].addr = ihid->client->addr;
@@ -654,7 +658,9 @@ int VoodooI2C::i2c_hid_set_power(i2c_hid *ihid, int power_state) {
 void VoodooI2C::stop(IOService * provider) {
     IOLog("%s::stop\n", getName());
     
-    _dev->commandGate->commandWakeup(&_dev->commandComplete);
+    for(int i=0;i<=bus_devices_number;i++) {
+        OSSafeReleaseNULL(bus_devices[i]);
+    }
     
     /*
         
@@ -798,6 +804,38 @@ void VoodooI2C::xferInitI2C(I2CBus* _dev) {
     writel(_dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
 }
 
+void VoodooI2C::registerDump(I2CBus* _dev) {
+    IOLog("DW_IC_CON: 0x%x\n", readl(_dev, DW_IC_CON));
+    IOLog("DW_IC_TAR: 0x%x\n", readl(_dev, DW_IC_TAR));
+    IOLog("DW_IC_SAR: 0x%x\n", readl(_dev, DW_IC_SAR));
+    //IOLog("DW_IC_DATA_CMD: 0x%x\n", readl(_dev, DW_IC_DATA_CMD));
+    IOLog("DW_IC_SS_SCL_HCNT: 0x%x\n", readl(_dev, DW_IC_SS_SCL_HCNT));
+    IOLog("DW_IC_SS_SCL_LCNT: 0x%x\n", readl(_dev, DW_IC_SS_SCL_LCNT));
+    IOLog("DW_IC_FS_SCL_HCNT: 0x%x\n", readl(_dev, DW_IC_FS_SCL_HCNT));
+    IOLog("DW_IC_FS_SCL_LCNT: 0x%x\n", readl(_dev, DW_IC_FS_SCL_LCNT));
+    IOLog("DW_IC_INTR_STAT: 0x%x\n", readl(_dev, DW_IC_INTR_STAT));
+    IOLog("DW_IC_INTR_MASK: 0x%x\n", readl(_dev, DW_IC_FS_SCL_LCNT));
+    IOLog("DW_IC_RAW_INTR_STAT: 0x%x\n", readl(_dev, DW_IC_RAW_INTR_STAT));
+    IOLog("DW_IC_RX_TL: 0x%x\n", readl(_dev, DW_IC_RX_TL));
+    IOLog("DW_IC_TX_TL: 0x%x\n", readl(_dev, DW_IC_TX_TL));
+    IOLog("DW_IC_STATUS: 0x%x\n", readl(_dev, DW_IC_STATUS));
+    IOLog("DW_IC_TXFLR: 0x%x\n", readl(_dev, DW_IC_TXFLR));
+    IOLog("DW_IC_RXFLR: 0x%x\n", readl(_dev, DW_IC_RXFLR));
+    IOLog("DW_IC_SDA_HOLD: 0x%x\n", readl(_dev, DW_IC_SDA_HOLD));
+    IOLog("DW_IC_TX_ABRT_SOURCE: 0x%x\n", readl(_dev, DW_IC_TX_ABRT_SOURCE));
+    IOLog("DW_IC_DMA_CR: 0x%x\n", readl(_dev, DW_IC_DMA_CR));
+    IOLog("DW_IC_DMA_TDLR: 0x%x\n", readl(_dev, DW_IC_DMA_TDLR));
+    IOLog("DW_IC_DMA_RDLR: 0x%x\n", readl(_dev, DW_IC_DMA_RDLR));
+    IOLog("DW_IC_SDA_SETUP: 0x%x\n", readl(_dev, DW_IC_SDA_SETUP));
+    IOLog("DW_IC_ENABLE_STATUS: 0x%x\n", readl(_dev, DW_IC_ENABLE_STATUS));
+    IOLog("DW_IC_FS_SPKLEN: 0x%x\n", readl(_dev, DW_IC_FS_SPKLEN));
+    IOLog("DW_IC_COMP_PARAM_1: 0x%x\n", readl(_dev, DW_IC_COMP_PARAM_1));
+    IOLog("DW_IC_COMP_VERSION: 0x%x\n", readl(_dev, DW_IC_COMP_VERSION));
+    IOLog("DW_IC_COMP_TYPE: 0x%x\n", readl(_dev, DW_IC_COMP_TYPE));
+    IOLog("privatespace: 0x%x\n", readl(_dev, 0x800));
+
+}
+
 void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
     struct i2c_msg *msgs = _dev->msgs;
     UInt32 intr_mask;
@@ -811,16 +849,12 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
     
     for (; _dev->msg_write_idx < _dev->msgs_num; _dev->msg_write_idx++) {
         
-        IOLog("we are on message: %d\n", _dev->msg_write_idx);
-        
         if (msgs[_dev->msg_write_idx].addr != addr) {
-            IOLog("%s::%s::Invalid target address, aborting transaction\n", getName(), _dev->name);
             _dev->msg_err = -1;
             break;
         }
         
         if (msgs[_dev->msg_write_idx].len == 0) {
-            IOLog("%s::%s::Invalid message length, aborting transaction\n", getName(), _dev->name);
             _dev->msg_err = -1;
             break;
         }
@@ -830,7 +864,6 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
             buf_len = msgs[_dev->msg_write_idx].len;
             
             if ((_dev->master_cfg & DW_IC_CON_RESTART_EN) && (_dev->msg_write_idx > 0)) {
-                IOLog("restart needed\n");
                 need_restart = true;
             }
         }
@@ -840,29 +873,26 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         
         
         while (buf_len > 0 && tx_limit > 0 && rx_limit > 0) {
+            
+
             UInt32 cmd = 0;
             
             if (_dev->msg_write_idx == _dev->msgs_num - 1 && buf_len == 1) {
-                IOLog("writing stop cmd\n");
-                cmd |= BIT(9);
+                cmd |= 0x200;
             }
             
             if (need_restart) {
-                cmd |= BIT(10);
+                cmd |= 0x400;
                 need_restart = false;
             }
             if (msgs[_dev->msg_write_idx].flags & I2C_M_RD) {
                 if (rx_limit - _dev->rx_outstanding <= 0) {
-                    IOLog("we had too much...\n");
                     break;
                 }
-                IOLog("still writing read data\n");
                 writel(_dev, cmd | 0x100, DW_IC_DATA_CMD);
-                IOLog("cmd=%d, tx fifo=%d", cmd, readl(_dev, DW_IC_TXFLR));
                 rx_limit--;
                 _dev->rx_outstanding++;
             } else {
-                IOLog("still writing write data\n");
                 writel(_dev, cmd | *buf++, DW_IC_DATA_CMD);
             }
             tx_limit--; buf_len--;
@@ -872,18 +902,15 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         _dev->tx_buf_len = buf_len;
         
         if (buf_len > 0) {
-            IOLog("write in progress\n");
             _dev->status |= STATUS_WRITE_IN_PROGRESS;
             break;
         } else {
-            IOLog("write not in progress\n");
             _dev->status &= ~STATUS_WRITE_IN_PROGRESS;
         }
         
     }
    
     if (_dev->msg_write_idx == _dev->msgs_num) {
-        IOLog("transaction is done\n");
         intr_mask &= ~DW_IC_INTR_TX_EMPTY;
     }
     
@@ -893,226 +920,12 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
     
     writel(_dev, intr_mask, DW_IC_INTR_MASK);
     
+    //registerDump(_dev);
 
     //readl(_dev, DW_IC_INTR_MASK);
     
     //_dev->commandGate->commandWakeup(&_dev->commandComplete);
     
-}
-
-
-SInt32 VoodooI2C::i2c_smbus_read_i2c_block_data(I2CBus* phys, UInt16 addr, UInt8 command, UInt8 length, UInt8 *values) {
-    i2c_smbus_data data;
-    int status;
-    
-    if (length > I2C_SMBUS_BLOCK_MAX)
-        length = I2C_SMBUS_BLOCK_MAX;
-    
-    data.block[0] = length;
-    
-    
-    status = i2c_smbus_xfer(phys, addr, I2C_SMBUS_READ, command, I2C_SMBUS_I2C_BLOCK_DATA, &data);
-    
-    if (status < 0)
-        return status;
-    
-    memcpy(values, &data.block[1], data.block[0]);
-    return data.block[0];
-}
-
-SInt32 VoodooI2C::i2c_smbus_write_i2c_block_data(I2CBus* phys, UInt16 addr, UInt8 command, UInt8 length, const UInt8 *values) {
-    i2c_smbus_data data;
-    
-    if(length >I2C_SMBUS_BLOCK_MAX)
-        length = I2C_SMBUS_BLOCK_MAX;
-    data.block[0] = length;
-    memcpy(data.block + 1, values, length);
-    
-    //return i2c_smbus_xfer(phys, _rmidev->addr, I2C_SMBUS_WRITE, command, I2C_SMBUS_I2C_BLOCK_DATA, &data);
-    return 0;
-}
-
-SInt32 VoodooI2C::i2c_smbus_write_byte_data(I2CBus *phys, UInt16 addr, UInt8 command, UInt8 value) {
-    i2c_smbus_data data;
-    data.byte = value;
-    return i2c_smbus_xfer(phys, addr, I2C_SMBUS_WRITE, command, I2C_SMBUS_BYTE_DATA, &data);
-    
-    
-}
-
-
-SInt32 VoodooI2C::i2c_smbus_xfer(I2CBus *phys,
-                                 UInt16 addr, char read_write, UInt8 command, int size,
-                                 i2c_smbus_data *data) {
-    
-    if (phys->commandGate){
-        
-        commandGateTransaction transaction;
-        
-        transaction.phys = phys;
-        transaction.addr = addr;
-        transaction.read_write = read_write;
-        transaction.command = command;
-        transaction.size = size;
-        transaction.data = data;
-        
-        
-        SInt32 result = phys->commandGate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2C::i2c_smbus_xfer_gated), &transaction);
-        
-        return result;
-        
-    }
-    
-    return -1;
-    
-
-}
-
-SInt32 VoodooI2C::i2c_smbus_xfer_gated(commandGateTransaction *transaction) {
-    
-    I2CBus* phys = transaction->phys;
-    UInt16 addr = transaction->addr;
-    char read_write = transaction->read_write;
-    UInt8 command = transaction->command;
-    int size = transaction->size;
-    i2c_smbus_data *data = transaction->data;
-     
-    
-    unsigned char msgbuf0[I2C_SMBUS_BLOCK_MAX+3];
-    unsigned char msgbuf1[I2C_SMBUS_BLOCK_MAX+2];
-    int num = read_write == I2C_SMBUS_READ ? 2 : 1;
-    int i;
-    UInt8 partial_pec = 0;
-    int status;
-    
-    struct i2c_msg msg[2] = {
-        {
-            .addr = addr,
-            .flags = 0,
-            .len = 1,
-            .buf = msgbuf0,
-        }, {
-            .addr = addr,
-            .flags = I2C_M_RD,
-            .len = 0,
-            .buf = msgbuf1,
-        }
-    };
-    
-    msgbuf0[0] = command;
-    switch(size) {
-        case I2C_SMBUS_QUICK:
-            msg[0].len = 0;
-            msg[0].flags = (read_write == I2C_SMBUS_READ ? I2C_M_RD : 0);
-            num = 1;
-            break;
-        case I2C_SMBUS_BYTE:
-            if (read_write == I2C_SMBUS_READ) {
-                msg[0].flags = I2C_M_RD;
-                num = 1;
-            }
-            break;
-        case I2C_SMBUS_BYTE_DATA:
-            if (read_write == I2C_SMBUS_READ)
-                msg[1].len = 1;
-            else {
-                msg[0].len = 2;
-                msgbuf0[1] = data->byte;
-            }
-        case I2C_SMBUS_WORD_DATA:
-            if (read_write == I2C_SMBUS_READ)
-                msg[1].len = 2;
-            else {
-                msg[0].len = 3;
-                msgbuf0[1] = data->word & 0xff;
-                msgbuf0[2] = data->word >> 8;
-            }
-            break;
-        case I2C_SMBUS_PROC_CALL:
-            num = 2;
-            read_write = I2C_SMBUS_READ;
-            msg[0].len = 3;
-            msg[1].len = 2;
-            msgbuf0[1] = data->word & 0xff;
-            msgbuf0[2] = data->word >> 8;
-            break;
-        case I2C_SMBUS_BLOCK_DATA:
-            if (read_write == I2C_SMBUS_READ ) {
-                msg[1].flags = I2C_M_RECV_LEN;
-                msg[1].len = 1;
-            } else {
-                msg[0].len = data->block[0] + 2;
-                if (msg[0].len > I2C_SMBUS_BLOCK_MAX + 2) {
-                    IOLog("invalid block write size");
-                    return -1;
-                }
-                for (i=1; i < msg[0].len; i++)
-                    msgbuf0[i] = data->block[i-1];
-            }
-            break;
-        case I2C_SMBUS_BLOCK_PROC_CALL:
-            num = 2;
-            read_write = I2C_SMBUS_READ;
-            if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
-                IOLog("invalid block write size");
-                return -1;
-            }
-            msg[0].len = data->block[0] + 2;
-            for (i=1; i < msg[0].len; i++)
-                msgbuf0[i] = data->block[i-1];
-            msg[1].flags = I2C_M_RECV_LEN;
-            msg[1].len = 1;
-            break;
-        case I2C_SMBUS_I2C_BLOCK_DATA:
-            if (read_write == I2C_SMBUS_READ) {
-                msg[1].len = data->block[0];
-            } else {
-                msg[0].len = data->block[0] + 1;
-                if (msg[0].len > I2C_SMBUS_BLOCK_MAX + 1) {
-                    IOLog("invalid block write size");
-                    return -1;
-                }
-                for (i = 1; i <= data->block[0]; i++)
-                    msgbuf0[i] = data->block[i];
-            }
-            break;
-        default:
-            IOLog("unsupported transaction");
-            return -1;
-    }
-    
-    
-    
-    status = i2c_transfer(phys, msg, num);
-    if (status < 0)
-        return status;
-    
-    
-    if (read_write == I2C_SMBUS_READ) {
-        switch(size) {
-            case I2C_SMBUS_BYTE:
-                data->byte = msgbuf0[0];
-                break;
-            case I2C_SMBUS_BYTE_DATA:
-                data->byte = msgbuf1[0];
-                break;
-            case I2C_SMBUS_WORD_DATA:
-            case I2C_SMBUS_PROC_CALL:
-                data->word = msgbuf1[0] | (msgbuf1[1] << 8);
-                break;
-            case I2C_SMBUS_I2C_BLOCK_DATA:
-                for (i=0; i < data->block[0]; i++)
-                    data->block[i+1] = msgbuf1[i];
-                break;
-            case I2C_SMBUS_BLOCK_DATA:
-            case I2C_SMBUS_BLOCK_PROC_CALL:
-                for (i=0; i< msgbuf1[0] + 1; i++)
-                    data->block[i] = msgbuf1[i];
-                break;
-        }
-    }
-    
-    return 0;
 }
 
 int VoodooI2C::i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num) {
@@ -1158,13 +971,12 @@ void VoodooI2C::interruptOccured(OSObject* owner, IOInterruptEventSource* src, i
     if (!enabled || !(stat &~DW_IC_INTR_ACTIVITY))
         return;
     
-    IOLog("interupt: %d\n", stat);
     
     stat = readClearIntrbitsI2C(_dev);
 
 
     if (stat & DW_IC_INTR_TX_ABRT) {
-        IOLog("%s::%s::Interrupt Aborting transaction\n", getName(), _dev->name);
+        //IOLog("%s::%s::Interrupt Aborting transaction\n", getName(), _dev->name);
 
         _dev->cmd_err |= DW_IC_ERR_TX_ABRT;
         _dev->status = STATUS_IDLE;
@@ -1174,65 +986,19 @@ void VoodooI2C::interruptOccured(OSObject* owner, IOInterruptEventSource* src, i
     }
     
     if (stat & DW_IC_INTR_RX_FULL) {
-        IOLog("%s::%s::interrupt reading transaction\n", getName(), _dev->name);
+        //IOLog("%s::%s::interrupt reading transaction\n", getName(), _dev->name);
         readI2C(_dev);
     }
     
     if (stat & DW_IC_INTR_TX_EMPTY) {
-        IOLog("%s::%s::interrupt xfer transaction\n", getName(), _dev->name);
+        //IOLog("%s::%s::interrupt xfer transaction\n", getName(), _dev->name);
         xferMsgI2C(_dev);
-    }
-    
-    if (stat & DW_IC_INTR_START_DET) {
-        IOLog("%s::%s::interrupt start det\n", getName(), _dev->name);
     }
     
 tx_aborted:
     if ((stat & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || _dev->msg_err) {
-        IOLog("we're waking up here!\n");
         _dev->commandGate->commandWakeup(&_dev->commandComplete);
     }
-}
-
-int VoodooI2C::rmi_set_page(RMI4Device *phys, UInt page) {
-    rmi_i2c_data *data = phys->data;
-    int rc;
-    
-    rc = i2c_smbus_write_byte_data(phys->_dev, phys->addr, RMI_PAGE_SELECT_REGISTER, page);
-    
-    if (rc < 0) {
-        IOLog("%s::%s::Set page failed: %d\n", getName(), _dev->name, rc);
-        return rc;
-    }
-    data->page = page;
-    return 0;
-}
-
-int VoodooI2C::rmi_i2c_write_block(RMI4Device *phys, UInt16 addr, UInt8 *buf, int len) {
-    
-    SInt32 result = phys->commandGate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2C::rmi_i2c_write_block_gated), phys, &addr, buf, &len);
-    
-    return result;
-}
-
-int VoodooI2C::rmi_i2c_write_block_gated(RMI4Device *phys, UInt16 *addr, UInt8 *buf, int *len) {
-    rmi_i2c_data *data = phys->data;
-    int rc;
-    
-    if(RMI_I2C_PAGE(*addr) != data->page) {
-        rc = rmi_set_page(phys, RMI_I2C_PAGE(*addr));
-        if (rc<0)
-            return rc;
-    }
-    
-    rc = i2c_smbus_write_i2c_block_data(phys->_dev, phys->addr, *addr & 0xff, sizeof(buf), buf);
-    
-    return rc;
-}
-
-int VoodooI2C::rmi_i2c_write(RMI4Device *phys, UInt16 addr, UInt8 data) {
-    int rc = rmi_i2c_write_block(phys, addr, &data, 1);
-    return (rc < 0) ? rc : 0;
 }
 
 void VoodooI2C::HIDInterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
@@ -1240,33 +1006,6 @@ void VoodooI2C::HIDInterruptOccured(OSObject* owner, IOInterruptEventSource* src
 
 }
 
-int VoodooI2C::rmi_i2c_read_block(RMI4Device *phys, UInt16 addr, UInt8 *buf, int len) {
-    
-    SInt32 result = phys->commandGate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2C::rmi_i2c_read_block_gated), phys, &addr, buf, &len);
-    
-    return result;
-}
-
-int VoodooI2C::rmi_i2c_read_block_gated(RMI4Device *phys, UInt16 *addr, UInt8 *buf, int *len) {
-    rmi_i2c_data *data = phys->data;
-    int rc;
-    
-    if (RMI_I2C_PAGE(*addr) != data->page) {
-        rc = rmi_set_page(phys, RMI_I2C_PAGE(*addr));
-        if ( rc < 0)
-            return rc;
-    }
-    
-    
-    rc = i2c_smbus_read_i2c_block_data(phys->_dev, phys->addr, *addr & 0xff, *len, buf);
-    
-    return rc;
-}
-
-int VoodooI2C::rmi_i2c_read(RMI4Device *phys, UInt16 addr, UInt8 *buf) {
-    int rc = rmi_i2c_read_block(phys, addr, buf, 1);
-    return ( rc < 0) ? rc : 0;
-}
 
 void VoodooI2C::clearI2CInt(I2CBus* _dev) {
     readl(_dev, DW_IC_CLR_INTR);

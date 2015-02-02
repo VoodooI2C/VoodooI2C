@@ -75,7 +75,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "639"
             endingLineNumber = "639"
-            landmarkName = "VoodooI2C::i2c_hid_set_power(i2c_hid *ihid, int power_state)"
+            landmarkName = "VoodooI2C::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -150,12 +150,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VoodooI2C/VoodooI2C.cpp"
-            timestampString = "440096794.791367"
+            timestampString = "440312594.249305"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "991"
-            endingLineNumber = "991"
-            landmarkName = "VoodooI2C::i2c_smbus_xfer_gated(commandGateTransaction *transaction)"
+            startingLineNumber = "630"
+            endingLineNumber = "630"
+            landmarkName = "VoodooI2C::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -165,29 +165,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VoodooI2C/VoodooI2C.cpp"
-            timestampString = "440097328.738347"
+            filePath = "VoodooI2C/VoodooI2CHIDDevice.h"
+            timestampString = "444587719.929104"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1009"
-            endingLineNumber = "1009"
-            landmarkName = "VoodooI2C::i2c_smbus_xfer_gated(commandGateTransaction *transaction)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VoodooI2C/VoodooI2C.h"
-            timestampString = "440303653.521806"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "302"
-            endingLineNumber = "302"
-            landmarkName = "class VoodooI2C"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "class VoodooI2CHIDDevice"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -198,28 +182,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VoodooI2C/VoodooI2C.cpp"
-            timestampString = "440304980.170075"
+            timestampString = "444588470.250245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "571"
-            endingLineNumber = "571"
-            landmarkName = "VoodooI2C::i2c_hid_fetch_hid_descriptor(i2c_hid *ihid)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VoodooI2C/VoodooI2C.cpp"
-            timestampString = "440312594.249305"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "630"
-            endingLineNumber = "630"
-            landmarkName = "VoodooI2C::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len)"
+            startingLineNumber = "433"
+            endingLineNumber = "433"
+            landmarkName = "VoodooI2C::start(IOService * provider)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

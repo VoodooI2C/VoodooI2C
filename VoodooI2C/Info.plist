@@ -33,21 +33,22 @@
 			<key>IONameMatch</key>
 			<array>
 				<string>INT33C3</string>
+				<string>INT33C2</string>
 			</array>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2014 Alexandre Daoud. All rights reserved.</string>
-    <key>OSBundleLibraries</key>
-    <dict>
-        <key>com.apple.iokit.IOACPIFamily</key>
-        <string>1.4</string>
-        <key>com.apple.kpi.iokit</key>
-        <string>14.0</string>
-        <key>com.apple.kpi.libkern</key>
-        <string>14.0</string>
-        <key>com.apple.kpi.mach</key>
-        <string>14.0</string>
-    </dict>
+	<key>OSBundleLibraries</key>
+	<dict>
+		<key>com.apple.iokit.IOACPIFamily</key>
+		<string>1.4</string>
+		<key>com.apple.kpi.iokit</key>
+		<string>14.0</string>
+		<key>com.apple.kpi.libkern</key>
+		<string>14.0</string>
+		<key>com.apple.kpi.mach</key>
+		<string>14.0</string>
+	</dict>
 </dict>
 </plist>
