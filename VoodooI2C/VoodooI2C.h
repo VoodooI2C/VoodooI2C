@@ -251,87 +251,7 @@ public:
     VoodooI2CHIDDevice* bus_devices[2];
     int bus_devices_number;
     
-    typedef struct {
-        
-        unsigned short addr;
-        
-        I2CBus* _dev;
-        
-        IOACPIPlatformDevice* provider;
-        
-        IOWorkLoop* workLoop;
-        IOCommandGate* commandGate;
-        
-        IOInterruptEventSource *interruptSource;
-        
-    } I2CDevice;
-    
-    I2CDevice* hid_device;
-    
-    union command {
-        UInt8 data[0];
-        struct cmd {
-            __le16 reg;
-            UInt8 reportTypeID;
-            UInt8 opcode;
-        } c;
-    };
-    
-    struct i2c_hid_desc {
-        __le16 wHIDDescLength;
-        __le16 bcdVersion;
-        __le16 wReportDescLength;
-        __le16 wReportDescRegister;
-        __le16 wInputRegister;
-        __le16 wMaxInputRegister;
-        __le16 wOutputRegister;
-        __le16 wMaxOutputLength;
-        __le16 wCommandRegister;
-        __le16 wDataRegister;
-        __le16 wVendorID;
-        __le16 wProductID;
-        __le16 wVersionID;
-        __le32 reserved;
-    } __packed;
-    
-    struct i2c_hid_platform_data {
-        UInt16 hid_descriptor_address;
-    };
-    
-    typedef struct {
-        I2CDevice *client;
-        
-        
-        union {
-            UInt8 hdesc_buffer[sizeof(struct i2c_hid_desc)];
-            struct i2c_hid_desc hdesc;
-        };
-        
-        __le16 wHIDDescRegister;
-        
-        UInt bufsize;
-        char *inbuf;
-        char *rawbuf;
-        char *cmdbuf;
-        char *argsbuf;
-        
-        unsigned long flags;
-        
-        struct i2c_hid_platform_data pdata;
-    } i2c_hid;
-    
-    i2c_hid *ihid;
-    
-    struct i2c_hid_cmd {
-        UInt registerIndex;
-        UInt8 opcode;
-        UInt length;
-        bool wait;
-    };
-    
-    struct i2c_hid_cmd hid_descr_cmd = { .length = 2};
-    
-    struct i2c_hid_cmd hid_set_power_cmd = { I2C_HID_CMD(0x08) };
+
     
     
     static void getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
@@ -357,7 +277,6 @@ public:
     void xferMsgI2C(I2CBus* _dev);
     
     void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
-    void HIDInterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     
     //static I2CBus* getBusByName(char* name );
     
@@ -371,49 +290,16 @@ public:
     SInt32 i2c_smbus_read_i2c_block_data(I2CBus* phys, UInt16 addr, UInt8 command, UInt8 length, UInt8 *values);
     SInt32 i2c_smbus_write_i2c_block_data(I2CBus* phys, UInt16 addr, UInt8 command, UInt8 length, const UInt8 *values);
     
-    int i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num);
+    int i2c_transfer(i2c_msg *msgs, int num);
     int i2c_transfer_gated(I2CBus* phys, i2c_msg *msgs, int *num);
     int __i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num);
     //static int i2c_smbus_write_i2c_block_data;
     
     //static char* getName();
     
-    int rmi_set_page(RMI4Device *phys, UInt page);
-    
     void registerDump(I2CBus* _dev);
-    
     
     void clearI2CInt(I2CBus* _dev);
     
-    int initHIDDevice(I2CDevice *hid_device);
     
-    int probeRMI4Device(RMI4Device *phys);
-    
-    int i2c_hid_acpi_pdata(i2c_hid *ihid);
-    
-    int i2c_hid_alloc_buffers(i2c_hid *ihid, UInt report_size);
-    
-    void i2c_hid_free_buffers(i2c_hid *ihid, UInt report_size);
-    
-    int i2c_hid_fetch_hid_descriptor(i2c_hid *ihid);
-    
-    int i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, unsigned char *buf_recv, int data_len);
-    
-    int __i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len);
-    
-    int i2c_hid_set_power(i2c_hid *ihid, int power_state);
-    
-    int rmi_driver_f01_init(RMI4Device *rmi_dev);
-    
-    int rmi_i2c_write_block(RMI4Device *phys, UInt16 addr, UInt8 *buf, int len);
-    
-    int rmi_i2c_write_block_gated(RMI4Device *phys, UInt16 *addr, UInt8 *buf, int *len);
-    
-    int rmi_i2c_write(RMI4Device *phys, UInt16 addr, UInt8 data);
-    
-    int rmi_i2c_read_block(RMI4Device *phys, UInt16 addr, UInt8 *buf, int len);
-    
-    int rmi_i2c_read_block_gated(RMI4Device *phys, UInt16 *addr, UInt8 *buf, int *len);
-    
-    int rmi_i2c_read(RMI4Device *phys, UInt16 addr, UInt8 *buf);
 };

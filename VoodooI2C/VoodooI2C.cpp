@@ -413,14 +413,11 @@ bool VoodooI2C::start(IOService * provider) {
     IORegistryIterator* children;
     IORegistryEntry* child;
     
-    //hid_device = (I2CDevice *)IOMalloc(sizeof(I2CDevice));
-    
 
-    //hid_device->addr = 0x002c;
-    //hid_device->_dev = _dev;
     
     
     children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
+    bus_devices_number = 0;
     if (children != 0) {
         OSOrderedSet* set = children->iterateAll();
         if(set != 0) {
@@ -434,6 +431,8 @@ bool VoodooI2C::start(IOService * provider) {
                             !bus_devices[bus_devices_number]->attach(this, (IOService*)child) )
                         {
                             OSSafeReleaseNULL(bus_devices[bus_devices_number]);
+                        } else {
+                            //bus_devices_number++;
                         }
                     //}
                 }
@@ -443,6 +442,8 @@ bool VoodooI2C::start(IOService * provider) {
         }
     }
     children->release();
+    
+    IOLog("number: %d\n",bus_devices_number);
     
     
     //if (initHIDDevice(hid_device))
@@ -454,198 +455,9 @@ bool VoodooI2C::start(IOService * provider) {
      
 }
 
-int VoodooI2C::initHIDDevice(I2CDevice *hid_device) {
-    int ret;
-    UInt16 hidRegister;
-    
-    IOLog("HID Probe called for i2c 0x%02x\n", hid_device->addr);
-    
-    ihid = (i2c_hid*)IOMalloc(sizeof(i2c_hid));
-    
-    ihid->client = hid_device;
-    
-    ret = i2c_hid_acpi_pdata(ihid);
-    
-    ihid->client = hid_device;
-    
-    
-    hidRegister = ihid->pdata.hid_descriptor_address;
-    
-    ihid->wHIDDescRegister = (__le16)hidRegister;
-    
-    IOLog("register: 0x%x\n", ihid->wHIDDescRegister);
-    
-    ret = i2c_hid_alloc_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    if (ret < 0)
-        goto err;
-    
-    //ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
-    //if(ret<0)
-    //    goto err;
-    
-    ret = i2c_hid_fetch_hid_descriptor(ihid);
-    if (ret < 0)
-        goto err;
 
-    /*
-    hid_device->interruptSource =
-    IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2C::HIDInterruptOccured), hid_device->provider);
-    
-    if (_dev->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
-        IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _dev->name);
-        return -1;
-    }
-    
-   hid_device->interruptSource->enable();
-    
-    
-    
-   hid_device->commandGate = IOCommandGate::commandGate(this);
-    
-    if (!hid_device->commandGate || (_dev->workLoop->addEventSource(hid_device->commandGate) != kIOReturnSuccess)) {
-        IOLog("%s::%s::Failed to open HID command gate\n", getName(), _dev->name);
-        return -1;
-    }
-     */
 
-    
-    return 0;
-    
-err:
-    i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    IOFree(ihid, sizeof(i2c_hid));
-    return ret;
-}
 
-int VoodooI2C::i2c_hid_acpi_pdata(i2c_hid *ihid) {
-    //static UInt8 i2c_hid_guid[] = {
-   //     0xF7, 0xF6, 0xDF, 0x3C, 0x67, 0x42, 0x55, 0x45,
-    //    0xAD, 0x05, 0xB3, 0x0A, 0x3D, 0x89, 0x38, 0xDE,
-   // };
-    
-    ihid->pdata.hid_descriptor_address = 0x20;//ihid->client->provider->evaluateInteger("_DSM", &result);
-
-    return 0;
-}
-
-int VoodooI2C::i2c_hid_alloc_buffers(i2c_hid *ihid, UInt report_size) {
-    int args_len = sizeof(UInt8) + sizeof(UInt16) + sizeof(UInt16) + report_size;
-    
-    ihid->inbuf = (char *)IOMalloc(report_size);
-    ihid->argsbuf = (char *)IOMalloc(report_size);
-    ihid->cmdbuf = (char *)IOMalloc(sizeof(union command) + args_len);
-    
-    if(!ihid->inbuf || !ihid->argsbuf || !ihid->cmdbuf) {
-        i2c_hid_free_buffers(ihid, report_size);
-        return -1;
-    }
-    
-    ihid->bufsize = report_size;
-    
-    return 0;
-}
-
-void VoodooI2C::i2c_hid_free_buffers(i2c_hid *ihid, UInt report_size) {
-    IOFree(ihid->inbuf, report_size);
-    IOFree(ihid->argsbuf, report_size);
-    IOFree(ihid->cmdbuf, sizeof(UInt8) + sizeof(UInt16) + sizeof(UInt16) + report_size);
-    ihid->inbuf = NULL;
-    ihid->cmdbuf = NULL;
-    ihid->argsbuf = NULL;
-    ihid->bufsize = 0;
-}
-
-int VoodooI2C::i2c_hid_fetch_hid_descriptor(i2c_hid *ihid) {
-    struct i2c_hid_desc *hdesc = &ihid->hdesc;
-    UInt dsize;
-    int ret;
-    
-    ret = i2c_hid_command(ihid, &hid_descr_cmd, ihid->hdesc_buffer, sizeof(struct i2c_hid_desc));
-    
-    if (ret)
-    {
-        IOLog("%s::%s::hid_descr_cmd failed\n", getName(), _dev->name);
-        return -1;
-    }
-    
-    if((UInt16)(hdesc->bcdVersion) != 0x0100) {
-        IOLog("%s::%s::Unexpected HID descriptor bcdVersion %x\n", getName(), _dev->name, (UInt16)(hdesc->bcdVersion));
-        return -1;
-    }
-    
-    //dsize = (UInt16)(hdesc->wHIDDescLength);
-    
-    //if (dsize != sizeof(struct i2c_hid_desc)) {
-    //    IOLog("%s::%s::weird size of HID descriptor\n", getName(), _dev->name);
-    //    return -1;
-    //}
-    
-    return 0;
-}
-
-int VoodooI2C::i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, unsigned char *buf_recv, int data_len) {
-    return __i2c_hid_command(ihid, command, 0, 0, NULL, 0, buf_recv, data_len);
-}
-
-int VoodooI2C::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len) {
-    union command *cmd = (union command *)ihid->cmdbuf;
-    int ret;
-    struct i2c_msg msg[2];
-    int msg_num = 1;
-    
-    int length = command->length;
-    bool wait = command->wait;
-    UInt registerIndex = command->registerIndex;
-    
-    if (command == &hid_descr_cmd) {
-        cmd->c.reg = ihid->wHIDDescRegister;
-    } else {
-        cmd->data[0] = ihid->hdesc_buffer[registerIndex];
-        cmd->data[1] = ihid->hdesc_buffer[registerIndex + 1];
-    }
-    
-    if (length > 2) {
-        cmd->c.opcode = command->opcode;
-        cmd->c.reportTypeID = reportID | reportType << 4;
-    }
-    
-    memcpy(cmd->data + length, args, args_len);
-    length += args_len;
-    
-    
-    msg[0].addr = ihid->client->addr;
-    msg[0].flags = 0; //ihid->client->flags & I2C_M_TEN;
-    msg[0].len = length;
-    msg[0].buf = cmd->data;
-    
-    if (data_len > 0) {
-        msg[1].addr = ihid->client->addr;
-        msg[1].flags = I2C_M_RD;
-        msg[1].len = data_len;
-        msg[1].buf = buf_recv;
-        msg_num = 2;
-        //set_bit(I2C_HID_READ_PENDING, &ihid->flags);
-    }
-    
-    ret = i2c_transfer(ihid->client->_dev, msg, msg_num);
-    
-    if (ret != msg_num)
-        return ret < 0 ? ret : -1;
-    
-    ret = 0;
-    
-    return ret;
-}
-
-int VoodooI2C::i2c_hid_set_power(i2c_hid *ihid, int power_state) {
-    int ret;
-    
-    ret = __i2c_hid_command(ihid, &hid_set_power_cmd, 0, NULL, 0, NULL, 0, NULL);
-    if (ret)
-        IOLog("failed to change power settings \n");
-    
-    return ret;
-}
 /*
  ############################################################################################
  ############################################################################################
@@ -659,10 +471,11 @@ void VoodooI2C::stop(IOService * provider) {
     IOLog("%s::stop\n", getName());
     
     for(int i=0;i<=bus_devices_number;i++) {
+        //bus_devices[i]->stop(this);
         OSSafeReleaseNULL(bus_devices[i]);
     }
     
-    /*
+    /*s
         
     _dev->workLoop->removeEventSource(hid_device->interruptSource);
     hid_device->commandGate->release();
@@ -696,7 +509,6 @@ void VoodooI2C::stop(IOService * provider) {
     _dev->provider->close(this);
     OSSafeReleaseNULL(_dev->provider);
 
-    IOFree(hid_device, sizeof(I2CDevice*));
     IOFree(_dev, sizeof(I2CBus));
     
     
@@ -928,12 +740,13 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
     
 }
 
-int VoodooI2C::i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num) {
-    
+int VoodooI2C::i2c_transfer(i2c_msg *msgs, int num) {
+    I2CBus* phys = _dev;
     return phys->commandGate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2C::i2c_transfer_gated), phys, msgs, &num);
 }
 
 int VoodooI2C::i2c_transfer_gated(I2CBus* phys, i2c_msg *msgs, int *num) {
+    
     
     int ret;
     
@@ -980,6 +793,8 @@ void VoodooI2C::interruptOccured(OSObject* owner, IOInterruptEventSource* src, i
 
         _dev->cmd_err |= DW_IC_ERR_TX_ABRT;
         _dev->status = STATUS_IDLE;
+                
+        IOLog("%s::%s::I2C transaction aborted with error 0x%x\n", getName(), _dev->name, _dev->abort_source);
         
         writel(_dev, 0, DW_IC_INTR_MASK);
         goto tx_aborted;
@@ -999,11 +814,6 @@ tx_aborted:
     if ((stat & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || _dev->msg_err) {
         _dev->commandGate->commandWakeup(&_dev->commandComplete);
     }
-}
-
-void VoodooI2C::HIDInterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    IOLog("%s::%s::RMI4 Interrupt occured\n", getName(), _dev->name);
-
 }
 
 
