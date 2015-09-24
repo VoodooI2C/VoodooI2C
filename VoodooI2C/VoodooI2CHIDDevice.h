@@ -22,6 +22,9 @@
 
 #define HID_MAX_DESCRIPTOR_SIZE 4096
 
+#define I2C_HID_PWR_ON 0x00
+#define I2C_HID_PWR_SLEEP 0x01
+
 
 class VoodooI2C;
 
@@ -75,7 +78,7 @@ public:
         __le16 wReportDescLength;
         __le16 wReportDescRegister;
         __le16 wInputRegister;
-        __le16 wMaxInputRegister;
+        __le16 wMaxInputLength;
         __le16 wOutputRegister;
         __le16 wMaxOutputLength;
         __le16 wCommandRegister;
@@ -137,8 +140,19 @@ public:
 .opcode = opcode_, .length = 4,\
 .registerIndex = offsetof(struct i2c_hid_desc, wCommandRegister)
     };
+    struct i2c_hid_cmd hid_reset_cmd = { I2C_HID_CMD(0x01),
+                                        .wait = true
+    };
     
     struct i2c_hid_cmd hid_descr_cmd = { .length = 2};
+    
+    struct i2c_hid_cmd hid_input_cmd = { .length = 2};
+    
+    struct i2c_hid_cmd hid_report_desc_cmd = {
+        .registerIndex = offsetof(struct i2c_hid_desc, wReportDescRegister),
+        .opcode = 0x00,
+        .length =2
+    };
     
     struct i2c_hid_cmd hid_set_power_cmd = { I2C_HID_CMD(0x08) };
     
@@ -166,6 +180,10 @@ public:
     void i2c_hid_get_input(i2c_hid *ihid);
     
     bool i2c_hid_get_report_descriptor(i2c_hid *ihid);
+    
+    int i2c_get_slave_address(I2CDevice* hid_device);
+    
+    bool i2c_hid_hwreset(i2c_hid *ihid);
 
 };
 

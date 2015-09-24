@@ -276,6 +276,8 @@ public:
     void xferInitI2C(I2CBus* _dev);
     void xferMsgI2C(I2CBus* _dev);
     
+    int i2c_master_recv(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *buf, int count);
+    
     void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     
     //static I2CBus* getBusByName(char* name );

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */ = {isa = PBXBuildFile; fileRef = AC45AFEC1A32543B008E6857 /* VoodooI2C.h */; };
 		AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */; };
-		ACF45CFA1A7FDE76005C2BBE /* VoodooI2CDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACF45CF91A7FDE76005C2BBE /* VoodooI2CDevice.cpp */; };
+		ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,7 +18,7 @@
 		AC45AFEC1A32543B008E6857 /* VoodooI2C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2C.h; sourceTree = "<group>"; };
 		AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2C.cpp; sourceTree = "<group>"; };
 		ACF45CF81A7FDDD0005C2BBE /* VoodooI2CHIDDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2CHIDDevice.h; sourceTree = "<group>"; };
-		ACF45CF91A7FDE76005C2BBE /* VoodooI2CDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CDevice.cpp; sourceTree = "<group>"; };
+		ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CHIDDevice.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +55,7 @@
 				AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */,
 				AC45AFEA1A32543B008E6857 /* Supporting Files */,
 				ACF45CF81A7FDDD0005C2BBE /* VoodooI2CHIDDevice.h */,
-				ACF45CF91A7FDE76005C2BBE /* VoodooI2CDevice.cpp */,
+				ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */,
 			);
 			path = VoodooI2C;
 			sourceTree = "<group>";
@@ -146,7 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACF45CFA1A7FDE76005C2BBE /* VoodooI2CDevice.cpp in Sources */,
+				ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */,
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

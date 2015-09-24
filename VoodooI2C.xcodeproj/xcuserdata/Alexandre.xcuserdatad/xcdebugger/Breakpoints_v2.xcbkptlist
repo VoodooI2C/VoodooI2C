@@ -163,13 +163,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VoodooI2C/VoodooI2CDevice.cpp"
-            timestampString = "444591556.178357"
+            filePath = "VoodooI2C/VoodooI2CHIDDevice.cpp"
+            timestampString = "445197773.3507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
-            landmarkName = "VoodooI2CHIDDevice::i2c_hid_fetch_hid_descriptor(i2c_hid *ihid)"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "VoodooI2CHIDDevice::probe(IOService* device)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

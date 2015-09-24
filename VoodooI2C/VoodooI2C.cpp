@@ -238,6 +238,7 @@ void VoodooI2C::readI2C(I2CBus* _dev) {
         
         for (; len > 0 && rx_valid > 0; len--, rx_valid--)
             *buf++ = readl(_dev, DW_IC_DATA_CMD);
+            _dev->rx_outstanding--;
         
         if (len > 0) {
             _dev->status |= STATUS_READ_IN_PROGRESS;
@@ -432,7 +433,7 @@ bool VoodooI2C::start(IOService * provider) {
                         {
                             OSSafeReleaseNULL(bus_devices[bus_devices_number]);
                         } else {
-                            //bus_devices_number++;
+                            bus_devices_number++;
                         }
                     //}
                 }
@@ -564,6 +565,7 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
     nanoseconds_to_absolutetime(10000, &abstime);
     
     sleep = _dev->commandGate->commandSleep(&_dev->commandComplete, abstime);
+    
                                             
     if ( sleep == THREAD_TIMED_OUT ) {
         IOLog("%s::%s::Warning: Timeout waiting for bus ready\n", getName(), _dev->name);
@@ -775,6 +777,25 @@ int VoodooI2C::__i2c_transfer(I2CBus* phys, i2c_msg *msgs, int num) {
     
 }
 
+int VoodooI2C::i2c_master_recv(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *buf, int count) {
+    struct i2c_msg msg;
+    int ret;
+    
+    msg.addr = I2CDevice.addr;
+    msg.flags |= I2C_M_RD;
+    msg.len = count;
+    msg.buf = buf;
+    
+    ret = i2c_transfer(&msg, 1);
+    
+    if (ret) {
+        IOLog("failed!\n");
+    }
+    
+    return (ret == 1) ? count : ret;
+    
+}
+
 void VoodooI2C::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
     UInt32 stat, enabled;
     
@@ -794,7 +815,7 @@ void VoodooI2C::interruptOccured(OSObject* owner, IOInterruptEventSource* src, i
         _dev->cmd_err |= DW_IC_ERR_TX_ABRT;
         _dev->status = STATUS_IDLE;
                 
-        IOLog("%s::%s::I2C transaction aborted with error 0x%x\n", getName(), _dev->name, _dev->abort_source);
+        //IOLog("%s::%s::I2C transaction aborted with error 0x%x\n", getName(), _dev->name, _dev->abort_source);
         
         writel(_dev, 0, DW_IC_INTR_MASK);
         goto tx_aborted;
