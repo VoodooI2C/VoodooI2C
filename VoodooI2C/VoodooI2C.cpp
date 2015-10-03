@@ -416,7 +416,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     writel(_dev, 1, 0x800);
     
-    //we've disabled the private space gate so the bus can actually communicate with devices
+    //we've disabled the private space gate so the bus can actually communicate with devices, test here
     
     disableI2CInt(_dev);
     
