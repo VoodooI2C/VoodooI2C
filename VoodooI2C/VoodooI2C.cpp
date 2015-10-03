@@ -131,7 +131,7 @@ char* VoodooI2C::getMatchedName(IOService* provider) {
 
 int VoodooI2C::handleTxAbortI2C(I2CBus* _dev) {
     
-    IOLog("%s::%s::I2C Transaction error - aborting\n", getName(), _dev->name);
+    IOLog("%s::%s::I2C Transaction error: 0x%08x - aborting\n", getName(), _dev->name, _dev->abort_source);
     return -1;
     
     //TODO: determine exactly what this function does...
@@ -322,7 +322,8 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
-        
+    
+    //Memory allocated for I2CBus struct, test here
     
     _dev->provider = fACPIDevice;
     _dev->name = getMatchedName(fACPIDevice);
@@ -334,7 +335,7 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    
+    //provider opened, test here
     _dev->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!_dev->workLoop) {
         IOLog("%s::%s::Failed to get workloop\n", getName(), _dev->name);
@@ -344,7 +345,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev->workLoop->retain();
     
-    
+    //got workloop, test here
     _dev->interruptSource =
     IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2C::interruptOccured), _dev->provider);
     
@@ -356,6 +357,8 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev->interruptSource->enable();
     
+    //got interupt source, test here
+    
     _dev->commandGate = IOCommandGate::commandGate(this);
     
     if (!_dev->commandGate || (_dev->workLoop->addEventSource(_dev->commandGate) != kIOReturnSuccess)) {
@@ -363,7 +366,11 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
+    //got command gate, test here
+    
     setI2CPowerState(_dev, true);
+    
+    //we've turned the I2C device on, test here
     
     if(!mapI2CMemory(_dev)) {
         IOLog("%s::%s::Failed to map memory\n", getName(), _dev->name);
@@ -374,6 +381,8 @@ bool VoodooI2C::start(IOService * provider) {
         setProperty("memory-length", (UInt32)_dev->mmap->getLength(), 32);
         setProperty("virtual-address", (UInt32)_dev->mmap->getVirtualAddress(), 32);
     }
+    
+    //we've mapped the memory, test here
     
     _dev->clk_rate_khz = 400;
     _dev->sda_hold_time = 0x12c;//_dev->clk_rate_khz*300 + 500000;
@@ -395,19 +404,23 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
+    //configure I2C device properties from ACPI, test here
+    
     if(!initI2CBus(_dev)) {
         IOLog("%s::%s::Failed to initialise I2C Bus\n", getName(), _dev->name);
         VoodooI2C::stop(provider);
         return false;
     }
     
+    //we've initialised the I2C device, test here
+    
     writel(_dev, 1, 0x800);
+    
+    //we've disabled the private space gate so the bus can actually communicate with devices
     
     disableI2CInt(_dev);
     
     
-    
-    //TODO: Interrupt stuff
     
     registerService();
     
@@ -445,6 +458,9 @@ bool VoodooI2C::start(IOService * provider) {
     children->release();
     
     IOLog("number: %d\n",bus_devices_number);
+    
+    
+    //we've successfully mapped devices, test here
     
     
     //if (initHIDDevice(hid_device))
@@ -493,24 +509,31 @@ void VoodooI2C::stop(IOService * provider) {
      
     
     //i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
+    if (_dev->commandGate) {
+        _dev->workLoop->removeEventSource(_dev->commandGate);
+        _dev->commandGate->release();
+        _dev->commandGate = NULL;
+    }
     
-    _dev->workLoop->removeEventSource(_dev->commandGate);
-    _dev->commandGate->release();
-    _dev->commandGate = NULL;
+    if (_dev->interruptSource) {
+        _dev->workLoop->removeEventSource(_dev->interruptSource);
+        _dev->interruptSource->disable();
+        _dev->interruptSource = NULL;
+    }
     
-    _dev->workLoop->removeEventSource(_dev->interruptSource);
-    _dev->interruptSource->disable();
-    _dev->interruptSource = NULL;
+    if (_dev->workLoop) {
+        _dev->workLoop->release();
+        _dev->workLoop = NULL;
+    }
     
-    _dev->workLoop->release();
-    _dev->workLoop = NULL;
-    
-    setI2CPowerState(_dev, false);
+    if(_dev) {
+        setI2CPowerState(_dev, false);
 
-    _dev->provider->close(this);
-    OSSafeReleaseNULL(_dev->provider);
+        _dev->provider->close(this);
+        OSSafeReleaseNULL(_dev->provider);
 
-    IOFree(_dev, sizeof(I2CBus));
+        IOFree(_dev, sizeof(I2CBus));
+    }
     
     
     super::stop(provider);

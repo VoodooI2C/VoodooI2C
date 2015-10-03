@@ -9,6 +9,7 @@
 #ifndef VoodooI2C_VoodooI2CHIDDevice_h
 #define VoodooI2C_VoodooI2CHIDDevice_h
 
+
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
 #include <IOKit/IOWorkLoop.h>
@@ -16,6 +17,7 @@
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include <IOKit/IOLocks.h>
 #include <IOKit/IOCommandGate.h>
+#include <IOKit/IOTimerEventSource.h>
 
 #define __le16 UInt16
 #define __le32 UInt32
@@ -54,6 +56,8 @@ public:
         IOInterruptEventSource *interruptSource;
         
         IOACPIPlatformDevice* provider;
+        
+        IOTimerEventSource* timerSource;
         
         char* name;
         
@@ -177,7 +181,7 @@ public:
     
     void InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     
-    void i2c_hid_get_input(i2c_hid *ihid);
+    void i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender);
     
     bool i2c_hid_get_report_descriptor(i2c_hid *ihid);
     
