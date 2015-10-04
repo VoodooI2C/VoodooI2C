@@ -11,8 +11,8 @@ Support for i2c-hid touchscreens, trackpads and sensor hubs (which control accel
 # Supported Devices
 The following devices are confirmed to work with the current iteration of VoodooI2C
 
-* Synaptics 7500 Clearpad
-* Atmel 1000
+* Synaptics 7500 Clearpad touchscreen
+* Atmel 1000 touchscreen
 
 Support for the Surface Pro 3 touchscreen is more than likely guaranteed (we have not yet been able to test it)
 
@@ -20,7 +20,7 @@ Support for the Surface Pro 3 touchscreen is more than likely guaranteed (we hav
 
 We are always looking for people with computers that have I2C controllers to help ensure these drivers will work for them.
 
-The first step to setting up debugging is to open up IORegExplorer (v2.1) and search for `INT33C2` and `INT33C3`. If you find something, great! Contact @alexandred at http://github.com/alexandred/VoodooI2C and we'll see what kind of support your device will have.
+The first step to setting up debugging is to open up IORegExplorer (v2.1) and search for `INT33C2` and `INT33C3`. If you find something, great! Contact @alexandred at http://gitter.im/alexandred/VoodooI2C and we'll see what kind of support your device will have.
 
 If not (and you still suspect that you have I2C devices), you may need to patch your DSDT to ensure that OS X can properly enumerate the devices. Again, you can visit the gitter chatroom to get more help with this.
 
