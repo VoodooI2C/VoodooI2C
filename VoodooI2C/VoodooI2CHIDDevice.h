@@ -29,12 +29,19 @@
 
 
 class VoodooI2C;
+class VoodooHIDWrapper;
 
 class VoodooI2CHIDDevice : public IOService
 {
     typedef IOService super;
     OSDeclareDefaultStructors(VoodooI2CHIDDevice);
-    
+
+private:
+	VoodooHIDWrapper* _wrapper;
+
+	void initialize_wrapper(void);
+	void destroy_wrapper(void);
+
 protected:
     VoodooI2C* _controller;
     

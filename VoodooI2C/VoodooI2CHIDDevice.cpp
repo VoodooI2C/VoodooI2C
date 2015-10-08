@@ -5,8 +5,10 @@
 //  Created by Alexandre on 02/02/2015.
 //  Copyright (c) 2015 Alexandre Daoud. All rights reserved.
 //
+
 #include "VoodooI2CHIDDevice.h"
 #include "VoodooI2C.h"
+#include "VoodooHIDWrapper.h"
 
 OSDefineMetaClassAndStructors(VoodooI2CHIDDevice, IOService);
 
@@ -60,6 +62,8 @@ bool VoodooI2CHIDDevice::probe(IOService* device) {
 void VoodooI2CHIDDevice::stop(IOService* device) {
     
     IOLog("I2C HID Device is stopping\n");
+    
+    destroy_wrapper();
     
     if (hid_device->timerSource){
         hid_device->timerSource->cancelTimeout();
@@ -181,7 +185,8 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
      */
     
     i2c_hid_get_report_descriptor(ihid);
-    
+
+    initialize_wrapper();
     registerService();
     
     return 0;
@@ -190,6 +195,28 @@ err:
     i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
     IOFree(ihid, sizeof(i2c_hid));
     return ret;
+}
+
+void VoodooI2CHIDDevice::initialize_wrapper(void) {
+    destroy_wrapper();
+
+    _wrapper = new VoodooHIDWrapper;
+    if (_wrapper->init()) {
+        _wrapper->attach(this);
+        _wrapper->start(this);
+    }
+    else {
+        _wrapper->release();
+        _wrapper = NULL;
+    }
+}
+
+void VoodooI2CHIDDevice::destroy_wrapper(void) {
+    if (_wrapper != NULL) {
+        _wrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        _wrapper->release();
+        _wrapper = NULL;
+    }
 }
 
 int VoodooI2CHIDDevice::i2c_hid_acpi_pdata(i2c_hid *ihid) {
@@ -386,8 +413,15 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     
     ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
     
-    for(int i = UInt16(ihid->hdesc.wMaxInputLength) -1; i >=0; i-- )
-        IOLog("Report descriptor: 0x%x\n", (UInt8) rdesc[i]);
+//    for(int i = UInt16(ihid->hdesc.wMaxInputLength) -1; i >=0; i-- )
+//        IOLog("Report descriptor: 0x%x\n", (UInt8) rdesc[i]);
+
+    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, rsize);
+    buffer->writeBytes(0, rdesc, rsize);
+
+    IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
+    if (err != kIOReturnSuccess)
+        IOLog("Error handling report: 0x%.8x\n", err);
 
     IOFree(rdesc, rsize);
     

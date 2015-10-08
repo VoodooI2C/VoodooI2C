@@ -438,7 +438,7 @@ bool VoodooI2C::start(IOService * provider) {
             OSIterator *iter = OSCollectionIterator::withCollection(set);
             if (iter != 0) {
                 while( (child = (IORegistryEntry*)iter->getNextObject()) ) {
-                    //if (!strcmp((getMatchedName((IOService*)child)),(char*)"SYNA7500")){
+                    if (strcmp((getMatchedName((IOService*)child)),(char*)"DLL05E3")){
                         bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         if ( !bus_devices[bus_devices_number]               ||
                             !bus_devices[bus_devices_number]->init()       ||
@@ -448,7 +448,7 @@ bool VoodooI2C::start(IOService * provider) {
                         } else {
                             bus_devices_number++;
                         }
-                    //}
+                    }
                 }
                 iter->release();
             }
@@ -461,8 +461,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     
     //we've successfully mapped devices, test here
-    
-    
+	
     //if (initHIDDevice(hid_device))
     //    IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
     
