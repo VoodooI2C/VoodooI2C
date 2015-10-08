@@ -30,6 +30,7 @@
 
 class VoodooI2C;
 class VoodooHIDWrapper;
+class IOBufferMemoryDescriptor;
 
 class VoodooI2CHIDDevice : public IOService
 {
@@ -37,10 +38,10 @@ class VoodooI2CHIDDevice : public IOService
     OSDeclareDefaultStructors(VoodooI2CHIDDevice);
 
 private:
-	VoodooHIDWrapper* _wrapper;
+    VoodooHIDWrapper* _wrapper;
 
-	void initialize_wrapper(void);
-	void destroy_wrapper(void);
+    void initialize_wrapper(void);
+    void destroy_wrapper(void);
 
 protected:
     VoodooI2C* _controller;
@@ -191,6 +192,8 @@ public:
     void i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender);
     
     bool i2c_hid_get_report_descriptor(i2c_hid *ihid);
+    
+    void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     

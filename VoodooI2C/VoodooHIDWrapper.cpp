@@ -31,10 +31,10 @@ IOReturn VoodooHIDWrapper::setProperties(OSObject *properties) {
 }
 
 IOReturn VoodooHIDWrapper::newReportDescriptor(IOMemoryDescriptor **descriptor) const {
-    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(VoodooI2CHIDDevice::i2c_hid_desc));
+    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, GetOwner(this)->ihid->hdesc.wReportDescLength);
 
     if (buffer == NULL) return kIOReturnNoResources;
-    buffer->writeBytes(0, &GetOwner(this)->ihid->hdesc, sizeof(VoodooI2CHIDDevice::i2c_hid_desc));
+    GetOwner(this)->write_report_descriptor_to_buffer(buffer);
     *descriptor = buffer;
     return kIOReturnSuccess;
 }

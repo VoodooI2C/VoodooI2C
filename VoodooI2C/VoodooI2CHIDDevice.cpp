@@ -203,7 +203,6 @@ void VoodooI2CHIDDevice::initialize_wrapper(void) {
     _wrapper = new VoodooHIDWrapper;
     if (_wrapper->init()) {
         _wrapper->attach(this);
-        _wrapper->start(this);
     }
     else {
         _wrapper->release();
@@ -479,6 +478,25 @@ bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
     return 0;
     
 };
+
+void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
+    UInt rsize;
+    int ret;
+    
+    IOLog("reg: 0x%x\n",ihid->hdesc.wReportDescRegister);
+    
+    rsize = UInt16(ihid->hdesc.wReportDescLength);
+    
+    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
+    
+    i2c_hid_hwreset(ihid);
+    
+    ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
+
+    buffer->writeBytes(0, rdesc, rsize);
+
+    IOFree(rdesc, rsize);
+}
 
 bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
     int ret;
