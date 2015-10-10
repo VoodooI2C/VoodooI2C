@@ -426,6 +426,8 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     if (err != kIOReturnSuccess)
         IOLog("Error handling report: 0x%.8x\n", err);
 
+    buffer->release();
+
     IOFree(rdesc, rsize);
     
     hid_device->timerSource->setTimeoutMS(100);
