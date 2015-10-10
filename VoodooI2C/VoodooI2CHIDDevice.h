@@ -158,7 +158,10 @@ public:
     
     struct i2c_hid_cmd hid_descr_cmd = { .length = 2};
     
-    struct i2c_hid_cmd hid_input_cmd = { .length = 2};
+    struct i2c_hid_cmd hid_input_cmd = {
+        .registerIndex = offsetof(struct i2c_hid_desc, wInputRegister),
+        .length = 2
+    };
     
     struct i2c_hid_cmd hid_report_desc_cmd = {
         .registerIndex = offsetof(struct i2c_hid_desc, wReportDescRegister),
