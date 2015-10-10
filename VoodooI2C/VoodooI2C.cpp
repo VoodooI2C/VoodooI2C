@@ -564,7 +564,7 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
     AbsoluteTime abstime;
     IOReturn sleep;
     
-    IOLog("%s::%s::msgs: %d\n", getName(), _dev->name, num);
+//    IOLog("%s::%s::msgs: %d\n", getName(), _dev->name, num);
     
     
     _dev->msgs = msgs;
@@ -595,7 +595,7 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
         ret = -1;
         goto done;
     } else {
-        IOLog("%s::%s::Woken up\n", getName(), _dev->name);
+//        IOLog("%s::%s::Woken up\n", getName(), _dev->name);
     }
     
     enableI2CDevice(_dev, false);
@@ -774,9 +774,9 @@ int VoodooI2C::i2c_transfer_gated(I2CBus* phys, i2c_msg *msgs, int *num) {
     
     int ret;
     
-    for (ret = 0 ; ret < *num; ret++ ) {
-        IOLog("master_xfer[%d] %s, addr=0x%02x, len=%d%s\n", ret, (msgs[ret].flags & I2C_M_RD) ? "R" : "W", msgs[ret].addr, msgs[ret].len, (msgs[ret].flags & I2C_M_RECV_LEN) ? "+" : "");
-    }
+//    for (ret = 0 ; ret < *num; ret++ ) {
+//        IOLog("master_xfer[%d] %s, addr=0x%02x, len=%d%s\n", ret, (msgs[ret].flags & I2C_M_RD) ? "R" : "W", msgs[ret].addr, msgs[ret].len, (msgs[ret].flags & I2C_M_RECV_LEN) ? "+" : "");
+//    }
     
     ret = __i2c_transfer(phys, msgs, *num);
 

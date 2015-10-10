@@ -406,7 +406,7 @@ void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSourc
 }
 
 void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender) {
-    IOLog("getting input\n");
+//    IOLog("getting input\n");
     UInt rsize;
     int ret;
     
@@ -415,9 +415,11 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
     
     ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
-    
-//    for(int i = UInt16(ihid->hdesc.wMaxInputLength) -1; i >=0; i-- )
-//        IOLog("Report descriptor: 0x%x\n", (UInt8) rdesc[i]);
+
+    IOLog("===Input===\n");
+    for (int i = 0; i < rsize; i++)
+        IOLog("0x%02x ", (UInt8) rdesc[i]);
+    IOLog("\n===Input===\n");
 
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, rsize);
     buffer->writeBytes(0, rdesc, rsize);
