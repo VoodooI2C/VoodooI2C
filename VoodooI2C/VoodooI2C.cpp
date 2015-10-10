@@ -461,7 +461,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     
     //we've successfully mapped devices, test here
-	
+    
     //if (initHIDDevice(hid_device))
     //    IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
     

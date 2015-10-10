@@ -200,11 +200,15 @@ err:
 void VoodooI2CHIDDevice::initialize_wrapper(void) {
     destroy_wrapper();
 
+    IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     _wrapper = new VoodooHIDWrapper;
     if (_wrapper->init()) {
+        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
+        _wrapper->start(this);
     }
     else {
+        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->release();
         _wrapper = NULL;
     }
@@ -452,7 +456,7 @@ bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
     ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
     
     if (!ret){
-        IOLog("it worked!");
+        IOLog("it worked!\n");
     }
     
     
@@ -470,8 +474,10 @@ bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
      
     */
     
-    for(int i = UInt16(ihid->hdesc.wReportDescLength) -1; i >=0; i-- )
-        IOLog("Report descriptor: 0x%x\n", (UInt8) rdesc[i]);
+    IOLog("===Report Descriptor===\n");
+    for (int i = 0; i < UInt16(ihid->hdesc.wReportDescLength); i++)
+        IOLog("0x%02x\n", (UInt8) rdesc[i]);
+    IOLog("===Report Descriptor===\n");
     
     IOFree(rdesc, rsize);
     
@@ -483,7 +489,7 @@ void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescrip
     UInt rsize;
     int ret;
     
-    IOLog("reg: 0x%x\n",ihid->hdesc.wReportDescRegister);
+    IOLog("Report descriptor register: 0x%x\n",ihid->hdesc.wReportDescRegister);
     
     rsize = UInt16(ihid->hdesc.wReportDescLength);
     
@@ -493,7 +499,11 @@ void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescrip
     
     ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
 
+    if (!ret)
+        IOLog("Report descriptor was fetched\n");
+
     buffer->writeBytes(0, rdesc, rsize);
+    IOLog("Report Descriptor written to buffer (%d)\n", rsize);
 
     IOFree(rdesc, rsize);
 }
