@@ -5,6 +5,9 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 
+// #define IGNORED_DEVICE "DLL05E3"
+// #define IGNORED_DEVICE "SYNA7500"
+
 /*
 ############################################################################################
 ############################################################################################
@@ -438,7 +441,9 @@ bool VoodooI2C::start(IOService * provider) {
             OSIterator *iter = OSCollectionIterator::withCollection(set);
             if (iter != 0) {
                 while( (child = (IORegistryEntry*)iter->getNextObject()) ) {
-                    //if (!strcmp((getMatchedName((IOService*)child)),(char*)"SYNA7500")){
+#ifdef IGNORED_DEVICE
+                    if (strcmp((getMatchedName((IOService*)child)),(char*)IGNORED_DEVICE)){
+#endif
                         bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         if ( !bus_devices[bus_devices_number]               ||
                             !bus_devices[bus_devices_number]->init()       ||
@@ -448,7 +453,9 @@ bool VoodooI2C::start(IOService * provider) {
                         } else {
                             bus_devices_number++;
                         }
-                    //}
+#ifdef IGNORED_DEVICE
+                    }
+#endif
                 }
                 iter->release();
             }
@@ -461,7 +468,6 @@ bool VoodooI2C::start(IOService * provider) {
     
     
     //we've successfully mapped devices, test here
-    
     
     //if (initHIDDevice(hid_device))
     //    IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
@@ -565,7 +571,7 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
     AbsoluteTime abstime;
     IOReturn sleep;
     
-    IOLog("%s::%s::msgs: %d\n", getName(), _dev->name, num);
+//    IOLog("%s::%s::msgs: %d\n", getName(), _dev->name, num);
     
     
     _dev->msgs = msgs;
@@ -596,7 +602,7 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
         ret = -1;
         goto done;
     } else {
-        IOLog("%s::%s::Woken up\n", getName(), _dev->name);
+//        IOLog("%s::%s::Woken up\n", getName(), _dev->name);
     }
     
     enableI2CDevice(_dev, false);
@@ -775,9 +781,9 @@ int VoodooI2C::i2c_transfer_gated(I2CBus* phys, i2c_msg *msgs, int *num) {
     
     int ret;
     
-    for (ret = 0 ; ret < *num; ret++ ) {
-        IOLog("master_xfer[%d] %s, addr=0x%02x, len=%d%s\n", ret, (msgs[ret].flags & I2C_M_RD) ? "R" : "W", msgs[ret].addr, msgs[ret].len, (msgs[ret].flags & I2C_M_RECV_LEN) ? "+" : "");
-    }
+//    for (ret = 0 ; ret < *num; ret++ ) {
+//        IOLog("master_xfer[%d] %s, addr=0x%02x, len=%d%s\n", ret, (msgs[ret].flags & I2C_M_RD) ? "R" : "W", msgs[ret].addr, msgs[ret].len, (msgs[ret].flags & I2C_M_RECV_LEN) ? "+" : "");
+//    }
     
     ret = __i2c_transfer(phys, msgs, *num);
 
