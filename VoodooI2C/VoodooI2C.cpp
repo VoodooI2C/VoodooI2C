@@ -442,7 +442,7 @@ bool VoodooI2C::start(IOService * provider) {
             if (iter != 0) {
                 while( (child = (IORegistryEntry*)iter->getNextObject()) ) {
 #ifdef IGNORED_DEVICE
-                    if (!strcmp((getMatchedName((IOService*)child)),(char*)IGNORED_DEVICE)){
+                    if (strcmp((getMatchedName((IOService*)child)),(char*)IGNORED_DEVICE)){
 #endif
                         bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         if ( !bus_devices[bus_devices_number]               ||
