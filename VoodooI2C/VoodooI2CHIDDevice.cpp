@@ -173,7 +173,7 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     }
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
-    hid_device->timerSource->setTimeoutMS(100);
+    hid_device->timerSource->setTimeoutMS(10);
      /*
      
      hid_device->commandGate = IOCommandGate::commandGate(this);
@@ -416,13 +416,25 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     
     ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
 
-    IOLog("===Input===\n");
-    for (int i = 0; i < rsize; i++)
-        IOLog("0x%02x ", (UInt8) rdesc[i]);
-    IOLog("\n===Input===\n");
+//    IOLog("===Input (%d)===\n", rsize);
+//    for (int i = 0; i < rsize; i++)
+//        IOLog("0x%02x ", (UInt8) rdesc[i]);
+//    IOLog("\n");
 
-    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, rsize);
-    buffer->writeBytes(0, rdesc, rsize);
+    int return_size = rdesc[0] | rdesc[1] << 8;
+    if (return_size == 0) {
+        /* host or device initiated RESET completed */
+        // test/clear bit?
+        hid_device->timerSource->setTimeoutMS(10);
+        return;
+    }
+
+    if (return_size > rsize) {
+        IOLog("%s: Incomplete report %d/%d\n", __func__, rsize, return_size);
+    }
+
+    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, return_size);
+    buffer->writeBytes(0, rdesc + 2, return_size - 2);
 
     IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
     if (err != kIOReturnSuccess)
@@ -432,7 +444,7 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
 
     IOFree(rdesc, rsize);
     
-    hid_device->timerSource->setTimeoutMS(100);
+    hid_device->timerSource->setTimeoutMS(10);
 }
 
 bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
