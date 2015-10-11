@@ -5,6 +5,9 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 
+// #define IGNORED_DEVICE "DLL05E3"
+// #define IGNORED_DEVICE "SYNA7500"
+
 /*
 ############################################################################################
 ############################################################################################
@@ -438,7 +441,9 @@ bool VoodooI2C::start(IOService * provider) {
             OSIterator *iter = OSCollectionIterator::withCollection(set);
             if (iter != 0) {
                 while( (child = (IORegistryEntry*)iter->getNextObject()) ) {
-                    if (strcmp((getMatchedName((IOService*)child)),(char*)"DLL05E3")){
+#ifdef IGNORED_DEVICE
+                    if (!strcmp((getMatchedName((IOService*)child)),(char*)IGNORED_DEVICE)){
+#endif
                         bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         if ( !bus_devices[bus_devices_number]               ||
                             !bus_devices[bus_devices_number]->init()       ||
@@ -448,7 +453,9 @@ bool VoodooI2C::start(IOService * provider) {
                         } else {
                             bus_devices_number++;
                         }
+#ifdef IGNORED_DEVICE
                     }
+#endif
                 }
                 iter->release();
             }
