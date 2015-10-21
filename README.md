@@ -11,10 +11,9 @@ Support for i2c-hid touchscreens, trackpads and sensor hubs (which control accel
 # Supported Devices
 The following devices are confirmed to work with the current iteration of VoodooI2C
 
-* Synaptics 7500 Clearpad touchscreen
-* Atmel 1000 touchscreen
-
-Support for the Surface Pro 3 touchscreen is more than likely guaranteed (we have not yet been able to test it)
+* Synaptics 7500 Clearpad touchscreen (Dell Venue Pro 11) - only partially
+* Atmel 1000 touchscreen (Dell XPS 12)
+* NTRG 0001 touchscreen (Surface Pro 3)
 
 # Helping out and testing
 
