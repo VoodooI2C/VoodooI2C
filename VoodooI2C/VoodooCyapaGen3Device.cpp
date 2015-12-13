@@ -11,7 +11,7 @@
 #include "VoodooI2C.h"
 #include "VoodooHIDWrapper.h"
 
-OSDefineMetaClassAndStructors(VoodooI2CHIDDevice, IOService);
+OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, IOService);
 
 #ifndef ABS32
 #define ABS32
@@ -25,6 +25,11 @@ inline int32_t abs(int32_t num){
 
 typedef unsigned char BYTE;
 
+#define REPORTID_FEATURE        0x02
+#define REPORTID_RELATIVE_MOUSE 0x04
+#define REPORTID_TOUCHPAD       0x05
+#define REPORTID_KEYBOARD       0x07
+
 #define MOUSE_BUTTON_1     0x01
 #define MOUSE_BUTTON_2     0x02
 #define MOUSE_BUTTON_3     0x04
@@ -33,6 +38,23 @@ typedef unsigned char BYTE;
 #define KBD_LGUI_BIT         8
 
 #define KBD_KEY_CODES        6
+
+typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
+{
+    
+    BYTE        ReportID;
+    
+    BYTE        Button;
+    
+    BYTE        XValue;
+    
+    BYTE        YValue;
+    
+    BYTE        WheelPosition;
+    
+    BYTE		HWheelPosition;
+    
+} CyapaRelativeMouseReport;
 
 int VoodooI2CCyapaGen3Device::distancesq(int delta_x, int delta_y){
     return (delta_x * delta_x) + (delta_y*delta_y);
@@ -377,10 +399,8 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     update_relative_mouse(sc->buttonmask, sc->dx, sc->dy, sc->scrolly, sc->scrollx);
 }
 
-void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, struct cyapa_regs *regs, int tickinc){
+void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc){
     int nfingers;
-    int afingers;	/* actual fingers after culling */
-    int i;
     
     if ((regs->stat & CYAPA_STAT_RUNNING) == 0) {
         regs->fngr = 0;
@@ -455,7 +475,7 @@ bool VoodooI2CCyapaGen3Device::probe(IOService* device) {
     return 0;
 }
 
-void VoodooI2CHIDDevice::stop(IOService* device) {
+void VoodooI2CCyapaGen3Device::stop(IOService* device) {
     
     IOLog("I2C HID Device is stopping\n");
     
@@ -474,12 +494,6 @@ void VoodooI2CHIDDevice::stop(IOService* device) {
     hid_device->workLoop->release();
     hid_device->workLoop = NULL;
     
-    
-    
-    
-    i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    IOFree(ihid, sizeof(i2c_hid));
-    
     IOFree(hid_device, sizeof(I2CDevice));
     
     //hid_device->provider->close(this);
@@ -488,7 +502,7 @@ void VoodooI2CHIDDevice::stop(IOService* device) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void VoodooI2CHIDDevice::detach( IOService * provider )
+void VoodooI2CCyapaGen3Device::detach( IOService * provider )
 {
     assert(_controller == provider);
     _controller->release();
@@ -497,35 +511,19 @@ void VoodooI2CHIDDevice::detach( IOService * provider )
     super::detach(provider);
 }
 
-int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
+int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     int ret;
     UInt16 hidRegister;
     
-    ihid = (i2c_hid*)IOMalloc(sizeof(i2c_hid));
+    uint8_t bl_exit[] = {
+        0x00, 0xff, 0xa5, 0x00, 0x01,
+        0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
     
-    ihid->client = hid_device;
+    cyapa_boot_regs boot;
     
-    ret = i2c_hid_acpi_pdata(ihid);
-    
-    ihid->client = hid_device;
-    
-    
-    hidRegister = ihid->pdata.hid_descriptor_address;
-    
-    ihid->wHIDDescRegister = (__le16)hidRegister;
-    
-    ret = i2c_hid_alloc_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    if (ret < 0)
-        goto err;
-    
-    //ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
-    //if(ret<0)
-    //   goto err;
-    
-    
-    ret = i2c_hid_fetch_hid_descriptor(ihid);
-    if (ret < 0)
-        goto err;
+    readI2C(0x00, sizeof(boot), (uint8_t *)&boot);
+    if ((boot.stat & CYAPA_STAT_RUNNING) == 0)
+        writeI2C(0x00, sizeof(bl_exit), bl_exit);
     
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
@@ -566,20 +564,16 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
      }
      */
     
-    i2c_hid_get_report_descriptor(ihid);
-    
     initialize_wrapper();
     registerService();
     
     return 0;
     
 err:
-    i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    IOFree(ihid, sizeof(i2c_hid));
     return ret;
 }
 
-void VoodooI2CHIDDevice::initialize_wrapper(void) {
+void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
@@ -596,7 +590,7 @@ void VoodooI2CHIDDevice::initialize_wrapper(void) {
     }
 }
 
-void VoodooI2CHIDDevice::destroy_wrapper(void) {
+void VoodooI2CCyapaGen3Device::destroy_wrapper(void) {
     if (_wrapper != NULL) {
         _wrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
         _wrapper->release();
@@ -604,43 +598,15 @@ void VoodooI2CHIDDevice::destroy_wrapper(void) {
     }
 }
 
-int VoodooI2CHIDDevice::i2c_hid_acpi_pdata(i2c_hid *ihid) {
-    
-    UInt32 guid_1 = 0x3CDFF6F7;
-    UInt32 guid_2 = 0x45554267;
-    UInt32 guid_3 = 0x0AB305AD;
-    UInt32 guid_4 = 0xDE38893D;
-    
-    
-    OSObject *result = NULL;
-    OSObject *params[3];
-    char buffer[16];
-    
-    memcpy(buffer, &guid_1, 4);
-    memcpy(buffer + 4, &guid_2, 4);
-    memcpy(buffer + 8, &guid_3, 4);
-    memcpy(buffer + 12, &guid_4, 4);
-    
-    
-    params[0] = OSData::withBytes(buffer, 16);
-    params[1] = OSNumber::withNumber(0x1, 8);
-    params[2] = OSNumber::withNumber(0x1, 8);
-    
-    ihid->client->provider->evaluateObject("_DSM", &result, params, 3);
-    
-    OSNumber* number = OSDynamicCast(OSNumber, result);
-    
-    ihid->pdata.hid_descriptor_address = number->unsigned32BitValue();
-    
-    number->release();
-    params[0]->release();
-    params[1]->release();
-    params[2]->release();
-    
-    return 0;
+SInt32 VoodooI2CCyapaGen3Device::readI2C(uint8_t reg, size_t len, uint8_t *values){
+    return _controller->i2c_smbus_read_i2c_block_data(_controller->_dev, 0x67, reg, len, values);
 }
 
-int VoodooI2CHIDDevice::i2c_get_slave_address(I2CDevice* hid_device){
+SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *values){
+    return _controller->i2c_smbus_write_i2c_block_data(_controller->_dev, 0x67, reg, len, values);
+}
+
+int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
     OSObject* result = NULL;
     
     hid_device->provider->evaluateObject("_CRS", &result);
@@ -655,270 +621,162 @@ int VoodooI2CHIDDevice::i2c_get_slave_address(I2CDevice* hid_device){
     
 }
 
-int VoodooI2CHIDDevice::i2c_hid_alloc_buffers(i2c_hid *ihid, UInt report_size) {
-    int args_len = sizeof(UInt8) + sizeof(UInt16) + sizeof(UInt16) + report_size;
-    
-    ihid->inbuf = (char *)IOMalloc(report_size);
-    ihid->argsbuf = (char *)IOMalloc(report_size);
-    ihid->cmdbuf = (char *)IOMalloc(sizeof(union command) + args_len);
-    
-    if(!ihid->inbuf || !ihid->argsbuf || !ihid->cmdbuf) {
-        i2c_hid_free_buffers(ihid, report_size);
-        return -1;
-    }
-    
-    ihid->bufsize = report_size;
-    
-    return 0;
-}
 
-void VoodooI2CHIDDevice::i2c_hid_free_buffers(i2c_hid *ihid, UInt report_size) {
-    IOFree(ihid->inbuf, report_size);
-    IOFree(ihid->argsbuf, report_size);
-    IOFree(ihid->cmdbuf, sizeof(UInt8) + sizeof(UInt16) + sizeof(UInt16) + report_size);
-    ihid->inbuf = NULL;
-    ihid->cmdbuf = NULL;
-    ihid->argsbuf = NULL;
-    ihid->bufsize = 0;
-}
-
-int VoodooI2CHIDDevice::i2c_hid_fetch_hid_descriptor(i2c_hid *ihid) {
-    struct i2c_hid_desc *hdesc = &ihid->hdesc;
-    UInt dsize;
-    int ret;
-    
-    ret = i2c_hid_command(ihid, &hid_descr_cmd, ihid->hdesc_buffer, sizeof(struct i2c_hid_desc));
-    
-    if (ret)
-    {
-        IOLog("%s::%s::hid_descr_cmd failed\n", getName(), hid_device->name);
-        return -1;
-    }
-    
-    if((UInt16)(hdesc->bcdVersion) != 0x0100) {
-        IOLog("%s::%s::Unexpected HID descriptor bcdVersion %x\n", getName(), hid_device->name, (UInt16)(hdesc->bcdVersion));
-        return -1;
-    }
-    
-    //dsize = (UInt16)(hdesc->wHIDDescLength);
-    
-    //if (dsize != sizeof(struct i2c_hid_desc)) {
-    //    IOLog("%s::%s::weird size of HID descriptor\n", getName(), _dev->name);
-    //    return -1;
-    //}
-    
-    return 0;
-}
-
-int VoodooI2CHIDDevice::i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, unsigned char *buf_recv, int data_len) {
-    return __i2c_hid_command(ihid, command, 0, 0, NULL, 0, buf_recv, data_len);
-}
-
-int VoodooI2CHIDDevice::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len) {
-    union command *cmd = (union command *)ihid->cmdbuf;
-    int ret;
-    struct i2c_msg msg[2];
-    int msg_num = 1;
-    
-    int length = command->length;
-    bool wait = command->wait;
-    UInt registerIndex = command->registerIndex;
-    
-    if (command == &hid_descr_cmd) {
-        cmd->c.reg = ihid->wHIDDescRegister;
-    } else {
-        cmd->data[0] = ihid->hdesc_buffer[registerIndex];
-        cmd->data[1] = ihid->hdesc_buffer[registerIndex + 1];
-    }
-    
-    if (length > 2) {
-        cmd->c.opcode = command->opcode;
-        cmd->c.reportTypeID = reportID | reportType << 4;
-    }
-    
-    memcpy(cmd->data + length, args, args_len);
-    length += args_len;
-    
-    
-    msg[0].addr = ihid->client->addr;
-    msg[0].flags = 0; //ihid->client->flags & I2C_M_TEN;
-    msg[0].len = length;
-    msg[0].buf = cmd->data;
-    
-    if (data_len > 0) {
-        msg[1].addr = ihid->client->addr;
-        msg[1].flags = I2C_M_RD;
-        msg[1].len = data_len;
-        msg[1].buf = buf_recv;
-        msg_num = 2;
-        hid_device->reading = true;
-    }
-    
-    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)msg, msg_num);
-    
-    if (data_len > 0)
-        hid_device->reading = false;
-    
-    if (ret != msg_num)
-        return ret < 0 ? ret : -1;
-    
-    ret = 0;
-    
-    return ret;
-}
-
-int VoodooI2CHIDDevice::i2c_hid_set_power(i2c_hid *ihid, int power_state) {
-    int ret;
-    
-    ret = __i2c_hid_command(ihid, &hid_set_power_cmd, power_state, NULL, 0, NULL, 0, NULL);
-    if (ret)
-        IOLog("failed to change power settings \n");
-    
-    return ret;
-}
-
-
-void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
+void VoodooI2CCyapaGen3Device::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     IOLog("interrupt\n");
     if (hid_device->reading)
         return;
-    
     //i2c_hid_get_input(ihid);
-    
 }
 
-void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender) {
-    //    IOLog("getting input\n");
-    UInt rsize;
-    int ret;
+void VoodooI2CCyapaGen3Device::update_relative_mouse(uint8_t button,
+                                                     uint8_t x, uint8_t y, uint8_t wheelPosition, uint8_t wheelHPosition){
+    _CYAPA_RELATIVE_MOUSE_REPORT report;
+    report.ReportID = REPORTID_RELATIVE_MOUSE;
+    report.Button = button;
+    report.XValue = x;
+    report.YValue = y;
+    report.WheelPosition = wheelPosition;
+    report.HWheelPosition = wheelHPosition;
     
-    rsize = UInt16(ihid->hdesc.wMaxInputLength);
-    
-    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
-    
-    ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
-    
-    //    IOLog("===Input (%d)===\n", rsize);
-    //    for (int i = 0; i < rsize; i++)
-    //        IOLog("0x%02x ", (UInt8) rdesc[i]);
-    //    IOLog("\n");
-    
-    int return_size = rdesc[0] | rdesc[1] << 8;
-    if (return_size == 0) {
-        /* host or device initiated RESET completed */
-        // test/clear bit?
-        hid_device->timerSource->setTimeoutMS(10);
-        return;
-    }
-    
-    if (return_size > rsize) {
-        IOLog("%s: Incomplete report %d/%d\n", __func__, rsize, return_size);
-    }
-    
-    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, return_size);
-    buffer->writeBytes(0, rdesc + 2, return_size - 2);
+    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
+    buffer->writeBytes(0, &report, sizeof(report));
     
     IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
     if (err != kIOReturnSuccess)
         IOLog("Error handling report: 0x%.8x\n", err);
     
     buffer->release();
-    
-    IOFree(rdesc, rsize);
-    
     hid_device->timerSource->setTimeoutMS(10);
 }
 
-bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
-    UInt rsize;
-    int ret;
+void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
     
-    IOLog("reg: 0x%x\n",ihid->hdesc.wReportDescRegister);
+    unsigned char cyapadesc[] = {
+        //
+        // Relative mouse report starts here
+        //
+        0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
+        0x09, 0x02,                         // USAGE (Mouse)
+        0xa1, 0x01,                         // COLLECTION (Application)
+        0x85, REPORTID_RELATIVE_MOUSE,      //   REPORT_ID (Mouse)
+        0x09, 0x01,                         //   USAGE (Pointer)
+        0xa1, 0x00,                         //   COLLECTION (Physical)
+        0x05, 0x09,                         //     USAGE_PAGE (Button)
+        0x19, 0x01,                         //     USAGE_MINIMUM (Button 1)
+        0x29, 0x05,                         //     USAGE_MAXIMUM (Button 5)
+        0x15, 0x00,                         //     LOGICAL_MINIMUM (0)
+        0x25, 0x01,                         //     LOGICAL_MAXIMUM (1)
+        0x75, 0x01,                         //     REPORT_SIZE (1)
+        0x95, 0x05,                         //     REPORT_COUNT (5)
+        0x81, 0x02,                         //     INPUT (Data,Var,Abs)
+        0x95, 0x03,                         //     REPORT_COUNT (3)
+        0x81, 0x03,                         //     INPUT (Cnst,Var,Abs)
+        0x05, 0x01,                         //     USAGE_PAGE (Generic Desktop)
+        0x09, 0x30,                         //     USAGE (X)
+        0x09, 0x31,                         //     USAGE (Y)
+        0x15, 0x81,                         //     Logical Minimum (-127)
+        0x25, 0x7F,                         //     Logical Maximum (127)
+        0x75, 0x08,                         //     REPORT_SIZE (8)
+        0x95, 0x02,                         //     REPORT_COUNT (2)
+        0x81, 0x06,                         //     INPUT (Data,Var,Rel)
+        0x05, 0x01,                         //     Usage Page (Generic Desktop)
+        0x09, 0x38,                         //     Usage (Wheel)
+        0x15, 0x81,                         //     Logical Minimum (-127)
+        0x25, 0x7F,                         //     Logical Maximum (127)
+        0x75, 0x08,                         //     Report Size (8)
+        0x95, 0x01,                         //     Report Count (1)
+        0x81, 0x06,                         //     Input (Data, Variable, Relative)
+        // ------------------------------  Horizontal wheel
+        0x05, 0x0c,                         //     USAGE_PAGE (Consumer Devices)
+        0x0a, 0x38, 0x02,                   //     USAGE (AC Pan)
+        0x15, 0x81,                         //     LOGICAL_MINIMUM (-127)
+        0x25, 0x7f,                         //     LOGICAL_MAXIMUM (127)
+        0x75, 0x08,                         //     REPORT_SIZE (8)
+        0x95, 0x01,                         //     Report Count (1)
+        0x81, 0x06,                         //     Input (Data, Variable, Relative)
+        0xc0,                               //   END_COLLECTION
+        0xc0,                               // END_COLLECTION
+        
+        /*//TOUCH PAD input TLC
+         0x05, 0x0d,                         // USAGE_PAGE (Digitizers)
+         0x09, 0x05,                         // USAGE (Touch Pad)
+         0xa1, 0x01,                         // COLLECTION (Application)
+         0x85, REPORTID_TOUCHPAD,            //   REPORT_ID (Touch pad)
+         0x09, 0x22,                         //   USAGE (Finger)
+         0xa1, 0x02,                         //   COLLECTION (Logical)
+         0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
+         0x25, 0x01,                         //       LOGICAL_MAXIMUM (1)
+         0x09, 0x47,                         //       USAGE (Confidence)
+         0x09, 0x42,                         //       USAGE (Tip switch)
+         0x95, 0x02,                         //       REPORT_COUNT (2)
+         0x75, 0x01,                         //       REPORT_SIZE (1)
+         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+         0x95, 0x01,                         //       REPORT_COUNT (1)
+         0x75, 0x02,                         //       REPORT_SIZE (2)
+         0x25, 0x02,                         //       LOGICAL_MAXIMUM (2)
+         0x09, 0x51,                         //       USAGE (Contact Identifier)
+         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+         0x75, 0x01,                         //       REPORT_SIZE (1)
+         0x95, 0x04,                         //       REPORT_COUNT (4)
+         0x81, 0x03,                         //       INPUT (Cnst,Var,Abs)
+         0x05, 0x01,                         //       USAGE_PAGE (Generic Desk..
+         0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
+         0x26, 0xff, 0x0f,                   //       LOGICAL_MAXIMUM (4095)
+         0x75, 0x10,                         //       REPORT_SIZE (16)
+         0x55, 0x0e,                         //       UNIT_EXPONENT (-2)
+         0x65, 0x13,                         //       UNIT(Inch,EngLinear)
+         0x09, 0x30,                         //       USAGE (X)
+         0x35, 0x00,                         //       PHYSICAL_MINIMUM (0)
+         0x46, 0x90, 0x01,                   //       PHYSICAL_MAXIMUM (400)
+         0x95, 0x01,                         //       REPORT_COUNT (1)
+         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+         0x46, 0x13, 0x01,                   //       PHYSICAL_MAXIMUM (275)
+         0x09, 0x31,                         //       USAGE (Y)
+         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+         0xc0,                               //    END_COLLECTION
+         0xc0,                               // END_COLLECTION*/
+        
+        //
+        // Keyboard report starts here
+        //
+        /*0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
+        0x09, 0x06,                         // USAGE (Keyboard)
+        0xa1, 0x01,                         // COLLECTION (Application)
+        0x85, REPORTID_KEYBOARD,            //   REPORT_ID (Keyboard)
+        0x05, 0x07,                         //   USAGE_PAGE (Keyboard)
+        0x19, 0xe0,                         //   USAGE_MINIMUM (Keyboard LeftControl)
+        0x29, 0xe7,                         //   USAGE_MAXIMUM (Keyboard Right GUI)
+        0x15, 0x00,                         //   LOGICAL_MINIMUM (0)
+        0x25, 0x01,                         //   LOGICAL_MAXIMUM (1)
+        0x75, 0x01,                         //   REPORT_SIZE (1)
+        0x95, 0x08,                         //   REPORT_COUNT (8)
+        0x81, 0x02,                         //   INPUT (Data,Var,Abs)
+        0x95, 0x01,                         //   REPORT_COUNT (1)
+        0x75, 0x08,                         //   REPORT_SIZE (8)
+        0x81, 0x03,                         //   INPUT (Cnst,Var,Abs)
+        0x95, 0x05,                         //   REPORT_COUNT (5)
+        0x75, 0x01,                         //   REPORT_SIZE (1)
+        0x05, 0x08,                         //   USAGE_PAGE (LEDs)
+        0x19, 0x01,                         //   USAGE_MINIMUM (Num Lock)
+        0x29, 0x05,                         //   USAGE_MAXIMUM (Kana)
+        0x91, 0x02,                         //   OUTPUT (Data,Var,Abs)
+        0x95, 0x01,                         //   REPORT_COUNT (1)
+        0x75, 0x03,                         //   REPORT_SIZE (3)
+        0x91, 0x03,                         //   OUTPUT (Cnst,Var,Abs)
+        0x95, 0x06,                         //   REPORT_COUNT (6)
+        0x75, 0x08,                         //   REPORT_SIZE (8)
+        0x15, 0x00,                         //   LOGICAL_MINIMUM (0)
+        0x25, 0x65,                         //   LOGICAL_MAXIMUM (101)
+        0x05, 0x07,                         //   USAGE_PAGE (Keyboard)
+        0x19, 0x00,                         //   USAGE_MINIMUM (Reserved (no event indicated))
+        0x29, 0x65,                         //   USAGE_MAXIMUM (Keyboard Application)
+        0x81, 0x00,                         //   INPUT (Data,Ary,Abs)
+        0xc0,                               // END_COLLECTION*/
+    };
     
-    rsize = UInt16(ihid->hdesc.wReportDescLength);
     
-    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
+    UInt rsize = sizeof(cyapadesc);
     
-    i2c_hid_hwreset(ihid);
-    
-    if (!rdesc){
-        return -1;
-    }
-    /*
-     if (!rsize || rsize > HID_MAX_DESCRIPTOR_SIZE){
-     IOLog("%s::%s::Weird size of report descriptor (%u)\n", getName(), hid_device->name, rsize);ƒ
-     return 1;
-     }
-     */
-    
-    ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
-    
-    if (!ret){
-        IOLog("it worked!\n");
-    }
-    
-    
-    
-    //_controller->registerDump(_controller->_dev);
-    
-    /*
-     if (ret) {
-     IOLog("%s::%s::Reading report descriptor failed", getName(), hid_device->name);
-     return -1;
-     }
-     
-     
-     IOLog("%s::%s::Report descriptor: %s\n", getName(), hid_device->name, rdesc);
-     
-     */
-    
-    IOLog("===Report Descriptor===\n");
-    for (int i = 0; i < UInt16(ihid->hdesc.wReportDescLength); i++)
-        IOLog("0x%02x\n", (UInt8) rdesc[i]);
-    IOLog("===Report Descriptor===\n");
-    
-    IOFree(rdesc, rsize);
-    
-    return 0;
-    
-};
-
-void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
-    UInt rsize;
-    int ret;
-    
-    IOLog("Report descriptor register: 0x%x\n",ihid->hdesc.wReportDescRegister);
-    
-    rsize = UInt16(ihid->hdesc.wReportDescLength);
-    
-    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
-    
-    i2c_hid_hwreset(ihid);
-    
-    ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
-    
-    if (!ret)
-        IOLog("Report descriptor was fetched\n");
-    
-    buffer->writeBytes(0, rdesc, rsize);
-    IOLog("Report Descriptor written to buffer (%d)\n", rsize);
-    
-    IOFree(rdesc, rsize);
+    buffer->writeBytes(0, cyapadesc, rsize);
 }
-
-bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
-    int ret;
-    
-    ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
-    
-    if (ret)
-        return ret;
-    
-    ret = i2c_hid_command(ihid, &hid_reset_cmd, NULL, 0);
-    if (ret) {
-        i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
-        return ret;
-    }
-    
-    return 0;
-};

@@ -117,6 +117,25 @@ struct csgesture_softc {
 #define  CMD_POWER_MODE_FULL	0xFC
 #define CMD_QUERY_CAPABILITIES  0x2A
 
+typedef struct __attribute__((__packed__)){
+    uint8_t stat;			/* CYAPA_STAT_xxx */
+    uint8_t boot;			/* CYAPA_BOOT_xxx */
+    uint8_t error;
+} cyapa_boot_regs;
+
+typedef struct __attribute__((__packed__)){
+    uint8_t stat;
+    uint8_t fngr;
+    
+    struct {
+        uint8_t xy_high;        /* 7:4 high 4 bits of x */
+        uint8_t x_low;          /* 3:0 high 4 bits of y */
+        uint8_t y_low;
+        uint8_t pressure;
+        uint8_t id;             /* 1-15 incremented each touch */
+    } touch[CYAPA_MAX_MT];
+} cyapa_regs;
+
 class VoodooI2C;
 class VoodooHIDWrapper;
 class IOBufferMemoryDescriptor;
@@ -164,34 +183,9 @@ public:
     
     I2CDevice* hid_device;
     
-    struct cyapa_regs{
-        uint8_t stat;
-        uint8_t fngr;
-        
-        struct {
-            uint8_t xy_high;        /* 7:4 high 4 bits of x */
-            uint8_t x_low;          /* 3:0 high 4 bits of y */
-            uint8_t y_low;
-            uint8_t pressure;
-            uint8_t id;             /* 1-15 incremented each touch */
-        } touch[CYAPA_MAX_MT];
-    } __packed;
-    
     struct csgesture_softc *softc;
     
     int initHIDDevice(I2CDevice *hid_device);
-    
-    int i2c_hid_alloc_buffers(i2c_hid *ihid, UInt report_size);
-    
-    void i2c_hid_free_buffers(i2c_hid *ihid, UInt report_size);
-    
-    int i2c_hid_fetch_hid_descriptor(i2c_hid *ihid);
-    
-    int i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, unsigned char *buf_recv, int data_len);
-    
-    int __i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len);
-    
-    int i2c_hid_set_power(i2c_hid *ihid, int power_state);
     
     bool probe(IOService* device);
     
@@ -199,20 +193,22 @@ public:
     
     void i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender);
     
-    bool i2c_hid_get_report_descriptor(i2c_hid *ihid);
-    
     void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     
-    bool i2c_hid_hwreset(i2c_hid *ihid);
+    SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
+    SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
+    
+    void update_relative_mouse(uint8_t button,
+                          uint8_t x, uint8_t y, uint8_t wheelPosition, uint8_t wheelHPosition);
     
     int distancesq(int delta_x, int delta_y);
     void ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
     void ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
     void TapToClick(csgesture_softc *sc, int button);
     void ProcessGesture(csgesture_softc *sc);
-    void TrackpadRawInput(struct csgesture_softc *sc, struct cyapa_regs *regs, int tickinc);
+    void TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc);
 };
 
 
