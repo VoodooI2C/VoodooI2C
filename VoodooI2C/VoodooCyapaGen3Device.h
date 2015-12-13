@@ -183,7 +183,7 @@ public:
     
     I2CDevice* hid_device;
     
-    struct csgesture_softc *softc;
+    struct csgesture_softc softc;
     
     int initHIDDevice(I2CDevice *hid_device);
     
@@ -191,7 +191,7 @@ public:
     
     void InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     
-    void i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender);
+    void get_input(OSObject* owner, IOTimerEventSource* sender);
     
     void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
     

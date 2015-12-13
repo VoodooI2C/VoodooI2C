@@ -547,7 +547,7 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
      hid_device->interruptSource->enable();
      */
     
-    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::i2c_hid_get_input));
+    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
     if (!hid_device->timerSource){
         goto err;
     }
@@ -621,12 +621,18 @@ int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
     
 }
 
-
 void VoodooI2CCyapaGen3Device::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     IOLog("interrupt\n");
     if (hid_device->reading)
         return;
     //i2c_hid_get_input(ihid);
+}
+
+void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* sender) {
+    cyapa_regs regs;
+    readI2C(0, sizeof(regs), (uint8_t *)&regs);
+    TrackpadRawInput(&softc, &regs, 1);
+    hid_device->timerSource->setTimeoutMS(10);
 }
 
 void VoodooI2CCyapaGen3Device::update_relative_mouse(uint8_t button,
@@ -647,7 +653,6 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(uint8_t button,
         IOLog("Error handling report: 0x%.8x\n", err);
     
     buffer->release();
-    hid_device->timerSource->setTimeoutMS(10);
 }
 
 void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
