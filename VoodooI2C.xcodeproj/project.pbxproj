@@ -11,6 +11,8 @@
 		AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */ = {isa = PBXBuildFile; fileRef = AC45AFEC1A32543B008E6857 /* VoodooI2C.h */; };
 		AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */; };
 		ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */; };
+		F158186C1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F158186A1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp */; settings = {ASSET_TAGS = (); }; };
+		F158186D1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h in Headers */ = {isa = PBXBuildFile; fileRef = F158186B1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2C.cpp; sourceTree = "<group>"; };
 		ACF45CF81A7FDDD0005C2BBE /* VoodooI2CHIDDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2CHIDDevice.h; sourceTree = "<group>"; };
 		ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CHIDDevice.cpp; sourceTree = "<group>"; };
+		F158186A1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCyapaGen3Device.cpp; sourceTree = "<group>"; };
+		F158186B1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCyapaGen3Device.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,8 @@
 				AC45AFEA1A32543B008E6857 /* Supporting Files */,
 				ACF45CF81A7FDDD0005C2BBE /* VoodooI2CHIDDevice.h */,
 				ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */,
+				F158186A1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp */,
+				F158186B1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h */,
 				308C59891BC61FE00078D1B1 /* VoodooHIDWrapper.h */,
 				308C59871BC61FD20078D1B1 /* VoodooHIDWrapper.cpp */,
 			);
@@ -80,6 +86,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F158186D1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h in Headers */,
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,6 +161,7 @@
 				308C59881BC61FD20078D1B1 /* VoodooHIDWrapper.cpp in Sources */,
 				ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */,
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
+				F158186C1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

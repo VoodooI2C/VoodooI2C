@@ -435,6 +435,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
     bus_devices_number = 0;
+#warning "Begin crash with non-HID device"
     if (children != 0) {
         OSOrderedSet* set = children->iterateAll();
         if(set != 0) {
@@ -463,6 +464,7 @@ bool VoodooI2C::start(IOService * provider) {
         }
     }
     children->release();
+#warning "End crash with non-HID device"
     
     IOLog("number: %d\n",bus_devices_number);
     
