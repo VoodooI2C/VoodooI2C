@@ -15,6 +15,8 @@ The following devices are confirmed to work with the current iteration of Voodoo
 * Synaptics 7501 Clearpad touchscreen (Acer Switch 12)
 * Atmel 1000 touchscreen (Dell XPS 12)
 * NTRG 0001 touchscreen (Surface Pro 3)
+* CYAP0000 trackpad (Haswell Chromebooks)
+ * This uses a propriety interface, as opposed to i2c-hid in the above devices, so requires use of `VoodooCyapaGen3Device` instead of `VoodooI2CHIDDevice`
 
 # Helping out and testing
 
