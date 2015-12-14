@@ -181,6 +181,23 @@ public:
         
     } I2CDevice;
     
+    struct i2c_msg {
+        UInt16 addr;
+        UInt16 flags;
+        UInt16 len;
+        UInt8 *buf;
+        
+#define I2C_M_TEN 0x0010
+#define I2C_M_RD 0x0001
+#define I2C_M_RECV_LEN 0x0400
+        
+#define I2C_HID_READ_PENDING (1 << 2);
+        
+#define I2C_HID_CMD(opcode_) \
+.opcode = opcode_, .length = 4,\
+.registerIndex = offsetof(struct i2c_hid_desc, wCommandRegister)
+    };
+    
     I2CDevice* hid_device;
     
     struct csgesture_softc softc;
@@ -193,6 +210,11 @@ public:
     
     void get_input(OSObject* owner, IOTimerEventSource* sender);
     
+    int reportDescriptorLength();
+    
+    int vendorID();
+    int productID();
+    
     void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
@@ -200,8 +222,8 @@ public:
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
     
-    void update_relative_mouse(uint8_t button,
-                          uint8_t x, uint8_t y, uint8_t wheelPosition, uint8_t wheelHPosition);
+    void update_relative_mouse(char button,
+                               char x, char y, char wheelPosition, char wheelHPosition);
     
     int distancesq(int delta_x, int delta_y);
     void ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
