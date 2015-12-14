@@ -226,16 +226,16 @@ void VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
         if (abs(sc->scrolly) > 75)
             sc->scrolly = 0;
         if (sc->scrolly > 5)
-            sc->scrolly = 1;
-        else if (sc->scrolly < -5)
             sc->scrolly = -1;
+        else if (sc->scrolly < -5)
+            sc->scrolly = 1;
         else
             sc->scrolly = 0;
         
         if (sc->scrollx > 5)
-            sc->scrollx = -1;
-        else if (sc->scrollx < -5)
             sc->scrollx = 1;
+        else if (sc->scrollx < -5)
+            sc->scrollx = -1;
         else
             sc->scrollx = 0;
     }
