@@ -7,6 +7,9 @@
 #include <IOKit/IOCommandGate.h>
 #include <string.h>
 #include "VoodooI2CHIDDevice.h"
+#include "VoodooCyapaGen3Device.h"
+
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
 
 #define STATUS_IDLE 0x0
 #define STATUS_WRITE_IN_PROGRESS 0x1
@@ -277,6 +280,7 @@ public:
     void xferMsgI2C(I2CBus* _dev);
     
     int i2c_master_recv(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *buf, int count);
+    int i2c_master_send(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *buf, int count);
     
     void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     

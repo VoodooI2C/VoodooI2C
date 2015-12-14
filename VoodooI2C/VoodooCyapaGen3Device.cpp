@@ -9,7 +9,7 @@
 
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooI2C.h"
-#include "VoodooHIDWrapper.h"
+#include "VoodooHIDMouseWrapper.h"
 
 OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, IOService);
 
@@ -165,17 +165,17 @@ unsigned char cyapadesc[] = {
 typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
 {
     
-    BYTE        ReportID;
+    UInt8        ReportID;
     
-    BYTE        Button;
+    UInt8        Button;
     
-    BYTE        XValue;
+    UInt8        XValue;
     
-    BYTE        YValue;
+    UInt8        YValue;
     
-    BYTE        WheelPosition;
+    UInt8        WheelPosition;
     
-    BYTE		HWheelPosition;
+    UInt8		HWheelPosition;
     
 } CyapaRelativeMouseReport;
 
@@ -527,8 +527,6 @@ void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyap
     
     nfingers = CYAPA_FNGR_NUMFINGERS(regs->fngr);
     
-    IOLog("Cyapa Fingers: %d\n", nfingers);
-    
     for (int i = 0;i < 15;i++) {
         sc->x[i] = -1;
         sc->y[i] = -1;
@@ -646,20 +644,12 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
         0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,
         0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
     
-    IOLog("%s", "Cyapa Hello!\n");
-    
     cyapa_boot_regs boot;
     
     readI2C(0x00, sizeof(boot), (uint8_t *)&boot);
     
-    IOLog("Cypress Boot 0x%x 0x%x\n",boot.stat, boot.boot);
-    
-    if ((boot.stat & CYAPA_STAT_RUNNING) == 0){
+    if ((boot.stat & CYAPA_STAT_RUNNING) == 0)
         ret = writeI2C(0x00, sizeof(bl_exit), bl_exit);
-        IOLog("%s %d", "Cyapa Boot Sent!\n",ret);
-    }
-    
-    IOLog("%s", "Cyapa Boot Done!\n");
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!hid_device->workLoop) {
@@ -713,7 +703,7 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooHIDWrapper;
+    _wrapper = new VoodooHIDMouseWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
@@ -807,10 +797,7 @@ void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* se
     cyapa_regs regs;
     readI2C(0, sizeof(regs), (uint8_t *)&regs);
     
-    IOLog("Regs: 0x%x 0x%x\n",regs.stat,regs.fngr);
-    
     TrackpadRawInput(&softc, &regs, 1);
-    IOLog("%s", "Cyapa Input Retrieved!\n");
     hid_device->timerSource->setTimeoutMS(10);
 }
 
@@ -824,12 +811,12 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
     report.WheelPosition = wheelPosition;
     report.HWheelPosition = wheelHPosition;
     
-    IOLog("Relative Mouse Sent: %d %d %d %d %d\n",button,x,y,wheelPosition,wheelHPosition);
+    lastmouse.x = x;
+    lastmouse.y = y;
+    lastmouse.buttonMask = button;
     
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
     buffer->writeBytes(0, &report, sizeof(report));
-    
-    IOLog("Wrote Bytes: %lu\n",sizeof(report));
     
     IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
     if (err != kIOReturnSuccess)
@@ -848,6 +835,21 @@ int VoodooI2CCyapaGen3Device::vendorID(){
 
 int VoodooI2CCyapaGen3Device::productID(){
     return 'rtyC';
+}
+
+void VoodooI2CCyapaGen3Device::write_report_to_buffer(IOMemoryDescriptor *buffer){
+    
+    _CYAPA_RELATIVE_MOUSE_REPORT report;
+    report.ReportID = REPORTID_RELATIVE_MOUSE;
+    report.Button = lastmouse.buttonMask;
+    report.XValue = lastmouse.x;
+    report.YValue = lastmouse.y;
+    report.WheelPosition = 0;
+    report.HWheelPosition = 0;
+    
+    UInt rsize = sizeof(report);
+    
+    buffer->writeBytes(0, &report, rsize);
 }
 
 void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){

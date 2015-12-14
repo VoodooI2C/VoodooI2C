@@ -137,7 +137,7 @@ typedef struct __attribute__((__packed__)){
 } cyapa_regs;
 
 class VoodooI2C;
-class VoodooHIDWrapper;
+class VoodooHIDMouseWrapper;
 class IOBufferMemoryDescriptor;
 
 class VoodooI2CCyapaGen3Device : public IOService
@@ -146,7 +146,7 @@ class VoodooI2CCyapaGen3Device : public IOService
     OSDeclareDefaultStructors(VoodooI2CCyapaGen3Device);
     
 private:
-    VoodooHIDWrapper* _wrapper;
+    VoodooHIDMouseWrapper* _wrapper;
     
     void initialize_wrapper(void);
     void destroy_wrapper(void);
@@ -198,6 +198,12 @@ public:
 .registerIndex = offsetof(struct i2c_hid_desc, wCommandRegister)
     };
     
+    struct {
+        UInt8 x;
+        UInt8 y;
+        UInt8 buttonMask;
+    } lastmouse;
+    
     I2CDevice* hid_device;
     
     struct csgesture_softc softc;
@@ -215,6 +221,7 @@ public:
     int vendorID();
     int productID();
     
+    void write_report_to_buffer(IOMemoryDescriptor *buffer);
     void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
