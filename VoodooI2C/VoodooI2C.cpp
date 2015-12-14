@@ -430,7 +430,7 @@ bool VoodooI2C::start(IOService * provider) {
     IORegistryIterator* children;
     IORegistryEntry* child;
     
-
+ 
     
     
     children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
@@ -814,6 +814,25 @@ int VoodooI2C::i2c_master_recv(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *b
     
     msg.addr = I2CDevice.addr;
     msg.flags |= I2C_M_RD;
+    msg.len = count;
+    msg.buf = buf;
+    
+    ret = i2c_transfer(&msg, 1);
+    
+    if (ret) {
+        IOLog("failed!\n");
+    }
+    
+    return (ret == 1) ? count : ret;
+    
+}
+
+int VoodooI2C::i2c_master_send(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *buf, int count) {
+    struct i2c_msg msg;
+    int ret;
+    
+    msg.addr = I2CDevice.addr;
+    msg.flags |= 0;
     msg.len = count;
     msg.buf = buf;
     

@@ -9,7 +9,7 @@
 
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooI2C.h"
-#include "VoodooHIDWrapper.h"
+#include "VoodooHIDMouseWrapper.h"
 
 OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, IOService);
 
@@ -39,20 +39,143 @@ typedef unsigned char BYTE;
 
 #define KBD_KEY_CODES        6
 
+unsigned char cyapadesc[] = {
+    //
+    // Relative mouse report starts here
+    //
+    0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
+    0x09, 0x02,                         // USAGE (Mouse)
+    0xa1, 0x01,                         // COLLECTION (Application)
+    0x85, REPORTID_RELATIVE_MOUSE,      //   REPORT_ID (Mouse)
+    0x09, 0x01,                         //   USAGE (Pointer)
+    0xa1, 0x00,                         //   COLLECTION (Physical)
+    0x05, 0x09,                         //     USAGE_PAGE (Button)
+    0x19, 0x01,                         //     USAGE_MINIMUM (Button 1)
+    0x29, 0x05,                         //     USAGE_MAXIMUM (Button 5)
+    0x15, 0x00,                         //     LOGICAL_MINIMUM (0)
+    0x25, 0x01,                         //     LOGICAL_MAXIMUM (1)
+    0x75, 0x01,                         //     REPORT_SIZE (1)
+    0x95, 0x05,                         //     REPORT_COUNT (5)
+    0x81, 0x02,                         //     INPUT (Data,Var,Abs)
+    0x95, 0x03,                         //     REPORT_COUNT (3)
+    0x81, 0x03,                         //     INPUT (Cnst,Var,Abs)
+    0x05, 0x01,                         //     USAGE_PAGE (Generic Desktop)
+    0x09, 0x30,                         //     USAGE (X)
+    0x09, 0x31,                         //     USAGE (Y)
+    0x15, 0x81,                         //     Logical Minimum (-127)
+    0x25, 0x7F,                         //     Logical Maximum (127)
+    0x75, 0x08,                         //     REPORT_SIZE (8)
+    0x95, 0x02,                         //     REPORT_COUNT (2)
+    0x81, 0x06,                         //     INPUT (Data,Var,Rel)
+    0x05, 0x01,                         //     Usage Page (Generic Desktop)
+    0x09, 0x38,                         //     Usage (Wheel)
+    0x15, 0x81,                         //     Logical Minimum (-127)
+    0x25, 0x7F,                         //     Logical Maximum (127)
+    0x75, 0x08,                         //     Report Size (8)
+    0x95, 0x01,                         //     Report Count (1)
+    0x81, 0x06,                         //     Input (Data, Variable, Relative)
+    // ------------------------------  Horizontal wheel
+    0x05, 0x0c,                         //     USAGE_PAGE (Consumer Devices)
+    0x0a, 0x38, 0x02,                   //     USAGE (AC Pan)
+    0x15, 0x81,                         //     LOGICAL_MINIMUM (-127)
+    0x25, 0x7f,                         //     LOGICAL_MAXIMUM (127)
+    0x75, 0x08,                         //     REPORT_SIZE (8)
+    0x95, 0x01,                         //     Report Count (1)
+    0x81, 0x06,                         //     Input (Data, Variable, Relative)
+    0xc0,                               //   END_COLLECTION
+    0xc0                               // END_COLLECTION
+    
+    /*//TOUCH PAD input TLC
+     0x05, 0x0d,                         // USAGE_PAGE (Digitizers)
+     0x09, 0x05,                         // USAGE (Touch Pad)
+     0xa1, 0x01,                         // COLLECTION (Application)
+     0x85, REPORTID_TOUCHPAD,            //   REPORT_ID (Touch pad)
+     0x09, 0x22,                         //   USAGE (Finger)
+     0xa1, 0x02,                         //   COLLECTION (Logical)
+     0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
+     0x25, 0x01,                         //       LOGICAL_MAXIMUM (1)
+     0x09, 0x47,                         //       USAGE (Confidence)
+     0x09, 0x42,                         //       USAGE (Tip switch)
+     0x95, 0x02,                         //       REPORT_COUNT (2)
+     0x75, 0x01,                         //       REPORT_SIZE (1)
+     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+     0x95, 0x01,                         //       REPORT_COUNT (1)
+     0x75, 0x02,                         //       REPORT_SIZE (2)
+     0x25, 0x02,                         //       LOGICAL_MAXIMUM (2)
+     0x09, 0x51,                         //       USAGE (Contact Identifier)
+     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+     0x75, 0x01,                         //       REPORT_SIZE (1)
+     0x95, 0x04,                         //       REPORT_COUNT (4)
+     0x81, 0x03,                         //       INPUT (Cnst,Var,Abs)
+     0x05, 0x01,                         //       USAGE_PAGE (Generic Desk..
+     0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
+     0x26, 0xff, 0x0f,                   //       LOGICAL_MAXIMUM (4095)
+     0x75, 0x10,                         //       REPORT_SIZE (16)
+     0x55, 0x0e,                         //       UNIT_EXPONENT (-2)
+     0x65, 0x13,                         //       UNIT(Inch,EngLinear)
+     0x09, 0x30,                         //       USAGE (X)
+     0x35, 0x00,                         //       PHYSICAL_MINIMUM (0)
+     0x46, 0x90, 0x01,                   //       PHYSICAL_MAXIMUM (400)
+     0x95, 0x01,                         //       REPORT_COUNT (1)
+     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+     0x46, 0x13, 0x01,                   //       PHYSICAL_MAXIMUM (275)
+     0x09, 0x31,                         //       USAGE (Y)
+     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
+     0xc0,                               //    END_COLLECTION
+     0xc0,                               // END_COLLECTION*/
+    
+    //
+    // Keyboard report starts here
+    //
+    /*0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
+     0x09, 0x06,                         // USAGE (Keyboard)
+     0xa1, 0x01,                         // COLLECTION (Application)
+     0x85, REPORTID_KEYBOARD,            //   REPORT_ID (Keyboard)
+     0x05, 0x07,                         //   USAGE_PAGE (Keyboard)
+     0x19, 0xe0,                         //   USAGE_MINIMUM (Keyboard LeftControl)
+     0x29, 0xe7,                         //   USAGE_MAXIMUM (Keyboard Right GUI)
+     0x15, 0x00,                         //   LOGICAL_MINIMUM (0)
+     0x25, 0x01,                         //   LOGICAL_MAXIMUM (1)
+     0x75, 0x01,                         //   REPORT_SIZE (1)
+     0x95, 0x08,                         //   REPORT_COUNT (8)
+     0x81, 0x02,                         //   INPUT (Data,Var,Abs)
+     0x95, 0x01,                         //   REPORT_COUNT (1)
+     0x75, 0x08,                         //   REPORT_SIZE (8)
+     0x81, 0x03,                         //   INPUT (Cnst,Var,Abs)
+     0x95, 0x05,                         //   REPORT_COUNT (5)
+     0x75, 0x01,                         //   REPORT_SIZE (1)
+     0x05, 0x08,                         //   USAGE_PAGE (LEDs)
+     0x19, 0x01,                         //   USAGE_MINIMUM (Num Lock)
+     0x29, 0x05,                         //   USAGE_MAXIMUM (Kana)
+     0x91, 0x02,                         //   OUTPUT (Data,Var,Abs)
+     0x95, 0x01,                         //   REPORT_COUNT (1)
+     0x75, 0x03,                         //   REPORT_SIZE (3)
+     0x91, 0x03,                         //   OUTPUT (Cnst,Var,Abs)
+     0x95, 0x06,                         //   REPORT_COUNT (6)
+     0x75, 0x08,                         //   REPORT_SIZE (8)
+     0x15, 0x00,                         //   LOGICAL_MINIMUM (0)
+     0x25, 0x65,                         //   LOGICAL_MAXIMUM (101)
+     0x05, 0x07,                         //   USAGE_PAGE (Keyboard)
+     0x19, 0x00,                         //   USAGE_MINIMUM (Reserved (no event indicated))
+     0x29, 0x65,                         //   USAGE_MAXIMUM (Keyboard Application)
+     0x81, 0x00,                         //   INPUT (Data,Ary,Abs)
+     0xc0,                               // END_COLLECTION*/
+};
+
 typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
 {
     
-    BYTE        ReportID;
+    UInt8        ReportID;
     
-    BYTE        Button;
+    UInt8        Button;
     
-    BYTE        XValue;
+    UInt8        XValue;
     
-    BYTE        YValue;
+    UInt8        YValue;
     
-    BYTE        WheelPosition;
+    UInt8        WheelPosition;
     
-    BYTE		HWheelPosition;
+    UInt8		HWheelPosition;
     
 } CyapaRelativeMouseReport;
 
@@ -103,16 +226,16 @@ void VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
         if (abs(sc->scrolly) > 75)
             sc->scrolly = 0;
         if (sc->scrolly > 5)
-            sc->scrolly = 1;
-        else if (sc->scrolly < -5)
             sc->scrolly = -1;
+        else if (sc->scrolly < -5)
+            sc->scrolly = 1;
         else
             sc->scrolly = 0;
         
         if (sc->scrollx > 5)
-            sc->scrollx = -1;
-        else if (sc->scrollx < -5)
             sc->scrollx = 1;
+        else if (sc->scrollx < -5)
+            sc->scrollx = -1;
         else
             sc->scrollx = 0;
     }
@@ -402,10 +525,6 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
 void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc){
     int nfingers;
     
-    if ((regs->stat & CYAPA_STAT_RUNNING) == 0) {
-        regs->fngr = 0;
-    }
-    
     nfingers = CYAPA_FNGR_NUMFINGERS(regs->fngr);
     
     for (int i = 0;i < 15;i++) {
@@ -515,16 +634,22 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     int ret;
     UInt16 hidRegister;
     
+    uint8_t clear[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    
+    writeI2C(0x00, sizeof(clear), clear);
+    
     uint8_t bl_exit[] = {
-        0x00, 0xff, 0xa5, 0x00, 0x01,
+        0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,
         0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
     
     cyapa_boot_regs boot;
     
     readI2C(0x00, sizeof(boot), (uint8_t *)&boot);
-    if ((boot.stat & CYAPA_STAT_RUNNING) == 0)
-        writeI2C(0x00, sizeof(bl_exit), bl_exit);
     
+    if ((boot.stat & CYAPA_STAT_RUNNING) == 0)
+        ret = writeI2C(0x00, sizeof(bl_exit), bl_exit);
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!hid_device->workLoop) {
@@ -549,6 +674,7 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
     if (!hid_device->timerSource){
+        IOLog("%s", "Timer Err!\n");
         goto err;
     }
     
@@ -577,7 +703,7 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooHIDWrapper;
+    _wrapper = new VoodooHIDMouseWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
@@ -598,12 +724,51 @@ void VoodooI2CCyapaGen3Device::destroy_wrapper(void) {
     }
 }
 
+#define EIO              5      /* I/O error */
+#define ENOMEM          12      /* Out of memory */
+
 SInt32 VoodooI2CCyapaGen3Device::readI2C(uint8_t reg, size_t len, uint8_t *values){
-    return _controller->i2c_smbus_read_i2c_block_data(_controller->_dev, 0x67, reg, len, values);
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = 0x67,
+            .flags = 0,
+            .len = 1,
+            .buf = &reg,
+        },
+        {
+            .addr = 0x67,
+            .flags = I2C_M_RD,
+            .len = (uint8_t)len,
+            .buf = values,
+        },
+    };
+    int ret;
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)msgs, ARRAY_SIZE(msgs));
+    if (ret != ARRAY_SIZE(msgs))
+        return ret < 0 ? ret : EIO;
+    return 0;
 }
 
 SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *values){
-    return _controller->i2c_smbus_write_i2c_block_data(_controller->_dev, 0x67, reg, len, values);
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = 0x67,
+            .flags = 0,
+            .len = 1,
+            .buf = &reg,
+        },
+        {
+            .addr = 0x67,
+            .flags = 0,
+            .len = (uint8_t)len,
+            .buf = values,
+        },
+    };
+    int ret;
+    
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
+    
+    return ret;
 }
 
 int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
@@ -631,12 +796,13 @@ void VoodooI2CCyapaGen3Device::InterruptOccured(OSObject* owner, IOInterruptEven
 void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* sender) {
     cyapa_regs regs;
     readI2C(0, sizeof(regs), (uint8_t *)&regs);
+    
     TrackpadRawInput(&softc, &regs, 1);
     hid_device->timerSource->setTimeoutMS(10);
 }
 
-void VoodooI2CCyapaGen3Device::update_relative_mouse(uint8_t button,
-                                                     uint8_t x, uint8_t y, uint8_t wheelPosition, uint8_t wheelHPosition){
+void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
+                                                     char x, char y, char wheelPosition, char wheelHPosition){
     _CYAPA_RELATIVE_MOUSE_REPORT report;
     report.ReportID = REPORTID_RELATIVE_MOUSE;
     report.Button = button;
@@ -644,6 +810,10 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(uint8_t button,
     report.YValue = y;
     report.WheelPosition = wheelPosition;
     report.HWheelPosition = wheelHPosition;
+    
+    lastmouse.x = x;
+    lastmouse.y = y;
+    lastmouse.buttonMask = button;
     
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
     buffer->writeBytes(0, &report, sizeof(report));
@@ -655,131 +825,34 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(uint8_t button,
     buffer->release();
 }
 
+int VoodooI2CCyapaGen3Device::reportDescriptorLength(){
+    return sizeof(cyapadesc);
+}
+
+int VoodooI2CCyapaGen3Device::vendorID(){
+    return 'pyaC';
+}
+
+int VoodooI2CCyapaGen3Device::productID(){
+    return 'rtyC';
+}
+
+void VoodooI2CCyapaGen3Device::write_report_to_buffer(IOMemoryDescriptor *buffer){
+    
+    _CYAPA_RELATIVE_MOUSE_REPORT report;
+    report.ReportID = REPORTID_RELATIVE_MOUSE;
+    report.Button = lastmouse.buttonMask;
+    report.XValue = lastmouse.x;
+    report.YValue = lastmouse.y;
+    report.WheelPosition = 0;
+    report.HWheelPosition = 0;
+    
+    UInt rsize = sizeof(report);
+    
+    buffer->writeBytes(0, &report, rsize);
+}
+
 void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
-    
-    unsigned char cyapadesc[] = {
-        //
-        // Relative mouse report starts here
-        //
-        0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
-        0x09, 0x02,                         // USAGE (Mouse)
-        0xa1, 0x01,                         // COLLECTION (Application)
-        0x85, REPORTID_RELATIVE_MOUSE,      //   REPORT_ID (Mouse)
-        0x09, 0x01,                         //   USAGE (Pointer)
-        0xa1, 0x00,                         //   COLLECTION (Physical)
-        0x05, 0x09,                         //     USAGE_PAGE (Button)
-        0x19, 0x01,                         //     USAGE_MINIMUM (Button 1)
-        0x29, 0x05,                         //     USAGE_MAXIMUM (Button 5)
-        0x15, 0x00,                         //     LOGICAL_MINIMUM (0)
-        0x25, 0x01,                         //     LOGICAL_MAXIMUM (1)
-        0x75, 0x01,                         //     REPORT_SIZE (1)
-        0x95, 0x05,                         //     REPORT_COUNT (5)
-        0x81, 0x02,                         //     INPUT (Data,Var,Abs)
-        0x95, 0x03,                         //     REPORT_COUNT (3)
-        0x81, 0x03,                         //     INPUT (Cnst,Var,Abs)
-        0x05, 0x01,                         //     USAGE_PAGE (Generic Desktop)
-        0x09, 0x30,                         //     USAGE (X)
-        0x09, 0x31,                         //     USAGE (Y)
-        0x15, 0x81,                         //     Logical Minimum (-127)
-        0x25, 0x7F,                         //     Logical Maximum (127)
-        0x75, 0x08,                         //     REPORT_SIZE (8)
-        0x95, 0x02,                         //     REPORT_COUNT (2)
-        0x81, 0x06,                         //     INPUT (Data,Var,Rel)
-        0x05, 0x01,                         //     Usage Page (Generic Desktop)
-        0x09, 0x38,                         //     Usage (Wheel)
-        0x15, 0x81,                         //     Logical Minimum (-127)
-        0x25, 0x7F,                         //     Logical Maximum (127)
-        0x75, 0x08,                         //     Report Size (8)
-        0x95, 0x01,                         //     Report Count (1)
-        0x81, 0x06,                         //     Input (Data, Variable, Relative)
-        // ------------------------------  Horizontal wheel
-        0x05, 0x0c,                         //     USAGE_PAGE (Consumer Devices)
-        0x0a, 0x38, 0x02,                   //     USAGE (AC Pan)
-        0x15, 0x81,                         //     LOGICAL_MINIMUM (-127)
-        0x25, 0x7f,                         //     LOGICAL_MAXIMUM (127)
-        0x75, 0x08,                         //     REPORT_SIZE (8)
-        0x95, 0x01,                         //     Report Count (1)
-        0x81, 0x06,                         //     Input (Data, Variable, Relative)
-        0xc0,                               //   END_COLLECTION
-        0xc0,                               // END_COLLECTION
-        
-        /*//TOUCH PAD input TLC
-         0x05, 0x0d,                         // USAGE_PAGE (Digitizers)
-         0x09, 0x05,                         // USAGE (Touch Pad)
-         0xa1, 0x01,                         // COLLECTION (Application)
-         0x85, REPORTID_TOUCHPAD,            //   REPORT_ID (Touch pad)
-         0x09, 0x22,                         //   USAGE (Finger)
-         0xa1, 0x02,                         //   COLLECTION (Logical)
-         0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
-         0x25, 0x01,                         //       LOGICAL_MAXIMUM (1)
-         0x09, 0x47,                         //       USAGE (Confidence)
-         0x09, 0x42,                         //       USAGE (Tip switch)
-         0x95, 0x02,                         //       REPORT_COUNT (2)
-         0x75, 0x01,                         //       REPORT_SIZE (1)
-         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-         0x95, 0x01,                         //       REPORT_COUNT (1)
-         0x75, 0x02,                         //       REPORT_SIZE (2)
-         0x25, 0x02,                         //       LOGICAL_MAXIMUM (2)
-         0x09, 0x51,                         //       USAGE (Contact Identifier)
-         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-         0x75, 0x01,                         //       REPORT_SIZE (1)
-         0x95, 0x04,                         //       REPORT_COUNT (4)
-         0x81, 0x03,                         //       INPUT (Cnst,Var,Abs)
-         0x05, 0x01,                         //       USAGE_PAGE (Generic Desk..
-         0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
-         0x26, 0xff, 0x0f,                   //       LOGICAL_MAXIMUM (4095)
-         0x75, 0x10,                         //       REPORT_SIZE (16)
-         0x55, 0x0e,                         //       UNIT_EXPONENT (-2)
-         0x65, 0x13,                         //       UNIT(Inch,EngLinear)
-         0x09, 0x30,                         //       USAGE (X)
-         0x35, 0x00,                         //       PHYSICAL_MINIMUM (0)
-         0x46, 0x90, 0x01,                   //       PHYSICAL_MAXIMUM (400)
-         0x95, 0x01,                         //       REPORT_COUNT (1)
-         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-         0x46, 0x13, 0x01,                   //       PHYSICAL_MAXIMUM (275)
-         0x09, 0x31,                         //       USAGE (Y)
-         0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-         0xc0,                               //    END_COLLECTION
-         0xc0,                               // END_COLLECTION*/
-        
-        //
-        // Keyboard report starts here
-        //
-        /*0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
-        0x09, 0x06,                         // USAGE (Keyboard)
-        0xa1, 0x01,                         // COLLECTION (Application)
-        0x85, REPORTID_KEYBOARD,            //   REPORT_ID (Keyboard)
-        0x05, 0x07,                         //   USAGE_PAGE (Keyboard)
-        0x19, 0xe0,                         //   USAGE_MINIMUM (Keyboard LeftControl)
-        0x29, 0xe7,                         //   USAGE_MAXIMUM (Keyboard Right GUI)
-        0x15, 0x00,                         //   LOGICAL_MINIMUM (0)
-        0x25, 0x01,                         //   LOGICAL_MAXIMUM (1)
-        0x75, 0x01,                         //   REPORT_SIZE (1)
-        0x95, 0x08,                         //   REPORT_COUNT (8)
-        0x81, 0x02,                         //   INPUT (Data,Var,Abs)
-        0x95, 0x01,                         //   REPORT_COUNT (1)
-        0x75, 0x08,                         //   REPORT_SIZE (8)
-        0x81, 0x03,                         //   INPUT (Cnst,Var,Abs)
-        0x95, 0x05,                         //   REPORT_COUNT (5)
-        0x75, 0x01,                         //   REPORT_SIZE (1)
-        0x05, 0x08,                         //   USAGE_PAGE (LEDs)
-        0x19, 0x01,                         //   USAGE_MINIMUM (Num Lock)
-        0x29, 0x05,                         //   USAGE_MAXIMUM (Kana)
-        0x91, 0x02,                         //   OUTPUT (Data,Var,Abs)
-        0x95, 0x01,                         //   REPORT_COUNT (1)
-        0x75, 0x03,                         //   REPORT_SIZE (3)
-        0x91, 0x03,                         //   OUTPUT (Cnst,Var,Abs)
-        0x95, 0x06,                         //   REPORT_COUNT (6)
-        0x75, 0x08,                         //   REPORT_SIZE (8)
-        0x15, 0x00,                         //   LOGICAL_MINIMUM (0)
-        0x25, 0x65,                         //   LOGICAL_MAXIMUM (101)
-        0x05, 0x07,                         //   USAGE_PAGE (Keyboard)
-        0x19, 0x00,                         //   USAGE_MINIMUM (Reserved (no event indicated))
-        0x29, 0x65,                         //   USAGE_MAXIMUM (Keyboard Application)
-        0x81, 0x00,                         //   INPUT (Data,Ary,Abs)
-        0xc0,                               // END_COLLECTION*/
-    };
-    
     
     UInt rsize = sizeof(cyapadesc);
     
