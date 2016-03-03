@@ -221,23 +221,41 @@ void VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
             sc->scrollx = avgx;
         }
         //CyapaPrint(DEBUG_LEVEL_INFO,DBG_IOCTL,"DBGPAD Scroll X: %d Y: %d\n", sc->scrollx, sc->scrolly);
-        if (abs(sc->scrollx) > 75)
+        if (abs(sc->scrollx) > 100)
             sc->scrollx = 0;
-        if (abs(sc->scrolly) > 75)
+        if (abs(sc->scrolly) > 100)
             sc->scrolly = 0;
-        if (sc->scrolly > 5)
-            sc->scrolly = -1;
-        else if (sc->scrolly < -5)
+        
+        if (sc->scrolly > 8)
+            sc->scrolly = sc->scrolly / 8;
+        else if (sc->scrolly > 5)
             sc->scrolly = 1;
+        else if (sc->scrolly < -8)
+            sc->scrolly = sc->scrolly / 8;
+        else if (sc->scrolly < -5)
+            sc->scrolly = -1;
         else
             sc->scrolly = 0;
         
-        if (sc->scrollx > 5)
-            sc->scrollx = 1;
-        else if (sc->scrollx < -5)
+        if (sc->scrollx > 8) {
+            sc->scrollx = sc->scrollx / 8;
+            sc->scrollx = -sc->scrollx;
+        }
+        else if (sc->scrollx > 5)
             sc->scrollx = -1;
+        else if (sc->scrollx < -8) {
+            sc->scrollx = sc->scrollx / 8;
+            sc->scrollx = -sc->scrollx;
+        }
+        else if (sc->scrollx < -5)
+            sc->scrollx = 1;
         else
             sc->scrollx = 0;
+        
+        
+        //OS X already flips the scroll so revert the flip back to normal
+        sc->scrollx = -sc->scrollx;
+        sc->scrolly = -sc->scrolly;
     }
 }
 
@@ -313,8 +331,17 @@ void VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
     }
 }*/
 
-void VoodooI2CCyapaGen3Device::TapToClick(csgesture_softc *sc, int button) {
+void VoodooI2CCyapaGen3Device::TapToClickOrDrag(csgesture_softc *sc, int button) {
     sc->tickssinceclick++;
+    if (sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
+        if (sc->tickssinceclick > 10) {
+            sc->mouseDownDueToTap = false;
+            sc->mousedown = false;
+            sc->buttonmask = 0;
+            //Tap Drag Timed out
+        }
+        return;
+    }
     if (sc->mousedown) {
         sc->tickssinceclick = 0;
         return;
@@ -334,10 +361,28 @@ void VoodooI2CCyapaGen3Device::TapToClick(csgesture_softc *sc, int button) {
             buttonmask = MOUSE_BUTTON_3;
             break;
     }
-    if (buttonmask != 0 && sc->tickssinceclick > 10) {
-        update_relative_mouse(buttonmask, 0, 0, 0, 0);
-        update_relative_mouse(0, 0, 0, 0, 0);
+    if (buttonmask != 0 && sc->tickssinceclick > 10 && sc->ticksincelastrelease == 0) {
+        sc->idForMouseDown = -1;
+        sc->mouseDownDueToTap = true;
+        sc->buttonmask = buttonmask;
+        sc->mousebutton = button;
+        sc->mousedown = true;
         sc->tickssinceclick = 0;
+    }
+}
+
+void VoodooI2CCyapaGen3Device::ClearTapDrag(csgesture_softc *sc, int i) {
+    if (i == sc->idForMouseDown && sc->mouseDownDueToTap == true) {
+        if (sc->tick[i] < 10) {
+            //Double Tap
+            update_relative_mouse(0, 0, 0, 0, 0);
+            update_relative_mouse(sc->buttonmask, 0, 0, 0, 0);
+        }
+        sc->mouseDownDueToTap = false;
+        sc->mousedown = false;
+        sc->buttonmask = 0;
+        sc->idForMouseDown = -1;
+        //Clear Tap Drag
     }
 }
 
@@ -347,8 +392,8 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     sc->dy = 0;
     
 #pragma mark process touch thresholds
-    int avgx[15];
-    int avgy[15];
+    int avgx[MAX_FINGERS];
+    int avgy[MAX_FINGERS];
     
     int abovethreshold = 0;
     int recentlyadded = 0;
@@ -356,28 +401,38 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     int a = 0;
     
     int nfingers = 0;
-    for (int i = 0;i < 15;i++) {
+    for (int i = 0;i < MAX_FINGERS;i++) {
         if (sc->x[i] != -1)
             nfingers++;
     }
     
-    for (int i = 0;i < 15;i++) {
+    int lastfinger = 0;
+    for (int i = 0;i < MAX_FINGERS;i++) {
+        if (sc->truetick[i] == 0)
+            continue;
+        if (sc->x[lastfinger] == -1) {
+            lastfinger = i;
+            continue;
+        }
+        if (sc->truetick[i] <= sc->truetick[lastfinger])
+            lastfinger = i;
+    }
+    
+    for (int i = 0;i < MAX_FINGERS;i++) {
         if (sc->truetick[i] < 30 && sc->truetick[i] != 0)
             recentlyadded++;
         if (sc->tick[i] == 0)
             continue;
         avgx[i] = sc->totalx[i] / sc->tick[i];
         avgy[i] = sc->totaly[i] / sc->tick[i];
-        if (distancesq(avgx[i], avgy[i]) > 2) {
+        bool useLastFinger = false;
+        if (i == lastfinger && sc->truetick[lastfinger] > 30)
+            useLastFinger = true;
+        if (useLastFinger || distancesq(avgx[i], avgy[i]) > 2) {
             abovethreshold++;
             iToUse[a] = i;
             a++;
         }
-        /*else if (nfingers == 1 && sc->x[i] != -1 && sc->truetick[i] > 50) {
-         abovethreshold = 1;
-         iToUse[a] = i;
-         a++;
-         }*/
     }
     
 #pragma mark process different gestures
@@ -400,12 +455,7 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     if (sc->mousebutton > 3)
         sc->mousebutton = 3;
     
-    if (sc->mouseDownDueToTap) {
-        sc->mousedown = true;
-        sc->mousebutton = 1;
-        buttonmask = MOUSE_BUTTON_1;
-        sc->buttonmask = buttonmask;
-    } else {
+    if (!sc->mouseDownDueToTap) {
         if (sc->buttondown && !sc->mousedown) {
             sc->mousedown = true;
             sc->tickssinceclick = 0;
@@ -433,12 +483,13 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
 #pragma mark shift to last
     int releasedfingers = 0;
     
-    for (int i = 0;i < 15;i++) {
+    for (int i = 0;i < MAX_FINGERS;i++) {
         if (sc->x[i] != -1) {
-            /*if (sc->ticksincelastrelease < 25 && !sc->mouseDownDueToTap) {
-             sc->mouseDownDueToTap = true;
-             sc->idForMouseDown = i;
-             }*/
+            if (sc->lastx[i] == -1) {
+                if (sc->ticksincelastrelease < 10 && sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
+                    sc->idForMouseDown = i; //Associate Tap Drag
+                }
+            }
             sc->truetick[i]++;
             if (sc->tick[i] < 10) {
                 if (sc->lastx[i] != -1) {
@@ -488,10 +539,7 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
             }
         }
         if (sc->x[i] == -1) {
-            if (i == sc->idForMouseDown) {
-                sc->mouseDownDueToTap = false;
-                sc->idForMouseDown = -1;
-            }
+            ClearTapDrag(sc, i);
             if (sc->lastx[i] != -1)
                 sc->ticksincelastrelease = -1;
             for (int j = 0;j < 10;j++) {
@@ -516,7 +564,7 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     sc->ticksincelastrelease++;
     
 #pragma mark process tap to click
-    TapToClick(sc, releasedfingers);
+    TapToClickOrDrag(sc, releasedfingers);
     
 #pragma mark send to system
     update_relative_mouse(sc->buttonmask, sc->dx, sc->dy, sc->scrolly, sc->scrollx);
@@ -524,6 +572,10 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
 
 void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc){
     int nfingers;
+    
+    if ((regs->stat & CYAPA_STAT_RUNNING) == 0) {
+        regs->fngr = 0;
+    }
     
     nfingers = CYAPA_FNGR_NUMFINGERS(regs->fngr);
     
@@ -630,6 +682,21 @@ void VoodooI2CCyapaGen3Device::detach( IOService * provider )
     super::detach(provider);
 }
 
+void VoodooI2CCyapaGen3Device::cyapa_set_power_mode(uint8_t power_mode)
+{
+    uint8_t ret;
+    uint8_t power;
+    
+    readI2C(CMD_POWER_MODE, 1, &ret);
+    if (ret < 0)
+        return;
+    
+    power = (ret & ~0xFC);
+    power |= power_mode & 0xFc;
+    
+    writeI2C(CMD_POWER_MODE, 1, &power);
+}
+
 int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     int ret;
     UInt16 hidRegister;
@@ -644,12 +711,50 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
         0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,
         0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
     
+    uint8_t bl_deactivate[] = {
+        0x00, 0xff, 0x3b, 0x00, 0x01,
+        0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
+    
     cyapa_boot_regs boot;
     
     readI2C(0x00, sizeof(boot), (uint8_t *)&boot);
     
-    if ((boot.stat & CYAPA_STAT_RUNNING) == 0)
-        ret = writeI2C(0x00, sizeof(bl_exit), bl_exit);
+    if ((boot.stat & CYAPA_STAT_RUNNING) == 0){
+        if (boot.error & CYAPA_ERROR_BOOTLOADER)
+            ret = writeI2C(0x00, sizeof(bl_deactivate), bl_deactivate);
+        else
+            ret = writeI2C(0x00, sizeof(bl_exit), bl_exit);
+    }
+    
+    cyapa_cap cap;
+    readI2C(CMD_QUERY_CAPABILITIES, sizeof(cap), (uint8_t *)&cap);
+    if (strncmp((const char *)cap.prod_ida, "CYTRA", 5) != 0) {
+        IOLog("%s::%s::[cyapainit] Product ID \"%5.5s\" mismatch\n", getName(), _controller->_dev->name,
+                   cap.prod_ida);
+    }
+    
+    csgesture_softc *sc = &softc;
+    sc->resx = ((cap.max_abs_xy_high << 4) & 0x0F00) |
+    cap.max_abs_x_low;
+    sc->resy = ((cap.max_abs_xy_high << 8) & 0x0F00) |
+    cap.max_abs_y_low;
+    sc->phyx = ((cap.phy_siz_xy_high << 4) & 0x0F00) |
+    cap.phy_siz_x_low;
+    sc->phyy = ((cap.phy_siz_xy_high << 8) & 0x0F00) |
+    cap.phy_siz_y_low;
+    IOLog("%s::%s::[cyapainit] %5.5s-%6.6s-%2.2s buttons=%c%c%c res=%dx%d\n",
+               getName(), _controller->_dev->name,
+               cap.prod_ida, cap.prod_idb, cap.prod_idc,
+               ((cap.buttons & CYAPA_FNGR_LEFT) ? 'L' : '-'),
+               ((cap.buttons & CYAPA_FNGR_MIDDLE) ? 'M' : '-'),
+               ((cap.buttons & CYAPA_FNGR_RIGHT) ? 'R' : '-'),
+               sc->resx,
+               sc->resy);
+    
+    cyapa_set_power_mode(CMD_POWER_MODE_FULL);
+    
+    readI2C(CMD_BOOT_STATUS, sizeof(boot), (uint8_t *)&boot);
+
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!hid_device->workLoop) {
@@ -801,6 +906,8 @@ void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* se
     hid_device->timerSource->setTimeoutMS(10);
 }
 
+_CYAPA_RELATIVE_MOUSE_REPORT lastreport;
+
 void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
                                                      char x, char y, char wheelPosition, char wheelHPosition){
     _CYAPA_RELATIVE_MOUSE_REPORT report;
@@ -810,6 +917,14 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
     report.YValue = y;
     report.WheelPosition = wheelPosition;
     report.HWheelPosition = wheelHPosition;
+    
+    if (report.Button == lastreport.Button &&
+        report.XValue == lastreport.XValue &&
+        report.YValue == lastreport.YValue &&
+        report.WheelPosition == lastreport.WheelPosition &&
+        report.HWheelPosition == lastreport.HWheelPosition)
+        return;
+    lastreport = report;
     
     lastmouse.x = x;
     lastmouse.y = y;

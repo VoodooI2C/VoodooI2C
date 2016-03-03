@@ -22,6 +22,8 @@
 #define __le16 UInt16
 #define __le32 UInt32
 
+#define MAX_FINGERS 15
+
 struct csgesture_softc {
     //hardware input
     int x[15];
@@ -29,6 +31,12 @@ struct csgesture_softc {
     int p[15];
     
     bool buttondown;
+    
+    //hardware info
+    int resx;
+    int resy;
+    int phyx;
+    int phyy;
     
     //system output
     int dx;
@@ -136,6 +144,21 @@ typedef struct __attribute__((__packed__)){
     } touch[CYAPA_MAX_MT];
 } cyapa_regs;
 
+typedef struct __attribute__((__packed__)){
+    uint8_t prod_ida[5];    /* 0x00 - 0x04 */
+    uint8_t prod_idb[6];    /* 0x05 - 0x0A */
+    uint8_t prod_idc[2];    /* 0x0B - 0x0C */
+    uint8_t reserved[6];    /* 0x0D - 0x12 */
+    uint8_t buttons;        /* 0x13 */
+    uint8_t gen;            /* 0x14, low 4 bits */
+    uint8_t max_abs_xy_high;/* 0x15 7:4 high x bits, 3:0 high y bits */
+    uint8_t max_abs_x_low;  /* 0x16 */
+    uint8_t max_abs_y_low;  /* 0x17 */
+    uint8_t phy_siz_xy_high;/* 0x18 7:4 high x bits, 3:0 high y bits */
+    uint8_t phy_siz_x_low;  /* 0x19 */
+    uint8_t phy_siz_y_low;  /* 0x1A */
+} cyapa_cap;
+
 class VoodooI2C;
 class VoodooHIDMouseWrapper;
 class IOBufferMemoryDescriptor;
@@ -226,6 +249,8 @@ public:
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     
+    void cyapa_set_power_mode(uint8_t power_mode);
+    
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
     
@@ -235,7 +260,8 @@ public:
     int distancesq(int delta_x, int delta_y);
     void ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
     void ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
-    void TapToClick(csgesture_softc *sc, int button);
+    void TapToClickOrDrag(csgesture_softc *sc, int button);
+    void ClearTapDrag(csgesture_softc *sc, int i);
     void ProcessGesture(csgesture_softc *sc);
     void TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc);
 };
