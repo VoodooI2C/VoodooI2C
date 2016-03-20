@@ -11,10 +11,11 @@ Support for i2c-hid touchscreens, trackpads and sensor hubs (which control accel
 # Supported Devices
 The following devices are confirmed to work with the current iteration of VoodooI2C
 
-* Synaptics 7500 Clearpad touchscreen (Dell Venue Pro 11) - only partially
+* Synaptics 7500 Clearpad touchscreen (Dell Venue Pro 11) - enumeration yes, input no
 * Synaptics 7501 Clearpad touchscreen (Acer Switch 12)
 * Atmel 1000 touchscreen (Dell XPS 12)
 * NTRG 0001 touchscreen (Surface Pro 3)
+* FTSC1000 touchscreen (Cube i7)
 * CYAP0000 trackpad (Haswell Chromebooks)
  * This uses a propriety interface, as opposed to i2c-hid in the above devices, so requires use of `VoodooCyapaGen3Device` instead of `VoodooI2CHIDDevice`
 
