@@ -25,6 +25,7 @@ bool VoodooHIDWrapper::start(IOService *provider) {
         return false;
 
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+    setProperty("HIDDefaultBehavior", OSString::withCString("Trackpad"));
     return IOHIDDevice::start(provider);
 }
 
