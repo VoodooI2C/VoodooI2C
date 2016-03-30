@@ -4,7 +4,7 @@
 //
 //  Created by CoolStar on 12/13/15.
 //  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad 3.0 beta 3 for Windows
+//  ported from crostrackpad 3.0 beta 8 for Windows
 //
 
 #ifndef VoodooI2C_VoodooCyapaGen3Device_h
@@ -48,6 +48,15 @@ struct csgesture_softc {
     int buttonmask;
     
     //used internally in driver
+    int panningActive;
+    int idForPanning;
+    
+    int scrollingActive;
+    int idsForScrolling[2];
+    int ticksSinceScrolling;
+    
+    int blacklistedids[15];
+    
     bool mouseDownDueToTap;
     int idForMouseDown;
     bool mousedown;
@@ -258,8 +267,8 @@ public:
                                char x, char y, char wheelPosition, char wheelHPosition);
     
     int distancesq(int delta_x, int delta_y);
-    void ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
-    void ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
+    bool ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
+    bool ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
     void TapToClickOrDrag(csgesture_softc *sc, int button);
     void ClearTapDrag(csgesture_softc *sc, int i);
     void ProcessGesture(csgesture_softc *sc);
