@@ -630,10 +630,6 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
 void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc){
     int nfingers;
     
-    if ((regs->stat & CYAPA_STAT_RUNNING) == 0) {
-        regs->fngr = 0;
-    }
-    
     nfingers = CYAPA_FNGR_NUMFINGERS(regs->fngr);
     
     for (int i = 0;i < 15;i++) {
@@ -961,6 +957,8 @@ void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* se
     hid_device->timerSource->setTimeoutMS(10);
 }
 
+_CYAPA_RELATIVE_MOUSE_REPORT lastreport;
+
 void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
                                                      char x, char y, char wheelPosition, char wheelHPosition){
     _CYAPA_RELATIVE_MOUSE_REPORT report;
@@ -970,6 +968,14 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
     report.YValue = y;
     report.WheelPosition = wheelPosition;
     report.HWheelPosition = wheelHPosition;
+    
+    if (report.Button == lastreport.Button &&
+        report.XValue == lastreport.XValue &&
+        report.YValue == lastreport.YValue &&
+        report.WheelPosition == lastreport.WheelPosition &&
+        report.HWheelPosition == lastreport.HWheelPosition)
+        return;
+    lastreport = report;
     
     lastmouse.x = x;
     lastmouse.y = y;
