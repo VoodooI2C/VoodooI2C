@@ -10,7 +10,7 @@
 #include "VoodooI2C.h"
 #include "VoodooHIDWrapper.h"
 
-OSDefineMetaClassAndStructors(VoodooI2CHIDDevice, IOService);
+OSDefineMetaClassAndStructors(VoodooI2CHIDDevice, VoodooI2CDevice);
 
 bool VoodooI2CHIDDevice::attach(IOService * provider, IOService* child)
 {

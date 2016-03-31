@@ -18,6 +18,7 @@
 #include <IOKit/IOLocks.h>
 #include <IOKit/IOCommandGate.h>
 #include <IOKit/IOTimerEventSource.h>
+#include "VoodooI2CDevice.h"
 
 #define __le16 UInt16
 #define __le32 UInt32
@@ -32,7 +33,7 @@ class VoodooI2C;
 class VoodooHIDWrapper;
 class IOBufferMemoryDescriptor;
 
-class VoodooI2CHIDDevice : public IOService
+class VoodooI2CHIDDevice : public VoodooI2CDevice
 {
     typedef IOService super;
     OSDeclareDefaultStructors(VoodooI2CHIDDevice);

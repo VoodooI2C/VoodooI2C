@@ -11,7 +11,7 @@
 #include "VoodooI2C.h"
 #include "VoodooHIDMouseWrapper.h"
 
-OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, IOService);
+OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, VoodooI2CDevice);
 
 #ifndef ABS32
 #define ABS32
@@ -83,7 +83,7 @@ unsigned char cyapadesc[] = {
     0x95, 0x01,                         //     Report Count (1)
     0x81, 0x06,                         //     Input (Data, Variable, Relative)
     0xc0,                               //   END_COLLECTION
-    0xc0                               // END_COLLECTION
+    0xc0,                               // END_COLLECTION
     
     /*//TOUCH PAD input TLC
      0x05, 0x0d,                         // USAGE_PAGE (Digitizers)
@@ -127,7 +127,7 @@ unsigned char cyapadesc[] = {
     //
     // Keyboard report starts here
     //
-    /*0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
+     0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
      0x09, 0x06,                         // USAGE (Keyboard)
      0xa1, 0x01,                         // COLLECTION (Application)
      0x85, REPORTID_KEYBOARD,            //   REPORT_ID (Keyboard)
@@ -159,7 +159,7 @@ unsigned char cyapadesc[] = {
      0x19, 0x00,                         //   USAGE_MINIMUM (Reserved (no event indicated))
      0x29, 0x65,                         //   USAGE_MAXIMUM (Keyboard Application)
      0x81, 0x00,                         //   INPUT (Data,Ary,Abs)
-     0xc0,                               // END_COLLECTION*/
+     0xc0,                               // END_COLLECTION
 };
 
 typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
@@ -178,6 +178,23 @@ typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
     UInt8		HWheelPosition;
     
 } CyapaRelativeMouseReport;
+
+typedef struct __attribute__((__packed__)) _CYAPA_KEYBOARD_REPORT
+{
+    
+    BYTE      ReportID;
+    
+    // Left Control, Left Shift, Left Alt, Left GUI
+    // Right Control, Right Shift, Right Alt, Right GUI
+    BYTE      ShiftKeyFlags;
+    
+    BYTE      Reserved;
+    
+    // See http://www.usb.org/developers/devclass_docs/Hut1_11.pdf
+    // for a list of key codes
+    BYTE      KeyCodes[KBD_KEY_CODES];
+    
+} CyapaKeyboardReport;
 
 int VoodooI2CCyapaGen3Device::distancesq(int delta_x, int delta_y){
     return (delta_x * delta_x) + (delta_y*delta_y);
@@ -321,7 +338,7 @@ bool VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
     return false;
 }
 
-/*bool ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+bool VoodooI2CCyapaGen3Device::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     if (abovethreshold == 3 || abovethreshold == 4) {
         int i1 = iToUse[0];
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
@@ -345,12 +362,12 @@ bool VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
         if (sc->multitaskinggesturetick > 5 && !sc->multitaskingdone) {
             if ((abs(delta_y1) + abs(delta_y2) + abs(delta_y3)) > (abs(delta_x1) + abs(delta_x2) + abs(delta_x3))) {
                 if (abs(sc->multitaskingy) > 50) {
-                    BYTE shiftKeys = KBD_LGUI_BIT;
-                    BYTE keyCodes[KBD_KEY_CODES] = { 0, 0, 0, 0, 0, 0 };
+                    uint8_t shiftKeys = KBD_LCONTROL_BIT;
+                    uint8_t keyCodes[KBD_KEY_CODES] = { 0, 0, 0, 0, 0, 0 };
                     if (sc->multitaskingy < 0)
-                        keyCodes[0] = 0x2B;
+                        keyCodes[0] = 0x52;
                     else
-                        keyCodes[0] = 0x07;
+                        keyCodes[0] = 0x51;
                     update_keyboard(shiftKeys, keyCodes);
                     shiftKeys = 0;
                     keyCodes[0] = 0x0;
@@ -362,8 +379,8 @@ bool VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
             }
             else {
                 if (abs(sc->multitaskingx) > 50) {
-                    BYTE shiftKeys = KBD_LGUI_BIT | KBD_LCONTROL_BIT;
-                    BYTE keyCodes[KBD_KEY_CODES] = { 0, 0, 0, 0, 0, 0 };
+                    uint8_t shiftKeys = KBD_LCONTROL_BIT;
+                    uint8_t keyCodes[KBD_KEY_CODES] = { 0, 0, 0, 0, 0, 0 };
                     if (sc->multitaskingx > 0)
                         keyCodes[0] = 0x50;
                     else
@@ -393,7 +410,7 @@ bool VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
         sc->multitaskingdone = false;
         return false;
     }
-}*/
+}
 
 void VoodooI2CCyapaGen3Device::TapToClickOrDrag(csgesture_softc *sc, int button) {
     sc->tickssinceclick++;
@@ -488,8 +505,8 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     
 #pragma mark process different gestures
     bool handled = false;
-    //if (!handled)
-    //    handled = ProcessThreeFingerSwipe(sc, abovethreshold, iToUse);
+    if (!handled)
+        handled = ProcessThreeFingerSwipe(sc, abovethreshold, iToUse);
     if (!handled)
         handled = ProcessScroll(sc, abovethreshold, iToUse);
     if (!handled)
@@ -989,6 +1006,25 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
         IOLog("Error handling report: 0x%.8x\n", err);
     
     buffer->release();
+}
+
+void VoodooI2CCyapaGen3Device::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODES]) {
+    _CYAPA_KEYBOARD_REPORT report;
+    report.ReportID = REPORTID_KEYBOARD;
+    report.ShiftKeyFlags = shiftKeys;
+    for (int i = 0; i < KBD_KEY_CODES; i++){
+        report.KeyCodes[i] = keyCodes[i];
+    }
+    
+    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
+    buffer->writeBytes(0, &report, sizeof(report));
+    
+    IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
+    if (err != kIOReturnSuccess)
+        IOLog("Error handling report: 0x%.8x\n", err);
+    
+    buffer->release();
+
 }
 
 int VoodooI2CCyapaGen3Device::reportDescriptorLength(){
