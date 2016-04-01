@@ -18,6 +18,7 @@
 #include <IOKit/IOLocks.h>
 #include <IOKit/IOCommandGate.h>
 #include <IOKit/IOTimerEventSource.h>
+#include "VoodooI2CDevice.h"
 
 #define __le16 UInt16
 #define __le32 UInt32
@@ -172,7 +173,7 @@ class VoodooI2C;
 class VoodooHIDMouseWrapper;
 class IOBufferMemoryDescriptor;
 
-class VoodooI2CCyapaGen3Device : public IOService
+class VoodooI2CCyapaGen3Device : public VoodooI2CDevice
 {
     typedef IOService super;
     OSDeclareDefaultStructors(VoodooI2CCyapaGen3Device);
@@ -265,10 +266,13 @@ public:
     
     void update_relative_mouse(char button,
                                char x, char y, char wheelPosition, char wheelHPosition);
+    void update_keyboard(uint8_t shiftKeys, uint8_t *keyCodes);
     
     int distancesq(int delta_x, int delta_y);
     bool ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
     bool ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
+    bool ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
+    
     void TapToClickOrDrag(csgesture_softc *sc, int button);
     void ClearTapDrag(csgesture_softc *sc, int i);
     void ProcessGesture(csgesture_softc *sc);

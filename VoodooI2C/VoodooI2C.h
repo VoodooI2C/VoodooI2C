@@ -6,6 +6,7 @@
 #include <IOKit/IOLocks.h>
 #include <IOKit/IOCommandGate.h>
 #include <string.h>
+#include "VoodooI2CDevice.h"
 #include "VoodooI2CHIDDevice.h"
 #include "VoodooCyapaGen3Device.h"
 
@@ -251,7 +252,7 @@ public:
     
     
     
-    VoodooI2CHIDDevice* bus_devices[2];
+    VoodooI2CDevice* bus_devices[2];
     int bus_devices_number;
     
 
