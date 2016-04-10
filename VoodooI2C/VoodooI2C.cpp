@@ -447,8 +447,7 @@ bool VoodooI2C::start(IOService * provider) {
 #endif
                         if (strcmp(getMatchedName((IOService *)child), "CYAP0000") == 0)
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CCyapaGen3Device);
-                        else if (strcmp(getMatchedName((IOService *)child), "ATML0000") == 0){
-                            continue; //BROKEN DRIVER CAUSES FREEZE.
+                        else if (strcmp(getMatchedName((IOService *)child), "ATML0001") == 0){
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CAtmelMxtScreenDevice);
                         } else
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);

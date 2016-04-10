@@ -9,7 +9,7 @@
 
 #include "VoodooI2CAtmelMxtScreenDevice.h"
 #include "VoodooI2C.h"
-#include "VoodooHIDMouseWrapper.h"
+#include "VoodooAtmelTouchWrapper.h"
 
 OSDefineMetaClassAndStructors(VoodooI2CAtmelMxtScreenDevice, VoodooI2CDevice);
 
@@ -129,7 +129,7 @@ unsigned char atmeldesc[] = {
     0xc0,                               // END_COLLECTION
 };
 
-typedef struct  __attribute__((__packed__)) TOUCH
+typedef struct __attribute__((__packed__)) TOUCH
 {
     
     UInt8      Status;
@@ -146,7 +146,7 @@ typedef struct  __attribute__((__packed__)) TOUCH
     
 } PTOUCH;
 
-typedef struct  __attribute__((__packed__)) _ATMEL_MULTITOUCH_REPORT
+typedef struct __attribute__((__packed__)) _ATMEL_MULTITOUCH_REPORT
 {
     
     UInt8      ReportID;
@@ -226,14 +226,17 @@ void VoodooI2CAtmelMxtScreenDevice::stop(IOService* device) {
         hid_device->timerSource = NULL;
     }
     
-    //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
-    //hid_device->interruptSource->disable();
-    hid_device->interruptSource = NULL;
+    if (hid_device->interruptSource){
+        //hid_device->interruptSource->disable();
+        //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource = NULL;
+    }
     
     hid_device->workLoop->release();
     hid_device->workLoop = NULL;
     
-    IOFree(core.buf, totsize);
+    if (totsize > 0)
+        IOFree(core.buf, totsize);
     
     IOFree(hid_device, sizeof(I2CDevice));
     
@@ -516,6 +519,11 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
     
     atmel_reset_device();
     
+    for (int i=0; i < 20; i++){
+        Flags[i] = 0;
+    }
+    TouchCount = 0;
+    
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!hid_device->workLoop) {
@@ -526,8 +534,8 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->retain();
     
-    /*
-     hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->provider);
+    
+     /*hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CAtmelMxtScreenDevice::InterruptOccured), hid_device->provider);
      
      if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
      IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
@@ -535,8 +543,8 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
      return -1;
      }
      
-     hid_device->interruptSource->enable();
-     */
+     hid_device->interruptSource->enable();*/
+    
     
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CAtmelMxtScreenDevice::get_input));
     if (!hid_device->timerSource){
@@ -569,7 +577,7 @@ void VoodooI2CAtmelMxtScreenDevice::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooHIDMouseWrapper;
+    _wrapper = new VoodooAtmelTouchWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
@@ -710,8 +718,11 @@ void VoodooI2CAtmelMxtScreenDevice::InterruptOccured(OSObject* owner, IOInterrup
 }
 
 void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
+    //return;
+    //mxt_message_t msg;
+    //int ret1 = readI2C(0, sizeof(msg), (uint8_t *)&msg);
     mxt_message_t msg;
-    readI2C(0, sizeof(msg), (uint8_t *)&msg);
+    int ret1 = mxt_read_reg(msgprocobj->start_address, &msg, sizeof(msg));
     
     int reportid = msg.any.reportid;
     
@@ -754,6 +765,15 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
     struct _ATMEL_MULTITOUCH_REPORT report;
     report.ReportID = REPORTID_MTOUCH;
     
+    for (int i=0;i<10;i++){
+        report.Touch[i].ContactID = 0;
+        report.Touch[i].Height = 0;
+        report.Touch[i].Width = 0;
+        report.Touch[i].XValue = 0;
+        report.Touch[i].YValue = 0;
+        report.Touch[i].Status = 0;
+    }
+    
     int count = 0, i = 0;
     while (count < 10 && i < 20) {
         if (Flags[i] != 0) {
@@ -767,16 +787,17 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
                 report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
+                IOLog("%s::%s::Detect Touch %d\n", getName(), _controller->_dev->name, i);
             }
             else if (flags & MXT_T9_PRESS) {
                 report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
+                IOLog("%s::%s::Pressed Touch %d\n", getName(), _controller->_dev->name, i);
             }
             else if (flags & MXT_T9_RELEASE) {
+                IOLog("%s::%s::Released Touch %d\n", getName(), _controller->_dev->name, i);
                 report.Touch[count].Status = 0;
                 Flags[i] = 0;
             }
-            else
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT;
             
             count++;
         }
@@ -785,9 +806,9 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
     
     report.ActualCount = count;
     
-    IOLog("Touches: %d\n", count);
-    
-    if (count > 0) {
+    if (count > 0 || TouchCount != count) {
+        IOLog("%s::%s::Touches %d\n", getName(), _controller->_dev->name, count);
+        
         IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
         buffer->writeBytes(0, &report, sizeof(report));
         
@@ -797,6 +818,8 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
         
         buffer->release();
     }
+    
+    TouchCount = count;
     
     hid_device->timerSource->setTimeoutMS(10);
 }
@@ -818,6 +841,15 @@ void VoodooI2CAtmelMxtScreenDevice::write_report_to_buffer(IOMemoryDescriptor *b
     struct _ATMEL_MULTITOUCH_REPORT report;
     report.ReportID = REPORTID_MTOUCH;
     
+    for (int i=0;i<10;i++){
+        report.Touch[i].ContactID = 0;
+        report.Touch[i].Height = 0;
+        report.Touch[i].Width = 0;
+        report.Touch[i].XValue = 0;
+        report.Touch[i].YValue = 0;
+        report.Touch[i].Status = 0;
+    }
+    
     int count = 0, i = 0;
     while (count < 10 && i < 20) {
         if (Flags[i] != 0) {
@@ -839,8 +871,6 @@ void VoodooI2CAtmelMxtScreenDevice::write_report_to_buffer(IOMemoryDescriptor *b
                 report.Touch[count].Status = 0;
                 Flags[i] = 0;
             }
-            else
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT;
             
             count++;
         }
@@ -854,7 +884,7 @@ void VoodooI2CAtmelMxtScreenDevice::write_report_to_buffer(IOMemoryDescriptor *b
     buffer->writeBytes(0, &report, rsize);
 }
 
-void VoodooI2CAtmelMxtScreenDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
+void VoodooI2CAtmelMxtScreenDevice::write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer){
     
 #define MT_TOUCH_COLLECTION												\
 MT_TOUCH_COLLECTION0 \
@@ -885,6 +915,8 @@ MT_TOUCH_COLLECTION2 \
         USAGE_PAGE
         0xc0,                               // END_COLLECTION
     };
+    
+    IOLog("%s::%s:: Report Descriptor Written\n", getName(), _controller->_dev->name);
     
     UInt rsize = sizeof(ReportDescriptor);
     

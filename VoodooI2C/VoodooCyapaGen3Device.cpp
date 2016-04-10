@@ -9,7 +9,7 @@
 
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooI2C.h"
-#include "VoodooHIDMouseWrapper.h"
+#include "VoodooCyapaMouseWrapper.h"
 
 OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, VoodooI2CDevice);
 
@@ -874,7 +874,7 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooHIDMouseWrapper;
+    _wrapper = new VoodooCyapaMouseWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
@@ -1052,7 +1052,7 @@ void VoodooI2CCyapaGen3Device::write_report_to_buffer(IOMemoryDescriptor *buffer
     buffer->writeBytes(0, &report, rsize);
 }
 
-void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
+void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer){
     
     UInt rsize = sizeof(cyapadesc);
     

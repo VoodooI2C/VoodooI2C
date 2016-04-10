@@ -230,7 +230,7 @@ typedef struct __attribute__((__packed__)){
     uint8_t amplitude;
 } mxt_message_touch_t100;
 
-union mxt_message {
+union __attribute__((__packed__)) mxt_message {
     mxt_message_any any;
     mxt_message_touch_t9 touch_t9;
     mxt_message_touch_t100 touch_t100;

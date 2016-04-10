@@ -27,7 +27,7 @@
 #define HID_MAX_DESCRIPTOR_SIZE 4096
 
 class VoodooI2C;
-class VoodooHIDMouseWrapper;
+class VoodooAtmelTouchWrapper;
 class IOBufferMemoryDescriptor;
 
 class VoodooI2CAtmelMxtScreenDevice : public VoodooI2CDevice
@@ -36,7 +36,7 @@ class VoodooI2CAtmelMxtScreenDevice : public VoodooI2CDevice
     OSDeclareDefaultStructors(VoodooI2CAtmelMxtScreenDevice);
     
 private:
-    VoodooHIDMouseWrapper* _wrapper;
+    VoodooAtmelTouchWrapper* _wrapper;
     
     void initialize_wrapper(void);
     void destroy_wrapper(void);
@@ -110,12 +110,12 @@ public:
     int productID();
     
     void write_report_to_buffer(IOMemoryDescriptor *buffer);
-    void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
+    void write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     
     mxt_rollup core;
-    int totsize;
+    int totsize = 0;
     
     mxt_object	*msgprocobj;
     mxt_object	*cmdprocobj;
