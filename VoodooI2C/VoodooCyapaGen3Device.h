@@ -170,7 +170,7 @@ typedef struct __attribute__((__packed__)){
 } cyapa_cap;
 
 class VoodooI2C;
-class VoodooHIDMouseWrapper;
+class VoodooCyapaMouseWrapper;
 class IOBufferMemoryDescriptor;
 
 class VoodooI2CCyapaGen3Device : public VoodooI2CDevice
@@ -179,7 +179,7 @@ class VoodooI2CCyapaGen3Device : public VoodooI2CDevice
     OSDeclareDefaultStructors(VoodooI2CCyapaGen3Device);
     
 private:
-    VoodooHIDMouseWrapper* _wrapper;
+    VoodooCyapaMouseWrapper* _wrapper;
     
     void initialize_wrapper(void);
     void destroy_wrapper(void);
@@ -255,7 +255,7 @@ public:
     int productID();
     
     void write_report_to_buffer(IOMemoryDescriptor *buffer);
-    void write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer);
+    void write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     

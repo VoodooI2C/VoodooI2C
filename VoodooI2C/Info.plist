@@ -30,6 +30,7 @@
 			<string>VoodooI2C</string>
 			<key>IONameMatch</key>
 			<array>
+				<string>INT33C2</string>
 				<string>INT33C3</string>
 			</array>
 			<key>IOProviderClass</key>

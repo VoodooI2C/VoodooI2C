@@ -9,7 +9,7 @@
 
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooI2C.h"
-#include "VoodooHIDMouseWrapper.h"
+#include "VoodooCyapaMouseWrapper.h"
 
 OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, VoodooI2CDevice);
 
@@ -647,6 +647,10 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
 void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc){
     int nfingers;
     
+    if ((regs->stat & CYAPA_STAT_RUNNING) == 0) {
+        regs->fngr = 0;
+    }
+    
     nfingers = CYAPA_FNGR_NUMFINGERS(regs->fngr);
     
     for (int i = 0;i < 15;i++) {
@@ -771,12 +775,6 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     int ret;
     UInt16 hidRegister;
     
-    uint8_t clear[] = {
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-    
-    writeI2C(0x00, sizeof(clear), clear);
-    
     uint8_t bl_exit[] = {
         0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,
         0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
@@ -876,7 +874,7 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooHIDMouseWrapper;
+    _wrapper = new VoodooCyapaMouseWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
@@ -925,13 +923,13 @@ SInt32 VoodooI2CCyapaGen3Device::readI2C(uint8_t reg, size_t len, uint8_t *value
 SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *values){
     struct VoodooI2C::i2c_msg msgs[] = {
         {
-            .addr = 0x67,
+            .addr = hid_device->addr,
             .flags = 0,
             .len = 1,
             .buf = &reg,
         },
         {
-            .addr = 0x67,
+            .addr = hid_device->addr,
             .flags = 0,
             .len = (uint8_t)len,
             .buf = values,
@@ -1054,7 +1052,7 @@ void VoodooI2CCyapaGen3Device::write_report_to_buffer(IOMemoryDescriptor *buffer
     buffer->writeBytes(0, &report, rsize);
 }
 
-void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
+void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer){
     
     UInt rsize = sizeof(cyapadesc);
     

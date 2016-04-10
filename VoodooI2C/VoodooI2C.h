@@ -9,6 +9,7 @@
 #include "VoodooI2CDevice.h"
 #include "VoodooI2CHIDDevice.h"
 #include "VoodooCyapaGen3Device.h"
+#include "VoodooI2CAtmelMxtScreenDevice.h"
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
 
