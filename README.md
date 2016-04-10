@@ -21,7 +21,7 @@ The following devices are confirmed to work with the current iteration of Voodoo
 * CYAP0000 trackpad (Haswell Chromebooks)
  * This uses the propriety interface `VoodooCyapaGen3Device`.
 * ATML0001 touchscreen (Acer C720P Chromebook/Chromebook Pixel 2)
-  * Thus uses the propriety interface `VoodooI2CAtmelMxtScreenDevice`.
+  * This uses the propriety interface `VoodooI2CAtmelMxtScreenDevice`.
 
 # Helping out and testing
 
