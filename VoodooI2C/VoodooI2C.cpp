@@ -312,12 +312,40 @@ void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
  #############################################################################################
  */
 
+IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevice){
+    if (powerState == 0){
+        //Going to sleep
+        setI2CPowerState(_dev, false); //power off I2C bus
+        IOLog("%s::Going to Sleep!\n", getName());
+    } else {
+        //Waking up from Sleep
+        setI2CPowerState(_dev, true);  //power on I2C bus
+        
+        mapI2CMemory(_dev);
+        
+        initI2CBus(_dev);  //reinitialize I2C bus
+        
+        //we've initialised the I2C device, test here
+        
+        writel(_dev, 1, 0x800);
+        
+        //we've disabled the private space gate so the bus can actually communicate with devices, test here
+        
+        disableI2CInt(_dev);
+        
+        IOLog("%s::Woke up from Sleep!\n", getName());
+    }
+    return kIOPMAckImplied;
+}
+
 bool VoodooI2C::start(IOService * provider) {
     
     IOLog("%s::Found I2C device %s\n", getName(), getMatchedName(provider));
     
     if(!super::start(provider))
         return false;
+    
+    PMinit();
     
     fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
     
@@ -479,6 +507,29 @@ bool VoodooI2C::start(IOService * provider) {
     //if (initHIDDevice(hid_device))
     //    IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
     
+    // Declare an array of two IOPMPowerState structures (kMyNumberOfStates = 2).
+    
+#define kMyNumberOfStates 2
+    
+    static IOPMPowerState myPowerStates[kMyNumberOfStates];
+    // Zero-fill the structures.
+    bzero (myPowerStates, sizeof(myPowerStates));
+    // Fill in the information about your device's off state:
+    myPowerStates[0].version = 1;
+    myPowerStates[0].capabilityFlags = kIOPMPowerOff;
+    myPowerStates[0].outputPowerCharacter = kIOPMPowerOff;
+    myPowerStates[0].inputPowerRequirement = kIOPMPowerOff;
+    // Fill in the information about your device's on state:
+    myPowerStates[1].version = 1;
+    myPowerStates[1].capabilityFlags = kIOPMPowerOn;
+    myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
+    myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
+    
+    
+    
+    provider->joinPMtree(this);
+    
+    registerPowerDriver(this, myPowerStates, kMyNumberOfStates);
     
     return true;
      
@@ -548,6 +599,7 @@ void VoodooI2C::stop(IOService * provider) {
         IOFree(_dev, sizeof(I2CBus));
     }
     
+    PMstop();
     
     super::stop(provider);
 }

@@ -11,6 +11,8 @@
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooI2CAtmelMxtScreenDevice.h"
 
+#define kIOPMPowerOff		0
+
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
 
 #define STATUS_IDLE 0x0
@@ -273,6 +275,7 @@ public:
     UInt32 readClearIntrbitsI2C(I2CBus* _dev);
     void releaseAllI2CChildren();
     void setI2CPowerState(I2CBus* _dev, bool enabled);
+    IOReturn setPowerState(unsigned long powerState, IOService *whatDevice);
     virtual bool start(IOService* provider);
     virtual void stop(IOService* provider);
     int waitBusNotBusyI2C(I2CBus* _dev);

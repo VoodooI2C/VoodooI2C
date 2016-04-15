@@ -257,6 +257,8 @@ public:
     void write_report_to_buffer(IOMemoryDescriptor *buffer);
     void write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer);
     
+    IOReturn setPowerState(unsigned long powerState, IOService *whatDevice);
+    
     int i2c_get_slave_address(I2CDevice* hid_device);
     
     void cyapa_set_power_mode(uint8_t power_mode);
