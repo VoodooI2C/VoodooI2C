@@ -772,6 +772,8 @@ void VoodooI2CCyapaGen3Device::cyapa_set_power_mode(uint8_t power_mode)
 }
 
 int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
+    PMinit();
+    
     int ret;
     UInt16 hidRegister;
     
@@ -864,6 +866,28 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     initialize_wrapper();
     registerService();
     
+#define kMyNumberOfStates 2
+    
+    static IOPMPowerState myPowerStates[kMyNumberOfStates];
+    // Zero-fill the structures.
+    bzero (myPowerStates, sizeof(myPowerStates));
+    // Fill in the information about your device's off state:
+    myPowerStates[0].version = 1;
+    myPowerStates[0].capabilityFlags = kIOPMPowerOff;
+    myPowerStates[0].outputPowerCharacter = kIOPMPowerOff;
+    myPowerStates[0].inputPowerRequirement = kIOPMPowerOff;
+    // Fill in the information about your device's on state:
+    myPowerStates[1].version = 1;
+    myPowerStates[1].capabilityFlags = kIOPMPowerOn;
+    myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
+    myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
+    
+    
+    
+    this->_controller->joinPMtree(this);
+    
+    registerPowerDriver(this, myPowerStates, kMyNumberOfStates);
+    
     return 0;
     
 err:
@@ -940,6 +964,28 @@ SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *valu
     ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
     
     return ret;
+}
+
+IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOService *whatDevice){
+    if (powerState == 0){
+        //Going to sleep
+        if (hid_device->timerSource){
+            hid_device->timerSource->cancelTimeout();
+            hid_device->timerSource->release();
+            hid_device->timerSource = NULL;
+        }
+        IOLog("%s::Going to Sleep!\n", getName());
+    } else {
+        //Waking up from Sleep
+        if (!hid_device->timerSource){
+            hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
+            hid_device->workLoop->addEventSource(hid_device->timerSource);
+            hid_device->timerSource->setTimeoutMS(10);
+        }
+        
+        IOLog("%s::Woke up from Sleep!\n", getName());
+    }
+    return kIOPMAckImplied;
 }
 
 int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
