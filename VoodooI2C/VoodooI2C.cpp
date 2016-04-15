@@ -321,8 +321,6 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
         //Waking up from Sleep
         setI2CPowerState(_dev, true);  //power on I2C bus
         
-        mapI2CMemory(_dev);
-        
         initI2CBus(_dev);  //reinitialize I2C bus
         
         //we've initialised the I2C device, test here
