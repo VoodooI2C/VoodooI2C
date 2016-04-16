@@ -4,7 +4,7 @@
 //
 //  Created by CoolStar on 12/13/15.
 //  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad 3.0 beta 8 for Windows
+//  ported from crostrackpad 3.0 beta 9.4 for Windows
 //
 
 #ifndef VoodooI2C_VoodooCyapaGen3Device_h

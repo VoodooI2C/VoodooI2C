@@ -4,7 +4,7 @@
 //
 //  Created by CoolStar on 12/13/15.
 //  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad 3.0 beta 8 for Windows
+//  ported from crostrackpad 3.0 beta 9.4 for Windows
 //
 
 #include "VoodooCyapaGen3Device.h"
@@ -429,6 +429,12 @@ void VoodooI2CCyapaGen3Device::TapToClickOrDrag(csgesture_softc *sc, int button)
     }
     if (button == 0)
         return;
+    
+    for (int i = 0; i < MAX_FINGERS; i++){
+        if (sc->truetick[i] < 10 && sc->truetick[i] > 0)
+            button++;
+    }
+    
     int buttonmask = 0;
     
     switch (button) {
@@ -614,9 +620,7 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
                 sc->yhistory[i][j] = 0;
             }
             if (sc->tick[i] < 10 && sc->tick[i] != 0) {
-                int avgp = sc->totalp[i] / sc->tick[i];
-                if (avgp > 7)
-                    releasedfingers++;
+                releasedfingers++;
             }
             sc->totalx[i] = 0;
             sc->totaly[i] = 0;
