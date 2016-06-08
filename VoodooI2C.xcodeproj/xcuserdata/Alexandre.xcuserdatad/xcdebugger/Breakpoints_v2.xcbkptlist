@@ -91,23 +91,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "690"
             endingLineNumber = "690"
-            landmarkName = "VoodooI2C::xferMsgI2C(I2CBus* _dev)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VoodooI2C/VoodooI2C.cpp"
-            timestampString = "440044115.984717"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "347"
-            endingLineNumber = "347"
-            landmarkName = "VoodooI2C::start(IOService * provider)"
+            landmarkName = "VoodooI2C::waitBusNotBusyI2C(I2CBus* _dev)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -201,7 +185,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "434"
             endingLineNumber = "434"
-            landmarkName = "VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid)"
+            landmarkName = "VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -12,8 +12,9 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 ############################################################################################
 ############################################################################################
 ##### acpiConfigure
-##### accept I2CDevice* and get SSCN & FMCN from the ACPI tables data and set the
+##### accepts I2CDevice* and get SSCN & FMCN from the ACPI tables data and set the
 ##### values in the struct depending on the configuration we want (will always be I2C master)
+##### currently always returns true, TODO: return false when ACPI methods not available
 ############################################################################################
 #############################################################################################
  */
@@ -33,7 +34,7 @@ bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
  ############################################################################################
  ############################################################################################
  ##### disableI2CInt
- ##### **UNKNOWN**
+ ##### accepts I2CBus* and enables the controller interrupt mask
  ############################################################################################
  #############################################################################################
  */
@@ -46,7 +47,8 @@ void VoodooI2C::disableI2CInt(I2CBus* _dev) {
  ############################################################################################
  ############################################################################################
  ##### enableI2CDevice
- ##### accept I2CDevice* and sets the enabled status of the device to bool enable
+ ##### accepts I2CDevice* and sets the enabled status of the device to bool enable
+ ##### return true/false on success/failure
  ############################################################################################
  #############################################################################################
  */
@@ -72,6 +74,15 @@ void VoodooI2C::enableI2CDevice(I2CBus* _dev, bool enable) {
     IOLog("Timedout waiting for device status to change!\n");
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### funcI2C
+ ##### accepts I2CBus* and returns the functionality of the bus instance
+ ############################################################################################
+ #############################################################################################
+ */
+
 UInt32 VoodooI2C::funcI2C(I2CBus* _dev) {
     return _dev->functionality;
 }
@@ -80,8 +91,9 @@ UInt32 VoodooI2C::funcI2C(I2CBus* _dev) {
  ############################################################################################
  ############################################################################################
  ##### getACPIParams
- ##### accept IOACPIPlatformDevice* and get the method data using method, storing the results
+ ##### accepts IOACPIPlatformDevice*, char*, UInt32 x3 and gets the method data using method, storing the results
  ##### in hcnt, lcnt
+ ##### TODO: return true/false on success/failure
  ############################################################################################
  #############################################################################################
  */
@@ -91,10 +103,6 @@ void VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, U
     
     if(kIOReturnSuccess == fACPIDevice->evaluateObject(method, &object) && object) {
         OSArray* values = OSDynamicCast(OSArray, object);
-        
-        //IOLog("ACPI Configuration: %s: 0x%02x\n", method, OSDynamicCast(OSNumber, values->getObject(0))->unsigned32BitValue());
-        //IOLog("ACPI Configuration: %s: 0x%02x\n", method, OSDynamicCast(OSNumber, values->getObject(1))->unsigned32BitValue());
-        //IOLog("ACPI Configuration: %s: 0x%02x\n", method, OSDynamicCast(OSNumber, values->getObject(2))->unsigned32BitValue());
         
         *hcnt = OSDynamicCast(OSNumber, values->getObject(0))->unsigned32BitValue();
         *lcnt = OSDynamicCast(OSNumber, values->getObject(1))->unsigned32BitValue();
@@ -107,21 +115,10 @@ void VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, U
 }
 
 /*
-VoodooI2C::I2CBus* VoodooI2C::getBusByName(char* name ) {
-    if(strcmp(I2CBus1->name, name))
-        return I2CBus1;
-    else
-        return I2CBus2;
-    
-    return 0;
-}
- 
-*/
-/*
  ############################################################################################
  ############################################################################################
  ##### getMatchedName
- ##### accept IOService* and get the name of the matched device
+ ##### accepts IOService* and returns the name of the matched device
  ############################################################################################
  #############################################################################################
  */
@@ -131,6 +128,16 @@ char* VoodooI2C::getMatchedName(IOService* provider) {
     data = OSDynamicCast(OSData, provider->getProperty("name"));
     return (char*)data->getBytesNoCopy();
 }
+
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### handleTxAbortI2C
+ ##### accepts I2CBus* and outputs transaction error in IOLog
+ ##### TODO: change to void
+ ############################################################################################
+ #############################################################################################
+ */
 
 int VoodooI2C::handleTxAbortI2C(I2CBus* _dev) {
     
@@ -152,15 +159,18 @@ int VoodooI2C::handleTxAbortI2C(I2CBus* _dev) {
  ############################################################################################
  ############################################################################################
  ##### initI2CBus
- ##### accepts I2CDevice* and initialises the I2C Bus.
+ ##### accepts I2CDevice* and initialises the I2C Bus. Returns true if successful.
  ############################################################################################
  #############################################################################################
  */
 
 bool VoodooI2C::initI2CBus(I2CBus* _dev) {
     
+    //read the bus type from DW_IC_COMP_TYPE
     UInt32 reg = readl(_dev, DW_IC_COMP_TYPE);
     
+    
+    //check if bus type is valid, TODO: port other possibility from linux drivers
     if (reg == DW_IC_COMP_TYPE_VALUE) {
         IOLog("%s::%s::Found valid Synopsys component, continuing with initialisation\n", getName(), _dev->name);
     } else {
@@ -170,26 +180,38 @@ bool VoodooI2C::initI2CBus(I2CBus* _dev) {
     
     enableI2CDevice(_dev, false);
     
-    //Linux drivers set up sda/scl falling times and hcnt, lcnt here but we already set it up from the ACPI
+    //write standard mode hcnt, lcnt to DW_IC_SS_SCL_XCNT
     writel(_dev, _dev->ss_hcnt, DW_IC_SS_SCL_HCNT);
     writel(_dev, _dev->ss_lcnt, DW_IC_SS_SCL_LCNT);
     IOLog("%s::%s::Standard-mode HCNT:LCNT = %d:%d\n", getName(), _dev->name, _dev->ss_hcnt, _dev->ss_lcnt);
     
+    
+    //write fast mode hcnt, lcnt to DW_IC_DS_SCL_XCNT
     writel(_dev, _dev->fs_hcnt, DW_IC_FS_SCL_HCNT);
     writel(_dev, _dev->fs_lcnt, DW_IC_FS_SCL_LCNT);
     IOLog("%s::%s::Fast-mode HCNT:LCNT = %d:%d\n", getName(), _dev->name, _dev->fs_hcnt, _dev->fs_lcnt);
     
+    
+    //check bus version in DW_IC_COMP_VERSION to see if we can adjust SDA hold time
     reg = readl(_dev, DW_IC_COMP_VERSION); 
     if  (reg >= DW_IC_SDA_HOLD_MIN_VERS)
         writel(_dev, _dev->sda_hold_time, DW_IC_SDA_HOLD);
     else
         IOLog("%s::%s::Warning: hardware too old to adjust SDA hold time\n", getName(), _dev->name);
     
+    
+    //write transit buffer depth in DW_IC_TX_TL
     writel(_dev, _dev->tx_fifo_depth - 1, DW_IC_TX_TL);
+    
+    //write receive buffer depth in DW_IC_RX_TL
     writel(_dev, 0, DW_IC_RX_TL);
     
+    
+    //set default i2c target address in DW_IC_TAR, TODO: remove this, don't think we need it
     writel(_dev, 0x2c, DW_IC_TAR);
     
+    
+    //write I2C master configuration to DW_IC_CON
     writel(_dev, _dev->master_cfg, DW_IC_CON);
 
     return true;
@@ -199,7 +221,8 @@ bool VoodooI2C::initI2CBus(I2CBus* _dev) {
  ############################################################################################
  ############################################################################################
  ##### mapI2CMemory
- ##### accept I2CDevice* and map the device memory and store the data in the struct
+ ##### accepts I2CDevice* and maps the device memory and store the data in the struct
+ ##### returns true if succesful
  ############################################################################################
  #############################################################################################
  */
@@ -218,17 +241,33 @@ bool VoodooI2C::mapI2CMemory(I2CBus* _dev) {
     
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### readI2C
+ ##### accepts I2CBus* and reads from the read buffer during an ongoing transaction
+ ############################################################################################
+ #############################################################################################
+ */
+
 void VoodooI2C::readI2C(I2CBus* _dev) {
     struct i2c_msg *msgs = _dev->msgs;
     int rx_valid;
     
+    
+    //loop over the read index (less than the total number of messages)
     for(; _dev->msg_read_idx < _dev->msgs_num; _dev->msg_read_idx++) {
         UInt32 len;
         UInt8 *buf;
         
+        
+        //if current message is not a read, skip
         if (!(msgs[_dev->msg_read_idx].flags & I2C_M_RD))
             continue;
         
+        //if a read is not in progress then take the length and the current message in the loop
+        //is a read then take the length and buffer from the current message, else just set the
+        //length and buffer to the previous length and buffer
         if(!(_dev->status & STATUS_READ_IN_PROGRESS)) {
             len = msgs[_dev->msg_read_idx].len;
             buf = msgs[_dev->msg_read_idx].buf;
@@ -237,12 +276,16 @@ void VoodooI2C::readI2C(I2CBus* _dev) {
             buf = _dev->rx_buf;
         }
         
+        //check how many items left in receive buffer
         rx_valid = readl(_dev, DW_IC_RXFLR);
         
+        //collect data from receive buffer
         for (; len > 0 && rx_valid > 0; len--, rx_valid--)
             *buf++ = readl(_dev, DW_IC_DATA_CMD);
             _dev->rx_outstanding--;
         
+        //if there are still more messages to read, set status to read in progress and continue
+        //else remove read in progress status
         if (len > 0) {
             _dev->status |= STATUS_READ_IN_PROGRESS;
             _dev->rx_buf_len = len;
@@ -258,7 +301,8 @@ void VoodooI2C::readI2C(I2CBus* _dev) {
  ############################################################################################
  ############################################################################################
  ##### readl
- ##### accept I2CDevice* and read register at offset from the device's memory map
+ ##### accepts I2CDevice* and int and reads register at offset from the device's memory map
+ ##### returns register data
  ############################################################################################
  #############################################################################################
  */
@@ -267,11 +311,23 @@ UInt32 VoodooI2C::readl(I2CBus* _dev, int offset) {
     return *(const volatile UInt32 *)(_dev->mmio + offset);
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### readClearIntrbitsI2C
+ ##### accepts I2CBus* and determines which interrupt fires. Clears the relevant interrupt
+ ##### and returns the interrupt type.
+ ############################################################################################
+ #############################################################################################
+ */
+
+
 UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
     UInt32 stat;
-    
+    //get interrupt type from DW_IC_INTR_STAT
     stat = readl(_dev, DW_IC_INTR_STAT);
     
+    //determine interrupt type and clear relevant interrupt
     if (stat & DW_IC_INTR_RX_UNDER)
         readl(_dev, DW_IC_CLR_RX_UNDER);
     if (stat & DW_IC_INTR_RX_OVER)
@@ -281,6 +337,8 @@ UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
     if (stat & DW_IC_INTR_RD_REQ)
         readl(_dev, DW_IC_CLR_RD_REQ);
     if (stat & DW_IC_INTR_TX_ABRT) {
+        
+        //get transaction abort source from DW_IC_TX_ABRT_SOURCE
         _dev->abort_source = readl(_dev, DW_IC_TX_ABRT_SOURCE);
         readl(_dev, DW_IC_CLR_TX_ABRT);
     }
@@ -298,6 +356,16 @@ UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
     return stat;
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### setI2CPowerState
+ ##### accepts I2CBus* and bool and sets physical power state in DSDT
+ ############################################################################################
+ #############################################################################################
+ */
+
+
 
 void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
     _dev->provider->evaluateObject(enabled ? "_PS0" : "_PS3");
@@ -306,29 +374,35 @@ void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
 /*
  ############################################################################################
  ############################################################################################
- ##### start
- ##### accept IOService* and start the driver
+ ##### setPowerState
+ ##### accept unsigned long, IOService* and sets OS level power state
  ############################################################################################
  #############################################################################################
  */
 
 IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevice){
+    
+    // OS X going to sleep
     if (powerState == 0){
-        //Going to sleep
-        setI2CPowerState(_dev, false); //power off I2C bus
+        
+        //power off I2C bus
+        setI2CPowerState(_dev, false);
         IOLog("%s::Going to Sleep!\n", getName());
+        
+    // OS X waking up
     } else {
-        //Waking up from Sleep
-        setI2CPowerState(_dev, true);  //power on I2C bus
         
-        initI2CBus(_dev);  //reinitialize I2C bus
+        //power on I2C bus
+        setI2CPowerState(_dev, true);
         
-        //we've initialised the I2C device, test here
         
+        //reinitialize I2C bus
+        initI2CBus(_dev);
+        
+        //disable clock gating
         writel(_dev, 1, 0x800);
         
-        //we've disabled the private space gate so the bus can actually communicate with devices, test here
-        
+        //disable interrupts
         disableI2CInt(_dev);
         
         IOLog("%s::Woke up from Sleep!\n", getName());
@@ -336,6 +410,14 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
     return kIOPMAckImplied;
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### start
+ ##### accepts IOService* and initialises the driver and starts the bus
+ ############################################################################################
+ #############################################################################################
+ */
 bool VoodooI2C::start(IOService * provider) {
     
     IOLog("%s::Found I2C device %s\n", getName(), getMatchedName(provider));
@@ -343,6 +425,7 @@ bool VoodooI2C::start(IOService * provider) {
     if(!super::start(provider))
         return false;
     
+    //initialise OS power management
     PMinit();
     
     fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
@@ -352,7 +435,6 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
     
-    //Memory allocated for I2CBus struct, test here
     
     _dev->provider = fACPIDevice;
     _dev->name = getMatchedName(fACPIDevice);
@@ -364,7 +446,7 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    //provider opened, test here
+    //set up workloop
     _dev->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!_dev->workLoop) {
         IOLog("%s::%s::Failed to get workloop\n", getName(), _dev->name);
@@ -374,7 +456,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev->workLoop->retain();
     
-    //got workloop, test here
+    //set up interrupts
     _dev->interruptSource =
     IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2C::interruptOccured), _dev->provider);
     
@@ -386,7 +468,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev->interruptSource->enable();
     
-    //got interupt source, test here
+    //set up command gate
     
     _dev->commandGate = IOCommandGate::commandGate(this);
     
@@ -395,11 +477,11 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    //got command gate, test here
+    //power on I2C bus
     
     setI2CPowerState(_dev, true);
     
-    //we've turned the I2C device on, test here
+    //map I2C bus memory
     
     if(!mapI2CMemory(_dev)) {
         IOLog("%s::%s::Failed to map memory\n", getName(), _dev->name);
@@ -411,21 +493,22 @@ bool VoodooI2C::start(IOService * provider) {
         setProperty("virtual-address", (UInt32)_dev->mmap->getVirtualAddress(), 32);
     }
     
-    //we've mapped the memory, test here
+    //set I2C bus default configuration options
     
     _dev->clk_rate_khz = 400;
-    _dev->sda_hold_time = 0x12c;//_dev->clk_rate_khz*300 + 500000;
+    _dev->sda_hold_time = 0x12c;
     _dev->sda_falling_time = 300;
     _dev->scl_falling_time = 300;
     
-    //UInt32 param1 = readl(_dev, DW_IC_COMP_PARAM_1);
-    
-    //_dev->tx_fifo_depth = ((param1 >> 16) & 0xff) + 1;
-    //_dev->rx_fifo_depth = ((param1 >> 8) & 0xff) + 1;
+    //define I2C bus functionality
     
     _dev->functionality = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR| I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
     
+    //define I2C bus configuration
+    
     _dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE | DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
+    
+    //get ACPI configuration if they exist
     
     if(!acpiConfigure(_dev)) {
         IOLog("%s::%s::Failed to read ACPI config\n", getName(), _dev->name);
@@ -433,7 +516,7 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    //configure I2C device properties from ACPI, test here
+    //initialise I2C bus
     
     if(!initI2CBus(_dev)) {
         IOLog("%s::%s::Failed to initialise I2C Bus\n", getName(), _dev->name);
@@ -441,11 +524,11 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    //we've initialised the I2C device, test here
+    //disable LPSS clock gating
     
     writel(_dev, 1, 0x800);
     
-    //we've disabled the private space gate so the bus can actually communicate with devices, test here
+    //disable I2C interrupts
     
     disableI2CInt(_dev);
     
@@ -457,7 +540,7 @@ bool VoodooI2C::start(IOService * provider) {
     IORegistryEntry* child;
     
  
-    
+    //enumerate I2C children, TODO: major refactoring
     
     children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
     bus_devices_number = 0;
@@ -497,14 +580,9 @@ bool VoodooI2C::start(IOService * provider) {
     children->release();
 #warning "End crash with non-HID device"
     
-    IOLog("number: %d\n",bus_devices_number);
     
     
-    //we've successfully mapped devices, test here
-    
-    //if (initHIDDevice(hid_device))
-    //    IOLog("%s::%s::Failed to initialise HID Device\n", getName(), _dev->name);
-    
+
     // Declare an array of two IOPMPowerState structures (kMyNumberOfStates = 2).
     
 #define kMyNumberOfStates 2
@@ -541,7 +619,7 @@ bool VoodooI2C::start(IOService * provider) {
  ############################################################################################
  ############################################################################################
  ##### stop
- ##### accept IOService* and stop the driver
+ ##### accepts IOService* and stops the driver
  ############################################################################################
  #############################################################################################
  */
@@ -553,41 +631,28 @@ void VoodooI2C::stop(IOService * provider) {
         //bus_devices[i]->stop(this);
         OSSafeReleaseNULL(bus_devices[i]);
     }
-    
-    /*s
-        
-    _dev->workLoop->removeEventSource(hid_device->interruptSource);
-    hid_device->commandGate->release();
-    hid_device->commandGate = NULL;
-     
-     
-    
-    _dev->workLoop->removeEventSource(hid_device->interruptSource);
-    hid_device->interruptSource->disable();
-    hid_device->interruptSource = NULL;
-     
-     */
 
-     
-    
-    //i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
+    //stop the command gate
     if (_dev->commandGate) {
         _dev->workLoop->removeEventSource(_dev->commandGate);
         _dev->commandGate->release();
         _dev->commandGate = NULL;
     }
     
+    //stop the interrupt source
     if (_dev->interruptSource) {
         _dev->workLoop->removeEventSource(_dev->interruptSource);
         _dev->interruptSource->disable();
         _dev->interruptSource = NULL;
     }
     
+    //stop the work loop
     if (_dev->workLoop) {
         _dev->workLoop->release();
         _dev->workLoop = NULL;
     }
     
+    //stop the bus
     if(_dev) {
         setI2CPowerState(_dev, false);
 
@@ -597,11 +662,20 @@ void VoodooI2C::stop(IOService * provider) {
         IOFree(_dev, sizeof(I2CBus));
     }
     
+    //stop power management
     PMstop();
     
     super::stop(provider);
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### waitBusNotBusyI2C
+ ##### accepts I2CBus* and waits for the bus to become ready
+ ############################################################################################
+ #############################################################################################
+ */
 int VoodooI2C::waitBusNotBusyI2C(I2CBus* _dev) {
     int timeout = TIMEOUT * 100;
     
@@ -613,15 +687,33 @@ int VoodooI2C::waitBusNotBusyI2C(I2CBus* _dev) {
         timeout--;
         
         IODelay(1100);
-        //TODO: usleep(1100) goes here
     }
     
     return 0;
 }
 
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### writel
+ ##### accepts I2CBus*, UInt32 and int and writes to the register at the offset of the bus
+ ##### memory
+ ############################################################################################
+ #############################################################################################
+ */
+
 void VoodooI2C::writel(I2CBus* _dev, UInt32 b, int offset) {
     *(volatile UInt32 *)(_dev->mmio + offset) = b;
 }
+
+/*
+ ############################################################################################
+ ############################################################################################
+ ##### xferI2C
+ ##### accepts I2CBus*, i2c_msg, int 
+ ############################################################################################
+ #############################################################################################
+ */
 
 int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
     int ret;
