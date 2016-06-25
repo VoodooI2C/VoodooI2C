@@ -34,6 +34,11 @@ struct csgesture_softc {
     bool buttondown;
     
     //hardware info
+    bool infoSetup;
+    
+    char product_id[16];
+    char firmware_version[4];
+    
     int resx;
     int resy;
     int phyx;
@@ -158,7 +163,10 @@ typedef struct __attribute__((__packed__)){
     uint8_t prod_ida[5];    /* 0x00 - 0x04 */
     uint8_t prod_idb[6];    /* 0x05 - 0x0A */
     uint8_t prod_idc[2];    /* 0x0B - 0x0C */
-    uint8_t reserved[6];    /* 0x0D - 0x12 */
+    uint8_t reserved[2];    /* 0x0D - 0x0E */
+    uint8_t fw_maj_ver;     /* 0x0F */
+    uint8_t fw_min_ver;		/* 0x10 */
+    uint8_t reserved2[2];   /* 0x11 - 0x12 */
     uint8_t buttons;        /* 0x13 */
     uint8_t gen;            /* 0x14, low 4 bits */
     uint8_t max_abs_xy_high;/* 0x15 7:4 high x bits, 3:0 high y bits */
