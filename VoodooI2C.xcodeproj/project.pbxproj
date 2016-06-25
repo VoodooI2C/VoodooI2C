@@ -11,6 +11,10 @@
 		AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */ = {isa = PBXBuildFile; fileRef = AC45AFEC1A32543B008E6857 /* VoodooI2C.h */; };
 		AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */; };
 		ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */; };
+		F110CDBA1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F110CDB61D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp */; };
+		F110CDBB1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F110CDB71D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.h */; };
+		F110CDBC1D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F110CDB81D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.cpp */; };
+		F110CDBD1D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F110CDB91D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.h */; };
 		F153120A1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F15312081CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.cpp */; };
 		F153120B1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F15312091CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h */; };
 		F153120D1CB9B63B00BE6BFC /* atmel_crc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F153120C1CB9B63B00BE6BFC /* atmel_crc.cpp */; };
@@ -33,6 +37,10 @@
 		AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2C.cpp; sourceTree = "<group>"; };
 		ACF45CF81A7FDDD0005C2BBE /* VoodooI2CHIDDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2CHIDDevice.h; sourceTree = "<group>"; };
 		ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CHIDDevice.cpp; sourceTree = "<group>"; };
+		F110CDB61D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooElanTouchpadDevice.cpp; sourceTree = "<group>"; };
+		F110CDB71D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooElanTouchpadDevice.h; sourceTree = "<group>"; };
+		F110CDB81D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooElanTouchpadWrapper.cpp; sourceTree = "<group>"; };
+		F110CDB91D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooElanTouchpadWrapper.h; sourceTree = "<group>"; };
 		F15312081CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CAtmelMxtScreenDevice.cpp; sourceTree = "<group>"; };
 		F15312091CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CAtmelMxtScreenDevice.h; sourceTree = "<group>"; };
 		F153120C1CB9B63B00BE6BFC /* atmel_crc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = atmel_crc.cpp; sourceTree = "<group>"; };
@@ -41,6 +49,7 @@
 		F158186B1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCyapaGen3Device.h; sourceTree = "<group>"; };
 		F17D8FF61CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooAtmelTouchWrapper.cpp; sourceTree = "<group>"; };
 		F17D8FF71CBABF15002F9115 /* VoodooAtmelTouchWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooAtmelTouchWrapper.h; sourceTree = "<group>"; };
+		F1937E791D1F455700F97772 /* csgesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csgesture.h; sourceTree = "<group>"; };
 		F19963071CAD6EE3002E2D29 /* VoodooI2CDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CDevice.cpp; sourceTree = "<group>"; };
 		F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CDevice.h; sourceTree = "<group>"; };
 		F1AB82CE1C1E8F5E003EFE34 /* VoodooCyapaMouseWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCyapaMouseWrapper.cpp; sourceTree = "<group>"; };
@@ -84,8 +93,10 @@
 				F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */,
 				ACF45CF81A7FDDD0005C2BBE /* VoodooI2CHIDDevice.h */,
 				ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */,
+				F1937E781D1F454B00F97772 /* Multitouch Support */,
 				F153120F1CB9B67600BE6BFC /* Atmel MaxTouch Driver */,
 				F15312101CB9B68200BE6BFC /* Cypress APA Trackpad Driver */,
+				F110CDB51D1F3B2C0057BBDB /* Elan I2C Trackpad Driver */,
 				308C59891BC61FE00078D1B1 /* VoodooHIDWrapper.h */,
 				308C59871BC61FD20078D1B1 /* VoodooHIDWrapper.cpp */,
 			);
@@ -98,6 +109,17 @@
 				AC45AFEB1A32543B008E6857 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F110CDB51D1F3B2C0057BBDB /* Elan I2C Trackpad Driver */ = {
+			isa = PBXGroup;
+			children = (
+				F110CDB61D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp */,
+				F110CDB71D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.h */,
+				F110CDB81D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.cpp */,
+				F110CDB91D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.h */,
+			);
+			name = "Elan I2C Trackpad Driver";
 			sourceTree = "<group>";
 		};
 		F153120F1CB9B67600BE6BFC /* Atmel MaxTouch Driver */ = {
@@ -124,6 +146,14 @@
 			name = "Cypress APA Trackpad Driver";
 			sourceTree = "<group>";
 		};
+		F1937E781D1F454B00F97772 /* Multitouch Support */ = {
+			isa = PBXGroup;
+			children = (
+				F1937E791D1F455700F97772 /* csgesture.h */,
+			);
+			name = "Multitouch Support";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -131,10 +161,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F110CDBB1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.h in Headers */,
 				F1AB82D11C1E8F5E003EFE34 /* VoodooCyapaMouseWrapper.h in Headers */,
 				F158186D1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h in Headers */,
 				F153120B1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h in Headers */,
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
+				F110CDBD1D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.h in Headers */,
 				F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */,
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
 			);
@@ -209,11 +241,13 @@
 			files = (
 				F17D8FF81CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp in Sources */,
 				F153120D1CB9B63B00BE6BFC /* atmel_crc.cpp in Sources */,
+				F110CDBC1D1F3B4D0057BBDB /* VoodooElanTouchpadWrapper.cpp in Sources */,
 				F1AB82D01C1E8F5E003EFE34 /* VoodooCyapaMouseWrapper.cpp in Sources */,
 				308C59881BC61FD20078D1B1 /* VoodooHIDWrapper.cpp in Sources */,
 				ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */,
 				F153120A1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.cpp in Sources */,
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
+				F110CDBA1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp in Sources */,
 				F19963091CAD6EE3002E2D29 /* VoodooI2CDevice.cpp in Sources */,
 				F158186C1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp in Sources */,
 			);

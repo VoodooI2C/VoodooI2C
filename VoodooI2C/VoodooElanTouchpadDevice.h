@@ -1,14 +1,14 @@
 //
-//  VoodooCyapaGen3Device.hpp
+//  VoodooElanTouchpadDevice.h
 //  VoodooI2C
 //
 //  Created by CoolStar on 12/13/15.
 //  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad 3.0 beta 9.4 for Windows
+//  ported from crostrackpad-elan 3.0 beta 9.4 for Windows
 //
 
-#ifndef VoodooI2C_VoodooCyapaGen3Device_h
-#define VoodooI2C_VoodooCyapaGen3Device_h
+#ifndef VoodooI2C_VoodooElanTouchpadDevice_h
+#define VoodooI2C_VoodooElanTouchpadDevice_h
 
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
@@ -26,99 +26,79 @@
 
 #define HID_MAX_DESCRIPTOR_SIZE 4096
 
-#define CYAPA_MAX_MT    5
+/* Elan i2c commands */
+#define ETP_I2C_RESET			0x0100
+#define ETP_I2C_WAKE_UP			0x0800
+#define ETP_I2C_SLEEP			0x0801
+#define ETP_I2C_DESC_CMD		0x0001
+#define ETP_I2C_REPORT_DESC_CMD		0x0002
+#define ETP_I2C_STAND_CMD		0x0005
+#define ETP_I2C_UNIQUEID_CMD		0x0101
+#define ETP_I2C_FW_VERSION_CMD		0x0102
+#define ETP_I2C_SM_VERSION_CMD		0x0103
+#define ETP_I2C_XY_TRACENUM_CMD		0x0105
+#define ETP_I2C_MAX_X_AXIS_CMD		0x0106
+#define ETP_I2C_MAX_Y_AXIS_CMD		0x0107
+#define ETP_I2C_RESOLUTION_CMD		0x0108
+#define ETP_I2C_PRESSURE_CMD		0x010A
+#define ETP_I2C_IAP_VERSION_CMD		0x0110
+#define ETP_I2C_SET_CMD			0x0300
+#define ETP_I2C_POWER_CMD		0x0307
+#define ETP_I2C_FW_CHECKSUM_CMD		0x030F
+#define ETP_I2C_IAP_CTRL_CMD		0x0310
+#define ETP_I2C_IAP_CMD			0x0311
+#define ETP_I2C_IAP_RESET_CMD		0x0314
+#define ETP_I2C_IAP_CHECKSUM_CMD	0x0315
+#define ETP_I2C_CALIBRATE_CMD		0x0316
+#define ETP_I2C_MAX_BASELINE_CMD	0x0317
+#define ETP_I2C_MIN_BASELINE_CMD	0x0318
 
-#define CYAPA_BOOT_BUSY		0x80
-#define CYAPA_BOOT_RUNNING	0x10
-#define CYAPA_BOOT_DATA_VALID	0x08
-#define CYAPA_BOOT_CSUM_VALID	0x01
+#define ETP_I2C_REPORT_LEN		34
+#define ETP_I2C_DESC_LENGTH		30
+#define ETP_I2C_REPORT_DESC_LENGTH	158
+#define ETP_I2C_INF_LENGTH		2
+#define ETP_I2C_IAP_PASSWORD		0x1EA5
+#define ETP_I2C_IAP_RESET		0xF0F0
+#define ETP_I2C_MAIN_MODE_ON		(1 << 9)
+#define ETP_I2C_IAP_REG_L		0x01
+#define ETP_I2C_IAP_REG_H		0x06
 
-#define CYAPA_ERROR_INVALID     0x80
-#define CYAPA_ERROR_INVALID_KEY 0x40
-#define CYAPA_ERROR_BOOTLOADER	0x20
-#define CYAPA_ERROR_CMD_CSUM    0x10
-#define CYAPA_ERROR_FLASH_PROT  0x08
-#define CYAPA_ERROR_FLASH_CSUM  0x04
+#define ETP_ENABLE_ABS		0x0001
+#define ETP_ENABLE_CALIBRATE	0x0002
+#define ETP_DISABLE_CALIBRATE	0x0000
+#define ETP_DISABLE_POWER	0x0001
+#define ETP_PRESSURE_OFFSET	25
 
-#define CYAPA_STAT_RUNNING      0x80
-#define CYAPA_STAT_PWR_MASK     0x0C
-#define  CYAPA_PWR_OFF          0x00
-#define  CYAPA_PWR_IDLE         0x08
-#define  CYAPA_PWR_ACTIVE       0x0C
+#define ETP_MAX_PRESSURE	255
+#define ETP_FWIDTH_REDUCE	90
+#define ETP_FINGER_WIDTH	15
+#define ETP_RETRY_COUNT		3
 
-#define CYAPA_STAT_DEV_MASK     0x03
-#define  CYAPA_DEV_NORMAL       0x03
-#define  CYAPA_DEV_BUSY         0x01
+#define ETP_MAX_FINGERS		5
+#define ETP_FINGER_DATA_LEN	5
+#define ETP_REPORT_ID		0x5D
+#define ETP_REPORT_ID_OFFSET	2
+#define ETP_TOUCH_INFO_OFFSET	3
+#define ETP_FINGER_DATA_OFFSET	4
+#define ETP_HOVER_INFO_OFFSET	30
+#define ETP_MAX_REPORT_LEN	34
 
-#define CYAPA_FNGR_DATA_VALID   0x08
-#define CYAPA_FNGR_MIDDLE       0x04
-#define CYAPA_FNGR_RIGHT        0x02
-#define CYAPA_FNGR_LEFT         0x01
-#define CYAPA_FNGR_NUMFINGERS(c) (((c) >> 4) & 0x0F)
-
-#define CYAPA_TOUCH_X(regs, i)  ((((regs)->touch[i].xy_high << 4) & 0x0F00) | \
-(regs)->touch[i].x_low)
-#define CYAPA_TOUCH_Y(regs, i)  ((((regs)->touch[i].xy_high << 8) & 0x0F00) | \
-(regs)->touch[i].y_low)
-#define CYAPA_TOUCH_P(regs, i)  ((regs)->touch[i].pressure)
-
-#define CMD_BOOT_STATUS		0x00	/* only if in boot state */
-#define CMD_DEV_STATUS          0x00	/* only if in operational state */
-#define CMD_SOFT_RESET          0x28
-#define CMD_POWER_MODE          0x29
-#define  CMD_POWER_MODE_OFF	0x00
-#define  CMD_POWER_MODE_IDLE	0x14
-#define  CMD_POWER_MODE_FULL	0xFC
-#define CMD_QUERY_CAPABILITIES  0x2A
-
-typedef struct __attribute__((__packed__)){
-    uint8_t stat;			/* CYAPA_STAT_xxx */
-    uint8_t boot;			/* CYAPA_BOOT_xxx */
-    uint8_t error;
-} cyapa_boot_regs;
-
-typedef struct __attribute__((__packed__)){
-    uint8_t stat;
-    uint8_t fngr;
-    
-    struct {
-        uint8_t xy_high;        /* 7:4 high 4 bits of x */
-        uint8_t x_low;          /* 3:0 high 4 bits of y */
-        uint8_t y_low;
-        uint8_t pressure;
-        uint8_t id;             /* 1-15 incremented each touch */
-    } touch[CYAPA_MAX_MT];
-} cyapa_regs;
-
-typedef struct __attribute__((__packed__)){
-    uint8_t prod_ida[5];    /* 0x00 - 0x04 */
-    uint8_t prod_idb[6];    /* 0x05 - 0x0A */
-    uint8_t prod_idc[2];    /* 0x0B - 0x0C */
-    uint8_t reserved[2];    /* 0x0D - 0x0E */
-    uint8_t fw_maj_ver;     /* 0x0F */
-    uint8_t fw_min_ver;		/* 0x10 */
-    uint8_t reserved2[2];   /* 0x11 - 0x12 */
-    uint8_t buttons;        /* 0x13 */
-    uint8_t gen;            /* 0x14, low 4 bits */
-    uint8_t max_abs_xy_high;/* 0x15 7:4 high x bits, 3:0 high y bits */
-    uint8_t max_abs_x_low;  /* 0x16 */
-    uint8_t max_abs_y_low;  /* 0x17 */
-    uint8_t phy_siz_xy_high;/* 0x18 7:4 high x bits, 3:0 high y bits */
-    uint8_t phy_siz_x_low;  /* 0x19 */
-    uint8_t phy_siz_y_low;  /* 0x1A */
-} cyapa_cap;
+enum tp_mode {
+    IAP_MODE = 1,
+    MAIN_MODE
+};
 
 class VoodooI2C;
-class VoodooCyapaMouseWrapper;
+class VoodooElanTouchpadWrapper;
 class IOBufferMemoryDescriptor;
 
-class VoodooI2CCyapaGen3Device : public VoodooI2CDevice
+class VoodooI2CElanTouchpadDevice : public VoodooI2CDevice
 {
     typedef IOService super;
-    OSDeclareDefaultStructors(VoodooI2CCyapaGen3Device);
+    OSDeclareDefaultStructors(VoodooI2CElanTouchpadDevice);
     
 private:
-    VoodooCyapaMouseWrapper* _wrapper;
+    VoodooElanTouchpadWrapper* _wrapper;
     
     void initialize_wrapper(void);
     void destroy_wrapper(void);
@@ -200,10 +180,13 @@ public:
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     
-    void cyapa_set_power_mode(uint8_t power_mode);
+    void elan_i2c_read_cmd(uint16_t reg, uint8_t *val);
+    void elan_i2c_write_cmd(uint16_t reg, uint16_t cmd);
     
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
+    SInt32 readI2C16(uint16_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
+    SInt32 writeI2C16(uint16_t reg, size_t len, uint8_t *values);
     
     void update_relative_mouse(char button,
                                char x, char y, char wheelPosition, char wheelHPosition);
@@ -217,7 +200,7 @@ public:
     void TapToClickOrDrag(csgesture_softc *sc, int button);
     void ClearTapDrag(csgesture_softc *sc, int i);
     void ProcessGesture(csgesture_softc *sc);
-    void TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc);
+    void TrackpadRawInput(struct csgesture_softc *sc, uint8_t report[ETP_MAX_REPORT_LEN], int tickinc);
 };
 
 

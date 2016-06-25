@@ -558,6 +558,11 @@ bool VoodooI2C::start(IOService * provider) {
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CCyapaGen3Device);
                         else if (strcmp(getMatchedName((IOService *)child), "ATML0001") == 0){
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CAtmelMxtScreenDevice);
+                        } else if ((strcmp(getMatchedName((IOService *)child), "ELAN0000") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0100") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0600") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN1000") == 0)){
+                                bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
                         } else
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         if ( !bus_devices[bus_devices_number]               ||
