@@ -825,6 +825,22 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
                sc->resx,
                sc->resy);
     
+    for (int i = 0; i < 5; i++) {
+        sc->product_id[i] = cap.prod_ida[i];
+    }
+    sc->product_id[5] = '-';
+    for (int i = 0; i < 6; i++) {
+        sc->product_id[i + 6] = cap.prod_idb[i];
+    }
+    sc->product_id[12] = '-';
+    for (int i = 0; i < 2; i++) {
+        sc->product_id[i + 13] = cap.prod_idc[i];
+    }
+    sc->product_id[15] = '\0';
+    
+    sprintf(sc->firmware_version, "%d.%d", cap.fw_maj_ver, cap.fw_min_ver);
+    sc->infoSetup = true;
+    
     cyapa_set_power_mode(CMD_POWER_MODE_FULL);
 
     
@@ -1022,7 +1038,7 @@ void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* se
     hid_device->timerSource->setTimeoutMS(10);
 }
 
-_CYAPA_RELATIVE_MOUSE_REPORT lastreport;
+static _CYAPA_RELATIVE_MOUSE_REPORT lastreport;
 
 void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
                                                      char x, char y, char wheelPosition, char wheelHPosition){
