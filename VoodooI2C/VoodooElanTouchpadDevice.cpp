@@ -1029,7 +1029,7 @@ SInt32 VoodooI2CElanTouchpadDevice::readI2C16(uint16_t reg, size_t len, uint8_t 
             .buf = (uint8_t *)&buf,
         },
         {
-            .addr = 0x67,
+            .addr = hid_device->addr,
             .flags = I2C_M_RD,
             .len = (uint8_t)len,
             .buf = values,
