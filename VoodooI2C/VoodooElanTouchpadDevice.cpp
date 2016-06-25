@@ -998,13 +998,13 @@ void VoodooI2CElanTouchpadDevice::elan_i2c_write_cmd(uint16_t reg, uint16_t cmd)
 SInt32 VoodooI2CElanTouchpadDevice::readI2C(uint8_t reg, size_t len, uint8_t *values){
     struct VoodooI2C::i2c_msg msgs[] = {
         {
-            .addr = 0x67,
+            .addr = hid_device->addr,
             .flags = 0,
             .len = 1,
             .buf = &reg,
         },
         {
-            .addr = 0x67,
+            .addr = hid_device->addr,
             .flags = I2C_M_RD,
             .len = (uint8_t)len,
             .buf = values,
@@ -1023,7 +1023,7 @@ SInt32 VoodooI2CElanTouchpadDevice::readI2C16(uint16_t reg, size_t len, uint8_t 
     };
     struct VoodooI2C::i2c_msg msgs[] = {
         {
-            .addr = 0x67,
+            .addr = hid_device->addr,
             .flags = 0,
             .len = sizeof(buf),
             .buf = (uint8_t *)&buf,
