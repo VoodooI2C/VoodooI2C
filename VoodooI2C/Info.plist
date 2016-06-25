@@ -36,6 +36,8 @@
                 <string>pci8086,a161</string>
 				<string>INT33C2</string>
 				<string>INT33C3</string>
+				<string>INT3432</string>
+				<string>INT3433</string>
 			</array>
 			<key>IOProviderClass</key>
 			<string>IOService</string>
