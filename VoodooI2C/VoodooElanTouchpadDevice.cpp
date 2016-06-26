@@ -1137,7 +1137,12 @@ void VoodooI2CElanTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource*
     uint8_t report[ETP_MAX_REPORT_LEN];
     readI2C(0, sizeof(report), report);
     
-    TrackpadRawInput(&softc, report, 1);
+    if (report[0] != 0xff){
+        for (int i = 0;i < ETP_MAX_REPORT_LEN; i++)
+            prevreport[i] = report[i];
+    }
+    
+    TrackpadRawInput(&softc, prevreport, 1);
     hid_device->timerSource->setTimeoutMS(10);
 }
 

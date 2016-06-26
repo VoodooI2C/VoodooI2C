@@ -156,6 +156,8 @@ public:
         UInt8 buttonMask;
     } lastmouse;
     
+    uint8_t prevreport[ETP_MAX_REPORT_LEN];
+    
     I2CDevice* hid_device;
     
     struct csgesture_softc softc;
