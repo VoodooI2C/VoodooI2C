@@ -1,6 +1,7 @@
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
+#include <IOKit/pci/IOPCIDevice.h>
 #include <IOKit/IOWorkLoop.h>
 #include <IOKit/IOInterruptEventSource.h>
 #include <IOKit/IOLocks.h>
@@ -162,7 +163,7 @@ class VoodooI2C : public IOService {
     
     
 public:
-    IOACPIPlatformDevice* fACPIDevice;
+    bool                    fully_initialized;
     
     struct i2c_msg {
         UInt16 addr;
@@ -190,7 +191,7 @@ public:
     } i2c_smbus_data;
     
     typedef struct {
-        IOACPIPlatformDevice *provider;
+        IOService *provider;
         
         IOWorkLoop *workLoop;
         IOInterruptEventSource *interruptSource;

@@ -5,6 +5,8 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 
+#define kPowerStates 2
+
 // #define IGNORED_DEVICE "DLL05E3"
 // #define IGNORED_DEVICE "SYNA7500"
 
@@ -24,8 +26,8 @@ bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
     _dev->tx_fifo_depth = 32;
     _dev->rx_fifo_depth = 32;
     
-    getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL);
-    getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time);
+    // XXX FIXME getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL);
+    // XXX FIXME getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time);
     
     return true;
 }
@@ -368,7 +370,7 @@ UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
 
 
 void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
-    _dev->provider->evaluateObject(enabled ? "_PS0" : "_PS3");
+    //XXX FIXME _dev->provider->evaluateObject(enabled ? "_PS0" : "_PS3");
 }
 
 /*
@@ -384,26 +386,26 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
     
     // OS X going to sleep
     if (powerState == 0){
-        
         //power off I2C bus
-        setI2CPowerState(_dev, false);
+        if (fully_initialized)
+            setI2CPowerState(_dev, false);
         IOLog("%s::Going to Sleep!\n", getName());
         
     // OS X waking up
     } else {
-        
-        //power on I2C bus
-        setI2CPowerState(_dev, true);
-        
-        
-        //reinitialize I2C bus
-        initI2CBus(_dev);
-        
-        //disable clock gating
-        writel(_dev, 1, 0x800);
-        
-        //disable interrupts
-        disableI2CInt(_dev);
+        if (fully_initialized) {
+            //power on I2C bus
+            setI2CPowerState(_dev, true);
+            
+            //reinitialize I2C bus
+            initI2CBus(_dev);
+            
+            //disable clock gating
+            writel(_dev, 1, 0x800);
+            
+            //disable interrupts
+            disableI2CInt(_dev);
+        }
         
         IOLog("%s::Woke up from Sleep!\n", getName());
     }
@@ -420,6 +422,9 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
  */
 bool VoodooI2C::start(IOService * provider) {
     
+    IOACPIPlatformDevice    *fACPIDevice;
+    IOPCIDevice             *fPCIDevice;
+    
     IOLog("%s::Found I2C device %s\n", getName(), getMatchedName(provider));
     
     if(!super::start(provider))
@@ -428,23 +433,52 @@ bool VoodooI2C::start(IOService * provider) {
     //initialise OS power management
     PMinit();
     
-    fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
+    // Declare an array of two IOPMPowerState structures (kMyNumberOfStates = 2).
+    static IOPMPowerState myPowerStates[kPowerStates];
+    // Zero-fill the structures.
+    bzero (myPowerStates, sizeof(myPowerStates));
+    // Fill in the information about your device's off state:
+    myPowerStates[0].version = 1;
+    myPowerStates[0].capabilityFlags = kIOPMPowerOff;
+    myPowerStates[0].outputPowerCharacter = kIOPMPowerOff;
+    myPowerStates[0].inputPowerRequirement = kIOPMPowerOff;
+    // Fill in the information about your device's on state:
+    myPowerStates[1].version = 1;
+    myPowerStates[1].capabilityFlags = kIOPMPowerOn;
+    myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
+    myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
     
-    if (!fACPIDevice)
-        return false;
+    provider->joinPMtree(this);
     
+    registerPowerDriver(this, myPowerStates, kPowerStates);
+    
+    /* PCI or ACPI device? */
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
+    fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
+    fPCIDevice = OSDynamicCast(IOPCIDevice, provider);
     
-    
-    _dev->provider = fACPIDevice;
-    _dev->name = getMatchedName(fACPIDevice);
+    if (fPCIDevice) {
+        _dev->provider = fPCIDevice;
+        _dev->name = getMatchedName(fPCIDevice);
+        IOLog("Matched on PCI device: %s\n", _dev->name);
+    } else if (fACPIDevice){
+        _dev->provider = fACPIDevice;
+        _dev->name = getMatchedName(fACPIDevice);
+        IOLog("Matched on ACPI device: %s\n", _dev->name);
+    } else {
+        IOLog("Could not cast to PCI nor ACPI device...\n");
+        goto err_out;
+    }
     
     _dev->provider->retain();
     
     if(!_dev->provider->open(this)) {
-        IOLog("%s::%s::Failed to open ACPI device\n", getName(), _dev->name);
-        return false;
+        IOLog("%s::%s::Failed to open device\n", getName(), _dev->name);
+        goto err_out;
     }
+    
+    // XXX FIXME
+    goto err_out;
     
     //set up workloop
     _dev->workLoop = (IOWorkLoop*)getWorkLoop();
@@ -580,36 +614,18 @@ bool VoodooI2C::start(IOService * provider) {
     children->release();
 #warning "End crash with non-HID device"
     
-    
-    
-
-    // Declare an array of two IOPMPowerState structures (kMyNumberOfStates = 2).
-    
-#define kMyNumberOfStates 2
-    
-    static IOPMPowerState myPowerStates[kMyNumberOfStates];
-    // Zero-fill the structures.
-    bzero (myPowerStates, sizeof(myPowerStates));
-    // Fill in the information about your device's off state:
-    myPowerStates[0].version = 1;
-    myPowerStates[0].capabilityFlags = kIOPMPowerOff;
-    myPowerStates[0].outputPowerCharacter = kIOPMPowerOff;
-    myPowerStates[0].inputPowerRequirement = kIOPMPowerOff;
-    // Fill in the information about your device's on state:
-    myPowerStates[1].version = 1;
-    myPowerStates[1].capabilityFlags = kIOPMPowerOn;
-    myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
-    myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
-    
-    
-    
-    provider->joinPMtree(this);
-    
-    registerPowerDriver(this, myPowerStates, kMyNumberOfStates);
-    
     return true;
-     
-     
+    
+err_out:
+    if (_dev) {
+        if (_dev->provider) {
+            _dev->provider->close(provider);
+            _dev->provider->release();
+        }
+    }
+    PMstop();
+    return false;
+    
 }
 
 
