@@ -8,7 +8,9 @@ Currently the following Intel Lynxpoint I2C controllers are almost fully support
 * `INT33C2` and `INT33C3` - Haswell era
 * `INT3432` and `INT3433` - Broadwell era
 
-Most i2c-hid touchscreens and trackpads work with minor modifications to the drivers. Note that this is only very basic mouse functionality (navigating, left/right click, scrolling). Multitouch is a whole other beast.
+Most i2c-hid touchscreens and trackpads work with minor modifications to the drivers. Note that most device have only very basic mouse functionality (navigating, left/right click, scrolling).
+
+The following trackpads have basic multitouch: CYAP0000, ELAN0000, ELAN0100, ELAN0600, ELAN1000.
 
 # Supported Devices
 The following devices are confirmed to work with the current iteration of VoodooI2C
@@ -19,9 +21,11 @@ The following devices are confirmed to work with the current iteration of Voodoo
 * NTRG 0001 touchscreen (Surface Pro 3)
 * FTSC1000 touchscreen (Cube i7)
 * CYAP0000 trackpad (Haswell Chromebooks)
- * This uses the propriety interface `VoodooCyapaGen3Device`.
+ * This uses the proprietary interface `VoodooCyapaGen3Device`.
 * ATML0001 touchscreen (Acer C720P Chromebook/Chromebook Pixel 2)
-  * This uses the propriety interface `VoodooI2CAtmelMxtScreenDevice`.
+  * This uses the proprietary interface `VoodooI2CAtmelMxtScreenDevice`.
+* ELAN0000 trackpad (Broadwell Chromebooks)
+ * This uses the proprietary interface `VoodooElanTouchpadDevice`
 
 # Helping out and testing
 
