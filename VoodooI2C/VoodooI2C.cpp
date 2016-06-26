@@ -485,9 +485,6 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev->provider->retain();
     
-    // XXX FIXME
-    goto err_out;
-    
     //set up workloop
     _dev->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!_dev->workLoop) {
@@ -509,6 +506,12 @@ bool VoodooI2C::start(IOService * provider) {
     }
     
     _dev->interruptSource->enable();
+    
+    
+    // XXX FIXME
+    VoodooI2C::stop(provider);
+    return false;
+    
     
     //set up command gate
     
@@ -1019,6 +1022,9 @@ int VoodooI2C::i2c_master_send(VoodooI2CHIDDevice::I2CDevice I2CDevice, UInt8 *b
 
 void VoodooI2C::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
     UInt32 stat, enabled;
+    
+    if (!fully_initialized)
+        return;
     
     enabled = readl(_dev, DW_IC_ENABLE);
     stat = readl(_dev, DW_IC_RAW_INTR_STAT);
