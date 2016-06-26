@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		308C59881BC61FD20078D1B1 /* VoodooHIDWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 308C59871BC61FD20078D1B1 /* VoodooHIDWrapper.cpp */; };
+		AC10BDD01D1FD6E9001DBF47 /* VoodooI2CPCIDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC10BDCE1D1FD6E9001DBF47 /* VoodooI2CPCIDevice.cpp */; };
+		AC10BDD11D1FD6E9001DBF47 /* VoodooI2CPCIDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = AC10BDCF1D1FD6E9001DBF47 /* VoodooI2CPCIDevice.h */; };
 		AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */ = {isa = PBXBuildFile; fileRef = AC45AFEC1A32543B008E6857 /* VoodooI2C.h */; };
 		AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */; };
 		ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACF45CF91A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp */; };
@@ -27,6 +29,8 @@
 /* Begin PBXFileReference section */
 		308C59871BC61FD20078D1B1 /* VoodooHIDWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooHIDWrapper.cpp; sourceTree = "<group>"; };
 		308C59891BC61FE00078D1B1 /* VoodooHIDWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooHIDWrapper.h; sourceTree = "<group>"; };
+		AC10BDCE1D1FD6E9001DBF47 /* VoodooI2CPCIDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CPCIDevice.cpp; sourceTree = "<group>"; };
+		AC10BDCF1D1FD6E9001DBF47 /* VoodooI2CPCIDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CPCIDevice.h; sourceTree = "<group>"; };
 		AC45AFE71A32543B008E6857 /* VoodooI2C.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2C.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC45AFEB1A32543B008E6857 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC45AFEC1A32543B008E6857 /* VoodooI2C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooI2C.h; sourceTree = "<group>"; };
@@ -77,6 +81,8 @@
 		AC45AFE91A32543B008E6857 /* VoodooI2C */ = {
 			isa = PBXGroup;
 			children = (
+				AC10BDCE1D1FD6E9001DBF47 /* VoodooI2CPCIDevice.cpp */,
+				AC10BDCF1D1FD6E9001DBF47 /* VoodooI2CPCIDevice.h */,
 				AC45AFEC1A32543B008E6857 /* VoodooI2C.h */,
 				AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */,
 				AC45AFEA1A32543B008E6857 /* Supporting Files */,
@@ -134,6 +140,7 @@
 				F1AB82D11C1E8F5E003EFE34 /* VoodooCyapaMouseWrapper.h in Headers */,
 				F158186D1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h in Headers */,
 				F153120B1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h in Headers */,
+				AC10BDD11D1FD6E9001DBF47 /* VoodooI2CPCIDevice.h in Headers */,
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
 				F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */,
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
@@ -216,6 +223,7 @@
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
 				F19963091CAD6EE3002E2D29 /* VoodooI2CDevice.cpp in Sources */,
 				F158186C1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp in Sources */,
+				AC10BDD01D1FD6E9001DBF47 /* VoodooI2CPCIDevice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

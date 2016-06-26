@@ -313,5 +313,8 @@ public:
     
     void clearI2CInt(I2CBus* _dev);
     
+    bool isPCIDevice(IOService * provider);
+    bool isACPIDevice(IOService * provider);
+    
     
 };

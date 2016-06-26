@@ -1,5 +1,5 @@
 #include "VoodooI2C.h"
-
+#include "VoodooI2CPCIDevice.h"
 
 
 #define super IOService
@@ -412,6 +412,14 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
     return kIOPMAckImplied;
 }
 
+bool VoodooI2C::isPCIDevice(IOService * provider) {
+    return OSDynamicCast(IOPCIDevice, provider);
+}
+
+bool VoodooI2C::isACPIDevice(IOService * provider) {
+    return OSDynamicCast(IOACPIPlatformDevice, provider);
+}
+
 /*
  ############################################################################################
  ############################################################################################
@@ -454,28 +462,28 @@ bool VoodooI2C::start(IOService * provider) {
     
     /* PCI or ACPI device? */
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
-    fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
-    fPCIDevice = OSDynamicCast(IOPCIDevice, provider);
     
-    if (fPCIDevice) {
+    if (isPCIDevice(provider))
+    {
+        fPCIDevice = VoodooI2CPCIDevice::pciConfigure(provider);
         _dev->provider = fPCIDevice;
         _dev->name = getMatchedName(fPCIDevice);
         IOLog("Matched on PCI device: %s\n", _dev->name);
-    } else if (fACPIDevice){
+    }
+    else if (fACPIDevice)
+    {
+        fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
         _dev->provider = fACPIDevice;
         _dev->name = getMatchedName(fACPIDevice);
         IOLog("Matched on ACPI device: %s\n", _dev->name);
-    } else {
+    }
+    else
+    {
         IOLog("Could not cast to PCI nor ACPI device...\n");
         goto err_out;
     }
     
     _dev->provider->retain();
-    
-    if(!_dev->provider->open(this)) {
-        IOLog("%s::%s::Failed to open device\n", getName(), _dev->name);
-        goto err_out;
-    }
     
     // XXX FIXME
     goto err_out;
