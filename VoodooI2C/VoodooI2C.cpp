@@ -456,6 +456,8 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
     
     // OS X going to sleep
     if (powerState == 0){
+        _dev->busIsAwake = false;
+        
         //power off I2C bus
         if (fully_initialized)
             setI2CPowerState(_dev, false);
@@ -465,7 +467,7 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
         
     // OS X waking up
     } else {
-        if (fully_initialized) {
+        if (fully_initialized && !_dev->busIsAwake) {
             //power on I2C bus
             setI2CPowerState(_dev, true);
             
@@ -480,6 +482,12 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
             
             //disable interrupts
             disableI2CInt(_dev);
+
+            _dev->busIsAwake = true;
+        
+            IOLog("%s::Woke up from Sleep!\n", getName());
+        } else {
+            IOLog("%s::I2C Bus is already awake! Not reinitializing.\n", getName());
         }
         
         woke_up = true;
@@ -675,6 +683,8 @@ bool VoodooI2C::start(IOService * provider) {
     
     IORegistryIterator* children;
     IORegistryEntry* child;
+    
+    _dev->busIsAwake = true;
  
     //enumerate I2C children, TODO: major refactoring
     

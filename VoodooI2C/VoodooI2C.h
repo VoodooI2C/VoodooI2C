@@ -244,6 +244,8 @@ public:
         
         bool ready;
         
+        bool busIsAwake;
+        
     } I2CBus;
     
     I2CBus* _dev;
