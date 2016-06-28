@@ -164,6 +164,7 @@ class VoodooI2C : public IOService {
     
 public:
     bool                    fully_initialized;
+    bool                    woke_up;
     
     struct i2c_msg {
         UInt16 addr;
@@ -192,6 +193,7 @@ public:
     
     typedef struct {
         IOService *provider;
+        IOACPIPlatformDevice *fACPIDevice;
         
         IOWorkLoop *workLoop;
         IOInterruptEventSource *interruptSource;
@@ -313,8 +315,8 @@ public:
     
     void clearI2CInt(I2CBus* _dev);
     
-    bool isPCIDevice(IOService * provider);
-    bool isACPIDevice(IOService * provider);
+    IOPCIDevice* getPCIDevice(IOService * provider);
+    IOACPIPlatformDevice* getACPIDevice(IOService * provider);
     
     
 };

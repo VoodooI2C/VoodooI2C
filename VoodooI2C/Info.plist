@@ -36,6 +36,8 @@
 			</array>
 			<key>IOProviderClass</key>
 			<string>IOService</string>
+			<key>IOProbeScore</key>
+			<integer>5000</integer>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
