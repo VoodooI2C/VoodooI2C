@@ -526,14 +526,17 @@ void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescrip
 
 bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
     int ret;
+    unsigned char buf[2];
     
     ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
     
     if (ret)
         return ret;
 
-    ret = i2c_hid_command(ihid, &hid_reset_cmd, NULL, 0);
-    if (ret) {
+    /* Need to read back two NULL bytes after reset! */
+    ret = i2c_hid_command(ihid, &hid_reset_cmd, buf, 2);
+    if (ret || (*buf != 0) || (*(buf+1) != 0))
+    {
         i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
         return ret;
     }
