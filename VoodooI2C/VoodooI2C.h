@@ -1,6 +1,7 @@
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
+#include <IOKit/pci/IOPCIDevice.h>
 #include <IOKit/IOWorkLoop.h>
 #include <IOKit/IOInterruptEventSource.h>
 #include <IOKit/IOLocks.h>
@@ -162,7 +163,8 @@ class VoodooI2C : public IOService {
     
     
 public:
-    IOACPIPlatformDevice* fACPIDevice;
+    bool                    fully_initialized;
+    bool                    woke_up;
     
     struct i2c_msg {
         UInt16 addr;
@@ -190,7 +192,8 @@ public:
     } i2c_smbus_data;
     
     typedef struct {
-        IOACPIPlatformDevice *provider;
+        IOService *provider;
+        IOACPIPlatformDevice *fACPIDevice;
         
         IOWorkLoop *workLoop;
         IOInterruptEventSource *interruptSource;
@@ -261,7 +264,7 @@ public:
 
     
     
-    static void getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
+    static bool getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
     bool acpiConfigure(I2CBus* _dev);
     void disableI2CInt(I2CBus* _dev);
     void enableI2CDevice(I2CBus*, bool enabled);
@@ -311,6 +314,9 @@ public:
     void registerDump(I2CBus* _dev);
     
     void clearI2CInt(I2CBus* _dev);
+    
+    IOPCIDevice* getPCIDevice(IOService * provider);
+    IOACPIPlatformDevice* getACPIDevice(IOService * provider);
     
     
 };

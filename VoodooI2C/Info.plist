@@ -30,11 +30,15 @@
 			<string>VoodooI2C</string>
 			<key>IONameMatch</key>
 			<array>
+                <string>pci8086,9d60</string>
+                <!-- <string>pci8086,9d61</string> -->
 				<string>INT33C2</string>
 				<string>INT33C3</string>
 			</array>
 			<key>IOProviderClass</key>
-			<string>IOACPIPlatformDevice</string>
+			<string>IOService</string>
+			<key>IOProbeScore</key>
+			<integer>5000</integer>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
@@ -45,6 +49,8 @@
 		<string>1.4</string>
 		<key>com.apple.iokit.IOHIDFamily</key>
 		<string>2.0</string>
+        <key>com.apple.iokit.IOPCIFamily</key>
+        <string>2.0</string>
 		<key>com.apple.kpi.iokit</key>
 		<string>14.0</string>
 		<key>com.apple.kpi.libkern</key>
