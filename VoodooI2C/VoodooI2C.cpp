@@ -54,24 +54,31 @@ static struct dw_scl_sda_cfg hsw_config = {
 
 bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
     
-    IOACPIPlatformDevice* fACPIDevice = NULL; // _dev->fACPIDevice; // FIXME: XXX FIXME what if _dev == NULL ??
+    if (!_dev)
+        return false;
+    
+    IOACPIPlatformDevice* fACPIDevice = _dev->fACPIDevice;
     
     _dev->tx_fifo_depth = 32;
     _dev->rx_fifo_depth = 32;
     
-//    if (fACPIDevice) {
-//        getACPIParams(fACPIDevice, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL);
-//        getACPIParams(fACPIDevice, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time);
-//    } else {
-//        IOLog("WARN: getACPIParams not possible on PCI device -- using hardcoded settings\n");
-//        /* Try HASWELL config */
-//        struct dw_scl_sda_cfg *cfg = &hsw_config;
-//        _dev->ss_hcnt = cfg->ss_hcnt;
-//        _dev->ss_lcnt = cfg->ss_lcnt;
-//        _dev->fs_hcnt = cfg->fs_hcnt;
-//        _dev->fs_lcnt = cfg->fs_lcnt;
-//        _dev->sda_hold_time = cfg->sda_hold;
+//    if (fACPIDevice
+//        && getACPIParams(fACPIDevice, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL)
+//        && getACPIParams(fACPIDevice, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time))
+//    {
+//        IOLog("Loaded I2C settings from ACPI\n");
 //    }
+//    else
+    {
+        IOLog("Couldn't load I2C settings from ACPI -- using hardcoded settings\n");
+        /* Try HASWELL config */
+        struct dw_scl_sda_cfg *cfg = &hsw_config;
+        _dev->ss_hcnt = cfg->ss_hcnt;
+        _dev->ss_lcnt = cfg->ss_lcnt;
+        _dev->fs_hcnt = cfg->fs_hcnt;
+        _dev->fs_lcnt = cfg->fs_lcnt;
+        _dev->sda_hold_time = cfg->sda_hold;
+    }
     
     return true;
 }
@@ -144,8 +151,9 @@ UInt32 VoodooI2C::funcI2C(I2CBus* _dev) {
  #############################################################################################
  */
 
-void VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
+bool VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
     OSObject *object;
+    bool ret = false;
     
     if(kIOReturnSuccess == fACPIDevice->evaluateObject(method, &object) && object) {
         OSArray* values = OSDynamicCast(OSArray, object);
@@ -154,10 +162,11 @@ void VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, U
         *lcnt = OSDynamicCast(OSNumber, values->getObject(1))->unsigned32BitValue();
         if(sda_hold)
             *sda_hold = OSDynamicCast(OSNumber, values->getObject(2))->unsigned32BitValue();
-        
+        ret = true;
     }
     
     OSSafeReleaseNULL(object);
+    return ret;
 }
 
 /*
@@ -282,18 +291,17 @@ bool VoodooI2C::initI2CBus(I2CBus* _dev) {
  #############################################################################################
  */
 
-bool VoodooI2C::mapI2CMemory(I2CBus* _dev) {
-    
+bool VoodooI2C::mapI2CMemory(I2CBus *_dev)
+{
     if(_dev->provider->getDeviceMemoryCount()==0) {
         return false;
     } else {
         _dev->mmap = _dev->provider->mapDeviceMemoryWithIndex(0);
-        if(!_dev->mmap) return false;
-        _dev->mmio= _dev->mmap->getVirtualAddress();
+        if(!_dev->mmap)
+            return false;
+        _dev->mmio = _dev->mmap->getVirtualAddress();
         return true;
-        
     }
-    
 }
 
 /*
@@ -423,11 +431,10 @@ UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
 
 
 void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
-// XXX WTF FIXME??
-//    if (_dev->fACPIDevice && _dev->fACPIDevice->validateObject("_PS0") && _dev->fACPIDevice->validateObject("_PS3"))
-//    {
-//        _dev->fACPIDevice->evaluateObject(enabled ? "_PS0" : "_PS3");
-//    }
+    if (_dev->fACPIDevice)
+    {
+        _dev->fACPIDevice->evaluateObject(enabled ? "_PS0" : "_PS3");
+    }
 }
 
 /*
@@ -514,9 +521,9 @@ bool VoodooI2C::start(IOService * provider) {
     myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
     myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
     
-    provider->joinPMtree(this);
-    
     registerPowerDriver(this, myPowerStates, kNumPowerStates);
+    
+    provider->joinPMtree(this);
     
     IOLog("Power State (before wake-up): %d\n", getPowerState());
     
@@ -527,6 +534,7 @@ bool VoodooI2C::start(IOService * provider) {
     }
     
     while(!woke_up) { };
+    IODelay(2 * 1000 * 1000); /* wait a sec */
     IOLog("Power State (after wake-up): %d\n", getPowerState());
     
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
@@ -626,16 +634,15 @@ bool VoodooI2C::start(IOService * provider) {
     
     _dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE | DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
     
-    // XXX
-    IOLog("%s::%s::mapI2CMemory done, now bailing out\n", getName(), _dev->name);
-    goto err_out;
-    
     //get ACPI configuration if they exist
     if(!acpiConfigure(_dev)) {
         IOLog("%s::%s::Failed to read ACPI config\n", getName(), _dev->name);
         VoodooI2C::stop(provider);
         return false;
     }
+    
+    //Skylake hack
+    writel(_dev, 3, 0x204);
     
     //initialise I2C bus
     
@@ -653,16 +660,16 @@ bool VoodooI2C::start(IOService * provider) {
     
     disableI2CInt(_dev);
     
+    fully_initialized = true;
     
     registerService();
     
     IORegistryIterator* children;
     IORegistryEntry* child;
-    
  
     //enumerate I2C children, TODO: major refactoring
     
-    children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
+    children = IORegistryIterator::iterateOver(_dev->fACPIDevice, gIOACPIPlane);
     bus_devices_number = 0;
 #warning "Begin crash with non-HID device"
     if (children != 0) {
@@ -674,18 +681,21 @@ bool VoodooI2C::start(IOService * provider) {
 #ifdef IGNORED_DEVICE
                     if (strcmp((getMatchedName((IOService*)child)),(char*)IGNORED_DEVICE)){
 #endif
-                        if (strcmp(getMatchedName((IOService *)child), "CYAP0000") == 0)
+                        if (strcmp(getMatchedName((IOService *)child), "CYAP0000") == 0) {
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CCyapaGen3Device);
-                        else if (strcmp(getMatchedName((IOService *)child), "ATML0001") == 0){
+                        } else if (strcmp(getMatchedName((IOService *)child), "ATML0001") == 0){
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CAtmelMxtScreenDevice);
-                        } else
+                        } else {
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
-                        if ( !bus_devices[bus_devices_number]               ||
+                        }
+                        
+                        if (!bus_devices[bus_devices_number]               ||
                             !bus_devices[bus_devices_number]->init()       ||
                             !bus_devices[bus_devices_number]->attach(this, (IOService*)child) )
                         {
                             OSSafeReleaseNULL(bus_devices[bus_devices_number]);
                         } else {
+                            IOLog("%s::%s::I2C slave device found on ACPI: %s\n", getName(), _dev->name, child->getName());
                             bus_devices_number++;
                         }
 #ifdef IGNORED_DEVICE
@@ -696,6 +706,8 @@ bool VoodooI2C::start(IOService * provider) {
             }
             set->release();
         }
+    } else {
+        IOLog("%s::%s::No I2C children found in registry!\n", getName(), _dev->name);
     }
     children->release();
 #warning "End crash with non-HID device"

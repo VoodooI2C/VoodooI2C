@@ -264,7 +264,7 @@ public:
 
     
     
-    static void getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
+    static bool getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
     bool acpiConfigure(I2CBus* _dev);
     void disableI2CInt(I2CBus* _dev);
     void enableI2CDevice(I2CBus*, bool enabled);
