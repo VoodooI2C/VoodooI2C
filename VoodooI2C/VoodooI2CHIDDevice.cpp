@@ -409,6 +409,9 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
 //    IOLog("getting input\n");
     UInt rsize;
     int ret;
+    static unsigned char* rdesc_prev = NULL;
+    static UInt rsize_prev = 0;
+    bool new_report = true;
     
     rsize = UInt16(ihid->hdesc.wMaxInputLength);
     
@@ -436,14 +439,56 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, return_size);
     buffer->writeBytes(0, rdesc + 2, return_size - 2);
 
+#define FILTER_REPEATED_REPORTS /* Needed on my ASUS/Skylake ELAN1000 */
+
+#ifdef FILTER_REPEATED_REPORTS
+    /* Compare to previous report */
+    if (rdesc_prev)
+    {
+        /* See if they're different! */
+        if (rsize == rsize_prev)
+        {
+            if (memcmp(rdesc_prev, rdesc, rsize))
+            {
+                new_report = true;
+            } else {
+                new_report = false;
+            }
+        } else {
+            new_report = true;
+        }
+
+        /* We don't need the previous report anymore */
+        IOFree(rdesc_prev, rsize_prev);
+    }
+    else
+    {
+        new_report = true;
+    }
+
+    /* Keep for next comparison */
+    rdesc_prev = rdesc;
+    rsize_prev = rsize;
+
+    if (new_report)
+    {
+        IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
+        if (err != kIOReturnSuccess)
+            IOLog("Error handling report: 0x%.8x\n", err);
+    }
+
+#else /* non filtered for repeating reports */
     IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
     if (err != kIOReturnSuccess)
         IOLog("Error handling report: 0x%.8x\n", err);
+#endif
 
     buffer->release();
 
+#ifndef FILTER_REPEATED_REPORTS
     IOFree(rdesc, rsize);
-    
+#endif
+
     hid_device->timerSource->setTimeoutMS(10);
 }
 
