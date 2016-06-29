@@ -384,6 +384,7 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
     
     // OS X going to sleep
     if (powerState == 0){
+        _dev->busIsAwake = false;
         
         //power off I2C bus
         setI2CPowerState(_dev, false);
@@ -391,21 +392,26 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
         
     // OS X waking up
     } else {
+        if (!_dev->busIsAwake){
+            //power on I2C bus
+            setI2CPowerState(_dev, true);
         
-        //power on I2C bus
-        setI2CPowerState(_dev, true);
         
+            //reinitialize I2C bus
+            initI2CBus(_dev);
         
-        //reinitialize I2C bus
-        initI2CBus(_dev);
+            //disable clock gating
+            writel(_dev, 1, 0x800);
         
-        //disable clock gating
-        writel(_dev, 1, 0x800);
+            //disable interrupts
+            disableI2CInt(_dev);
         
-        //disable interrupts
-        disableI2CInt(_dev);
+            _dev->busIsAwake = true;
         
-        IOLog("%s::Woke up from Sleep!\n", getName());
+            IOLog("%s::Woke up from Sleep!\n", getName());
+        } else {
+            IOLog("%s::I2C Bus is already awake! Not reinitializing.\n", getName());
+        }
     }
     return kIOPMAckImplied;
 }
@@ -539,6 +545,7 @@ bool VoodooI2C::start(IOService * provider) {
     IORegistryIterator* children;
     IORegistryEntry* child;
     
+    _dev->busIsAwake = true;
  
     //enumerate I2C children, TODO: major refactoring
     
@@ -558,6 +565,11 @@ bool VoodooI2C::start(IOService * provider) {
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CCyapaGen3Device);
                         else if (strcmp(getMatchedName((IOService *)child), "ATML0001") == 0){
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CAtmelMxtScreenDevice);
+                        } else if ((strcmp(getMatchedName((IOService *)child), "ELAN0000") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0100") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0600") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN1000") == 0)){
+                                bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
                         } else
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         if ( !bus_devices[bus_devices_number]               ||

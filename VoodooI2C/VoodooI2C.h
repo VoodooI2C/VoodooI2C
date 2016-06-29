@@ -9,6 +9,7 @@
 #include "VoodooI2CDevice.h"
 #include "VoodooI2CHIDDevice.h"
 #include "VoodooCyapaGen3Device.h"
+#include "VoodooElanTouchpadDevice.h"
 #include "VoodooI2CAtmelMxtScreenDevice.h"
 
 #define kIOPMPowerOff		0
@@ -239,6 +240,8 @@ public:
         char *name;
         
         bool ready;
+        
+        bool busIsAwake;
         
     } I2CBus;
     

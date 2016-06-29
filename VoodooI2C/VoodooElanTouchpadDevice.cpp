@@ -1,17 +1,17 @@
 //
-//  VoodooCyapaGen3Device.cpp
+//  VoodooElanTouchpadDevice.cpp
 //  VoodooI2C
 //
 //  Created by CoolStar on 12/13/15.
 //  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad 3.0 beta 9.4 for Windows
+//  ported from crostrackpad-elan 3.0 beta 9.4 for Windows
 //
 
-#include "VoodooCyapaGen3Device.h"
+#include "VoodooElanTouchpadDevice.h"
 #include "VoodooI2C.h"
-#include "VoodooCyapaMouseWrapper.h"
+#include "VoodooElanTouchpadWrapper.h"
 
-OSDefineMetaClassAndStructors(VoodooI2CCyapaGen3Device, VoodooI2CDevice);
+OSDefineMetaClassAndStructors(VoodooI2CElanTouchpadDevice, VoodooI2CDevice);
 
 #ifndef ABS32
 #define ABS32
@@ -39,7 +39,7 @@ typedef unsigned char BYTE;
 
 #define KBD_KEY_CODES        6
 
-unsigned char cyapadesc[] = {
+unsigned char elandesc[] = {
     //
     // Relative mouse report starts here
     //
@@ -162,7 +162,7 @@ unsigned char cyapadesc[] = {
      0xc0,                               // END_COLLECTION
 };
 
-typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
+typedef struct  __attribute__((__packed__)) _ELAN_RELATIVE_MOUSE_REPORT
 {
     
     UInt8        ReportID;
@@ -177,9 +177,9 @@ typedef struct  __attribute__((__packed__)) _CYAPA_RELATIVE_MOUSE_REPORT
     
     UInt8		HWheelPosition;
     
-} CyapaRelativeMouseReport;
+} ElanRelativeMouseReport;
 
-typedef struct __attribute__((__packed__)) _CYAPA_KEYBOARD_REPORT
+typedef struct __attribute__((__packed__)) _ELAN_KEYBOARD_REPORT
 {
     
     BYTE      ReportID;
@@ -194,13 +194,13 @@ typedef struct __attribute__((__packed__)) _CYAPA_KEYBOARD_REPORT
     // for a list of key codes
     BYTE      KeyCodes[KBD_KEY_CODES];
     
-} CyapaKeyboardReport;
+} ElanKeyboardReport;
 
-int VoodooI2CCyapaGen3Device::distancesq(int delta_x, int delta_y){
+int VoodooI2CElanTouchpadDevice::distancesq(int delta_x, int delta_y){
     return (delta_x * delta_x) + (delta_y*delta_y);
 }
 
-bool VoodooI2CCyapaGen3Device::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+bool VoodooI2CElanTouchpadDevice::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     if (abovethreshold == 1 || sc->panningActive) {
         int i = iToUse[0];
         if (!sc->panningActive && sc->tick[i] < 5)
@@ -239,7 +239,7 @@ bool VoodooI2CCyapaGen3Device::ProcessMove(csgesture_softc *sc, int abovethresho
     return false;
 }
 
-bool VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+bool VoodooI2CElanTouchpadDevice::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     sc->scrollx = 0;
     sc->scrolly = 0;
     if (abovethreshold == 2 || sc->scrollingActive) {
@@ -338,7 +338,7 @@ bool VoodooI2CCyapaGen3Device::ProcessScroll(csgesture_softc *sc, int abovethres
     return false;
 }
 
-bool VoodooI2CCyapaGen3Device::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+bool VoodooI2CElanTouchpadDevice::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     if (abovethreshold == 3 || abovethreshold == 4) {
         int i1 = iToUse[0];
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
@@ -412,7 +412,7 @@ bool VoodooI2CCyapaGen3Device::ProcessThreeFingerSwipe(csgesture_softc *sc, int 
     }
 }
 
-void VoodooI2CCyapaGen3Device::TapToClickOrDrag(csgesture_softc *sc, int button) {
+void VoodooI2CElanTouchpadDevice::TapToClickOrDrag(csgesture_softc *sc, int button) {
     sc->tickssinceclick++;
     if (sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
         if (sc->tickssinceclick > 10) {
@@ -458,7 +458,7 @@ void VoodooI2CCyapaGen3Device::TapToClickOrDrag(csgesture_softc *sc, int button)
     }
 }
 
-void VoodooI2CCyapaGen3Device::ClearTapDrag(csgesture_softc *sc, int i) {
+void VoodooI2CElanTouchpadDevice::ClearTapDrag(csgesture_softc *sc, int i) {
     if (i == sc->idForMouseDown && sc->mouseDownDueToTap == true) {
         if (sc->tick[i] < 10) {
             //Double Tap
@@ -473,7 +473,7 @@ void VoodooI2CCyapaGen3Device::ClearTapDrag(csgesture_softc *sc, int i) {
     }
 }
 
-void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
+void VoodooI2CElanTouchpadDevice::ProcessGesture(csgesture_softc *sc) {
 #pragma mark reset inputs
     sc->dx = 0;
     sc->dy = 0;
@@ -648,36 +648,84 @@ void VoodooI2CCyapaGen3Device::ProcessGesture(csgesture_softc *sc) {
     update_relative_mouse(sc->buttonmask, sc->dx, sc->dy, sc->scrolly, sc->scrollx);
 }
 
-void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc){
-    int nfingers;
-    
-    if ((regs->stat & CYAPA_STAT_RUNNING) == 0) {
-        regs->fngr = 0;
+void VoodooI2CElanTouchpadDevice::TrackpadRawInput(struct csgesture_softc *sc, uint8_t report[ETP_MAX_REPORT_LEN], int tickinc){
+    if (report[0] == 0xff) {
+        return;
     }
     
-    nfingers = CYAPA_FNGR_NUMFINGERS(regs->fngr);
+    uint8_t *finger_data = &report[ETP_FINGER_DATA_OFFSET];
+    int i;
+    uint8_t tp_info = report[ETP_TOUCH_INFO_OFFSET];
+    uint8_t hover_info = report[ETP_HOVER_INFO_OFFSET];
+    bool contact_valid, hover_event;
     
-    for (int i = 0;i < 15;i++) {
+    int nfingers = 0;
+    
+    for (int i = 0;i < 5; i++) {
         sc->x[i] = -1;
         sc->y[i] = -1;
         sc->p[i] = -1;
     }
-    for (int i = 0;i < nfingers;i++) {
-        int a = regs->touch[i].id;
-        int x = CYAPA_TOUCH_X(regs, i);
-        int y = CYAPA_TOUCH_Y(regs, i);
-        int p = CYAPA_TOUCH_P(regs, i);
-        sc->x[a] = x;
-        sc->y[a] = y;
-        sc->p[a] = p;
-    }
     
-    sc->buttondown = (regs->fngr & CYAPA_FNGR_LEFT);
+    hover_event = hover_info & 0x40;
+    for (i = 0; i < ETP_MAX_FINGERS; i++) {
+        contact_valid = tp_info & (1U << (3 + i));
+        unsigned int pos_x, pos_y;
+        unsigned int pressure, mk_x, mk_y;
+        unsigned int area_x, area_y, major, minor;
+        unsigned int scaled_pressure;
+        
+        if (contact_valid) {
+            pos_x = ((finger_data[0] & 0xf0) << 4) |
+            finger_data[1];
+            pos_y = ((finger_data[0] & 0x0f) << 8) |
+            finger_data[2];
+            
+            mk_x = (finger_data[3] & 0x0f);
+            mk_y = (finger_data[3] >> 4);
+            pressure = finger_data[4];
+            
+            //map to cypress coordinates
+            //pos_y = 1500 - pos_y;
+            pos_y = sc->phyy - pos_y;
+            pos_x *= 2;
+            pos_x /= 7;
+            pos_y *= 2;
+            pos_y /= 7;
+            
+            
+            /*
+             * To avoid treating large finger as palm, let's reduce the
+             * width x and y per trace.
+             */
+            area_x = mk_x;
+            area_y = mk_y;
+            
+            major = max(area_x, area_y);
+            minor = min(area_x, area_y);
+            
+            scaled_pressure = pressure;
+            
+            if (scaled_pressure > ETP_MAX_PRESSURE)
+                scaled_pressure = ETP_MAX_PRESSURE;
+            sc->x[i] = pos_x;
+            sc->y[i] = pos_y;
+            sc->p[i] = scaled_pressure;
+        }
+        else {
+        }
+        
+        if (contact_valid) {
+            finger_data += ETP_FINGER_DATA_LEN;
+            nfingers++;
+        }
+    }
+    sc->buttondown = (tp_info & 0x01);
     
     ProcessGesture(sc);
 }
 
-bool VoodooI2CCyapaGen3Device::attach(IOService * provider, IOService* child)
+bool VoodooI2CElanTouchpadDevice::attach(IOService * provider, IOService* child)
 {
     if (!super::attach(provider))
         return false;
@@ -694,7 +742,7 @@ bool VoodooI2CCyapaGen3Device::attach(IOService * provider, IOService* child)
     return true;
 }
 
-bool VoodooI2CCyapaGen3Device::probe(IOService* device) {
+bool VoodooI2CElanTouchpadDevice::probe(IOService* device) {
     
     
     hid_device = (I2CDevice *)IOMalloc(sizeof(I2CDevice));
@@ -724,7 +772,7 @@ bool VoodooI2CCyapaGen3Device::probe(IOService* device) {
     return 0;
 }
 
-void VoodooI2CCyapaGen3Device::stop(IOService* device) {
+void VoodooI2CElanTouchpadDevice::stop(IOService* device) {
     
     IOLog("I2C HID Device is stopping\n");
     
@@ -751,7 +799,7 @@ void VoodooI2CCyapaGen3Device::stop(IOService* device) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void VoodooI2CCyapaGen3Device::detach( IOService * provider )
+void VoodooI2CElanTouchpadDevice::detach( IOService * provider )
 {
     assert(_controller == provider);
     _controller->release();
@@ -760,89 +808,85 @@ void VoodooI2CCyapaGen3Device::detach( IOService * provider )
     super::detach(provider);
 }
 
-void VoodooI2CCyapaGen3Device::cyapa_set_power_mode(uint8_t power_mode)
-{
-    uint8_t ret;
-    uint8_t power;
-    
-    readI2C(CMD_POWER_MODE, 1, &ret);
-    if (ret < 0)
-        return;
-    
-    power = (ret & ~0xFC);
-    power |= power_mode & 0xFc;
-    
-    writeI2C(CMD_POWER_MODE, 1, &power);
-}
-
-int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
+int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
     int ret;
     UInt16 hidRegister;
     
-    uint8_t bl_exit[] = {
-        0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,
-        0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
+    elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_RESET);
     
-    uint8_t bl_deactivate[] = {
-        0x00, 0xff, 0x3b, 0x00, 0x01,
-        0x02, 0x03, 0x04, 0x05, 0x06, 0x07 };
+    uint8_t val[256];
+    readI2C(0x00, ETP_I2C_INF_LENGTH, val);
     
-    cyapa_boot_regs boot;
+    readI2C16(ETP_I2C_DESC_CMD, ETP_I2C_DESC_LENGTH, val);
     
-    readI2C(0x00, sizeof(boot), (uint8_t *)&boot);
+    readI2C16(ETP_I2C_REPORT_DESC_CMD, ETP_I2C_REPORT_DESC_LENGTH, val);
     
-    if ((boot.stat & CYAPA_STAT_RUNNING) == 0){
-        if (boot.error & CYAPA_ERROR_BOOTLOADER)
-            ret = writeI2C(0x00, sizeof(bl_deactivate), bl_deactivate);
-        else
-            ret = writeI2C(0x00, sizeof(bl_exit), bl_exit);
-    }
+    elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
     
-    cyapa_cap cap;
-    readI2C(CMD_QUERY_CAPABILITIES, sizeof(cap), (uint8_t *)&cap);
-    if (strncmp((const char *)cap.prod_ida, "CYTRA", 5) != 0) {
-        IOLog("%s::%s::[cyapainit] Product ID \"%5.5s\" mismatch\n", getName(), _controller->_dev->name,
-                   cap.prod_ida);
-    }
+    elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
+    
+    uint8_t val2[3];
+    
+    elan_i2c_read_cmd(ETP_I2C_UNIQUEID_CMD, val2);
+    uint8_t prodid = val2[0];
+    
+    elan_i2c_read_cmd(ETP_I2C_FW_VERSION_CMD, val2);
+    uint8_t version = val2[0];
+    
+    elan_i2c_read_cmd(ETP_I2C_FW_CHECKSUM_CMD, val2);
+    uint16_t csum = *((uint16_t *)val2);
+    
+    elan_i2c_read_cmd(ETP_I2C_SM_VERSION_CMD, val2);
+    uint8_t smvers = val2[0];
+    
+    elan_i2c_read_cmd(ETP_I2C_IAP_VERSION_CMD, val2);
+    uint8_t iapversion = val2[0];
+    
+    elan_i2c_read_cmd(ETP_I2C_PRESSURE_CMD, val2);
+    
+    elan_i2c_read_cmd(ETP_I2C_MAX_X_AXIS_CMD, val2);
+    uint16_t max_x = (*((uint16_t *)val2)) & 0x0fff;
+    
+    elan_i2c_read_cmd(ETP_I2C_MAX_Y_AXIS_CMD, val2);
+    uint16_t max_y = (*((uint16_t *)val2)) & 0x0fff;
+    
+    elan_i2c_read_cmd(ETP_I2C_XY_TRACENUM_CMD, val2);
+    
+    uint8_t x_traces = val2[0];
+    uint8_t y_traces = val2[1];
     
     csgesture_softc *sc = &softc;
-    sc->resx = ((cap.max_abs_xy_high << 4) & 0x0F00) |
-    cap.max_abs_x_low;
-    sc->resy = ((cap.max_abs_xy_high << 8) & 0x0F00) |
-    cap.max_abs_y_low;
-    sc->phyx = ((cap.phy_siz_xy_high << 4) & 0x0F00) |
-    cap.phy_siz_x_low;
-    sc->phyy = ((cap.phy_siz_xy_high << 8) & 0x0F00) |
-    cap.phy_siz_y_low;
-    IOLog("%s::%s::[cyapainit] %5.5s-%6.6s-%2.2s buttons=%c%c%c res=%dx%d\n",
-               getName(), _controller->_dev->name,
-               cap.prod_ida, cap.prod_idb, cap.prod_idc,
-               ((cap.buttons & CYAPA_FNGR_LEFT) ? 'L' : '-'),
-               ((cap.buttons & CYAPA_FNGR_MIDDLE) ? 'M' : '-'),
-               ((cap.buttons & CYAPA_FNGR_RIGHT) ? 'R' : '-'),
-               sc->resx,
-               sc->resy);
     
-    for (int i = 0; i < 5; i++) {
-        sc->product_id[i] = cap.prod_ida[i];
-    }
-    sc->product_id[5] = '-';
-    for (int i = 0; i < 6; i++) {
-        sc->product_id[i + 6] = cap.prod_idb[i];
-    }
-    sc->product_id[12] = '-';
-    for (int i = 0; i < 2; i++) {
-        sc->product_id[i + 13] = cap.prod_idc[i];
-    }
-    sc->product_id[15] = '\0';
+    sprintf(sc->product_id, "%d.0", prodid);
+    sprintf(sc->firmware_version, "%d.0", version);
     
-    sprintf(sc->firmware_version, "%d.%d", cap.fw_maj_ver, cap.fw_min_ver);
+    sc->resx = max_x;
+    sc->resy = max_y;
+    
+    sc->resx *= 2;
+    sc->resx /= 7;
+    
+    sc->resy *= 2;
+    sc->resy /= 7;
+    
+    sc->phyx = max_x;
+    sc->phyy = max_y;
+    
+    IOLog("%s::%s::[Elan Trackpad] ProdID: %d Vers: %d Csum: %d SmVers: %d IAPVers: %d Max X: %d Max Y: %d\n", getName(), _controller->_dev->name, prodid, version, csum, smvers, iapversion, max_x, max_y);
+    
+    elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_CALIBRATE | ETP_ENABLE_ABS);
+    
+    elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
+    
+    elan_i2c_write_cmd(ETP_I2C_CALIBRATE_CMD, 1);
+    
+    readI2C16(ETP_I2C_CALIBRATE_CMD, 1, val2);
+    
+    elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
+    
     sc->infoSetup = true;
-    
-    cyapa_set_power_mode(CMD_POWER_MODE_FULL);
-
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
     if(!hid_device->workLoop) {
@@ -865,7 +909,7 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
      hid_device->interruptSource->enable();
      */
     
-    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
+    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CElanTouchpadDevice::get_input));
     if (!hid_device->timerSource){
         IOLog("%s", "Timer Err!\n");
         goto err;
@@ -914,11 +958,11 @@ err:
     return ret;
 }
 
-void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
+void VoodooI2CElanTouchpadDevice::initialize_wrapper(void) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooCyapaMouseWrapper;
+    _wrapper = new VoodooElanTouchpadWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
@@ -931,7 +975,7 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     }
 }
 
-void VoodooI2CCyapaGen3Device::destroy_wrapper(void) {
+void VoodooI2CElanTouchpadDevice::destroy_wrapper(void) {
     if (_wrapper != NULL) {
         _wrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
         _wrapper->release();
@@ -942,7 +986,16 @@ void VoodooI2CCyapaGen3Device::destroy_wrapper(void) {
 #define EIO              5      /* I/O error */
 #define ENOMEM          12      /* Out of memory */
 
-SInt32 VoodooI2CCyapaGen3Device::readI2C(uint8_t reg, size_t len, uint8_t *values){
+void VoodooI2CElanTouchpadDevice::elan_i2c_read_cmd(uint16_t reg, uint8_t *val) {
+    readI2C16(reg, ETP_I2C_INF_LENGTH, val);
+}
+
+void VoodooI2CElanTouchpadDevice::elan_i2c_write_cmd(uint16_t reg, uint16_t cmd){
+    uint16_t buffer[] = { cmd };
+    readI2C16(reg, sizeof(buffer), (uint8_t *)buffer);
+}
+
+SInt32 VoodooI2CElanTouchpadDevice::readI2C(uint8_t reg, size_t len, uint8_t *values){
     struct VoodooI2C::i2c_msg msgs[] = {
         {
             .addr = hid_device->addr,
@@ -964,7 +1017,32 @@ SInt32 VoodooI2CCyapaGen3Device::readI2C(uint8_t reg, size_t len, uint8_t *value
     return 0;
 }
 
-SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *values){
+SInt32 VoodooI2CElanTouchpadDevice::readI2C16(uint16_t reg, size_t len, uint8_t *values){
+    uint16_t buf[] {
+        reg
+    };
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = hid_device->addr,
+            .flags = 0,
+            .len = sizeof(buf),
+            .buf = (uint8_t *)&buf,
+        },
+        {
+            .addr = hid_device->addr,
+            .flags = I2C_M_RD,
+            .len = (uint8_t)len,
+            .buf = values,
+        },
+    };
+    int ret;
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)msgs, ARRAY_SIZE(msgs));
+    if (ret != ARRAY_SIZE(msgs))
+        return ret < 0 ? ret : EIO;
+    return 0;
+}
+
+SInt32 VoodooI2CElanTouchpadDevice::writeI2C(uint8_t reg, size_t len, uint8_t *values){
     struct VoodooI2C::i2c_msg msgs[] = {
         {
             .addr = hid_device->addr,
@@ -986,7 +1064,32 @@ SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *valu
     return ret;
 }
 
-IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOService *whatDevice){
+SInt32 VoodooI2CElanTouchpadDevice::writeI2C16(uint16_t reg, size_t len, uint8_t *values){
+    uint16_t buf[] {
+        reg
+    };
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = hid_device->addr,
+            .flags = 0,
+            .len = sizeof(buf),
+            .buf = (uint8_t *)&buf,
+        },
+        {
+            .addr = hid_device->addr,
+            .flags = 0,
+            .len = (uint8_t)len,
+            .buf = values,
+        },
+    };
+    int ret;
+    
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
+    
+    return ret;
+}
+
+IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IOService *whatDevice){
     if (powerState == 0){
         //Going to sleep
         if (hid_device->timerSource){
@@ -998,7 +1101,7 @@ IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOSer
     } else {
         //Waking up from Sleep
         if (!hid_device->timerSource){
-            hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
+            hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CElanTouchpadDevice::get_input));
             hid_device->workLoop->addEventSource(hid_device->timerSource);
             hid_device->timerSource->setTimeoutMS(10);
         }
@@ -1008,7 +1111,7 @@ IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOSer
     return kIOPMAckImplied;
 }
 
-int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
+int VoodooI2CElanTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_device){
     OSObject* result = NULL;
     
     hid_device->provider->evaluateObject("_CRS", &result);
@@ -1023,26 +1126,31 @@ int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
     
 }
 
-void VoodooI2CCyapaGen3Device::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
+void VoodooI2CElanTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     IOLog("interrupt\n");
     if (hid_device->reading)
         return;
     //i2c_hid_get_input(ihid);
 }
 
-void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* sender) {
-    cyapa_regs regs;
-    readI2C(0, sizeof(regs), (uint8_t *)&regs);
+void VoodooI2CElanTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
+    uint8_t report[ETP_MAX_REPORT_LEN];
+    readI2C(0, sizeof(report), report);
     
-    TrackpadRawInput(&softc, &regs, 1);
+    if (report[0] != 0xff){
+        for (int i = 0;i < ETP_MAX_REPORT_LEN; i++)
+            prevreport[i] = report[i];
+    }
+    
+    TrackpadRawInput(&softc, prevreport, 1);
     hid_device->timerSource->setTimeoutMS(10);
 }
 
-static _CYAPA_RELATIVE_MOUSE_REPORT lastreport;
+static _ELAN_RELATIVE_MOUSE_REPORT lastreport;
 
-void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
+void VoodooI2CElanTouchpadDevice::update_relative_mouse(char button,
                                                      char x, char y, char wheelPosition, char wheelHPosition){
-    _CYAPA_RELATIVE_MOUSE_REPORT report;
+    _ELAN_RELATIVE_MOUSE_REPORT report;
     report.ReportID = REPORTID_RELATIVE_MOUSE;
     report.Button = button;
     report.XValue = x;
@@ -1072,8 +1180,8 @@ void VoodooI2CCyapaGen3Device::update_relative_mouse(char button,
     buffer->release();
 }
 
-void VoodooI2CCyapaGen3Device::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODES]) {
-    _CYAPA_KEYBOARD_REPORT report;
+void VoodooI2CElanTouchpadDevice::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODES]) {
+    _ELAN_KEYBOARD_REPORT report;
     report.ReportID = REPORTID_KEYBOARD;
     report.ShiftKeyFlags = shiftKeys;
     for (int i = 0; i < KBD_KEY_CODES; i++){
@@ -1091,21 +1199,21 @@ void VoodooI2CCyapaGen3Device::update_keyboard(uint8_t shiftKeys, uint8_t keyCod
 
 }
 
-int VoodooI2CCyapaGen3Device::reportDescriptorLength(){
-    return sizeof(cyapadesc);
+int VoodooI2CElanTouchpadDevice::reportDescriptorLength(){
+    return sizeof(elandesc);
 }
 
-int VoodooI2CCyapaGen3Device::vendorID(){
+int VoodooI2CElanTouchpadDevice::vendorID(){
     return 'pyaC';
 }
 
-int VoodooI2CCyapaGen3Device::productID(){
+int VoodooI2CElanTouchpadDevice::productID(){
     return 'rtyC';
 }
 
-void VoodooI2CCyapaGen3Device::write_report_to_buffer(IOMemoryDescriptor *buffer){
+void VoodooI2CElanTouchpadDevice::write_report_to_buffer(IOMemoryDescriptor *buffer){
     
-    _CYAPA_RELATIVE_MOUSE_REPORT report;
+    _ELAN_RELATIVE_MOUSE_REPORT report;
     report.ReportID = REPORTID_RELATIVE_MOUSE;
     report.Button = lastmouse.buttonMask;
     report.XValue = lastmouse.x;
@@ -1118,9 +1226,9 @@ void VoodooI2CCyapaGen3Device::write_report_to_buffer(IOMemoryDescriptor *buffer
     buffer->writeBytes(0, &report, rsize);
 }
 
-void VoodooI2CCyapaGen3Device::write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer){
+void VoodooI2CElanTouchpadDevice::write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer){
     
-    UInt rsize = sizeof(cyapadesc);
+    UInt rsize = sizeof(elandesc);
     
-    buffer->writeBytes(0, cyapadesc, rsize);
+    buffer->writeBytes(0, elandesc, rsize);
 }
