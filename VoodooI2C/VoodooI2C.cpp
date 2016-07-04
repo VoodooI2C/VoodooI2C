@@ -463,6 +463,9 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
             //power on I2C bus
             setI2CPowerState(_dev, true);
             
+            //Skylake hack
+            writel(_dev, 3, 0x204);
+            
             //reinitialize I2C bus
             initI2CBus(_dev);
             
