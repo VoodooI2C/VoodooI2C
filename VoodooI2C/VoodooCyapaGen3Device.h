@@ -109,8 +109,6 @@ typedef struct __attribute__((__packed__)){
 } cyapa_cap;
 
 class VoodooI2C;
-class VoodooCyapaMouseWrapper;
-class IOBufferMemoryDescriptor;
 
 class VoodooI2CCyapaGen3Device : public VoodooI2CDevice
 {
@@ -118,7 +116,7 @@ class VoodooI2CCyapaGen3Device : public VoodooI2CDevice
     OSDeclareDefaultStructors(VoodooI2CCyapaGen3Device);
     
 private:
-    VoodooCyapaMouseWrapper* _wrapper;
+    CSGesture* _wrapper;
     
     void initialize_wrapper(void);
     void destroy_wrapper(void);
@@ -170,12 +168,6 @@ public:
 .registerIndex = offsetof(struct i2c_hid_desc, wCommandRegister)
     };
     
-    struct {
-        UInt8 x;
-        UInt8 y;
-        UInt8 buttonMask;
-    } lastmouse;
-    
     I2CDevice* hid_device;
     
     struct csgesture_softc softc;
@@ -188,14 +180,6 @@ public:
     
     void get_input(OSObject* owner, IOTimerEventSource* sender);
     
-    int reportDescriptorLength();
-    
-    int vendorID();
-    int productID();
-    
-    void write_report_to_buffer(IOMemoryDescriptor *buffer);
-    void write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer);
-    
     IOReturn setPowerState(unsigned long powerState, IOService *whatDevice);
     
     int i2c_get_slave_address(I2CDevice* hid_device);
@@ -204,19 +188,6 @@ public:
     
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
-    
-    void update_relative_mouse(char button,
-                               char x, char y, char wheelPosition, char wheelHPosition);
-    void update_keyboard(uint8_t shiftKeys, uint8_t *keyCodes);
-    
-    int distancesq(int delta_x, int delta_y);
-    bool ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
-    bool ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
-    bool ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]);
-    
-    void TapToClickOrDrag(csgesture_softc *sc, int button);
-    void ClearTapDrag(csgesture_softc *sc, int i);
-    void ProcessGesture(csgesture_softc *sc);
     void TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc);
 };
 

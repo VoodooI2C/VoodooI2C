@@ -1,23 +1,25 @@
 //
-//  VoodooCyapaMouseWrapper.h
+//  VoodooCSGestureMouseWrapper.h
 //  VoodooI2C
 //
 //  Created by Christopher Luu on 10/7/15.
 //  Copyright © 2015 Alexandre Daoud. All rights reserved.
 //
 
-#ifndef VoodooI2C_VoodooCyapaMouseWrapper_h
-#define VoodooI2C_VoodooCyapaMouseWrapper_h
+#ifndef VoodooI2C_VoodooCSGestureMouseWrapper_h
+#define VoodooI2C_VoodooCSGestureMouseWrapper_h
 
 #include <IOKit/hid/IOHIDDevice.h>
 
 class VoodooI2CHIDDevice;
+class CSGesture;
 
-class VoodooCyapaMouseWrapper : public IOHIDDevice
+class VoodooCSGestureMouseWrapper : public IOHIDDevice
 {
-    OSDeclareDefaultStructors(VoodooCyapaMouseWrapper)
-
+    OSDeclareDefaultStructors(VoodooCSGestureMouseWrapper)
 public:
+    CSGesture *gestureEngine;
+    
     virtual bool start(IOService *provider);
     
     virtual IOReturn setProperties(OSObject *properties);
@@ -39,4 +41,4 @@ public:
     virtual OSNumber* newLocationIDNumber() const;
 };
 
-#endif /* VoodooI2C_VoodooCyapaMouseWrapper_h */
+#endif /* VoodooI2C_VoodooCSGestureMouseWrapper_h */
