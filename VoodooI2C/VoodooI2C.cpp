@@ -688,7 +688,13 @@ bool VoodooI2C::start(IOService * provider) {
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CCyapaGen3Device);
                         } else if (strcmp(getMatchedName((IOService *)child), "ATML0001") == 0){
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CAtmelMxtScreenDevice);
-                        } else {
+                        } else if ((strcmp(getMatchedName((IOService *)child), "ELAN0000") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0100") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0600") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN1XXX") == 0)){
+                                bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
+                        } else
+>>>>>>> Move csgesture struct to a separate header so multiple trackpads can use it. Add support for Elan I2C trackpads for both chromebook and non-chromebook devices.
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         }
                         
