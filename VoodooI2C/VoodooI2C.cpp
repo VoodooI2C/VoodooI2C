@@ -8,6 +8,12 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 // #define IGNORED_DEVICE "DLL05E3"
 // #define IGNORED_DEVICE "SYNA7500"
 
+#define LPSS_PRIV                   (0x200)
+#define LPSS_PRIV_RESETS            (0x04)
+#define LPSS_PRIV_RESETS_FUNC		(2<<1)
+#define LPSS_PRIV_RESETS_IDMA		(0x3)
+
+
 // Declare an array of two IOPMPowerState structures (kMyNumberOfStates = 2).
 enum {
     kPowerOffState = 0,
@@ -463,8 +469,8 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
             //power on I2C bus
             setI2CPowerState(_dev, true);
             
-            //Skylake hack
-            writel(_dev, 3, 0x204);
+            //Skylake LPSS reset hack
+            writel(_dev, (LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
             
             //reinitialize I2C bus
             initI2CBus(_dev);
@@ -644,8 +650,8 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    //Skylake hack
-    writel(_dev, 3, 0x204);
+    //Skylake LPSS reset hack
+    writel(_dev, (LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
     
     //initialise I2C bus
     
@@ -693,8 +699,7 @@ bool VoodooI2C::start(IOService * provider) {
                                     strcmp(getMatchedName((IOService *)child), "ELAN0600") == 0 ||
                                     strcmp(getMatchedName((IOService *)child), "ELAN1XXX") == 0)){
                                 bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
-                        } else
->>>>>>> Move csgesture struct to a separate header so multiple trackpads can use it. Add support for Elan I2C trackpads for both chromebook and non-chromebook devices.
+                        } else {
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
                         }
                         

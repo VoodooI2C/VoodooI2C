@@ -173,7 +173,7 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     }
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
-    hid_device->timerSource->setTimeoutMS(10);
+    hid_device->timerSource->setTimeoutMS(200);
      /*
      
      hid_device->commandGate = IOCommandGate::commandGate(this);
