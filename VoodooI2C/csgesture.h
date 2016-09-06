@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
-#include "VoodooCSGestureMouseWrapper.h"
+#include "VoodooCSGestureHIDWrapper.h"
 
 #define MAX_FINGERS 15
 
@@ -81,7 +81,7 @@ struct csgesture_softc {
 
 class CSGesture {
 private:
-    VoodooCSGestureMouseWrapper *_wrapper;
+    VoodooCSGestureHIDWrapper *_wrapper;
     
     struct {
         UInt8 x;

@@ -1,28 +1,28 @@
 //
-//  VoodooCyapaMouseWrapper.cpp
+//  VoodooCSGestureHIDWrapper.cpp
 //  VoodooI2C
 //
 //  Created by Christopher Luu on 10/7/15.
 //  Copyright © 2015 Alexandre Daoud. All rights reserved.
 //
 
-#include "VoodooCSGestureMouseWrapper.h"
+#include "VoodooCSGestureHIDWrapper.h"
 #include "csgesture.h"
 
-OSDefineMetaClassAndStructors(VoodooCSGestureMouseWrapper, IOHIDDevice)
+OSDefineMetaClassAndStructors(VoodooCSGestureHIDWrapper, IOHIDDevice)
 
-bool VoodooCSGestureMouseWrapper::start(IOService *provider) {
+bool VoodooCSGestureHIDWrapper::start(IOService *provider) {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     setProperty("HIDDefaultBehavior", OSString::withCString("Trackpad"));
     return IOHIDDevice::start(provider);
 }
 
-IOReturn VoodooCSGestureMouseWrapper::setProperties(OSObject *properties) {
+IOReturn VoodooCSGestureHIDWrapper::setProperties(OSObject *properties) {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return kIOReturnUnsupported;
 }
 
-IOReturn VoodooCSGestureMouseWrapper::newReportDescriptor(IOMemoryDescriptor **descriptor) const {
+IOReturn VoodooCSGestureHIDWrapper::newReportDescriptor(IOMemoryDescriptor **descriptor) const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, gestureEngine->reportDescriptorLength());
 
@@ -33,12 +33,12 @@ IOReturn VoodooCSGestureMouseWrapper::newReportDescriptor(IOMemoryDescriptor **d
     return kIOReturnSuccess;
 }
 
-IOReturn VoodooCSGestureMouseWrapper::setReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
+IOReturn VoodooCSGestureHIDWrapper::setReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return kIOReturnUnsupported;
 }
 
-IOReturn VoodooCSGestureMouseWrapper::getReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
+IOReturn VoodooCSGestureHIDWrapper::getReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     if (reportType == kIOHIDReportTypeOutput){
         gestureEngine->write_report_to_buffer(report);
@@ -54,47 +54,47 @@ IOReturn VoodooCSGestureMouseWrapper::getReport(IOMemoryDescriptor *report, IOHI
     return IOHIDDevice::handleReport(report, reportType, options);
 }*/
 
-OSString* VoodooCSGestureMouseWrapper::newManufacturerString() const {
+OSString* VoodooCSGestureHIDWrapper::newManufacturerString() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSString::withCString("CSGesture");
 }
 
-OSNumber* VoodooCSGestureMouseWrapper::newPrimaryUsageNumber() const {
+OSNumber* VoodooCSGestureHIDWrapper::newPrimaryUsageNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSNumber::withNumber(kHIDUsage_GD_Mouse, 32);
 }
 
-OSNumber* VoodooCSGestureMouseWrapper::newPrimaryUsagePageNumber() const {
+OSNumber* VoodooCSGestureHIDWrapper::newPrimaryUsagePageNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSNumber::withNumber(kHIDPage_GenericDesktop, 32);
 }
 
-OSNumber* VoodooCSGestureMouseWrapper::newProductIDNumber() const {
+OSNumber* VoodooCSGestureHIDWrapper::newProductIDNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSNumber::withNumber(gestureEngine->productID, 32);
 }
 
-OSString* VoodooCSGestureMouseWrapper::newProductString() const {
+OSString* VoodooCSGestureHIDWrapper::newProductString() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSString::withCString("Trackpad");
 }
 
-OSString* VoodooCSGestureMouseWrapper::newSerialNumberString() const {
+OSString* VoodooCSGestureHIDWrapper::newSerialNumberString() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSString::withCString("1234");
 }
 
-OSString* VoodooCSGestureMouseWrapper::newTransportString() const {
+OSString* VoodooCSGestureHIDWrapper::newTransportString() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSString::withCString("I2C");
 }
 
-OSNumber* VoodooCSGestureMouseWrapper::newVendorIDNumber() const {
+OSNumber* VoodooCSGestureHIDWrapper::newVendorIDNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSNumber::withNumber(gestureEngine->vendorID, 16);
 }
 
-OSNumber* VoodooCSGestureMouseWrapper::newLocationIDNumber() const {
+OSNumber* VoodooCSGestureHIDWrapper::newLocationIDNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return OSNumber::withNumber(123, 32);
 }
