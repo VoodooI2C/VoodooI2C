@@ -2,9 +2,9 @@
 //  VoodooElanTouchpadDevice.h
 //  VoodooI2C
 //
-//  Created by CoolStar on 12/13/15.
-//  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad-elan 3.0 beta 9.4 for Windows
+//  Created by CoolStar on 6/25/16.
+//  Copyright © 2016 CoolStar. All rights reserved.
+//  ported from crostrackpad-elan 3.0 for Windows
 //
 
 #ifndef VoodooI2C_VoodooElanTouchpadDevice_h
@@ -97,6 +97,8 @@ class VoodooI2CElanTouchpadDevice : public VoodooI2CDevice
     
 private:
     CSGesture* _wrapper;
+    
+    uint32_t hw_res_x, hw_res_y;
     
     void initialize_wrapper(void);
     void destroy_wrapper(void);

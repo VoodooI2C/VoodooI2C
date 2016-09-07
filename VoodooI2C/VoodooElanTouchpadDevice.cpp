@@ -2,9 +2,9 @@
 //  VoodooElanTouchpadDevice.cpp
 //  VoodooI2C
 //
-//  Created by CoolStar on 12/13/15.
-//  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad-elan 3.0 beta 9.4 for Windows
+//  Created by CoolStar on 6/25/16.
+//  Copyright © 2016 CoolStar. All rights reserved.
+//  ported from crostrackpad-elan 3.0 for Windows
 //
 
 #include "VoodooElanTouchpadDevice.h"
@@ -52,10 +52,15 @@ void VoodooI2CElanTouchpadDevice::TrackpadRawInput(struct csgesture_softc *sc, u
             //map to cypress coordinates
             //pos_y = 1500 - pos_y;
             pos_y = sc->phyy - pos_y;
-            pos_x *= 2;
+            /*pos_x *= 2;
             pos_x /= 7;
             pos_y *= 2;
-            pos_y /= 7;
+            pos_y /= 7;*/
+            pos_x *= 10;
+            pos_x /= hw_res_x;
+            
+            pos_y *= 10;
+            pos_y /= hw_res_y;
             
             
             /*
@@ -220,6 +225,14 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     uint8_t x_traces = val2[0];
     uint8_t y_traces = val2[1];
     
+    elan_i2c_read_cmd(ETP_I2C_RESOLUTION_CMD, val2);
+    
+    hw_res_x = val2[0];
+    hw_res_y = val2[1];
+    
+    hw_res_x = (hw_res_x * 10 + 790) * 10 / 254;
+    hw_res_y = (hw_res_y * 10 + 790) * 10 / 254;
+    
     csgesture_softc *sc = &softc;
     
     sprintf(sc->product_id, "%d.0", prodid);
@@ -228,11 +241,14 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     sc->resx = max_x;
     sc->resy = max_y;
     
-    sc->resx *= 2;
+    /*sc->resx *= 2;
     sc->resx /= 7;
     
     sc->resy *= 2;
-    sc->resy /= 7;
+    sc->resy /= 7;*/
+    
+    sc->resx = max_x * 10 / hw_res_x;
+    sc->resy = max_y * 10 / hw_res_y;
     
     sc->phyx = max_x;
     sc->phyy = max_y;
