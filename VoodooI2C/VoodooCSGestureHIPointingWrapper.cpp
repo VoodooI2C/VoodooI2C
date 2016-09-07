@@ -109,6 +109,8 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
         gesturerec->softc->settings.tapDragEnabled = dragging->unsigned32BitValue() & 0x1;
     }
     
+    gesturerec->softc->settings.multiFingerTap = true;
+    
     OSNumber *hscroll  = OSDynamicCast(OSNumber, dict->getObject("TrackpadHorizScroll"));
     if (hscroll){
         horizontalScroll = hscroll->unsigned32BitValue() & 0x1;
