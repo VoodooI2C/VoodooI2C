@@ -134,11 +134,19 @@ void CSGestureScroll::ProcessScroll(int x1, int y1, int x2, int y2) {
         
         int delta_x2 = x2 - lastx2;
         int delta_y2 = y2 - lasty2;
+        
+        bool ignoreScroll = false;
+        
+        if (lastx1 == 0 || lasty1 == 0 || lastx2 == 0 || lasty2 == 0)
+            ignoreScroll = true;
             
         lastx1 = x1;
         lasty1 = y1;
         lastx2 = x2;
         lasty2 = y2;
+        
+        if (ignoreScroll)
+            return;
         
         int avgy = (delta_y1 + delta_y2) / 2;
         int avgx = (delta_x1 + delta_x2) / 2;
