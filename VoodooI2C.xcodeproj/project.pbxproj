@@ -27,6 +27,9 @@
 		F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */; };
 		F1AB82D01C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */; };
 		F1AB82D11C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */; };
+		F1FA896C1D7FAAC90019F9CF /* AverageClasses.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */; };
+		F1FA896F1D7FAAF10019F9CF /* csgesturescroll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */; };
+		F1FA89701D7FAAF10019F9CF /* csgesturescroll.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +59,10 @@
 		F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CDevice.h; sourceTree = "<group>"; };
 		F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCSGestureHIDWrapper.cpp; sourceTree = "<group>"; };
 		F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCSGestureHIDWrapper.h; sourceTree = "<group>"; };
+		F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AverageClasses.h; sourceTree = "<group>"; };
+		F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csgesturescroll.cpp; sourceTree = "<group>"; };
+		F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csgesturescroll.h; sourceTree = "<group>"; };
+		F1FA89711D7FBD4F0019F9CF /* csgesture-softc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "csgesture-softc.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,8 +154,12 @@
 		F1937E781D1F454B00F97772 /* Multitouch Support */ = {
 			isa = PBXGroup;
 			children = (
+				F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */,
 				F1937E791D1F455700F97772 /* csgesture.h */,
+				F1FA89711D7FBD4F0019F9CF /* csgesture-softc.h */,
 				F191539B1D25CE14007972A7 /* csgesture.cpp */,
+				F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */,
+				F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */,
 				F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */,
 				F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */,
 				F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */,
@@ -170,8 +181,10 @@
 				F153120B1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h in Headers */,
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
 				F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */,
+				F1FA896C1D7FAAC90019F9CF /* AverageClasses.h in Headers */,
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
 				F19857321D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h in Headers */,
+				F1FA89701D7FAAF10019F9CF /* csgesturescroll.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1FA896F1D7FAAF10019F9CF /* csgesturescroll.cpp in Sources */,
 				F17D8FF81CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp in Sources */,
 				F153120D1CB9B63B00BE6BFC /* atmel_crc.cpp in Sources */,
 				F1AB82D01C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp in Sources */,

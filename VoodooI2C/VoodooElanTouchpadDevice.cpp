@@ -326,6 +326,7 @@ void VoodooI2CElanTouchpadDevice::initialize_wrapper(void) {
     _wrapper = new CSGesture;
     _wrapper->vendorID = 'nalE';
     _wrapper->productID = 'dptE';
+    _wrapper->softc = &softc;
     _wrapper->initialize_wrapper(this);
 }
 
@@ -447,6 +448,10 @@ IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IO
             hid_device->timerSource->release();
             hid_device->timerSource = NULL;
         }
+        
+        if (_wrapper)
+            _wrapper->prepareToSleep();
+        
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         //Waking up from Sleep
@@ -455,6 +460,9 @@ IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IO
             hid_device->workLoop->addEventSource(hid_device->timerSource);
             hid_device->timerSource->setTimeoutMS(10);
         }
+        
+        if (_wrapper)
+            _wrapper->wakeFromSleep();
         
         IOLog("%s::Woke up from Sleep!\n", getName());
     }

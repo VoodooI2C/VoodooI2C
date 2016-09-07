@@ -27,6 +27,12 @@ inline int32_t abs(int32_t num){
 }
 #endif
 
+inline int filterNegative(int val) {
+    if (val > 0)
+        return val;
+    return 65535;
+}
+
 typedef unsigned char BYTE;
 
 unsigned char csgesturedesc[] = {
@@ -196,6 +202,9 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
         if (!sc->panningActive && sc->tick[i] < 5)
             return false;
         
+        _scrollHandler->softc = sc;
+        _scrollHandler->stopScroll();
+        
         if (sc->panningActive && i == -1)
             i = sc->idForPanning;
         
@@ -256,7 +265,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             }
         }
         
-        
+#if 0
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
         
@@ -271,7 +280,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             int avgx = (delta_x1 + delta_x2) / 2;
             sc->scrollx = avgx;
         }
-#if 0
+        
         if (abs(sc->scrollx) > 100)
             sc->scrollx = 0;
         if (abs(sc->scrolly) > 100)
@@ -305,7 +314,13 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         sc->scrollx = -sc->scrollx;
         sc->scrolly = -sc->scrolly;
 #endif
-        _pointingWrapper->updateScroll(sc->scrolly, sc->scrollx, 0);
+
+        _scrollHandler->softc = sc;
+        _scrollHandler->ProcessScroll(filterNegative(sc->x[i1]),
+                                      filterNegative(sc->y[i1]),
+                                      filterNegative(sc->x[i2]),
+                                      filterNegative(sc->y[i2]));
+        //_pointingWrapper->updateScroll(sc->scrolly, sc->scrollx, 0);
         
         int fngrcount = 0;
         int totfingers = 0;
@@ -340,6 +355,9 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
 
 bool CSGesture::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     if (abovethreshold == 3 || abovethreshold == 4) {
+        _scrollHandler->softc = sc;
+        _scrollHandler->stopScroll();
+        
         int i1 = iToUse[0];
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
@@ -650,6 +668,16 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
 
 #pragma mark OS Specific functions
 
+void CSGesture::prepareToSleep(){
+    if (_scrollHandler)
+        _scrollHandler->prepareToSleep();
+}
+
+void CSGesture::wakeFromSleep(){
+    if (_scrollHandler)
+        _scrollHandler->wakeFromSleep();
+}
+
 void CSGesture::initialize_wrapper(IOService *service) {
     destroy_wrapper();
     
@@ -677,6 +705,18 @@ void CSGesture::initialize_wrapper(IOService *service) {
         _pointingWrapper->release();
         _pointingWrapper = NULL;
     }
+    
+    _scrollHandler = new CSGestureScroll;
+    if (_scrollHandler->init()){
+        _scrollHandler->softc = softc;
+        _scrollHandler->inertiaScroll = true;
+        
+        _scrollHandler->_pointingWrapper = _pointingWrapper;
+        _scrollHandler->_gestureEngine = this;
+        
+        _scrollHandler->attach(service);
+        _scrollHandler->start(service);
+    }
 }
 
 void CSGesture::destroy_wrapper(void) {
@@ -690,6 +730,13 @@ void CSGesture::destroy_wrapper(void) {
         _pointingWrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
         _pointingWrapper->release();
         _pointingWrapper = NULL;
+    }
+    
+    if (_scrollHandler != NULL){
+        _scrollHandler->stop();
+        _scrollHandler->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        _scrollHandler->release();
+        _scrollHandler = NULL;
     }
 }
 
