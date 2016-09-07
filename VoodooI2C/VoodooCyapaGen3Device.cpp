@@ -4,7 +4,7 @@
 //
 //  Created by CoolStar on 12/13/15.
 //  Copyright © 2015 CoolStar. All rights reserved.
-//  ported from crostrackpad 3.0 beta 9.4 for Windows
+//  ported from crostrackpad 3.0 for Windows
 //
 
 #include "VoodooCyapaGen3Device.h"
@@ -142,8 +142,7 @@ void VoodooI2CCyapaGen3Device::cyapa_set_power_mode(uint8_t power_mode)
 int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
-    int ret;
-    UInt16 hidRegister;
+    int ret = 0;
     
     uint8_t bl_exit[] = {
         0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,
@@ -282,6 +281,7 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
     _wrapper = new CSGesture;
     _wrapper->vendorID = 'pyaC';
     _wrapper->productID = 'rtyC';
+    _wrapper->softc = &softc;
     _wrapper->initialize_wrapper(this);
 }
 
@@ -344,6 +344,10 @@ IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOSer
             hid_device->timerSource->release();
             hid_device->timerSource = NULL;
         }
+        
+        if (_wrapper)
+            _wrapper->prepareToSleep();
+        
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         //Waking up from Sleep
@@ -352,6 +356,9 @@ IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOSer
             hid_device->workLoop->addEventSource(hid_device->timerSource);
             hid_device->timerSource->setTimeoutMS(10);
         }
+        
+        if (_wrapper)
+            _wrapper->wakeFromSleep();
         
         IOLog("%s::Woke up from Sleep!\n", getName());
     }

@@ -27,6 +27,12 @@ inline int32_t abs(int32_t num){
 }
 #endif
 
+inline int filterNegative(int val) {
+    if (val > 0)
+        return val;
+    return 65535;
+}
+
 typedef unsigned char BYTE;
 
 unsigned char csgesturedesc[] = {
@@ -196,6 +202,9 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
         if (!sc->panningActive && sc->tick[i] < 5)
             return false;
         
+        _scrollHandler->softc = sc;
+        _scrollHandler->stopScroll();
+        
         if (sc->panningActive && i == -1)
             i = sc->idForPanning;
         
@@ -235,6 +244,12 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
     if (abovethreshold == 2 || sc->scrollingActive) {
         int i1 = iToUse[0];
         int i2 = iToUse[1];
+        
+        if (!sc->scrollingActive && !sc->scrollInertiaActive) {
+            if (sc->truetick[i1] < 4 && sc->truetick[i2] < 4)
+                return false;
+        }
+        
         if (sc->scrollingActive){
             if (i1 == -1) {
                 if (i2 != sc->idsForScrolling[0])
@@ -250,6 +265,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             }
         }
         
+#if 0
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
         
@@ -264,6 +280,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             int avgx = (delta_x1 + delta_x2) / 2;
             sc->scrollx = avgx;
         }
+        
         if (abs(sc->scrollx) > 100)
             sc->scrollx = 0;
         if (abs(sc->scrolly) > 100)
@@ -296,6 +313,14 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         
         sc->scrollx = -sc->scrollx;
         sc->scrolly = -sc->scrolly;
+#endif
+
+        _scrollHandler->softc = sc;
+        _scrollHandler->ProcessScroll(filterNegative(sc->x[i1]),
+                                      filterNegative(sc->y[i1]),
+                                      filterNegative(sc->x[i2]),
+                                      filterNegative(sc->y[i2]));
+        //_pointingWrapper->updateScroll(sc->scrolly, sc->scrollx, 0);
         
         int fngrcount = 0;
         int totfingers = 0;
@@ -330,6 +355,9 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
 
 bool CSGesture::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     if (abovethreshold == 3 || abovethreshold == 4) {
+        _scrollHandler->softc = sc;
+        _scrollHandler->stopScroll();
+        
         int i1 = iToUse[0];
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
@@ -403,6 +431,9 @@ bool CSGesture::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold,
 }
 
 void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
+    if (!sc->settings.tapToClickEnabled)
+        return;
+    
     sc->tickssinceclick++;
     if (sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
         if (sc->tickssinceclick > 10) {
@@ -432,10 +463,12 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
             buttonmask = MOUSE_BUTTON_1;
             break;
         case 2:
-            buttonmask = MOUSE_BUTTON_2;
+            if (sc->settings.multiFingerTap)
+                buttonmask = MOUSE_BUTTON_2;
             break;
         case 3:
-            buttonmask = MOUSE_BUTTON_3;
+            if (sc->settings.multiFingerTap)
+                buttonmask = MOUSE_BUTTON_3;
             break;
     }
     if (buttonmask != 0 && sc->tickssinceclick > 10 && sc->ticksincelastrelease == 0) {
@@ -558,7 +591,8 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
         if (sc->x[i] != -1) {
             if (sc->lastx[i] == -1) {
                 if (sc->ticksincelastrelease < 10 && sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
-                    sc->idForMouseDown = i; //Associate Tap Drag
+                    if (sc->settings.tapDragEnabled)
+                        sc->idForMouseDown = i; //Associate Tap Drag
                 }
             }
             sc->truetick[i]++;
@@ -640,11 +674,21 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
 
 #pragma mark OS Specific functions
 
+void CSGesture::prepareToSleep(){
+    if (_scrollHandler)
+        _scrollHandler->prepareToSleep();
+}
+
+void CSGesture::wakeFromSleep(){
+    if (_scrollHandler)
+        _scrollHandler->wakeFromSleep();
+}
+
 void CSGesture::initialize_wrapper(IOService *service) {
     destroy_wrapper();
     
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    _wrapper = new VoodooCSGestureMouseWrapper;
+    _wrapper = new VoodooCSGestureHIDWrapper;
     if (_wrapper->init()) {
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->gestureEngine = this;
@@ -656,6 +700,30 @@ void CSGesture::initialize_wrapper(IOService *service) {
         _wrapper->release();
         _wrapper = NULL;
     }
+    
+    _pointingWrapper = new VoodooCSGestureHIPointingWrapper;
+    if (_pointingWrapper->init()){
+        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+        _pointingWrapper->gesturerec = this;
+        _pointingWrapper->attach(service);
+        _pointingWrapper->start(service);
+    } else {
+        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+        _pointingWrapper->release();
+        _pointingWrapper = NULL;
+    }
+    
+    _scrollHandler = new CSGestureScroll;
+    if (_scrollHandler->init()){
+        _scrollHandler->softc = softc;
+        _scrollHandler->inertiaScroll = true;
+        
+        _scrollHandler->_pointingWrapper = _pointingWrapper;
+        _scrollHandler->_gestureEngine = this;
+        
+        _scrollHandler->attach(service);
+        _scrollHandler->start(service);
+    }
 }
 
 void CSGesture::destroy_wrapper(void) {
@@ -664,13 +732,26 @@ void CSGesture::destroy_wrapper(void) {
         _wrapper->release();
         _wrapper = NULL;
     }
+    
+    if (_pointingWrapper != NULL){
+        _pointingWrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        _pointingWrapper->release();
+        _pointingWrapper = NULL;
+    }
+    
+    if (_scrollHandler != NULL){
+        _scrollHandler->stop();
+        _scrollHandler->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        _scrollHandler->release();
+        _scrollHandler = NULL;
+    }
 }
 
 static _CSGESTURE_RELATIVE_MOUSE_REPORT lastreport;
 
 void CSGesture::update_relative_mouse(char button,
                                                      char x, char y, char wheelPosition, char wheelHPosition){
-    _CSGESTURE_RELATIVE_MOUSE_REPORT report;
+    /*_CSGESTURE_RELATIVE_MOUSE_REPORT report;
     report.ReportID = REPORTID_RELATIVE_MOUSE;
     report.Button = button;
     report.XValue = x;
@@ -697,7 +778,9 @@ void CSGesture::update_relative_mouse(char button,
     if (err != kIOReturnSuccess)
         IOLog("Error handling report: 0x%.8x\n", err);
     
-    buffer->release();
+    buffer->release();*/
+    
+    _pointingWrapper->updateRelativeMouse(x, y, button);
 }
 
 void CSGesture::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODES]) {

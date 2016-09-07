@@ -45,9 +45,9 @@ protected:
     VoodooI2C* _controller;
     
 public:
-    virtual bool attach(IOService * provider, IOService* child);
-    virtual void detach(IOService * provider);
-    void stop(IOService* device);
+    virtual bool attach(IOService * provider, IOService* child) override;
+    virtual void detach(IOService * provider) override;
+    void stop(IOService* device) override;
     
     
     typedef struct {
