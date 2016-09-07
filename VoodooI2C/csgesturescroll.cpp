@@ -165,6 +165,9 @@ void CSGestureScroll::ProcessScroll(int x1, int y1, int x2, int y2) {
             noScrollCounter = 0;
         }
         
+        avgy = -avgy;
+        avgx = -avgx;
+        
         if (abs(avgy) > abs(avgx)) {
             _pointingWrapper->updateScroll(avgy, 0, 0);
             
