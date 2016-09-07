@@ -21,21 +21,21 @@ private:
     bool horizontalScroll;
     
 protected:
-    virtual IOItemCount buttonCount();
-    virtual IOFixed resolution();
+    virtual IOItemCount buttonCount() override;
+    virtual IOFixed resolution() override;
     
 public:
     CSGesture *gesturerec;
     
-    virtual bool init();
+    virtual bool init() override;
     
-    virtual bool start(IOService *provider);
-    virtual void stop(IOService *provider);
+    virtual bool start(IOService *provider) override;
+    virtual void stop(IOService *provider) override;
     
-    virtual UInt32 deviceType();
-    virtual UInt32 interfaceID();
+    virtual UInt32 deviceType() override;
+    virtual UInt32 interfaceID() override;
     
-    virtual IOReturn setParamProperties(OSDictionary *dict);
+    virtual IOReturn setParamProperties(OSDictionary *dict) override;
     
     void updateRelativeMouse(int dx, int dy, int buttons);
     void updateScroll(short dy, short dx, short dz);

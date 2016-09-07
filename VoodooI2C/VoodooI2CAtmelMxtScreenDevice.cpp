@@ -394,7 +394,6 @@ int VoodooI2CAtmelMxtScreenDevice::mxt_read_t100_config()
 
 int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
     int ret;
-    UInt16 hidRegister;
     
     int blksize;
     uint32_t crc;

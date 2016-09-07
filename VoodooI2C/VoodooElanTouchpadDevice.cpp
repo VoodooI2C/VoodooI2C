@@ -175,8 +175,7 @@ void VoodooI2CElanTouchpadDevice::detach( IOService * provider )
 int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
-    int ret;
-    UInt16 hidRegister;
+    int ret = 0;
     
     elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_RESET);
     

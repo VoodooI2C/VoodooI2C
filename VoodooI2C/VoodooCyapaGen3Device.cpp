@@ -142,8 +142,7 @@ void VoodooI2CCyapaGen3Device::cyapa_set_power_mode(uint8_t power_mode)
 int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
-    int ret;
-    UInt16 hidRegister;
+    int ret = 0;
     
     uint8_t bl_exit[] = {
         0x00, 0x00, 0xff, 0xa5, 0x00, 0x01,

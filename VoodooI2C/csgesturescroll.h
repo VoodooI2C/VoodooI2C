@@ -69,7 +69,7 @@ public:
     
     void stopScroll();
     
-    bool start(IOService *provider);
+    bool start(IOService *provider) override;
     
     void stop();
     

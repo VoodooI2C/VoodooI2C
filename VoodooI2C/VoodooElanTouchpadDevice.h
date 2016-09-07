@@ -105,9 +105,9 @@ protected:
     VoodooI2C* _controller;
     
 public:
-    virtual bool attach(IOService * provider, IOService* child);
-    virtual void detach(IOService * provider);
-    void stop(IOService* device);
+    virtual bool attach(IOService * provider, IOService* child) override;
+    virtual void detach(IOService * provider) override;
+    void stop(IOService* device) override;
     
     
     typedef struct {
@@ -162,7 +162,7 @@ public:
     
     void get_input(OSObject* owner, IOTimerEventSource* sender);
     
-    IOReturn setPowerState(unsigned long powerState, IOService *whatDevice);
+    IOReturn setPowerState(unsigned long powerState, IOService *whatDevice) override;
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     
