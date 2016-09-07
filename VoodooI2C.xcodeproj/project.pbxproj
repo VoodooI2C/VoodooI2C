@@ -21,6 +21,8 @@
 		F17D8FF81CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F17D8FF61CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp */; };
 		F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F17D8FF71CBABF15002F9115 /* VoodooAtmelTouchWrapper.h */; };
 		F191539C1D25CE14007972A7 /* csgesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F191539B1D25CE14007972A7 /* csgesture.cpp */; };
+		F19857311D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */; };
+		F19857321D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */; };
 		F19963091CAD6EE3002E2D29 /* VoodooI2CDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F19963071CAD6EE3002E2D29 /* VoodooI2CDevice.cpp */; };
 		F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */; };
 		F1AB82D01C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */; };
@@ -48,6 +50,8 @@
 		F17D8FF71CBABF15002F9115 /* VoodooAtmelTouchWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooAtmelTouchWrapper.h; sourceTree = "<group>"; };
 		F191539B1D25CE14007972A7 /* csgesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csgesture.cpp; sourceTree = "<group>"; };
 		F1937E791D1F455700F97772 /* csgesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csgesture.h; sourceTree = "<group>"; };
+		F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCSGestureHIPointingWrapper.cpp; sourceTree = "<group>"; };
+		F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCSGestureHIPointingWrapper.h; sourceTree = "<group>"; };
 		F19963071CAD6EE3002E2D29 /* VoodooI2CDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CDevice.cpp; sourceTree = "<group>"; };
 		F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CDevice.h; sourceTree = "<group>"; };
 		F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCSGestureHIDWrapper.cpp; sourceTree = "<group>"; };
@@ -147,6 +151,8 @@
 				F191539B1D25CE14007972A7 /* csgesture.cpp */,
 				F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */,
 				F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */,
+				F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */,
+				F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */,
 			);
 			name = "Multitouch Support";
 			sourceTree = "<group>";
@@ -165,6 +171,7 @@
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
 				F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */,
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
+				F19857321D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +248,7 @@
 				308C59881BC61FD20078D1B1 /* VoodooHIDWrapper.cpp in Sources */,
 				ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */,
 				F153120A1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.cpp in Sources */,
+				F19857311D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp in Sources */,
 				F191539C1D25CE14007972A7 /* csgesture.cpp in Sources */,
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
 				F110CDBA1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp in Sources */,

@@ -8,6 +8,7 @@
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
 #include "VoodooCSGestureHIDWrapper.h"
+#include "VoodooCSGestureHIPointingWrapper.h"
 
 #define MAX_FINGERS 15
 
@@ -47,6 +48,8 @@ struct csgesture_softc {
     int idsForScrolling[2];
     int ticksSinceScrolling;
     
+    int scrollInertiaActive;
+    
     int blacklistedids[15];
     
     bool mouseDownDueToTap;
@@ -82,6 +85,7 @@ struct csgesture_softc {
 class CSGesture {
 private:
     VoodooCSGestureHIDWrapper *_wrapper;
+    VoodooCSGestureHIPointingWrapper *_pointingWrapper;
     
     struct {
         UInt8 x;

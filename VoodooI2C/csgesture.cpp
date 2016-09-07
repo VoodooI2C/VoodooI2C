@@ -235,6 +235,12 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
     if (abovethreshold == 2 || sc->scrollingActive) {
         int i1 = iToUse[0];
         int i2 = iToUse[1];
+        
+        if (!sc->scrollingActive && !sc->scrollInertiaActive) {
+            if (sc->truetick[i1] < 4 && sc->truetick[i2] < 4)
+                return false;
+        }
+        
         if (sc->scrollingActive){
             if (i1 == -1) {
                 if (i2 != sc->idsForScrolling[0])
@@ -250,6 +256,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             }
         }
         
+        
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
         
@@ -264,6 +271,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             int avgx = (delta_x1 + delta_x2) / 2;
             sc->scrollx = avgx;
         }
+#if 0
         if (abs(sc->scrollx) > 100)
             sc->scrollx = 0;
         if (abs(sc->scrolly) > 100)
@@ -296,6 +304,8 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         
         sc->scrollx = -sc->scrollx;
         sc->scrolly = -sc->scrolly;
+#endif
+        _pointingWrapper->updateScroll(sc->scrolly, sc->scrollx, 0);
         
         int fngrcount = 0;
         int totfingers = 0;
@@ -656,6 +666,17 @@ void CSGesture::initialize_wrapper(IOService *service) {
         _wrapper->release();
         _wrapper = NULL;
     }
+    
+    _pointingWrapper = new VoodooCSGestureHIPointingWrapper;
+    if (_pointingWrapper->init()){
+        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+        _pointingWrapper->attach(service);
+        _pointingWrapper->start(service);
+    } else {
+        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+        _pointingWrapper->release();
+        _pointingWrapper = NULL;
+    }
 }
 
 void CSGesture::destroy_wrapper(void) {
@@ -664,13 +685,19 @@ void CSGesture::destroy_wrapper(void) {
         _wrapper->release();
         _wrapper = NULL;
     }
+    
+    if (_pointingWrapper != NULL){
+        _pointingWrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        _pointingWrapper->release();
+        _pointingWrapper = NULL;
+    }
 }
 
 static _CSGESTURE_RELATIVE_MOUSE_REPORT lastreport;
 
 void CSGesture::update_relative_mouse(char button,
                                                      char x, char y, char wheelPosition, char wheelHPosition){
-    _CSGESTURE_RELATIVE_MOUSE_REPORT report;
+    /*_CSGESTURE_RELATIVE_MOUSE_REPORT report;
     report.ReportID = REPORTID_RELATIVE_MOUSE;
     report.Button = button;
     report.XValue = x;
@@ -697,7 +724,9 @@ void CSGesture::update_relative_mouse(char button,
     if (err != kIOReturnSuccess)
         IOLog("Error handling report: 0x%.8x\n", err);
     
-    buffer->release();
+    buffer->release();*/
+    
+    _pointingWrapper->updateRelativeMouse(x, y, button);
 }
 
 void CSGesture::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODES]) {
