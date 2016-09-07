@@ -4,7 +4,16 @@
 #ifndef csgesture_softc_h
 #define csgesture_softc_h
 
+struct csgesture_settings { //note not all settings were brought over from Windows as we are using Apple's settings panel
+    //tap settings
+    bool tapToClickEnabled;
+    bool multiFingerTap;
+    bool tapDragEnabled;
+};
+
 struct csgesture_softc {
+    struct csgesture_settings settings;
+    
     //hardware input
     int x[15];
     int y[15];

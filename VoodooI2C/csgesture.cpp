@@ -431,6 +431,9 @@ bool CSGesture::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold,
 }
 
 void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
+    if (!sc->settings.tapToClickEnabled)
+        return;
+    
     sc->tickssinceclick++;
     if (sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
         if (sc->tickssinceclick > 10) {
@@ -460,10 +463,12 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
             buttonmask = MOUSE_BUTTON_1;
             break;
         case 2:
-            buttonmask = MOUSE_BUTTON_2;
+            if (sc->settings.multiFingerTap)
+                buttonmask = MOUSE_BUTTON_2;
             break;
         case 3:
-            buttonmask = MOUSE_BUTTON_3;
+            if (sc->settings.multiFingerTap)
+                buttonmask = MOUSE_BUTTON_3;
             break;
     }
     if (buttonmask != 0 && sc->tickssinceclick > 10 && sc->ticksincelastrelease == 0) {
@@ -586,7 +591,8 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
         if (sc->x[i] != -1) {
             if (sc->lastx[i] == -1) {
                 if (sc->ticksincelastrelease < 10 && sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
-                    sc->idForMouseDown = i; //Associate Tap Drag
+                    if (sc->settings.tapDragEnabled)
+                        sc->idForMouseDown = i; //Associate Tap Drag
                 }
             }
             sc->truetick[i]++;
@@ -698,6 +704,7 @@ void CSGesture::initialize_wrapper(IOService *service) {
     _pointingWrapper = new VoodooCSGestureHIPointingWrapper;
     if (_pointingWrapper->init()){
         IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+        _pointingWrapper->gesturerec = this;
         _pointingWrapper->attach(service);
         _pointingWrapper->start(service);
     } else {

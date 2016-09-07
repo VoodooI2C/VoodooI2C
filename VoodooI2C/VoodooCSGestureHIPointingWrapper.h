@@ -10,17 +10,23 @@
 #define VoodooCSGestureHIPointingWrapper_h
 
 #include <IOKit/hidsystem/IOHIPointing.h>
+#include "csgesture.h"
 
 class VoodooCSGestureHIPointingWrapper : public IOHIPointing
 {
     typedef IOHIPointing super;
     OSDeclareDefaultStructors(VoodooCSGestureHIPointingWrapper);
     
+private:
+    bool horizontalScroll;
+    
 protected:
     virtual IOItemCount buttonCount();
     virtual IOFixed resolution();
     
 public:
+    CSGesture *gesturerec;
+    
     virtual bool init();
     
     virtual bool start(IOService *provider);
