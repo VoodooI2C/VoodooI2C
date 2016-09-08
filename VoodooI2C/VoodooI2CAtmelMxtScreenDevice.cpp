@@ -49,9 +49,7 @@ inline int32_t abs(int32_t num){
 0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
 0x09, 0x32,                         /*       USAGE (In Range)           */ \
 0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
-0x09, 0x47,                         /*       USAGE (Confidence)         */ \
-0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
-0x95, 0x05,                         /*       REPORT_COUNT (5)           */ \
+0x95, 0x06,                         /*       REPORT_COUNT (6)           */ \
 0x81, 0x03,                         /*       INPUT (Cnst,Ary,Abs)       */ \
 0x75, 0x08,                         /*       REPORT_SIZE (8)            */ \
 0x09, 0x51,                         /*       USAGE (Contact Identifier) */ \
@@ -798,10 +796,10 @@ int VoodooI2CAtmelMxtScreenDevice::ProcessMessage(uint8_t *message) {
             
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_PRESS) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_RELEASE) {
                 report.Touch[count].Status = 0;
@@ -979,10 +977,10 @@ void VoodooI2CAtmelMxtScreenDevice::write_report_to_buffer(IOMemoryDescriptor *b
             
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_PRESS) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_RELEASE) {
                 report.Touch[count].Status = 0;
