@@ -340,12 +340,12 @@ int VoodooI2CAtmelMxtScreenDevice::mxt_read_t9_resolution()
         range.y = 1023;
     
     if (orient & MXT_T9_ORIENT_SWITCH) {
-        max_x = range.y+1;
-        max_y = range.x+1;
+        max_x = range.y + 1;
+        max_y = range.x + 1;
     }
     else {
-        max_x = range.x+1;
-        max_y = range.y+1;
+        max_x = range.x + 1;
+        max_y = range.y + 1;
     }
     IOLog("%s::%s:: Screen Size: X: %d Y: %d\n", getName(), _controller->_dev->name, max_x, max_y);
     return 0;
@@ -494,8 +494,9 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
                 num_touchids = obj->num_report_ids - 2;
                 break;
         }
-        IOLog("%s::%s::Obj Type: %d\n", getName(), _controller->_dev->name, obj->type);
     }
+    
+    max_reportid = reportid;
     
     if (multitouch == MXT_TOUCH_MULTI_T9)
         mxt_read_t9_resolution();
@@ -716,41 +717,62 @@ void VoodooI2CAtmelMxtScreenDevice::InterruptOccured(OSObject* owner, IOInterrup
     //i2c_hid_get_input(ihid);
 }
 
-void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
-    //return;
-    //mxt_message_t msg;
-    //int ret1 = readI2C(0, sizeof(msg), (uint8_t *)&msg);
-    mxt_message_t msg;
-    int ret1 = mxt_read_reg(msgprocobj->start_address, &msg, sizeof(msg));
+int VoodooI2CAtmelMxtScreenDevice::ProcessMessagesUntilInvalid() {
+    int count, read;
+    uint8_t tries = 2;
     
-    int reportid = msg.any.reportid;
+    count = max_reportid;
+    do {
+        read = ReadAndProcessMessages(count);
+        if (read < count)
+            return 0;
+    } while (--tries);
+    return -1;
+}
+
+int VoodooI2CAtmelMxtScreenDevice::ProcessMessage(uint8_t *message) {
+    uint8_t report_id = message[0];
     
-    if (reportid == 0xff) {
+    if (report_id == 0xff)
+        return 0;
+    
+    if (report_id == T6_reportid) {
+        uint8_t status = message[1];
+        uint32_t crc = message[2] | (message[3] << 8) | (message[4] << 16);
     }
-    else if (reportid >= T9_reportid_min && reportid <= T9_reportid_max) {
-        reportid = reportid - T9_reportid_min;
+    else if (report_id >= T9_reportid_min && report_id <= T9_reportid_max) {
+        uint8_t flags = message[1];
         
-        int rawx = (msg.touch_t9.pos[0] << 4) |
-        ((msg.touch_t9.pos[2] >> 4) & 0x0F);
-        int rawy = ((msg.touch_t9.pos[1] << 4) |
-                    ((msg.touch_t9.pos[2]) & 0x0F)) / 4;
+        int rawx = (message[2] << 4) | ((message[4] >> 4) & 0xf);
+        int rawy = (message[3] << 4) | ((message[4] & 0xf));
         
-        Flags[reportid] = msg.touch_t9.flags;
-        XValue[reportid] = rawx;
-        YValue[reportid] = rawy;
-        AREA[reportid] = msg.touch_t9.area;
+        /* Handle 10/12 bit switching */
+        if (max_x < 1024)
+            rawx >>= 2;
+        if (max_y < 1024)
+            rawy >>= 2;
+        
+        uint8_t area = message[5];
+        uint8_t ampl = message[6];
+        
+        Flags[report_id] = flags;
+        XValue[report_id] = rawx;
+        YValue[report_id] = rawy;
+        AREA[report_id] = area;
     }
-    else if (reportid >= T100_reportid_min && reportid <= T100_reportid_max) {
-        reportid = reportid - T100_reportid_min - 2;
+    else if (report_id >= T100_reportid_min && report_id <= T100_reportid_max) {
+        int reportid = report_id - T100_reportid_min - 2;
+        
+        uint8_t flags = message[1];
         
         uint8_t t9_flags = 0; //convert T100 flags to T9
-        if (msg.touch_t100.flags & MXT_T100_DETECT)
+        if (flags & MXT_T100_DETECT)
             t9_flags += MXT_T9_DETECT;
         else if (Flags[reportid] & MXT_T100_DETECT)
             t9_flags += MXT_T9_RELEASE;
         
-        int rawx = msg.touch_t100.x;
-        int rawy = msg.touch_t100.y;
+        int rawx = *((uint16_t *)&message[2]);
+        int rawy = *((uint16_t *)&message[4]);
         
         if (reportid >= 0) {
             Flags[reportid] = t9_flags;
@@ -763,15 +785,6 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
     
     struct _ATMEL_MULTITOUCH_REPORT report;
     report.ReportID = REPORTID_MTOUCH;
-    
-    for (int i=0;i<10;i++){
-        report.Touch[i].ContactID = 0;
-        report.Touch[i].Height = 0;
-        report.Touch[i].Width = 0;
-        report.Touch[i].XValue = 0;
-        report.Touch[i].YValue = 0;
-        report.Touch[i].Status = 0;
-    }
     
     int count = 0, i = 0;
     while (count < 10 && i < 20) {
@@ -786,17 +799,16 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
                 report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
-                IOLog("%s::%s::Detect Touch %d\n", getName(), _controller->_dev->name, i);
             }
             else if (flags & MXT_T9_PRESS) {
                 report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
-                IOLog("%s::%s::Pressed Touch %d\n", getName(), _controller->_dev->name, i);
             }
             else if (flags & MXT_T9_RELEASE) {
-                IOLog("%s::%s::Released Touch %d\n", getName(), _controller->_dev->name, i);
                 report.Touch[count].Status = 0;
                 Flags[i] = 0;
             }
+            else
+                report.Touch[count].Status = MULTI_IN_RANGE_BIT;
             
             count++;
         }
@@ -804,7 +816,6 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
     }
     
     report.ActualCount = count;
-    
     if (count > 0 || TouchCount != count) {
         IOLog("%s::%s::Touches %d\n", getName(), _controller->_dev->name, count);
         
@@ -819,6 +830,113 @@ void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSourc
     }
     
     TouchCount = count;
+    return 1;
+}
+
+int VoodooI2CAtmelMxtScreenDevice::ReadAndProcessMessages(uint8_t count) {
+    uint8_t num_valid = 0;
+    int i, ret;
+    if (count > max_reportid)
+        return -1;
+    
+    int msg_buf_size = max_reportid * T5_msg_size;
+    uint8_t *msg_buf = (uint8_t *)IOMalloc(msg_buf_size);
+    
+    for (int i = 0; i < max_reportid * T5_msg_size; i++) {
+        msg_buf[i] = 0xff;
+    }
+    
+    mxt_read_reg(T5_address, msg_buf, T5_msg_size * count);
+    
+    for (i = 0; i < count; i++) {
+        ret = ProcessMessage(msg_buf + T5_msg_size * i);
+        
+        if (ret == 1)
+            num_valid++;
+    }
+    
+    IOFree(msg_buf, msg_buf_size);
+    
+    /* return number of messages read */
+    return num_valid;
+}
+
+bool VoodooI2CAtmelMxtScreenDevice::DeviceReadT44() {
+    int stret, ret;
+    uint8_t count, num_left;
+    
+    int msg_buf_size = T5_msg_size + 1;
+    uint8_t *msg_buf = (uint8_t *)IOMalloc(msg_buf_size);
+    
+    /* Read T44 and T5 together */
+    stret = mxt_read_reg(T44_address, msg_buf, T5_msg_size);
+    
+    count = msg_buf[0];
+    
+    if (count == 0)
+        goto end;
+    
+    if (count > max_reportid) {
+        count = max_reportid;
+    }
+    
+    ret = ProcessMessage(msg_buf + 1);
+    if (ret < 0) {
+        goto end;
+    }
+    
+    num_left = count - 1;
+    
+    if (num_left) {
+        ret = ReadAndProcessMessages(num_left);
+        if (ret < 0)
+            goto end;
+        //else if (ret != num_left)
+        ///	DbgPrint("T44: Unexpected invalid message!\n");
+    }
+    
+end:
+    IOFree(msg_buf, msg_buf_size);
+    return true;
+}
+
+bool VoodooI2CAtmelMxtScreenDevice::DeviceRead() {
+    int total_handled, num_handled;
+    uint8_t count = last_message_count;
+    
+    if (count < 1 || count > max_reportid)
+        count = 1;
+    
+    /* include final invalid message */
+    total_handled = ReadAndProcessMessages(count + 1);
+    if (total_handled < 0)
+        return false;
+    else if (total_handled <= count)
+        goto update_count;
+    
+    /* keep reading two msgs until one is invalid or reportid limit */
+    do {
+        num_handled = ReadAndProcessMessages(2);
+        if (num_handled < 0)
+            return false;
+        
+        total_handled += num_handled;
+        
+        if (num_handled < 2)
+            break;
+    } while (total_handled < num_touchids);
+    
+update_count:
+    last_message_count = total_handled;
+    
+    return true;
+}
+
+void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
+    if (T44_address)
+        DeviceReadT44();
+    else
+        DeviceRead();
     
     hid_device->timerSource->setTimeoutMS(10);
 }
