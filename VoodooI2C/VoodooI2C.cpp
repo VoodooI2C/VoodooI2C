@@ -14,18 +14,19 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 ##### acpiConfigure
 ##### accepts I2CDevice* and get SSCN & FMCN from the ACPI tables data and set the
 ##### values in the struct depending on the configuration we want (will always be I2C master)
-##### currently always returns true, TODO: return false when ACPI methods not available
+##### returns false when ACPI methods not available or if ACPI methods return invalid data
 ############################################################################################
 #############################################################################################
  */
 
 bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
-    
     _dev->tx_fifo_depth = 32;
     _dev->rx_fifo_depth = 32;
     
-    getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL);
-    getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time);
+    if (!getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL))
+        return false;
+    if (!getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time))
+        return false;
     
     return true;
 }
@@ -93,25 +94,48 @@ UInt32 VoodooI2C::funcI2C(I2CBus* _dev) {
  ##### getACPIParams
  ##### accepts IOACPIPlatformDevice*, char*, UInt32 x3 and gets the method data using method, storing the results
  ##### in hcnt, lcnt
- ##### TODO: return true/false on success/failure
+ ##### returns false if method missing or data invalid
  ############################################################################################
  #############################################################################################
  */
 
-void VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
+bool VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
     OSObject *object;
+    IOReturn status = fACPIDevice->evaluateObject(method, &object);
     
-    if(kIOReturnSuccess == fACPIDevice->evaluateObject(method, &object) && object) {
+    bool success = true;
+    
+    if(status == kIOReturnSuccess && object) {
         OSArray* values = OSDynamicCast(OSArray, object);
+        if (!values)
+            success = false;
         
-        *hcnt = OSDynamicCast(OSNumber, values->getObject(0))->unsigned32BitValue();
-        *lcnt = OSDynamicCast(OSNumber, values->getObject(1))->unsigned32BitValue();
-        if(sda_hold)
-            *sda_hold = OSDynamicCast(OSNumber, values->getObject(2))->unsigned32BitValue();
+        OSNumber *hcntNum = OSDynamicCast(OSNumber, values->getObject(0));
+        if (hcntNum)
+            *hcnt = hcntNum->unsigned32BitValue();
+        else
+            success = false;
         
-    }
+        OSNumber *lcntNum = OSDynamicCast(OSNumber, values->getObject(1));
+        if (lcntNum)
+            *lcnt = lcntNum->unsigned32BitValue();
+        else
+            success = false;
+        
+        if(sda_hold){
+            OSNumber *sdaHoldNum = OSDynamicCast(OSNumber, values->getObject(2));
+            if (sdaHoldNum)
+                *sda_hold = sdaHoldNum->unsigned32BitValue();
+            else
+                success = false;
+        }
+        
+    } else
+        success = false;
     
     OSSafeReleaseNULL(object);
+    
+    return success;
 }
 
 /*
