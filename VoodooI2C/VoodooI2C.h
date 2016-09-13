@@ -156,15 +156,12 @@
 #define I2C_HID_PWR_ON 0x00
 #define I2C_HID_PWR_SLEEP 0x01
 
-
 class VoodooI2C : public IOService {
     
     OSDeclareDefaultStructors(VoodooI2C);
     
     
 public:
-    IOACPIPlatformDevice* fACPIDevice;
-    
     struct i2c_msg {
         UInt16 addr;
         UInt16 flags;
@@ -191,7 +188,7 @@ public:
     } i2c_smbus_data;
     
     typedef struct {
-        IOACPIPlatformDevice *provider;
+        IOService *provider;
         
         IOWorkLoop *workLoop;
         IOInterruptEventSource *interruptSource;

@@ -46,12 +46,16 @@ static struct dw_scl_sda_cfg hsw_config = {
  */
 
 bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
+    IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, _dev->provider);
+    if (!fACPIDevice)
+        return false;
+    
     _dev->tx_fifo_depth = 32;
     _dev->rx_fifo_depth = 32;
     
-    if (!getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL))
+    if (!getACPIParams(fACPIDevice, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL))
         return false;
-    if (!getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time))
+    if (!getACPIParams(fACPIDevice, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time))
         return false;
     
     return true;
@@ -436,7 +440,9 @@ UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
 
 
 void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
-    _dev->provider->evaluateObject(enabled ? "_PS0" : "_PS3");
+    IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, _dev->provider);
+    if (fACPIDevice)
+        fACPIDevice->evaluateObject(enabled ? "_PS0" : "_PS3");
 }
 
 /*
@@ -502,7 +508,7 @@ bool VoodooI2C::start(IOService * provider) {
     //initialise OS power management
     PMinit();
     
-    fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
+    IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
     
     if (!fACPIDevice)
         return false;
