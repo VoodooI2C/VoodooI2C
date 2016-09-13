@@ -8,6 +8,32 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 // #define IGNORED_DEVICE "DLL05E3"
 // #define IGNORED_DEVICE "SYNA7500"
 
+struct dw_scl_sda_cfg {
+    uint32_t ss_hcnt;
+    uint32_t fs_hcnt;
+    uint32_t ss_lcnt;
+    uint32_t fs_lcnt;
+    uint32_t sda_hold;
+};
+
+/* BayTrail HCNT/LCNT/SDA hold time */
+static struct dw_scl_sda_cfg byt_config = {
+    .ss_hcnt = 0x200,
+    .fs_hcnt = 0x55,
+    .ss_lcnt = 0x200,
+    .fs_lcnt = 0x99,
+    .sda_hold = 0x6,
+};
+
+/* Haswell HCNT/LCNT/SDA hold time */
+static struct dw_scl_sda_cfg hsw_config = {
+    .ss_hcnt = 0x01b0,
+    .fs_hcnt = 0x48,
+    .ss_lcnt = 0x01fb,
+    .fs_lcnt = 0xa0,
+    .sda_hold = 0x9,
+};
+
 /*
 ############################################################################################
 ############################################################################################
@@ -28,6 +54,21 @@ bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
     if (!getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time))
         return false;
     
+    return true;
+}
+
+bool VoodooI2C::fallbackConfigure(I2CBus *_dev){
+    IOLog("Loading hardcoded settings for HSW/BDW/SKL\n");
+    _dev->tx_fifo_depth = 32;
+    _dev->rx_fifo_depth = 32;
+    
+    /* Try HASWELL config */
+    struct dw_scl_sda_cfg *cfg = &hsw_config;
+    _dev->ss_hcnt = cfg->ss_hcnt;
+    _dev->ss_lcnt = cfg->ss_lcnt;
+    _dev->fs_hcnt = cfg->fs_hcnt;
+    _dev->fs_lcnt = cfg->fs_lcnt;
+    _dev->sda_hold_time = cfg->sda_hold;
     return true;
 }
 
@@ -542,8 +583,7 @@ bool VoodooI2C::start(IOService * provider) {
     
     if(!acpiConfigure(_dev)) {
         IOLog("%s::%s::Failed to read ACPI config\n", getName(), _dev->name);
-        VoodooI2C::stop(provider);
-        return false;
+        fallbackConfigure(_dev);
     }
     
     //initialise I2C bus
