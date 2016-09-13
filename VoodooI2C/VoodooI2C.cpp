@@ -141,6 +141,9 @@ UInt32 VoodooI2C::funcI2C(I2CBus* _dev) {
  */
 
 bool VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
+    if (!fACPIDevice)
+        return false;
+    
     OSObject *object;
     IOReturn status = fACPIDevice->evaluateObject(method, &object);
     
