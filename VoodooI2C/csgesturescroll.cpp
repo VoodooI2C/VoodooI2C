@@ -57,6 +57,19 @@ void CSGestureScroll::disableScrollingDelayLaunch(){
     _disableScrollDelayTimer->setTimeoutMS(300);
 }
 
+bool CSGestureScroll::isScrolling(){
+    if (isTouchActive)
+        return true;
+    
+    if (momentumscrollcurrenty > 0 || momentumscrollrest1y > 0 || momentumscrollrest2y > 0)
+        return true;
+    
+    if (momentumscrollcurrentx > 0 || momentumscrollrest1x > 0 || momentumscrollrest2x > 0)
+        return true;
+    
+    return false;
+}
+
 void CSGestureScroll::stopScroll(){
     momentumscrollcurrentx = 0;
     momentumscrollrest1x = 0;

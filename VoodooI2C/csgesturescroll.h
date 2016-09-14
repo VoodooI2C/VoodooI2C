@@ -67,6 +67,8 @@ public:
     void prepareToSleep();
     void wakeFromSleep();
     
+    bool isScrolling();
+    
     void stopScroll();
     
     bool start(IOService *provider) override;
