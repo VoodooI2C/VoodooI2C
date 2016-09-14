@@ -177,6 +177,23 @@ void VoodooI2CElanTouchpadDevice::detach( IOService * provider )
     super::detach(provider);
 }
 
+static bool elan_check_ASUS_special_fw(uint8_t prodid, uint8_t ic_type)
+{
+    if (ic_type != 0x0E)
+        return false;
+    
+    switch (prodid) {
+        case 0x05:
+        case 0x06:
+        case 0x07:
+        case 0x09:
+        case 0x13:
+            return true;
+        default:
+            return false;
+    }
+}
+
 int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
@@ -184,6 +201,10 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_RESET);
     
+    /* Wait for the device to reset */
+    IOSleep(100);
+    
+    /* get reset acknowledgement 0000 */
     uint8_t val[256];
     readI2C(0x00, ETP_I2C_INF_LENGTH, val);
     
@@ -191,23 +212,34 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     readI2C16(ETP_I2C_REPORT_DESC_CMD, ETP_I2C_REPORT_DESC_LENGTH, val);
     
-    elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
-    
-    elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
-    
     uint8_t val2[3];
     
     elan_i2c_read_cmd(ETP_I2C_UNIQUEID_CMD, val2);
     uint8_t prodid = val2[0];
+    
+    elan_i2c_read_cmd(ETP_I2C_SM_VERSION_CMD, val2);
+    uint8_t smvers = val2[0];
+    uint8_t ictype = val2[1];
+    
+    if (elan_check_ASUS_special_fw(prodid, ictype)){ //some Elan trackpads on certain ASUS laptops are buggy (linux commit 2de4fcc64685def3e586856a2dc636df44532395)
+        IOLog("%s::%s:: Buggy ASUS trackpad detected. Applying workaround.\n", getName(), _controller->_dev->name);
+        
+        elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
+        
+        IOSleep(200);
+        
+        elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
+    } else {
+        elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
+    
+        elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
+    }
     
     elan_i2c_read_cmd(ETP_I2C_FW_VERSION_CMD, val2);
     uint8_t version = val2[0];
     
     elan_i2c_read_cmd(ETP_I2C_FW_CHECKSUM_CMD, val2);
     uint16_t csum = *((uint16_t *)val2);
-    
-    elan_i2c_read_cmd(ETP_I2C_SM_VERSION_CMD, val2);
-    uint8_t smvers = val2[0];
     
     elan_i2c_read_cmd(ETP_I2C_IAP_VERSION_CMD, val2);
     uint8_t iapversion = val2[0];
@@ -253,17 +285,7 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     sc->phyx = max_x;
     sc->phyy = max_y;
     
-    IOLog("%s::%s::[Elan Trackpad] ProdID: %d Vers: %d Csum: %d SmVers: %d IAPVers: %d Max X: %d Max Y: %d\n", getName(), _controller->_dev->name, prodid, version, csum, smvers, iapversion, max_x, max_y);
-    
-    elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_CALIBRATE | ETP_ENABLE_ABS);
-    
-    elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
-    
-    elan_i2c_write_cmd(ETP_I2C_CALIBRATE_CMD, 1);
-    
-    readI2C16(ETP_I2C_CALIBRATE_CMD, 1, val2);
-    
-    elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
+    IOLog("%s::%s::[Elan Trackpad test] ProdID: %d Vers: %d Csum: %d SmVers: %d ICType: %d IAPVers: %d Max X: %d Max Y: %d\n", getName(), _controller->_dev->name, prodid, version, ictype, csum, smvers, iapversion, max_x, max_y);
     
     sc->infoSetup = true;
     
@@ -357,8 +379,21 @@ void VoodooI2CElanTouchpadDevice::elan_i2c_read_cmd(uint16_t reg, uint8_t *val) 
 }
 
 void VoodooI2CElanTouchpadDevice::elan_i2c_write_cmd(uint16_t reg, uint16_t cmd){
-    uint16_t buffer[] = { cmd };
-    readI2C16(reg, sizeof(buffer), (uint8_t *)buffer);
+    uint16_t buf[] {
+        reg,
+        cmd
+    };
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = hid_device->addr,
+            .flags = 0,
+            .len = sizeof(buf),
+            .buf = (uint8_t *)&buf,
+        }
+    };
+    int ret;
+    
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
 }
 
 SInt32 VoodooI2CElanTouchpadDevice::readI2C(uint8_t reg, size_t len, uint8_t *values){
@@ -415,31 +450,6 @@ SInt32 VoodooI2CElanTouchpadDevice::writeI2C(uint8_t reg, size_t len, uint8_t *v
             .flags = 0,
             .len = 1,
             .buf = &reg,
-        },
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = (uint8_t)len,
-            .buf = values,
-        },
-    };
-    int ret;
-    
-    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
-    
-    return ret;
-}
-
-SInt32 VoodooI2CElanTouchpadDevice::writeI2C16(uint16_t reg, size_t len, uint8_t *values){
-    uint16_t buf[] {
-        reg
-    };
-    struct VoodooI2C::i2c_msg msgs[] = {
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = sizeof(buf),
-            .buf = (uint8_t *)&buf,
         },
         {
             .addr = hid_device->addr,
