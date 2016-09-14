@@ -42,7 +42,7 @@
 			<key>IOProviderClass</key>
 			<string>IOService</string>
 			<key>IOProbeScore</key>
-			<string>5000</string>
+			<integer>5000</integer>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
