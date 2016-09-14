@@ -45,6 +45,8 @@
 	<dict>
 		<key>com.apple.iokit.IOACPIFamily</key>
 		<string>1.4</string>
+		<key>com.apple.iokit.IOPCIFamily</key>
+		<string>2.0</string>
 		<key>com.apple.iokit.IOHIDFamily</key>
 		<string>2.0</string>
 		<key>com.apple.kpi.iokit</key>

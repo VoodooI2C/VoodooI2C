@@ -1,6 +1,5 @@
 #include "VoodooI2C.h"
-
-
+#include "VoodooI2CPCI.h"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2C, IOService);
@@ -509,21 +508,31 @@ bool VoodooI2C::start(IOService * provider) {
     PMinit();
     
     IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
-    
-    if (!fACPIDevice)
-        return false;
+    IOPCIDevice *fPCIDevice = OSDynamicCast(IOPCIDevice, provider);
     
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
     
+    if (fPCIDevice){
+        _dev->deviceMode = VoodooI2CDeviceModePCI;
+    } else if (fACPIDevice) {
+        _dev->deviceMode = VoodooI2CDeviceModeACPI;
+    } else {
+        IOFree(_dev, sizeof(I2CBus));
+        return false;
+    }
     
-    _dev->provider = fACPIDevice;
-    _dev->name = getMatchedName(fACPIDevice);
-    
+    _dev->provider = provider;
+    _dev->name = getMatchedName(provider);
     _dev->provider->retain();
     
     if(!_dev->provider->open(this)) {
-        IOLog("%s::%s::Failed to open ACPI device\n", getName(), _dev->name);
+        IOLog("%s::%s::Failed to open device\n", getName(), _dev->name);
         return false;
+    }
+    
+    if (fPCIDevice){
+        VoodooI2CPCI::pciConfigure(fPCIDevice);
+        fACPIDevice = VoodooI2CPCI::getACPIDevice(fPCIDevice);
     }
     
     //set up workloop
@@ -622,7 +631,7 @@ bool VoodooI2C::start(IOService * provider) {
  
     //enumerate I2C children, TODO: major refactoring
     
-    children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
+    children = IORegistryIterator::iterateOver(fACPIDevice, gIOACPIPlane);
     bus_devices_number = 0;
 #warning "Begin crash with non-HID device"
     if (children != 0) {

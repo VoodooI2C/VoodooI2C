@@ -156,6 +156,11 @@
 #define I2C_HID_PWR_ON 0x00
 #define I2C_HID_PWR_SLEEP 0x01
 
+enum VoodooI2CDeviceMode {
+    VoodooI2CDeviceModeACPI,
+    VoodooI2CDeviceModePCI
+};
+
 class VoodooI2C : public IOService {
     
     OSDeclareDefaultStructors(VoodooI2C);
@@ -189,6 +194,8 @@ public:
     
     typedef struct {
         IOService *provider;
+        
+        VoodooI2CDeviceMode deviceMode;
         
         IOWorkLoop *workLoop;
         IOInterruptEventSource *interruptSource;

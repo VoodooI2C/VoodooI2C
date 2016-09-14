@@ -20,6 +20,8 @@
 		F158186D1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h in Headers */ = {isa = PBXBuildFile; fileRef = F158186B1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h */; };
 		F17D8FF81CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F17D8FF61CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp */; };
 		F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F17D8FF71CBABF15002F9115 /* VoodooAtmelTouchWrapper.h */; };
+		F18F3CFB1D88C1C600CCED2B /* VoodooI2CPCI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18F3CF91D88C1C600CCED2B /* VoodooI2CPCI.cpp */; };
+		F18F3CFC1D88C1C600CCED2B /* VoodooI2CPCI.h in Headers */ = {isa = PBXBuildFile; fileRef = F18F3CFA1D88C1C600CCED2B /* VoodooI2CPCI.h */; };
 		F191539C1D25CE14007972A7 /* csgesture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F191539B1D25CE14007972A7 /* csgesture.cpp */; };
 		F19857311D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */; };
 		F19857321D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */; };
@@ -51,6 +53,8 @@
 		F158186B1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCyapaGen3Device.h; sourceTree = "<group>"; };
 		F17D8FF61CBABF15002F9115 /* VoodooAtmelTouchWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooAtmelTouchWrapper.cpp; sourceTree = "<group>"; };
 		F17D8FF71CBABF15002F9115 /* VoodooAtmelTouchWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooAtmelTouchWrapper.h; sourceTree = "<group>"; };
+		F18F3CF91D88C1C600CCED2B /* VoodooI2CPCI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CPCI.cpp; sourceTree = "<group>"; };
+		F18F3CFA1D88C1C600CCED2B /* VoodooI2CPCI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CPCI.h; sourceTree = "<group>"; };
 		F191539B1D25CE14007972A7 /* csgesture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csgesture.cpp; sourceTree = "<group>"; };
 		F1937E791D1F455700F97772 /* csgesture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csgesture.h; sourceTree = "<group>"; };
 		F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCSGestureHIPointingWrapper.cpp; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 			children = (
 				AC45AFEC1A32543B008E6857 /* VoodooI2C.h */,
 				AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */,
+				F18F3CF91D88C1C600CCED2B /* VoodooI2CPCI.cpp */,
+				F18F3CFA1D88C1C600CCED2B /* VoodooI2CPCI.h */,
 				AC45AFEA1A32543B008E6857 /* Supporting Files */,
 				F19963071CAD6EE3002E2D29 /* VoodooI2CDevice.cpp */,
 				F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */,
@@ -180,6 +186,7 @@
 				F158186D1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.h in Headers */,
 				F153120B1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.h in Headers */,
 				AC45AFED1A32543B008E6857 /* VoodooI2C.h in Headers */,
+				F18F3CFC1D88C1C600CCED2B /* VoodooI2CPCI.h in Headers */,
 				F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */,
 				F1FA896C1D7FAAC90019F9CF /* AverageClasses.h in Headers */,
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
@@ -268,6 +275,7 @@
 				F110CDBA1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp in Sources */,
 				F19963091CAD6EE3002E2D29 /* VoodooI2CDevice.cpp in Sources */,
 				F158186C1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp in Sources */,
+				F18F3CFB1D88C1C600CCED2B /* VoodooI2CPCI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
