@@ -217,6 +217,62 @@ char* VoodooI2C::getMatchedName(IOService* provider) {
  */
 
 int VoodooI2C::handleTxAbortI2C(I2CBus* _dev) {
+    #define BIT(nr)                 (1UL << (nr))
+    
+#define ABRT_7B_ADDR_NOACK	0
+#define ABRT_10ADDR1_NOACK	1
+#define ABRT_10ADDR2_NOACK	2
+#define ABRT_TXDATA_NOACK	3
+#define ABRT_GCALL_NOACK	4
+#define ABRT_GCALL_READ		5
+#define ABRT_SBYTE_ACKDET	7
+#define ABRT_SBYTE_NORSTRT	9
+#define ABRT_10B_RD_NORSTRT	10
+#define ABRT_MASTER_DIS		11
+#define ARB_LOST		12
+    
+#define DW_IC_TX_ABRT_7B_ADDR_NOACK	(1UL << ABRT_7B_ADDR_NOACK)
+#define DW_IC_TX_ABRT_10ADDR1_NOACK	(1UL << ABRT_10ADDR1_NOACK)
+#define DW_IC_TX_ABRT_10ADDR2_NOACK	(1UL << ABRT_10ADDR2_NOACK)
+#define DW_IC_TX_ABRT_TXDATA_NOACK	(1UL << ABRT_TXDATA_NOACK)
+#define DW_IC_TX_ABRT_GCALL_NOACK	(1UL << ABRT_GCALL_NOACK)
+#define DW_IC_TX_ABRT_GCALL_READ	(1UL << ABRT_GCALL_READ)
+#define DW_IC_TX_ABRT_SBYTE_ACKDET	(1UL << ABRT_SBYTE_ACKDET)
+#define DW_IC_TX_ABRT_SBYTE_NORSTRT	(1UL << ABRT_SBYTE_NORSTRT)
+#define DW_IC_TX_ABRT_10B_RD_NORSTRT	(1UL << ABRT_10B_RD_NORSTRT)
+#define DW_IC_TX_ABRT_MASTER_DIS	(1UL << ABRT_MASTER_DIS)
+#define DW_IC_TX_ARB_LOST		(1UL << ARB_LOST)
+    
+#define DW_IC_TX_ABRT_NOACK		(DW_IC_TX_ABRT_7B_ADDR_NOACK | \
+DW_IC_TX_ABRT_10ADDR1_NOACK | \
+DW_IC_TX_ABRT_10ADDR2_NOACK | \
+DW_IC_TX_ABRT_TXDATA_NOACK | \
+DW_IC_TX_ABRT_GCALL_NOACK)
+    
+    IOLog("%s::%s::I2C Transaction error details\n", getName(), _dev->name);
+    
+    if (_dev->abort_source & DW_IC_TX_ABRT_7B_ADDR_NOACK)
+        IOLog("%s::%s:: slave address not acknowledged (7bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_10ADDR1_NOACK)
+        IOLog("%s::%s:: first address byte not acknowledged (10bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_10ADDR2_NOACK)
+        IOLog("%s::%s:: second address byte not acknowledged (10bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_TXDATA_NOACK)
+        IOLog("%s::%s:: data not acknowledged\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_GCALL_NOACK)
+        IOLog("%s::%s:: no acknowledgement for a general call\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_GCALL_READ)
+        IOLog("%s::%s:: read after general call\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_SBYTE_ACKDET)
+        IOLog("%s::%s:: start byte acknowledged\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_SBYTE_NORSTRT)
+        IOLog("%s::%s:: trying to send start byte when restart is disabled\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_10B_RD_NORSTRT)
+        IOLog("%s::%s:: trying to read when restart is disabled (10bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_MASTER_DIS)
+        IOLog("%s::%s:: trying to use disabled adapter\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ARB_LOST)
+        IOLog("%s::%s:: lost arbitration\n", getName(), _dev->name);
     
     IOLog("%s::%s::I2C Transaction error: 0x%08x - aborting\n", getName(), _dev->name, _dev->abort_source);
     return -1;
@@ -863,6 +919,14 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
 //        IOLog("%s::%s::Woken up\n", getName(), _dev->name);
     }
     
+    /*
+     * We must disable the adapter before returning and signaling the end
+     * of the current transfer. Otherwise the hardware might continue
+     * generating interrupts which in turn causes a race condition with
+     * the following transfer.  Needs some more investigation if the
+     * additional interrupts are a hardware bug or this driver doesn't
+     * handle them correctly yet.
+     */
     enableI2CDevice(_dev, false);
     
     
@@ -893,15 +957,42 @@ done:
 
 void VoodooI2C::xferInitI2C(I2CBus* _dev) {
     struct i2c_msg *msgs = _dev->msgs;
+    uint32_t ic_con, ic_tar = 0;
     
     enableI2CDevice(_dev, 0);
-    writel(_dev, msgs[_dev->msg_write_idx].addr, DW_IC_TAR);
     
+    
+    /* if the slave address is ten bit address, enable 10BITADDR */
+    ic_con = readl(_dev, DW_IC_CON);
+    if (msgs[_dev->msg_write_idx].flags & I2C_M_TEN) {
+        ic_con |= DW_IC_CON_10BITADDR_MASTER;
+        /*
+         * If I2C_DYNAMIC_TAR_UPDATE is set, the 10-bit addressing
+         * mode has to be enabled via bit 12 of IC_TAR register.
+         * We set it always as I2C_DYNAMIC_TAR_UPDATE can't be
+         * detected from registers.
+         */
+        ic_tar = DW_IC_TAR_10BITADDR_MASTER;
+    } else {
+        ic_con &= ~DW_IC_CON_10BITADDR_MASTER;
+    }
+    
+    writel(_dev, ic_con, DW_IC_CON);
+    
+    /*
+     * Set the slave (target) address and enable 10-bit addressing mode
+     * if applicable.
+     */
+    writel(_dev, msgs[_dev->msg_write_idx].addr | ic_tar, DW_IC_TAR);
+    
+    /* enforce disabled interrupts (due to HW issues) */
     disableI2CInt(_dev);
     
+    /* Enable the adapter */
     enableI2CDevice(_dev, 1);
-    clearI2CInt(_dev);
     
+    /* Clear and enable interrupts */
+    clearI2CInt(_dev);
     writel(_dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
 }
 
@@ -949,7 +1040,11 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
     intr_mask = DW_IC_INTR_DEFAULT_MASK;
     
     for (; _dev->msg_write_idx < _dev->msgs_num; _dev->msg_write_idx++) {
-        
+        /*
+         * if target address has changed, we need to
+         * reprogram the target address in the i2c
+         * adapter when we are done with this transfer
+         */
         if (msgs[_dev->msg_write_idx].addr != addr) {
             _dev->msg_err = -1;
             break;
@@ -961,9 +1056,14 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         }
         
         if (!(_dev->status & STATUS_WRITE_IN_PROGRESS)) {
+            /* new i2c_msg */
             buf = msgs[_dev->msg_write_idx].buf;
             buf_len = msgs[_dev->msg_write_idx].len;
             
+            /* If both IC_EMPTYFIFO_HOLD_MASTER_EN and
+             * IC_RESTART_EN are set, we must manually
+             * set restart bit between messages.
+             */
             if ((_dev->master_cfg & DW_IC_CON_RESTART_EN) && (_dev->msg_write_idx > 0)) {
                 need_restart = true;
             }
@@ -974,10 +1074,14 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         
         
         while (buf_len > 0 && tx_limit > 0 && rx_limit > 0) {
-            
-
             UInt32 cmd = 0;
             
+            /*
+             * If IC_EMPTYFIFO_HOLD_MASTER_EN is set we must
+             * manually set the stop bit. However, it cannot be
+             * detected from the registers so we set it always
+             * when writing/reading the last byte.
+             */
             if (_dev->msg_write_idx == _dev->msgs_num - 1 && buf_len == 1) {
                 cmd |= 0x200;
             }
@@ -987,6 +1091,8 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
                 need_restart = false;
             }
             if (msgs[_dev->msg_write_idx].flags & I2C_M_RD) {
+                
+                /* avoid rx buffer overrun */
                 if (rx_limit - _dev->rx_outstanding <= 0) {
                     break;
                 }
@@ -1011,6 +1117,10 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         
     }
    
+    /*
+     * If i2c_msg index search is completed, we don't need TX_EMPTY
+     * interrupt any more.
+     */
     if (_dev->msg_write_idx == _dev->msgs_num) {
         intr_mask &= ~DW_IC_INTR_TX_EMPTY;
     }
