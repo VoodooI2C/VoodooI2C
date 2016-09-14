@@ -40,7 +40,9 @@
 				<string>INT3433</string>
 			</array>
 			<key>IOProviderClass</key>
-			<string>IOACPIPlatformDevice</string>
+			<string>IOService</string>
+			<key>IOProbeScore</key>
+			<string>5000</string>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
