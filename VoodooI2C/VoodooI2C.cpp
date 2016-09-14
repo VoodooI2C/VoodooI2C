@@ -67,7 +67,7 @@ bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
 }
 
 bool VoodooI2C::fallbackConfigure(I2CBus *_dev){
-    IOLog("Loading hardcoded settings for HSW/BDW/SKL\n");
+    IOLog("%s::%s:: Loading hardcoded settings for HSW/BDW/SKL\n", getName(), _dev->name);
     _dev->tx_fifo_depth = 32;
     _dev->rx_fifo_depth = 32;
     
