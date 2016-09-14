@@ -7,6 +7,12 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 // #define IGNORED_DEVICE "DLL05E3"
 // #define IGNORED_DEVICE "SYNA7500"
 
+
+#define LPSS_PRIV                   (0x200)
+#define LPSS_PRIV_RESETS            (0x04)
+#define LPSS_PRIV_RESETS_FUNC		(2<<1)
+#define LPSS_PRIV_RESETS_IDMA		(0x3)
+
 struct dw_scl_sda_cfg {
     uint32_t ss_hcnt;
     uint32_t fs_hcnt;
@@ -469,6 +475,10 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
             //power on I2C bus
             setI2CPowerState(_dev, true);
         
+            if (_dev->deviceMode == VoodooI2CDeviceModePCI){
+                //Skylake LPSS reset hack
+                writel(_dev, (LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
+            }
         
             //reinitialize I2C bus
             initI2CBus(_dev);
@@ -602,6 +612,11 @@ bool VoodooI2C::start(IOService * provider) {
     if(!acpiConfigure(_dev)) {
         IOLog("%s::%s::Failed to read ACPI config\n", getName(), _dev->name);
         fallbackConfigure(_dev);
+    }
+    
+    if (_dev->deviceMode == VoodooI2CDeviceModePCI){
+        //Skylake LPSS reset hack
+        writel(_dev, (LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
     }
     
     //initialise I2C bus
