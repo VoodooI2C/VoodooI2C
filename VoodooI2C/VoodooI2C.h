@@ -156,6 +156,10 @@
 #define I2C_HID_PWR_ON 0x00
 #define I2C_HID_PWR_SLEEP 0x01
 
+enum VoodooI2CDeviceMode {
+    VoodooI2CDeviceModeACPI,
+    VoodooI2CDeviceModePCI
+};
 
 class VoodooI2C : public IOService {
     
@@ -163,8 +167,6 @@ class VoodooI2C : public IOService {
     
     
 public:
-    IOACPIPlatformDevice* fACPIDevice;
-    
     struct i2c_msg {
         UInt16 addr;
         UInt16 flags;
@@ -191,7 +193,9 @@ public:
     } i2c_smbus_data;
     
     typedef struct {
-        IOACPIPlatformDevice *provider;
+        IOService *provider;
+        
+        VoodooI2CDeviceMode deviceMode;
         
         IOWorkLoop *workLoop;
         IOInterruptEventSource *interruptSource;
@@ -264,8 +268,9 @@ public:
 
     
     
-    static void getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
+    static bool getACPIParams(IOACPIPlatformDevice* fACPIDevice, char method[], UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold);
     bool acpiConfigure(I2CBus* _dev);
+    bool fallbackConfigure(I2CBus *_dev);
     void disableI2CInt(I2CBus* _dev);
     void enableI2CDevice(I2CBus*, bool enabled);
     UInt32 funcI2C(I2CBus* _dev);

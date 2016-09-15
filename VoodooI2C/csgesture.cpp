@@ -37,90 +37,6 @@ typedef unsigned char BYTE;
 
 unsigned char csgesturedesc[] = {
     //
-    // Relative mouse report starts here
-    //
-    0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
-    0x09, 0x02,                         // USAGE (Mouse)
-    0xa1, 0x01,                         // COLLECTION (Application)
-    0x85, REPORTID_RELATIVE_MOUSE,      //   REPORT_ID (Mouse)
-    0x09, 0x01,                         //   USAGE (Pointer)
-    0xa1, 0x00,                         //   COLLECTION (Physical)
-    0x05, 0x09,                         //     USAGE_PAGE (Button)
-    0x19, 0x01,                         //     USAGE_MINIMUM (Button 1)
-    0x29, 0x05,                         //     USAGE_MAXIMUM (Button 5)
-    0x15, 0x00,                         //     LOGICAL_MINIMUM (0)
-    0x25, 0x01,                         //     LOGICAL_MAXIMUM (1)
-    0x75, 0x01,                         //     REPORT_SIZE (1)
-    0x95, 0x05,                         //     REPORT_COUNT (5)
-    0x81, 0x02,                         //     INPUT (Data,Var,Abs)
-    0x95, 0x03,                         //     REPORT_COUNT (3)
-    0x81, 0x03,                         //     INPUT (Cnst,Var,Abs)
-    0x05, 0x01,                         //     USAGE_PAGE (Generic Desktop)
-    0x09, 0x30,                         //     USAGE (X)
-    0x09, 0x31,                         //     USAGE (Y)
-    0x15, 0x81,                         //     Logical Minimum (-127)
-    0x25, 0x7F,                         //     Logical Maximum (127)
-    0x75, 0x08,                         //     REPORT_SIZE (8)
-    0x95, 0x02,                         //     REPORT_COUNT (2)
-    0x81, 0x06,                         //     INPUT (Data,Var,Rel)
-    0x05, 0x01,                         //     Usage Page (Generic Desktop)
-    0x09, 0x38,                         //     Usage (Wheel)
-    0x15, 0x81,                         //     Logical Minimum (-127)
-    0x25, 0x7F,                         //     Logical Maximum (127)
-    0x75, 0x08,                         //     Report Size (8)
-    0x95, 0x01,                         //     Report Count (1)
-    0x81, 0x06,                         //     Input (Data, Variable, Relative)
-    // ------------------------------  Horizontal wheel
-    0x05, 0x0c,                         //     USAGE_PAGE (Consumer Devices)
-    0x0a, 0x38, 0x02,                   //     USAGE (AC Pan)
-    0x15, 0x81,                         //     LOGICAL_MINIMUM (-127)
-    0x25, 0x7f,                         //     LOGICAL_MAXIMUM (127)
-    0x75, 0x08,                         //     REPORT_SIZE (8)
-    0x95, 0x01,                         //     Report Count (1)
-    0x81, 0x06,                         //     Input (Data, Variable, Relative)
-    0xc0,                               //   END_COLLECTION
-    0xc0,                               // END_COLLECTION
-    
-    /*//TOUCH PAD input TLC
-     0x05, 0x0d,                         // USAGE_PAGE (Digitizers)
-     0x09, 0x05,                         // USAGE (Touch Pad)
-     0xa1, 0x01,                         // COLLECTION (Application)
-     0x85, REPORTID_TOUCHPAD,            //   REPORT_ID (Touch pad)
-     0x09, 0x22,                         //   USAGE (Finger)
-     0xa1, 0x02,                         //   COLLECTION (Logical)
-     0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
-     0x25, 0x01,                         //       LOGICAL_MAXIMUM (1)
-     0x09, 0x47,                         //       USAGE (Confidence)
-     0x09, 0x42,                         //       USAGE (Tip switch)
-     0x95, 0x02,                         //       REPORT_COUNT (2)
-     0x75, 0x01,                         //       REPORT_SIZE (1)
-     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-     0x95, 0x01,                         //       REPORT_COUNT (1)
-     0x75, 0x02,                         //       REPORT_SIZE (2)
-     0x25, 0x02,                         //       LOGICAL_MAXIMUM (2)
-     0x09, 0x51,                         //       USAGE (Contact Identifier)
-     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-     0x75, 0x01,                         //       REPORT_SIZE (1)
-     0x95, 0x04,                         //       REPORT_COUNT (4)
-     0x81, 0x03,                         //       INPUT (Cnst,Var,Abs)
-     0x05, 0x01,                         //       USAGE_PAGE (Generic Desk..
-     0x15, 0x00,                         //       LOGICAL_MINIMUM (0)
-     0x26, 0xff, 0x0f,                   //       LOGICAL_MAXIMUM (4095)
-     0x75, 0x10,                         //       REPORT_SIZE (16)
-     0x55, 0x0e,                         //       UNIT_EXPONENT (-2)
-     0x65, 0x13,                         //       UNIT(Inch,EngLinear)
-     0x09, 0x30,                         //       USAGE (X)
-     0x35, 0x00,                         //       PHYSICAL_MINIMUM (0)
-     0x46, 0x90, 0x01,                   //       PHYSICAL_MAXIMUM (400)
-     0x95, 0x01,                         //       REPORT_COUNT (1)
-     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-     0x46, 0x13, 0x01,                   //       PHYSICAL_MAXIMUM (275)
-     0x09, 0x31,                         //       USAGE (Y)
-     0x81, 0x02,                         //       INPUT (Data,Var,Abs)
-     0xc0,                               //    END_COLLECTION
-     0xc0,                               // END_COLLECTION*/
-    
-    //
     // Keyboard report starts here
     //
     0x05, 0x01,                         // USAGE_PAGE (Generic Desktop)
@@ -246,7 +162,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         int i2 = iToUse[1];
         
         if (!sc->scrollingActive && !sc->scrollInertiaActive) {
-            if (sc->truetick[i1] < 4 && sc->truetick[i2] < 4)
+            if (sc->truetick[i1] < 8 && sc->truetick[i2] < 8)
                 return false;
         }
         
@@ -265,13 +181,13 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             }
         }
         
-#if 0
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
         
         int delta_x2 = sc->x[i2] - sc->lastx[i2];
         int delta_y2 = sc->y[i2] - sc->lasty[i2];
         
+#if 0
         if ((abs(delta_y1) + abs(delta_y2)) > (abs(delta_x1) + abs(delta_x2))) {
             int avgy = (delta_y1 + delta_y2) / 2;
             sc->scrolly = avgy;
@@ -314,6 +230,21 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         sc->scrollx = -sc->scrollx;
         sc->scrolly = -sc->scrolly;
 #endif
+        
+        int scrollx = 0;
+        int scrolly = 0;
+        
+        if ((abs(delta_y1) + abs(delta_y2)) > (abs(delta_x1) + abs(delta_x2))) {
+            int avgy = (delta_y1 + delta_y2) / 2;
+            scrolly = avgy;
+        }
+        else {
+            int avgx = (delta_x1 + delta_x2) / 2;
+            scrollx = avgx;
+        }
+        
+        if (abs(scrollx) < 5 && abs(scrolly) < 5 && !sc->scrollingActive)
+            return false;
 
         _scrollHandler->softc = sc;
         _scrollHandler->ProcessScroll(filterNegative(sc->x[i1]),
@@ -448,12 +379,18 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
         sc->tickssinceclick = 0;
         return;
     }
-    if (button == 0)
-        return;
     
     for (int i = 0; i < MAX_FINGERS; i++){
         if (sc->truetick[i] < 10 && sc->truetick[i] > 0)
             button++;
+    }
+    
+    if (button == 0)
+        return;
+    
+    if (_scrollHandler->isScrolling()){
+        _scrollHandler->stopScroll();
+        return;
     }
     
     int buttonmask = 0;
@@ -534,10 +471,12 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
 #pragma mark process different gestures
     bool handled = false;
+    bool handledByScroll = false;
+    
     if (!handled)
         handled = ProcessThreeFingerSwipe(sc, abovethreshold, iToUse);
     if (!handled)
-        handled = ProcessScroll(sc, abovethreshold, iToUse);
+        handledByScroll = handled = ProcessScroll(sc, abovethreshold, iToUse);
     if (!handled)
         handled = ProcessMove(sc, abovethreshold, iToUse);
     
@@ -666,7 +605,8 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     sc->ticksincelastrelease++;
     
 #pragma mark process tap to click
-    TapToClickOrDrag(sc, releasedfingers);
+    if (!handledByScroll)
+        TapToClickOrDrag(sc, releasedfingers);
     
 #pragma mark send to system
     update_relative_mouse(sc->buttonmask, sc->dx, sc->dy, sc->scrolly, sc->scrollx);

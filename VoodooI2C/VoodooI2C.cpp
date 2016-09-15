@@ -1,6 +1,5 @@
 #include "VoodooI2C.h"
-
-
+#include "VoodooI2CPCI.h"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2C, IOService);
@@ -8,25 +7,77 @@ OSDefineMetaClassAndStructors(VoodooI2C, IOService);
 // #define IGNORED_DEVICE "DLL05E3"
 // #define IGNORED_DEVICE "SYNA7500"
 
+
+#define LPSS_PRIV                   (0x200)
+#define LPSS_PRIV_RESETS            (0x04)
+#define LPSS_PRIV_RESETS_FUNC		(2<<1)
+#define LPSS_PRIV_RESETS_IDMA		(0x3)
+
+struct dw_scl_sda_cfg {
+    uint32_t ss_hcnt;
+    uint32_t fs_hcnt;
+    uint32_t ss_lcnt;
+    uint32_t fs_lcnt;
+    uint32_t sda_hold;
+};
+
+/* BayTrail HCNT/LCNT/SDA hold time */
+static struct dw_scl_sda_cfg byt_config = {
+    .ss_hcnt = 0x200,
+    .fs_hcnt = 0x55,
+    .ss_lcnt = 0x200,
+    .fs_lcnt = 0x99,
+    .sda_hold = 0x6,
+};
+
+/* Haswell HCNT/LCNT/SDA hold time */
+static struct dw_scl_sda_cfg hsw_config = {
+    .ss_hcnt = 0x01b0,
+    .fs_hcnt = 0x48,
+    .ss_lcnt = 0x01fb,
+    .fs_lcnt = 0xa0,
+    .sda_hold = 0x9,
+};
+
 /*
 ############################################################################################
 ############################################################################################
 ##### acpiConfigure
 ##### accepts I2CDevice* and get SSCN & FMCN from the ACPI tables data and set the
 ##### values in the struct depending on the configuration we want (will always be I2C master)
-##### currently always returns true, TODO: return false when ACPI methods not available
+##### returns false when ACPI methods not available or if ACPI methods return invalid data
 ############################################################################################
 #############################################################################################
  */
 
 bool VoodooI2C::acpiConfigure(I2CBus* _dev) {
+    IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, _dev->provider);
+    if (!fACPIDevice)
+        return false;
     
     _dev->tx_fifo_depth = 32;
     _dev->rx_fifo_depth = 32;
     
-    getACPIParams(_dev->provider, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL);
-    getACPIParams(_dev->provider, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time);
+    if (!getACPIParams(fACPIDevice, (char*)"SSCN", &_dev->ss_hcnt, &_dev->ss_lcnt, NULL))
+        return false;
+    if (!getACPIParams(fACPIDevice, (char*)"FMCN", &_dev->fs_hcnt, &_dev->fs_lcnt, &_dev->sda_hold_time))
+        return false;
     
+    return true;
+}
+
+bool VoodooI2C::fallbackConfigure(I2CBus *_dev){
+    IOLog("%s::%s:: Loading hardcoded settings for HSW/BDW/SKL\n", getName(), _dev->name);
+    _dev->tx_fifo_depth = 32;
+    _dev->rx_fifo_depth = 32;
+    
+    /* Try HASWELL config */
+    struct dw_scl_sda_cfg *cfg = &hsw_config;
+    _dev->ss_hcnt = cfg->ss_hcnt;
+    _dev->ss_lcnt = cfg->ss_lcnt;
+    _dev->fs_hcnt = cfg->fs_hcnt;
+    _dev->fs_lcnt = cfg->fs_lcnt;
+    _dev->sda_hold_time = cfg->sda_hold;
     return true;
 }
 
@@ -93,25 +144,51 @@ UInt32 VoodooI2C::funcI2C(I2CBus* _dev) {
  ##### getACPIParams
  ##### accepts IOACPIPlatformDevice*, char*, UInt32 x3 and gets the method data using method, storing the results
  ##### in hcnt, lcnt
- ##### TODO: return true/false on success/failure
+ ##### returns false if method missing or data invalid
  ############################################################################################
  #############################################################################################
  */
 
-void VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
-    OSObject *object;
+bool VoodooI2C::getACPIParams(IOACPIPlatformDevice* fACPIDevice, char* method, UInt32 *hcnt, UInt32 *lcnt, UInt32 *sda_hold) {
+    if (!fACPIDevice)
+        return false;
     
-    if(kIOReturnSuccess == fACPIDevice->evaluateObject(method, &object) && object) {
+    OSObject *object;
+    IOReturn status = fACPIDevice->evaluateObject(method, &object);
+    
+    bool success = true;
+    
+    if(status == kIOReturnSuccess && object) {
         OSArray* values = OSDynamicCast(OSArray, object);
+        if (!values)
+            success = false;
         
-        *hcnt = OSDynamicCast(OSNumber, values->getObject(0))->unsigned32BitValue();
-        *lcnt = OSDynamicCast(OSNumber, values->getObject(1))->unsigned32BitValue();
-        if(sda_hold)
-            *sda_hold = OSDynamicCast(OSNumber, values->getObject(2))->unsigned32BitValue();
+        OSNumber *hcntNum = OSDynamicCast(OSNumber, values->getObject(0));
+        if (hcntNum)
+            *hcnt = hcntNum->unsigned32BitValue();
+        else
+            success = false;
         
-    }
+        OSNumber *lcntNum = OSDynamicCast(OSNumber, values->getObject(1));
+        if (lcntNum)
+            *lcnt = lcntNum->unsigned32BitValue();
+        else
+            success = false;
+        
+        if(sda_hold){
+            OSNumber *sdaHoldNum = OSDynamicCast(OSNumber, values->getObject(2));
+            if (sdaHoldNum)
+                *sda_hold = sdaHoldNum->unsigned32BitValue();
+            else
+                success = false;
+        }
+        
+    } else
+        success = false;
     
     OSSafeReleaseNULL(object);
+    
+    return success;
 }
 
 /*
@@ -140,6 +217,62 @@ char* VoodooI2C::getMatchedName(IOService* provider) {
  */
 
 int VoodooI2C::handleTxAbortI2C(I2CBus* _dev) {
+    #define BIT(nr)                 (1UL << (nr))
+    
+#define ABRT_7B_ADDR_NOACK	0
+#define ABRT_10ADDR1_NOACK	1
+#define ABRT_10ADDR2_NOACK	2
+#define ABRT_TXDATA_NOACK	3
+#define ABRT_GCALL_NOACK	4
+#define ABRT_GCALL_READ		5
+#define ABRT_SBYTE_ACKDET	7
+#define ABRT_SBYTE_NORSTRT	9
+#define ABRT_10B_RD_NORSTRT	10
+#define ABRT_MASTER_DIS		11
+#define ARB_LOST		12
+    
+#define DW_IC_TX_ABRT_7B_ADDR_NOACK	(1UL << ABRT_7B_ADDR_NOACK)
+#define DW_IC_TX_ABRT_10ADDR1_NOACK	(1UL << ABRT_10ADDR1_NOACK)
+#define DW_IC_TX_ABRT_10ADDR2_NOACK	(1UL << ABRT_10ADDR2_NOACK)
+#define DW_IC_TX_ABRT_TXDATA_NOACK	(1UL << ABRT_TXDATA_NOACK)
+#define DW_IC_TX_ABRT_GCALL_NOACK	(1UL << ABRT_GCALL_NOACK)
+#define DW_IC_TX_ABRT_GCALL_READ	(1UL << ABRT_GCALL_READ)
+#define DW_IC_TX_ABRT_SBYTE_ACKDET	(1UL << ABRT_SBYTE_ACKDET)
+#define DW_IC_TX_ABRT_SBYTE_NORSTRT	(1UL << ABRT_SBYTE_NORSTRT)
+#define DW_IC_TX_ABRT_10B_RD_NORSTRT	(1UL << ABRT_10B_RD_NORSTRT)
+#define DW_IC_TX_ABRT_MASTER_DIS	(1UL << ABRT_MASTER_DIS)
+#define DW_IC_TX_ARB_LOST		(1UL << ARB_LOST)
+    
+#define DW_IC_TX_ABRT_NOACK		(DW_IC_TX_ABRT_7B_ADDR_NOACK | \
+DW_IC_TX_ABRT_10ADDR1_NOACK | \
+DW_IC_TX_ABRT_10ADDR2_NOACK | \
+DW_IC_TX_ABRT_TXDATA_NOACK | \
+DW_IC_TX_ABRT_GCALL_NOACK)
+    
+    IOLog("%s::%s::I2C Transaction error details\n", getName(), _dev->name);
+    
+    if (_dev->abort_source & DW_IC_TX_ABRT_7B_ADDR_NOACK)
+        IOLog("%s::%s:: slave address not acknowledged (7bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_10ADDR1_NOACK)
+        IOLog("%s::%s:: first address byte not acknowledged (10bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_10ADDR2_NOACK)
+        IOLog("%s::%s:: second address byte not acknowledged (10bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_TXDATA_NOACK)
+        IOLog("%s::%s:: data not acknowledged\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_GCALL_NOACK)
+        IOLog("%s::%s:: no acknowledgement for a general call\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_GCALL_READ)
+        IOLog("%s::%s:: read after general call\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_SBYTE_ACKDET)
+        IOLog("%s::%s:: start byte acknowledged\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_SBYTE_NORSTRT)
+        IOLog("%s::%s:: trying to send start byte when restart is disabled\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_10B_RD_NORSTRT)
+        IOLog("%s::%s:: trying to read when restart is disabled (10bit mode)\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ABRT_MASTER_DIS)
+        IOLog("%s::%s:: trying to use disabled adapter\n", getName(), _dev->name);
+    if (_dev->abort_source & DW_IC_TX_ARB_LOST)
+        IOLog("%s::%s:: lost arbitration\n", getName(), _dev->name);
     
     IOLog("%s::%s::I2C Transaction error: 0x%08x - aborting\n", getName(), _dev->name, _dev->abort_source);
     return -1;
@@ -368,7 +501,9 @@ UInt32 VoodooI2C::readClearIntrbitsI2C(I2CBus* _dev) {
 
 
 void VoodooI2C::setI2CPowerState(I2CBus* _dev, bool enabled) {
-    _dev->provider->evaluateObject(enabled ? "_PS0" : "_PS3");
+    IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, _dev->provider);
+    if (fACPIDevice)
+        fACPIDevice->evaluateObject(enabled ? "_PS0" : "_PS3");
 }
 
 /*
@@ -396,6 +531,10 @@ IOReturn VoodooI2C::setPowerState(unsigned long powerState, IOService *whatDevic
             //power on I2C bus
             setI2CPowerState(_dev, true);
         
+            if (_dev->deviceMode == VoodooI2CDeviceModePCI){
+                //Skylake LPSS reset hack
+                writel(_dev, (LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
+            }
         
             //reinitialize I2C bus
             initI2CBus(_dev);
@@ -434,22 +573,32 @@ bool VoodooI2C::start(IOService * provider) {
     //initialise OS power management
     PMinit();
     
-    fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
-    
-    if (!fACPIDevice)
-        return false;
+    IOACPIPlatformDevice *fACPIDevice = OSDynamicCast(IOACPIPlatformDevice, provider);
+    IOPCIDevice *fPCIDevice = OSDynamicCast(IOPCIDevice, provider);
     
     _dev = (I2CBus *)IOMalloc(sizeof(I2CBus));
     
+    if (fPCIDevice){
+        _dev->deviceMode = VoodooI2CDeviceModePCI;
+    } else if (fACPIDevice) {
+        _dev->deviceMode = VoodooI2CDeviceModeACPI;
+    } else {
+        IOFree(_dev, sizeof(I2CBus));
+        return false;
+    }
     
-    _dev->provider = fACPIDevice;
-    _dev->name = getMatchedName(fACPIDevice);
-    
+    _dev->provider = provider;
+    _dev->name = getMatchedName(provider);
     _dev->provider->retain();
     
     if(!_dev->provider->open(this)) {
-        IOLog("%s::%s::Failed to open ACPI device\n", getName(), _dev->name);
+        IOLog("%s::%s::Failed to open device\n", getName(), _dev->name);
         return false;
+    }
+    
+    if (fPCIDevice){
+        VoodooI2CPCI::pciConfigure(fPCIDevice);
+        fACPIDevice = VoodooI2CPCI::getACPIDevice(fPCIDevice);
     }
     
     //set up workloop
@@ -518,8 +667,12 @@ bool VoodooI2C::start(IOService * provider) {
     
     if(!acpiConfigure(_dev)) {
         IOLog("%s::%s::Failed to read ACPI config\n", getName(), _dev->name);
-        VoodooI2C::stop(provider);
-        return false;
+        fallbackConfigure(_dev);
+    }
+    
+    if (_dev->deviceMode == VoodooI2CDeviceModePCI){
+        //Skylake LPSS reset hack
+        writel(_dev, (LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
     }
     
     //initialise I2C bus
@@ -549,7 +702,7 @@ bool VoodooI2C::start(IOService * provider) {
  
     //enumerate I2C children, TODO: major refactoring
     
-    children = IORegistryIterator::iterateOver(_dev->provider, gIOACPIPlane);
+    children = IORegistryIterator::iterateOver(fACPIDevice, gIOACPIPlane);
     bus_devices_number = 0;
 #warning "Begin crash with non-HID device"
     if (children != 0) {
@@ -766,6 +919,14 @@ int VoodooI2C::xferI2C(I2CBus* _dev, i2c_msg *msgs, int num) {
 //        IOLog("%s::%s::Woken up\n", getName(), _dev->name);
     }
     
+    /*
+     * We must disable the adapter before returning and signaling the end
+     * of the current transfer. Otherwise the hardware might continue
+     * generating interrupts which in turn causes a race condition with
+     * the following transfer.  Needs some more investigation if the
+     * additional interrupts are a hardware bug or this driver doesn't
+     * handle them correctly yet.
+     */
     enableI2CDevice(_dev, false);
     
     
@@ -796,15 +957,42 @@ done:
 
 void VoodooI2C::xferInitI2C(I2CBus* _dev) {
     struct i2c_msg *msgs = _dev->msgs;
+    uint32_t ic_con, ic_tar = 0;
     
     enableI2CDevice(_dev, 0);
-    writel(_dev, msgs[_dev->msg_write_idx].addr, DW_IC_TAR);
     
+    
+    /* if the slave address is ten bit address, enable 10BITADDR */
+    ic_con = readl(_dev, DW_IC_CON);
+    if (msgs[_dev->msg_write_idx].flags & I2C_M_TEN) {
+        ic_con |= DW_IC_CON_10BITADDR_MASTER;
+        /*
+         * If I2C_DYNAMIC_TAR_UPDATE is set, the 10-bit addressing
+         * mode has to be enabled via bit 12 of IC_TAR register.
+         * We set it always as I2C_DYNAMIC_TAR_UPDATE can't be
+         * detected from registers.
+         */
+        ic_tar = DW_IC_TAR_10BITADDR_MASTER;
+    } else {
+        ic_con &= ~DW_IC_CON_10BITADDR_MASTER;
+    }
+    
+    writel(_dev, ic_con, DW_IC_CON);
+    
+    /*
+     * Set the slave (target) address and enable 10-bit addressing mode
+     * if applicable.
+     */
+    writel(_dev, msgs[_dev->msg_write_idx].addr | ic_tar, DW_IC_TAR);
+    
+    /* enforce disabled interrupts (due to HW issues) */
     disableI2CInt(_dev);
     
+    /* Enable the adapter */
     enableI2CDevice(_dev, 1);
-    clearI2CInt(_dev);
     
+    /* Clear and enable interrupts */
+    clearI2CInt(_dev);
     writel(_dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
 }
 
@@ -852,7 +1040,11 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
     intr_mask = DW_IC_INTR_DEFAULT_MASK;
     
     for (; _dev->msg_write_idx < _dev->msgs_num; _dev->msg_write_idx++) {
-        
+        /*
+         * if target address has changed, we need to
+         * reprogram the target address in the i2c
+         * adapter when we are done with this transfer
+         */
         if (msgs[_dev->msg_write_idx].addr != addr) {
             _dev->msg_err = -1;
             break;
@@ -864,9 +1056,14 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         }
         
         if (!(_dev->status & STATUS_WRITE_IN_PROGRESS)) {
+            /* new i2c_msg */
             buf = msgs[_dev->msg_write_idx].buf;
             buf_len = msgs[_dev->msg_write_idx].len;
             
+            /* If both IC_EMPTYFIFO_HOLD_MASTER_EN and
+             * IC_RESTART_EN are set, we must manually
+             * set restart bit between messages.
+             */
             if ((_dev->master_cfg & DW_IC_CON_RESTART_EN) && (_dev->msg_write_idx > 0)) {
                 need_restart = true;
             }
@@ -877,10 +1074,14 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         
         
         while (buf_len > 0 && tx_limit > 0 && rx_limit > 0) {
-            
-
             UInt32 cmd = 0;
             
+            /*
+             * If IC_EMPTYFIFO_HOLD_MASTER_EN is set we must
+             * manually set the stop bit. However, it cannot be
+             * detected from the registers so we set it always
+             * when writing/reading the last byte.
+             */
             if (_dev->msg_write_idx == _dev->msgs_num - 1 && buf_len == 1) {
                 cmd |= 0x200;
             }
@@ -890,6 +1091,8 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
                 need_restart = false;
             }
             if (msgs[_dev->msg_write_idx].flags & I2C_M_RD) {
+                
+                /* avoid rx buffer overrun */
                 if (rx_limit - _dev->rx_outstanding <= 0) {
                     break;
                 }
@@ -914,6 +1117,10 @@ void VoodooI2C::xferMsgI2C(I2CBus* _dev) {
         
     }
    
+    /*
+     * If i2c_msg index search is completed, we don't need TX_EMPTY
+     * interrupt any more.
+     */
     if (_dev->msg_write_idx == _dev->msgs_num) {
         intr_mask &= ~DW_IC_INTR_TX_EMPTY;
     }

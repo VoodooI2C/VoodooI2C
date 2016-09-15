@@ -150,6 +150,10 @@ public:
     uint8_t T100_reportid_min;
     uint8_t T100_reportid_max;
     
+    uint8_t max_reportid;
+    
+    uint8_t last_message_count;
+    
     uint32_t TouchCount;
     
     uint8_t      Flags[20];
@@ -173,6 +177,12 @@ public:
     void atmel_reset_device();
     int mxt_read_t9_resolution();
     int mxt_read_t100_config();
+    
+    int ProcessMessagesUntilInvalid();
+    int ProcessMessage(uint8_t *message);
+    int ReadAndProcessMessages(uint8_t count);
+    bool DeviceReadT44();
+    bool DeviceRead();
     
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);

@@ -174,7 +174,6 @@ public:
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
     SInt32 readI2C16(uint16_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
-    SInt32 writeI2C16(uint16_t reg, size_t len, uint8_t *values);
     void TrackpadRawInput(struct csgesture_softc *sc, uint8_t report[ETP_MAX_REPORT_LEN], int tickinc);
 };
 

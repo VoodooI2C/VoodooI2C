@@ -130,6 +130,8 @@ typedef struct __attribute__((__packed__)){
 #define MXT_SPT_CTECONFIG_T46		46
 #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
 
+#define MXT_OBJECT_START	0x07
+
 /*
  * register 0 - Object configuration element(s) (occurs after mxt_id_info)
  */
@@ -167,6 +169,14 @@ typedef struct __attribute__((__packed__)){
     uint8_t area;
     uint8_t amplitude;
 } mxt_message_touch_t9;
+
+/* Define for T6 status byte */
+#define MXT_T6_STATUS_RESET	(1 << 7)
+#define MXT_T6_STATUS_OFL	(1 << 6)
+#define MXT_T6_STATUS_SIGERR	(1 << 5)
+#define MXT_T6_STATUS_CAL	(1 << 4)
+#define MXT_T6_STATUS_CFGERR	(1 << 3)
+#define MXT_T6_STATUS_COMSERR	(1 << 2)
 
 /* MXT_TOUCH_MULTI_T9 field */
 #define MXT_T9_CTRL		0
@@ -577,6 +587,11 @@ MXT_RESERVED255		}
 #define MXT_CMDPROC_REPORTALL_OFF	0x03
 #define MXT_CMDPROC_RESERVED04_OFF	0x04
 #define MXT_CMDPROC_DIAGNOSTIC_OFF	0x05
+
+/* Define for MXT_GEN_COMMAND_T6 */
+#define MXT_BOOT_VALUE		0xa5
+#define MXT_RESET_VALUE		0x01
+#define MXT_BACKUP_VALUE	0x55
 
 /*
  * device driver helper structures
