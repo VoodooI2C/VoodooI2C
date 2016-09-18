@@ -1,8 +1,13 @@
 # VoodooI2C
 
 VoodooI2C is a project to bring support for I2C input devices to OS X. This repository contains code for both I2C controllers and I2C devices.
+=> This project has been merged with the main VoodooI2C repo at: https://gitter.im/alexandred/VoodooI2C
 
-# Current Status
+# Project deprecated!
+This project is deprecated since it's functionality has been merged with the main project over at https://gitter.im/alexandred/VoodooI2C
+Please head over there. This just remains here as a reference.
+
+# Current Status (deprecated!!)
 
 Currently the following Intel Lynxpoint I2C controllers are almost fully supported:
 * `INT33C2` and `INT33C3` - Haswell era
