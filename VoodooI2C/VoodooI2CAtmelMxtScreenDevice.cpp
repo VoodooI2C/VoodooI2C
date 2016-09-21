@@ -31,8 +31,7 @@ inline int32_t abs(int32_t num){
 //
 
 #define MULTI_TIPSWITCH_BIT    1
-#define MULTI_IN_RANGE_BIT     2
-#define MULTI_CONFIDENCE_BIT   4
+#define MULTI_CONFIDENCE_BIT   2
 
 #define MULTI_MIN_COORDINATE   0x0000
 #define MULTI_MAX_COORDINATE   0x7FFF
@@ -47,7 +46,7 @@ inline int32_t abs(int32_t num){
 0x75, 0x01,                         /*       REPORT_SIZE (1)            */ \
 0x95, 0x01,                         /*       REPORT_COUNT (1)           */ \
 0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
-0x09, 0x32,                         /*       USAGE (In Range)           */ \
+0x09, 0x47,                         /*       USAGE (Confidence)         */ \
 0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
 0x95, 0x06,                         /*       REPORT_COUNT (6)           */ \
 0x81, 0x03,                         /*       INPUT (Cnst,Ary,Abs)       */ \
@@ -796,17 +795,17 @@ int VoodooI2CAtmelMxtScreenDevice::ProcessMessage(uint8_t *message) {
             
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_PRESS) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_RELEASE) {
-                report.Touch[count].Status = 0;
+                report.Touch[count].Status = MULTI_CONFIDENCE_BIT;
                 Flags[i] = 0;
             }
             else
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT;
+                report.Touch[count].Status = 0;
             
             count++;
         }
@@ -977,13 +976,13 @@ void VoodooI2CAtmelMxtScreenDevice::write_report_to_buffer(IOMemoryDescriptor *b
             
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_PRESS) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_CONFIDENCE_BIT | MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_RELEASE) {
-                report.Touch[count].Status = 0;
+                report.Touch[count].Status = MULTI_CONFIDENCE_BIT;
                 Flags[i] = 0;
             }
             
