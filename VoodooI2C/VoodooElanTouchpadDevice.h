@@ -130,6 +130,8 @@ public:
         char* name;
         
         bool reading;
+
+        bool trackpadIsAwake;
         
     } I2CDevice;
     

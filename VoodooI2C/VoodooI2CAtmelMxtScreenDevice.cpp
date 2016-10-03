@@ -31,8 +31,7 @@ inline int32_t abs(int32_t num){
 //
 
 #define MULTI_TIPSWITCH_BIT    1
-#define MULTI_IN_RANGE_BIT     2
-#define MULTI_CONFIDENCE_BIT   4
+#define MULTI_CONFIDENCE_BIT   2
 
 #define MULTI_MIN_COORDINATE   0x0000
 #define MULTI_MAX_COORDINATE   0x7FFF
@@ -47,9 +46,7 @@ inline int32_t abs(int32_t num){
 0x75, 0x01,                         /*       REPORT_SIZE (1)            */ \
 0x95, 0x01,                         /*       REPORT_COUNT (1)           */ \
 0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
-0x09, 0x32,                         /*       USAGE (In Range)           */ \
-0x81, 0x02,                         /*       INPUT (Data,Var,Abs)       */ \
-0x95, 0x06,                         /*       REPORT_COUNT (6)           */ \
+0x95, 0x07,                         /*       REPORT_COUNT (7)           */ \
 0x81, 0x03,                         /*       INPUT (Cnst,Ary,Abs)       */ \
 0x75, 0x08,                         /*       REPORT_SIZE (8)            */ \
 0x09, 0x51,                         /*       USAGE (Contact Identifier) */ \
@@ -519,6 +516,9 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
     
     for (int i=0; i < 20; i++){
         Flags[i] = 0;
+        XValue[i] = 0;
+        YValue[i] = 0;
+        AREA[i] = 0;
     }
     TouchCount = 0;
     
@@ -784,6 +784,15 @@ int VoodooI2CAtmelMxtScreenDevice::ProcessMessage(uint8_t *message) {
     struct _ATMEL_MULTITOUCH_REPORT report;
     report.ReportID = REPORTID_MTOUCH;
     
+    for (int i=0;i<10;i++){
+        report.Touch[i].ContactID = 0;
+        report.Touch[i].Height = 0;
+        report.Touch[i].Width = 0;
+        report.Touch[i].XValue = 0;
+        report.Touch[i].YValue = 0;
+        report.Touch[i].Status = 0;
+    }
+    
     int count = 0, i = 0;
     while (count < 10 && i < 20) {
         if (Flags[i] != 0) {
@@ -796,17 +805,21 @@ int VoodooI2CAtmelMxtScreenDevice::ProcessMessage(uint8_t *message) {
             
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_PRESS) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_RELEASE) {
                 report.Touch[count].Status = 0;
+                
                 Flags[i] = 0;
+                XValue[i] = 0;
+                YValue[i] = 0;
+                AREA[i] = 0;
             }
             else
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT;
+                report.Touch[count].Status = 0;
             
             count++;
         }
@@ -977,14 +990,23 @@ void VoodooI2CAtmelMxtScreenDevice::write_report_to_buffer(IOMemoryDescriptor *b
             
             uint8_t flags = Flags[i];
             if (flags & MXT_T9_DETECT) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_PRESS) {
-                report.Touch[count].Status = MULTI_IN_RANGE_BIT | MULTI_TIPSWITCH_BIT;
+                report.Touch[count].Status = MULTI_TIPSWITCH_BIT;
             }
             else if (flags & MXT_T9_RELEASE) {
                 report.Touch[count].Status = 0;
+                
+                report.Touch[count].XValue = 0;
+                report.Touch[count].YValue = 0;
+                report.Touch[count].Width = 0;
+                report.Touch[count].Height = 0;
+                
                 Flags[i] = 0;
+                XValue[i] = 0;
+                YValue[i] = 0;
+                AREA[i] = 0;
             }
             
             count++;

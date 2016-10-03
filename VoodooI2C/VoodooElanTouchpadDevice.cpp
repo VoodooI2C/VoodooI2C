@@ -327,6 +327,8 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
      return -1;
      }
      */
+
+    hid_device->trackpadIsAwake = true;
     
     initialize_wrapper();
     registerService();
@@ -476,9 +478,56 @@ IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IO
         
         if (_wrapper)
             _wrapper->prepareToSleep();
+
+        hid_device->trackpadIsAwake = false;
         
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
+        if (!hid_device->trackpadIsAwake){
+            int ret = 0;
+    
+            elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_RESET);
+            
+            /* Wait for the device to reset */
+            IOSleep(100);
+            
+            /* get reset acknowledgement 0000 */
+            uint8_t val[256];
+            readI2C(0x00, ETP_I2C_INF_LENGTH, val);
+            
+            readI2C16(ETP_I2C_DESC_CMD, ETP_I2C_DESC_LENGTH, val);
+            
+            readI2C16(ETP_I2C_REPORT_DESC_CMD, ETP_I2C_REPORT_DESC_LENGTH, val);
+            
+            uint8_t val2[3];
+            
+            elan_i2c_read_cmd(ETP_I2C_UNIQUEID_CMD, val2);
+            uint8_t prodid = val2[0];
+            
+            elan_i2c_read_cmd(ETP_I2C_SM_VERSION_CMD, val2);
+            uint8_t smvers = val2[0];
+            uint8_t ictype = val2[1];
+            
+            if (elan_check_ASUS_special_fw(prodid, ictype)){ //some Elan trackpads on certain ASUS laptops are buggy (linux commit 2de4fcc64685def3e586856a2dc636df44532395)
+                IOLog("%s::%s:: Buggy ASUS trackpad detected. Applying workaround.\n", getName(), _controller->_dev->name);
+                
+                elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
+                
+                IOSleep(200);
+                
+                elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
+            } else {
+                elan_i2c_write_cmd(ETP_I2C_SET_CMD, ETP_ENABLE_ABS);
+            
+                elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_WAKE_UP);
+            }
+
+            hid_device->trackpadIsAwake = true;
+            IOLog("%s::Woke up from Sleep!\n", getName());
+        } else {
+            IOLog("%s::Trackpad already awake! Not reinitializing.\n", getName());
+        }
+
         //Waking up from Sleep
         if (!hid_device->timerSource){
             hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CElanTouchpadDevice::get_input));
@@ -488,8 +537,6 @@ IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IO
         
         if (_wrapper)
             _wrapper->wakeFromSleep();
-        
-        IOLog("%s::Woke up from Sleep!\n", getName());
     }
     return kIOPMAckImplied;
 }
