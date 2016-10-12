@@ -12,8 +12,10 @@
 OSDefineMetaClassAndStructors(VoodooCSGestureHIDWrapper, IOHIDDevice)
 
 bool VoodooCSGestureHIDWrapper::start(IOService *provider) {
+    if (!IOHIDDevice::start(provider))
+        return false;
     setProperty("HIDDefaultBehavior", OSString::withCString("Trackpad"));
-    return IOHIDDevice::start(provider);
+    return true;
 }
 
 IOReturn VoodooCSGestureHIDWrapper::setProperties(OSObject *properties) {

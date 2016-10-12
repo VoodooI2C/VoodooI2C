@@ -45,8 +45,7 @@ bool VoodooI2CCyapaGen3Device::attach(IOService * provider, IOService* child)
 {
     if (!super::attach(provider))
         return false;
-    
-    assert(_controller == 0);
+
     _controller = (VoodooI2C*)provider;
     _controller->retain();
     

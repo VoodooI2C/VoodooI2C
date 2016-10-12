@@ -23,10 +23,12 @@ static VoodooI2CAtmelMxtScreenDevice* GetOwner(const IOService *us)
 bool VoodooAtmelTouchWrapper::start(IOService *provider) {
     if (OSDynamicCast(VoodooI2CAtmelMxtScreenDevice, provider) == NULL)
         return false;
+    if (!IOHIDDevice::start(provider))
+        return false;
 
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     setProperty("HIDDefaultBehavior", OSString::withCString("Trackpad"));
-    return IOHIDDevice::start(provider);
+    return true;
 }
 
 IOReturn VoodooAtmelTouchWrapper::setProperties(OSObject *properties) {

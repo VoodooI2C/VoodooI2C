@@ -56,11 +56,11 @@
 		<key>com.apple.iokit.IOHIDFamily</key>
 		<string>2.0</string>
 		<key>com.apple.kpi.iokit</key>
-		<string>14.0</string>
+		<string>13.0</string>
 		<key>com.apple.kpi.libkern</key>
-		<string>14.0</string>
+		<string>13.0</string>
 		<key>com.apple.kpi.mach</key>
-		<string>14.0</string>
+		<string>13.0</string>
 	</dict>
 </dict>
 </plist>
