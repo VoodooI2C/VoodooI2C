@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.alexandred.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -39,10 +39,10 @@
 				<string>INT3432</string>
 				<string>INT3433</string>
 			</array>
-			<key>IOProviderClass</key>
-			<string>IOService</string>
 			<key>IOProbeScore</key>
 			<integer>5000</integer>
+			<key>IOProviderClass</key>
+			<string>IOService</string>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
@@ -51,9 +51,9 @@
 	<dict>
 		<key>com.apple.iokit.IOACPIFamily</key>
 		<string>1.4</string>
-		<key>com.apple.iokit.IOPCIFamily</key>
-		<string>2.0</string>
 		<key>com.apple.iokit.IOHIDFamily</key>
+		<string>2.0</string>
+		<key>com.apple.iokit.IOPCIFamily</key>
 		<string>2.0</string>
 		<key>com.apple.kpi.iokit</key>
 		<string>13.0</string>

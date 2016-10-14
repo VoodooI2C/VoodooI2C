@@ -154,7 +154,7 @@
             startingLineNumber = "56"
             endingLineNumber = "56"
             landmarkName = "VoodooI2CHIDDevice::probe(IOService* device)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -170,7 +170,7 @@
             startingLineNumber = "15"
             endingLineNumber = "15"
             landmarkName = "VoodooI2CHIDDevice::attach(IOService * provider, IOService* child)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -186,7 +186,7 @@
             startingLineNumber = "434"
             endingLineNumber = "434"
             landmarkName = "VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -173,7 +173,7 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     }
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
-    hid_device->timerSource->setTimeoutMS(10);
+    hid_device->timerSource->setTimeoutMS(200);
      /*
      
      hid_device->commandGate = IOCommandGate::commandGate(this);
@@ -416,10 +416,10 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     
     ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
 
-//    IOLog("===Input (%d)===\n", rsize);
-//    for (int i = 0; i < rsize; i++)
-//        IOLog("0x%02x ", (UInt8) rdesc[i]);
-//    IOLog("\n");
+    IOLog("===Input (%d)===\n", rsize);
+    for (int i = 0; i < rsize; i++)
+        IOLog("0x%02x ", (UInt8) rdesc[i]);
+    IOLog("\n");
 
     int return_size = rdesc[0] | rdesc[1] << 8;
     if (return_size == 0) {
