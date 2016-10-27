@@ -28,7 +28,7 @@ The following devices are confirmed to work with the current iteration of Voodoo
   * This uses the proprietary interface `VoodooI2CAtmelMxtScreenDevice`.
 * ELAN0000 trackpad (Broadwell Chromebooks)
  * This uses the proprietary interface `VoodooElanTouchpadDevice`
-* ELAN1000 trackpad (Skylake Asus K501UB-DM039D)
+* ELAN1000 trackpad (Skylake Asus K501UB-DM039D/Skylake Asus X556UF)
  * This uses the proprietary interface `VoodooElanTouchpadDevice`
 
 # Helping out and testing
