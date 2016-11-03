@@ -74,23 +74,6 @@ unsigned char csgesturedesc[] = {
     0xc0,                               // END_COLLECTION
 };
 
-typedef struct  __attribute__((__packed__)) _CSGESTURE_RELATIVE_MOUSE_REPORT
-{
-    
-    UInt8        ReportID;
-    
-    UInt8        Button;
-    
-    UInt8        XValue;
-    
-    UInt8        YValue;
-    
-    UInt8        WheelPosition;
-    
-    UInt8		HWheelPosition;
-    
-} CSGestureRelativeMouseReport;
-
 typedef struct __attribute__((__packed__)) _CSGESTURE_KEYBOARD_REPORT
 {
     
@@ -687,39 +670,7 @@ void CSGesture::destroy_wrapper(void) {
     }
 }
 
-static _CSGESTURE_RELATIVE_MOUSE_REPORT lastreport;
-
-void CSGesture::update_relative_mouse(char button,
-                                                     char x, char y, char wheelPosition, char wheelHPosition){
-    /*_CSGESTURE_RELATIVE_MOUSE_REPORT report;
-    report.ReportID = REPORTID_RELATIVE_MOUSE;
-    report.Button = button;
-    report.XValue = x;
-    report.YValue = y;
-    report.WheelPosition = wheelPosition;
-    report.HWheelPosition = wheelHPosition;
-    
-    if (report.Button == lastreport.Button &&
-        report.XValue == lastreport.XValue &&
-        report.YValue == lastreport.YValue &&
-        report.WheelPosition == lastreport.WheelPosition &&
-        report.HWheelPosition == lastreport.HWheelPosition)
-        return;
-    lastreport = report;
-    
-    lastmouse.x = x;
-    lastmouse.y = y;
-    lastmouse.buttonMask = button;
-    
-    IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
-    buffer->writeBytes(0, &report, sizeof(report));
-    
-    IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
-    if (err != kIOReturnSuccess)
-        IOLog("Error handling report: 0x%.8x\n", err);
-    
-    buffer->release();*/
-    
+void CSGesture::update_relative_mouse(char button, char x, char y, char wheelPosition, char wheelHPosition){
     _pointingWrapper->updateRelativeMouse(x, y, button);
 }
 
@@ -748,13 +699,12 @@ int CSGesture::reportDescriptorLength(){
 
 void CSGesture::write_report_to_buffer(IOMemoryDescriptor *buffer){
     
-    _CSGESTURE_RELATIVE_MOUSE_REPORT report;
-    report.ReportID = REPORTID_RELATIVE_MOUSE;
-    report.Button = lastmouse.buttonMask;
-    report.XValue = lastmouse.x;
-    report.YValue = lastmouse.y;
-    report.WheelPosition = 0;
-    report.HWheelPosition = 0;
+    _CSGESTURE_KEYBOARD_REPORT report;
+    report.ReportID = REPORTID_KEYBOARD;
+    report.ShiftKeyFlags = 0;
+    for (int i = 0; i < KBD_KEY_CODES; i++){
+        report.KeyCodes[i] = 0;
+    }
     
     UInt rsize = sizeof(report);
     
