@@ -428,7 +428,7 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     if (return_size == 0) {
         /* host or device initiated RESET completed */
         // test/clear bit?
-        IOLog("return size is %x\n", return_size);
+        // IOLog("return size is %x\n", return_size);
         hid_device->timerSource->setTimeoutMS(10);
         return;
     }
