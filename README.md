@@ -1,6 +1,3 @@
-This fork contains the adjustments and added multitouch functionality for the HP Elite X2 1012
-
-
 # VoodooI2C
 
 VoodooI2C is a project to bring support for I2C input devices to OS X. This repository contains code for both I2C controllers and I2C devices.
