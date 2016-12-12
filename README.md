@@ -21,7 +21,7 @@ The following devices are confirmed to work with the current iteration of Voodoo
 * Atmel 1000 touchscreen (Dell XPS 12)
 * NTRG 0001 touchscreen (Surface Pro 3)
 * FTSC1000 touchscreen (Cube i7)
-* WCOM4818 touch screen + stylus (Skylake HP Elite X2 1012)
+* WCOM4814 touch screen + stylus (Skylake HP Elite X2 1012)
 * CYAP0000 trackpad (Haswell Chromebooks)
  * This uses the proprietary interface `VoodooCyapaGen3Device`.
 * ATML0001 touchscreen (Acer C720P Chromebook/Chromebook Pixel 2)
