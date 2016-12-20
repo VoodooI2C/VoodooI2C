@@ -29,6 +29,8 @@
 		F199630A1CAD6EE3002E2D29 /* VoodooI2CDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */; };
 		F1AB82D01C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */; };
 		F1AB82D11C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */; };
+		F1AD63621E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AD63601E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp */; };
+		F1AD63631E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F1AD63611E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h */; };
 		F1FA896C1D7FAAC90019F9CF /* AverageClasses.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */; };
 		F1FA896F1D7FAAF10019F9CF /* csgesturescroll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */; };
 		F1FA89701D7FAAF10019F9CF /* csgesturescroll.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */; };
@@ -63,6 +65,8 @@
 		F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CDevice.h; sourceTree = "<group>"; };
 		F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCSGestureHIDWrapper.cpp; sourceTree = "<group>"; };
 		F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCSGestureHIDWrapper.h; sourceTree = "<group>"; };
+		F1AD63601E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooSynapticsRMITouchpadDevice.cpp; sourceTree = "<group>"; };
+		F1AD63611E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooSynapticsRMITouchpadDevice.h; sourceTree = "<group>"; };
 		F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AverageClasses.h; sourceTree = "<group>"; };
 		F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csgesturescroll.cpp; sourceTree = "<group>"; };
 		F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csgesturescroll.h; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 				F153120F1CB9B67600BE6BFC /* Atmel MaxTouch Driver */,
 				F15312101CB9B68200BE6BFC /* Cypress APA Trackpad Driver */,
 				F110CDB51D1F3B2C0057BBDB /* Elan I2C Trackpad Driver */,
+				F1AD635F1E090E1D00F0BC23 /* Synaptics RMI Trackpad Driver */,
 				308C59891BC61FE00078D1B1 /* VoodooHIDWrapper.h */,
 				308C59871BC61FD20078D1B1 /* VoodooHIDWrapper.cpp */,
 			);
@@ -174,6 +179,15 @@
 			name = "Multitouch Support";
 			sourceTree = "<group>";
 		};
+		F1AD635F1E090E1D00F0BC23 /* Synaptics RMI Trackpad Driver */ = {
+			isa = PBXGroup;
+			children = (
+				F1AD63601E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp */,
+				F1AD63611E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h */,
+			);
+			name = "Synaptics RMI Trackpad Driver";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -191,6 +205,7 @@
 				F1FA896C1D7FAAC90019F9CF /* AverageClasses.h in Headers */,
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
 				F19857321D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h in Headers */,
+				F1AD63631E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h in Headers */,
 				F1FA89701D7FAAF10019F9CF /* csgesturescroll.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,6 +289,7 @@
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,
 				F110CDBA1D1F3B4D0057BBDB /* VoodooElanTouchpadDevice.cpp in Sources */,
 				F19963091CAD6EE3002E2D29 /* VoodooI2CDevice.cpp in Sources */,
+				F1AD63621E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp in Sources */,
 				F158186C1C1D6B8F0086ED55 /* VoodooCyapaGen3Device.cpp in Sources */,
 				F18F3CFB1D88C1C600CCED2B /* VoodooI2CPCI.cpp in Sources */,
 			);

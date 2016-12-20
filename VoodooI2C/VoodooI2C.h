@@ -11,6 +11,7 @@
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooElanTouchpadDevice.h"
 #include "VoodooI2CAtmelMxtScreenDevice.h"
+#include "VoodooSynapticsRMITouchpadDevice.h"
 
 #define kIOPMPowerOff		0
 
