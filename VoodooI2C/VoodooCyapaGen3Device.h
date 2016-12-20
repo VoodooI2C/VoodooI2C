@@ -187,7 +187,7 @@ public:
     void cyapa_set_power_mode(uint8_t power_mode);
     
     SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
-    SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
+    SInt32 writeI2C(size_t len, uint8_t *values);
     void TrackpadRawInput(struct csgesture_softc *sc, cyapa_regs *regs, int tickinc);
 };
 

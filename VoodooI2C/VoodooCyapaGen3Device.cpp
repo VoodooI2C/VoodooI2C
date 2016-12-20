@@ -135,7 +135,9 @@ void VoodooI2CCyapaGen3Device::cyapa_set_power_mode(uint8_t power_mode)
     power = (ret & ~0xFC);
     power |= power_mode & 0xFc;
     
-    writeI2C(CMD_POWER_MODE, 1, &power);
+    uint8_t buf[2] = {CMD_POWER_MODE, power};
+    
+    writeI2C(sizeof(buf), buf);
 }
 
 int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
@@ -157,9 +159,9 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     
     if ((boot.stat & CYAPA_STAT_RUNNING) == 0){
         if (boot.error & CYAPA_ERROR_BOOTLOADER)
-            ret = writeI2C(0x00, sizeof(bl_deactivate), bl_deactivate);
+            ret = writeI2C(sizeof(bl_deactivate), bl_deactivate);
         else
-            ret = writeI2C(0x00, sizeof(bl_exit), bl_exit);
+            ret = writeI2C(sizeof(bl_exit), bl_exit);
     }
     
     cyapa_cap cap;
@@ -313,20 +315,14 @@ SInt32 VoodooI2CCyapaGen3Device::readI2C(uint8_t reg, size_t len, uint8_t *value
     return 0;
 }
 
-SInt32 VoodooI2CCyapaGen3Device::writeI2C(uint8_t reg, size_t len, uint8_t *values){
+SInt32 VoodooI2CCyapaGen3Device::writeI2C(size_t len, uint8_t *values){
     struct VoodooI2C::i2c_msg msgs[] = {
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = 1,
-            .buf = &reg,
-        },
         {
             .addr = hid_device->addr,
             .flags = 0,
             .len = (uint8_t)len,
             .buf = values,
-        },
+        }
     };
     int ret;
     
