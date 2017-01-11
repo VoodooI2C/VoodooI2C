@@ -30,6 +30,8 @@ The following devices are confirmed to work with the current iteration of Voodoo
  * This uses the proprietary interface `VoodooElanTouchpadDevice`
 * ELAN1000 trackpad (Skylake Asus K501UB-DM039D)
  * This uses the proprietary interface `VoodooElanTouchpadDevice`
+* SYNA0000 trackpad (Dell Chromebook 13)
+ * This uses the proprietary interface `VoodooSynapticsRMITouchpadDevice`
 
 # Helping out and testing
 
