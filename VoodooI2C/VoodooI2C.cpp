@@ -721,6 +721,7 @@ bool VoodooI2C::start(IOService * provider) {
                         } else if ((strcmp(getMatchedName((IOService *)child), "ELAN0000") == 0 ||
                                     strcmp(getMatchedName((IOService *)child), "ELAN0100") == 0 ||
                                     strcmp(getMatchedName((IOService *)child), "ELAN0600") == 0 ||
+                                    strcmp(getMatchedName((IOService *)child), "ELAN0605") == 0 ||
                                     strcmp(getMatchedName((IOService *)child), "ELAN1000") == 0)){
                                 bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
                         } else if (strcmp(getMatchedName((IOService *)child), "SYNA0000") == 0){
