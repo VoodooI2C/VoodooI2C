@@ -175,6 +175,7 @@ public:
     int mxt_write_reg(uint16_t reg, uint8_t val);
     int mxt_write_object_off(mxt_object *obj,int offset, uint8_t val);
     void atmel_reset_device();
+    int mxt_set_t7_power_cfg(uint8_t sleep);
     int mxt_read_t9_resolution();
     int mxt_read_t100_config();
     
@@ -184,8 +185,6 @@ public:
     bool DeviceReadT44();
     bool DeviceRead();
     
-    SInt32 readI2C(uint8_t reg, size_t len, uint8_t *values);
-    SInt32 writeI2C(uint8_t reg, size_t len, uint8_t *values);
     SInt32 readI2C16(uint16_t reg, size_t len, uint8_t *values);
     SInt32 writeI2C16(uint16_t reg, size_t len, uint8_t *values);
 };

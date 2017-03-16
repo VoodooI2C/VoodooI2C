@@ -313,6 +313,24 @@ VoodooI2CAtmelMxtScreenDevice::mxt_write_object_off(mxt_object *obj,
 void VoodooI2CAtmelMxtScreenDevice::atmel_reset_device()
 {
     mxt_write_object_off(cmdprocobj, MXT_CMDPROC_RESET_OFF, 1);
+    IOSleep(100);
+}
+
+int VoodooI2CAtmelMxtScreenDevice::mxt_set_t7_power_cfg(uint8_t sleep)
+{
+    t7_config *new_config;
+    t7_config deepsleep;
+    deepsleep.active = deepsleep.idle = 0;
+    t7_config active;
+    active.active = 20;
+    active.idle = 100;
+    
+    if (sleep == MXT_POWER_CFG_DEEPSLEEP)
+        new_config = &deepsleep;
+    else
+        new_config = &active;
+    return mxt_write_reg_buf(T7_address,
+                                 new_config, sizeof(t7_cfg));
 }
 
 int VoodooI2CAtmelMxtScreenDevice::mxt_read_t9_resolution()
@@ -513,6 +531,13 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
     
     atmel_reset_device();
     
+    if (multitouch == MXT_TOUCH_MULTITOUCHSCREEN_T100){
+        mxt_set_t7_power_cfg(MXT_POWER_CFG_RUN);
+    } else {
+        mxt_object *obj = mxt_findobject(&core, MXT_TOUCH_MULTI_T9);
+        mxt_write_object_off(obj, MXT_T9_CTRL, 0x83);
+    }
+    
     for (int i=0; i < 20; i++){
         Flags[i] = 0;
         XValue[i] = 0;
@@ -598,28 +623,6 @@ void VoodooI2CAtmelMxtScreenDevice::destroy_wrapper(void) {
 #define EIO              5      /* I/O error */
 #define ENOMEM          12      /* Out of memory */
 
-SInt32 VoodooI2CAtmelMxtScreenDevice::readI2C(uint8_t reg, size_t len, uint8_t *values){
-    struct VoodooI2C::i2c_msg msgs[] = {
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = 1,
-            .buf = &reg,
-        },
-        {
-            .addr = hid_device->addr,
-            .flags = I2C_M_RD,
-            .len = (uint8_t)len,
-            .buf = values,
-        },
-    };
-    int ret;
-    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)msgs, ARRAY_SIZE(msgs));
-    if (ret != ARRAY_SIZE(msgs))
-        return ret < 0 ? ret : EIO;
-    return 0;
-}
-
 SInt32 VoodooI2CAtmelMxtScreenDevice::readI2C16(uint16_t reg, size_t len, uint8_t *values){
     uint16_t buf[] = {
         reg
@@ -645,50 +648,25 @@ SInt32 VoodooI2CAtmelMxtScreenDevice::readI2C16(uint16_t reg, size_t len, uint8_
     return 0;
 }
 
-SInt32 VoodooI2CAtmelMxtScreenDevice::writeI2C(uint8_t reg, size_t len, uint8_t *values){
-    struct VoodooI2C::i2c_msg msgs[] = {
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = 1,
-            .buf = &reg,
-        },
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = (uint8_t)len,
-            .buf = values,
-        },
-    };
-    int ret;
-    
-    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
-    
-    return ret;
-}
-
 SInt32 VoodooI2CAtmelMxtScreenDevice::writeI2C16(uint16_t reg, size_t len, uint8_t *values){
     uint16_t buf[] = {
         reg
     };
+    uint8_t *intermbuf = (uint8_t *)IOMalloc(sizeof(buf) + len);
+    memcpy(intermbuf, buf, sizeof(buf));
+    memcpy(intermbuf + 2, values, len);
     struct VoodooI2C::i2c_msg msgs[] = {
         {
             .addr = hid_device->addr,
             .flags = 0,
-            .len = sizeof(buf),
-            .buf = (uint8_t *)&buf,
-        },
-        {
-            .addr = hid_device->addr,
-            .flags = 0,
-            .len = (uint8_t)len,
-            .buf = values,
-        },
+            .len = (UInt16)(sizeof(buf) + len),
+            .buf = intermbuf,
+        }
     };
     int ret;
     
     ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
-    
+    IOFree(intermbuf, sizeof(buf) + len);
     return ret;
 }
 
