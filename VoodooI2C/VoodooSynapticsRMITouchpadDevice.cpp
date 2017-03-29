@@ -936,7 +936,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_set_mode(uint8_t mode) {
 int VoodooSynapticsRMITouchpadDevice::rmi_populate() {
     int ret;
     
-    ret = rmi_set_mode(0);
+    ret = rmi_set_mode(RMI_MODE_ATTN_REPORTS);
     if (ret) {
         IOLog("%s::%s::PDT set mode failed with code %d\n", getName(), _controller->_dev->name, ret);
         return ret;
