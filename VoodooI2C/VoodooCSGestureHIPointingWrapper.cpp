@@ -127,22 +127,32 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
      Below chunk of code should work in El Captain and lower (untested)
      */
     
-    OSBoolean *clicking = OSDynamicCast(OSBoolean, dict->getObject("Clicking"));
-    if (clicking){
-        gesturerec->softc->settings.tapToClickEnabled = clicking->isTrue();
+    OSBoolean *bool_clicking = OSDynamicCast(OSBoolean, dict->getObject("Clicking"));
+    OSNumber *num_clicking = OSDynamicCast(OSNumber, dict->getObject("Clicking"));
+    if (num_clicking ){
+        gesturerec->softc->settings.tapToClickEnabled = num_clicking->unsigned32BitValue() & 0x1;
+    } else if(bool_clicking) {
+        gesturerec->softc->settings.tapToClickEnabled = bool_clicking->isTrue();
     }
     
-    OSBoolean *dragging = OSDynamicCast(OSBoolean, dict->getObject("Dragging"));
-    if (dragging){
-        gesturerec->softc->settings.tapDragEnabled = dragging->isTrue();
+    OSBoolean *bool_dragging = OSDynamicCast(OSBoolean, dict->getObject("Dragging"));
+    OSNumber *num_dragging = OSDynamicCast(OSNumber, dict->getObject("Dragging"));
+    if (num_dragging) {
+        gesturerec->softc->settings.tapDragEnabled = num_dragging->unsigned32BitValue() & 0x1;
+    }else if (bool_dragging){
+        gesturerec->softc->settings.tapDragEnabled = bool_dragging->isTrue();
     }
     
     gesturerec->softc->settings.multiFingerTap = true;
     
-    OSBoolean *hscroll  = OSDynamicCast(OSBoolean, dict->getObject("TrackpadHorizScroll"));
-    if (hscroll){
-        horizontalScroll = hscroll->isTrue();
+    OSBoolean *bool_hscroll  = OSDynamicCast(OSBoolean, dict->getObject("TrackpadHorizScroll"));
+    OSNumber *num_hscroll = OSDynamicCast(OSNumber, dict->getObject("TrackpadHorizScroll"));
+    if(num_hscroll) {
+        horizontalScroll = num_hscroll->>unsigned32BitValue() & 0x1;
+    } else if (bool_hscroll){
+        horizontalScroll = bool_hscroll->isTrue();
     }
+    
     return super::setParamProperties(dict);
 }
 
