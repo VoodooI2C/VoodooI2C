@@ -121,21 +121,27 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
     /*Known Keys:
      HIDDefaultParameters, HIDClickTime, HIDClickSpace, HIDKeyRepeat, HIDInitialKeyRepeat, HIDPointerAcceleration, HIDScrollAcceleration, HIDPointerButtonMode, HIDF12EjectDelay, EjectDelay, HIDSlowKeysDelay, HIDStickyKeysDisabled, HIDStickyKeysOn, HIDStickyKeysShiftToggles, HIDMouseKeysOptionToggles, HIDFKeyMode, HIDMouseKeysOn, HIDKeyboardModifierMappingPairs, MouseKeysStopsTrackpad, HIDScrollZoomModifierMask, HIDMouseAcceleration, HIDMouseScrollAcceleration, HIDTrackpadAcceleration, HIDTrackpadScrollAcceleration, TrackpadPinch, TrackpadFourFingerVertSwipeGesture, TrackpadRotate, TrackpadHorizScroll, TrackpadFourFingerPinchGesture, TrackpadTwoFingerDoubleTapGesture, TrackpadMomentumScroll, TrackpadThreeFingerTapGesture, TrackpadThreeFingerHorizSwipeGesture, Clicking, TrackpadScroll, DragLock, TrackpadFiveFingerPinchGesture, TrackpadThreeFingerVertSwipeGesture, TrackpadTwoFingerFromRightEdgeSwipeGesture, Dragging, TrackpadRightClick, TrackpadCornerSecondaryClick, TrackpadFourFingerHorizSwipeGesture, TrackpadThreeFingerDrag, JitterNoMove, JitterNoClick, PalmNoAction When Typing, PalmNoAction Permanent, TwofingerNoAction, OutsidezoneNoAction When Typing, Use Panther Settings for W, Trackpad Jitter Milliseconds, USBMouseStopsTrackpad, HIDWaitCursorFrameInterval*/
     
-    OSNumber *clicking = OSDynamicCast(OSNumber, dict->getObject("Clicking"));
+    /*
+     Notes:
+     Sierra fix requires the cast to be changed to OSBoolean
+     Below chunk of code should work in El Captain and lower (untested)
+     */
+    
+    OSBoolean *clicking = OSDynamicCast(OSBoolean, dict->getObject("Clicking"));
     if (clicking){
-        gesturerec->softc->settings.tapToClickEnabled = clicking->unsigned32BitValue() & 0x1;
+        gesturerec->softc->settings.tapToClickEnabled = clicking->isTrue();
     }
     
-    OSNumber *dragging = OSDynamicCast(OSNumber, dict->getObject("Dragging"));
+    OSBoolean *dragging = OSDynamicCast(OSBoolean, dict->getObject("Dragging"));
     if (dragging){
-        gesturerec->softc->settings.tapDragEnabled = dragging->unsigned32BitValue() & 0x1;
+        gesturerec->softc->settings.tapDragEnabled = dragging->isTrue();
     }
     
     gesturerec->softc->settings.multiFingerTap = true;
     
-    OSNumber *hscroll  = OSDynamicCast(OSNumber, dict->getObject("TrackpadHorizScroll"));
+    OSBoolean *hscroll  = OSDynamicCast(OSBoolean, dict->getObject("TrackpadHorizScroll"));
     if (hscroll){
-        horizontalScroll = hscroll->unsigned32BitValue() & 0x1;
+        horizontalScroll = hscroll->isTrue();
     }
     return super::setParamProperties(dict);
 }
