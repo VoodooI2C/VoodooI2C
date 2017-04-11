@@ -165,4 +165,3 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
     
     return super::setParamProperties(dict);
 }
-
