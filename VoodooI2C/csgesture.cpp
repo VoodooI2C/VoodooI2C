@@ -590,7 +590,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     sc->ticksincelastrelease++;
     
 #pragma mark process tap to click
-    if (!handledByScroll && !(sc->scrollingActive || sc->scrollInertiaActive))
+    if (!handledByScroll)
         TapToClickOrDrag(sc, releasedfingers);
     
 #pragma mark send to system
