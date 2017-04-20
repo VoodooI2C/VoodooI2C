@@ -245,12 +245,17 @@ int VoodooI2CHIDDevice::i2c_hid_acpi_pdata(i2c_hid *ihid) {
     params[2] = OSNumber::withNumber(0x1, 8);
     
     ihid->client->provider->evaluateObject("_DSM", &result, params, 3);
+    if (!result)
+        ihid->client->provider->evaluateObject("XDSM", &result, params, 3);
+
 
     OSNumber* number = OSDynamicCast(OSNumber, result);
-    
-    ihid->pdata.hid_descriptor_address = number->unsigned32BitValue();
-    
-    number->release();
+    if (number)
+        ihid->pdata.hid_descriptor_address = number->unsigned32BitValue();
+
+    if (result)
+        result->release();
+
     params[0]->release();
     params[1]->release();
     params[2]->release();
