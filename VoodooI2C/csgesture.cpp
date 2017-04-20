@@ -140,6 +140,11 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
 bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     sc->scrollx = 0;
     sc->scrolly = 0;
+    
+    if(sc->mousedown || sc->mouseDownDueToTap) {
+        return false;
+    }
+    
     if (abovethreshold == 2 || sc->scrollingActive) {
         int i1 = iToUse[0];
         int i2 = iToUse[1];
@@ -537,9 +542,6 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
                 int absx = abs(sc->x[i] - sc->lastx[i]);
                 int absy = abs(sc->y[i] - sc->lasty[i]);
                 
-                int newtotalx = sc->flextotalx[i] - sc->xhistory[i][0] + absx;
-                int newtotaly = sc->flextotaly[i] - sc->yhistory[i][0] + absy;
-                
                 sc->totalx[i] += absx;
                 sc->totaly[i] += absy;
                 
@@ -588,7 +590,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     sc->ticksincelastrelease++;
     
 #pragma mark process tap to click
-    if (!handledByScroll)
+    if (!handledByScroll && !(sc->scrollingActive || sc->scrollInertiaActive))
         TapToClickOrDrag(sc, releasedfingers);
     
 #pragma mark send to system
