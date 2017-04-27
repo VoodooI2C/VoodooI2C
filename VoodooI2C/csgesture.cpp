@@ -458,7 +458,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
     if (!handled)
         handled = ProcessThreeFingerSwipe(sc, abovethreshold, iToUse);
-    if (!handled)
+    if (!handled && !sc->buttondown && !sc->mouseDownDueToTap)
         handledByScroll = handled = ProcessScroll(sc, abovethreshold, iToUse);
     if (!handled)
         handled = ProcessMove(sc, abovethreshold, iToUse);
@@ -483,6 +483,11 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
     if (!sc->mouseDownDueToTap) {
         if (sc->buttondown && !sc->mousedown) {
+            if (_scrollHandler->isScrolling()){
+                _scrollHandler->stopScroll();
+                return;
+            }
+            
             sc->mousedown = true;
             sc->tickssinceclick = 0;
             
