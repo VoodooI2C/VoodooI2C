@@ -2,6 +2,7 @@
 // © 2016, CoolStar. All Rights Reserved.
 
 #include "csgesture.h"
+#include "GestureSocket.h"
 
 #define REPORTID_FEATURE        0x02
 #define REPORTID_RELATIVE_MOUSE 0x04
@@ -427,6 +428,7 @@ void CSGesture::ClearTapDrag(csgesture_softc *sc, int i) {
 }
 
 void CSGesture::ProcessGesture(csgesture_softc *sc) {
+    send_input(sc);
 #pragma mark reset inputs
     sc->dx = 0;
     sc->dy = 0;
