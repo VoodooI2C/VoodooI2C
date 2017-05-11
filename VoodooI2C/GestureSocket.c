@@ -122,8 +122,8 @@ kern_return_t destroy_gesture_socket() {
         ctl_ref = NULL;
     } else {
         // clients are still connected on the socket
-        // if we do not allow clients to close connection properly then KP will occur
-        return KERN_FAILURE;
+        // ensure that they disconnect or elsse we get a KP
+        send_quit();
     }
     
     // memory clean up
@@ -145,7 +145,7 @@ kern_return_t destroy_gesture_socket() {
     return KERN_SUCCESS;
 }
 
-void send_input(struct csgesture_softc* sc) {
+void send_quit() {
     lck_mtx_lock(lock);
     
     // we do not have a current connection to send data to
@@ -156,7 +156,37 @@ void send_input(struct csgesture_softc* sc) {
         return;
     }
     
-    errno_t result = ctl_enqueuedata(current_connection, current_unit, sc, sizeof(struct csgesture_softc), 0);
+    struct gesture_socket_cmd gesture_cmd;
+    gesture_cmd.type = GESTURE_QUIT;
+    errno_t result = ctl_enqueuedata(current_connection, current_unit, &gesture_cmd, sizeof(struct gesture_socket_cmd), 0);
+    
+    // ran out of socket buffer space?
+    if (result != KERN_SUCCESS) {
+        current_connection = NULL;
+        current_unit = -1;
+    }
+
+    lck_mtx_unlock(lock);
+}
+
+void send_input(struct csgesture_softc* sc) {
+    if(sc == NULL) return;
+    
+    lck_mtx_lock(lock);
+    
+    // we do not have a current connection to send data to
+    // OR
+    // we have a invalid unit id (corrupted somehow?)
+    if(current_connection == NULL || current_unit == -1) {
+        lck_mtx_unlock(lock);
+        return;
+    }
+    
+    struct gesture_socket_cmd gesture_cmd;
+    gesture_cmd.type = GESTURE_DATA;
+    memcpy(&gesture_cmd.gesture, sc, sizeof(struct csgesture_softc));
+    
+    errno_t result = ctl_enqueuedata(current_connection, current_unit, &gesture_cmd, sizeof(struct gesture_socket_cmd), 0);
     
     // ran out of socket buffer space?
     if (result != KERN_SUCCESS) {
