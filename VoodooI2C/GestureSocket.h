@@ -23,7 +23,7 @@ extern "C" {
  to communicate with the VoodooI2C driver.
  */
 
-#define GESTURE_CLIENT_CTL_NAME "com.alexandred.VoodooI2C.GestureSocket"
+#define GESTURE_CTL_NAME "com.alexandred.VoodooI2C.GestureSocket"
 
 kern_return_t initialise_gesture_socket();
 kern_return_t destroy_gesture_socket();
