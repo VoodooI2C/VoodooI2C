@@ -34,7 +34,7 @@ static lck_grp_t* lock_group = NULL; // lock group
 static lck_mtx_t* lock = NULL; // concruency management
 
 static kern_ctl_ref current_connection = NULL; // refernce to the currently connected client
-static u_int32_t current_unit = 0; // unit number for the currently connected client
+static u_int32_t current_unit = -1; // unit number for the currently connected client
 
 errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl* sac, void** unitinfo) {
     lck_mtx_lock(lock);
@@ -57,7 +57,7 @@ errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void* unitinfo) {
     }
     
     current_connection = NULL;
-    current_unit = 0;
+    current_unit = -1;
     
     lck_mtx_unlock(lock);
     
@@ -122,6 +122,7 @@ kern_return_t destroy_gesture_socket() {
         return KERN_FAILURE;
     }
     
+    // memory clean up
     if(lock) {
         lck_mtx_free(lock, lock_group);
         lock = NULL;
@@ -138,4 +139,27 @@ kern_return_t destroy_gesture_socket() {
     }
     
     return KERN_SUCCESS;
+}
+
+void send_input(struct csgesture_softc* sc) {
+    lck_mtx_lock(lock);
+    
+    // we do not have a current connection to send data to
+    // OR
+    // we have a invalid unit id (corrupted somehow?)
+    if(current_connection == NULL || current_unit == -1) {
+        lck_mtx_unlock(lock);
+        return;
+    }
+    
+    errno_t result = ctl_enqueuedata(current_connection, current_unit, sc, sizeof(struct csgesture_softc), 0);
+    
+    // ran out of socket buffer space?
+    if (result != KERN_SUCCESS) {
+        current_connection = NULL;
+        current_unit = -1;
+    }
+    
+    lck_mtx_unlock(lock);
+    return;
 }
