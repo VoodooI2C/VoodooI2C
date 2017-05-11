@@ -55,6 +55,8 @@
 		<string>2.0</string>
 		<key>com.apple.iokit.IOPCIFamily</key>
 		<string>2.0</string>
+		<key>com.apple.kpi.bsd</key>
+		<string>8.0</string>
 		<key>com.apple.kpi.iokit</key>
 		<string>13.0</string>
 		<key>com.apple.kpi.libkern</key>
