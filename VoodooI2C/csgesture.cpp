@@ -432,8 +432,12 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     if(initialise_status == KERN_SUCCESS) {
         IOLog("GestureSocket: Initialised the gesture socket!\n");
     }
-
-    send_input(sc);
+    
+    bool dataSent = send_input(sc);
+    if(dataSent) {
+        return;
+    }
+    
 #pragma mark reset inputs
     sc->dx = 0;
     sc->dy = 0;

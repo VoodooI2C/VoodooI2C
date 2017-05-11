@@ -169,8 +169,8 @@ void send_quit() {
     lck_mtx_unlock(lock);
 }
 
-void send_input(struct csgesture_softc* sc) {
-    if(sc == NULL) return;
+bool send_input(struct csgesture_softc* sc) {
+    if(sc == NULL) return false;
     
     lck_mtx_lock(lock);
     
@@ -179,7 +179,7 @@ void send_input(struct csgesture_softc* sc) {
     // we have a invalid unit id (corrupted somehow?)
     if(current_connection == NULL || current_unit == -1) {
         lck_mtx_unlock(lock);
-        return;
+        return false;
     }
     
     struct gesture_socket_cmd gesture_cmd;
@@ -192,8 +192,11 @@ void send_input(struct csgesture_softc* sc) {
     if (result != KERN_SUCCESS) {
         current_connection = NULL;
         current_unit = -1;
+        
+        lck_mtx_unlock(lock);
+        return false;
     }
     
     lck_mtx_unlock(lock);
-    return;
+    return true;
 }

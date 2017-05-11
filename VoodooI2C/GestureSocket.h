@@ -38,7 +38,7 @@ struct gesture_socket_cmd {
 kern_return_t initialise_gesture_socket();
 kern_return_t destroy_gesture_socket();
 void send_quit();
-void send_input(struct csgesture_softc* sc);
+bool send_input(struct csgesture_softc* sc);
     
 #ifdef __cplusplus
 }
