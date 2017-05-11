@@ -14,19 +14,7 @@ static errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl* sac, void*
 static errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void* unitinfo);
 
 // control structure needed
-static struct kern_ctl_reg ctl_reg = {
-    GESTURE_CLIENT_CTL_NAME,             // socket identifier
-    0,                                   // flags
-    0,                                   // ctl_unit
-    0,                                   // privileged access
-    0,                                   // send buffer size
-    0,                                   // recv size buffer
-    ctl_connect,                         // connected
-    ctl_disconnect,                      // disconnected
-    NULL,                                // ctl_send_func
-    NULL,                                // setsockopt call
-    NULL                                 // getsockopt call
-};
+static struct kern_ctl_reg ctl_reg;
 
 static kern_ctl_ref ctl_ref = NULL; // reference to control structure
 static OSMallocTag malloc_tag = NULL; // malloc tag
@@ -36,10 +24,10 @@ static lck_mtx_t* lock = NULL; // concruency management
 static kern_ctl_ref current_connection = NULL; // refernce to the currently connected client
 static u_int32_t current_unit = -1; // unit number for the currently connected client
 
-errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl* sac, void** unitinfo) {
+errno_t ctl_connect(kern_ctl_ref ctlref, struct sockaddr_ctl* sac, void** unitinfo) {
     lck_mtx_lock(lock);
     
-    current_connection = ctl_ref;
+    current_connection = ctlref;
     current_unit = sac->sc_unit;
     
     lck_mtx_unlock(lock);
@@ -47,7 +35,7 @@ errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl* sac, void** uniti
     return KERN_SUCCESS;
 }
 
-errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void* unitinfo) {
+errno_t ctl_disconnect(kern_ctl_ref ctlref, u_int32_t unit, void* unitinfo) {
     lck_mtx_lock(lock);
     
     if(unit != current_unit) {
@@ -64,16 +52,21 @@ errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void* unitinfo) {
     return KERN_SUCCESS;
 }
 
+errno_t ctl_setopt(kern_ctl_ref ctlref, unsigned int unit, void *userdata, int opt, void *data, size_t len) {
+    return KERN_SUCCESS;
+}
 
 kern_return_t initialise_gesture_socket() {
+    if(ctl_ref != NULL) return KERN_FAILURE;
+    
     // allocate memory for the locks
-    malloc_tag = OSMalloc_Tagalloc(GESTURE_CLIENT_CTL_NAME, OSMT_DEFAULT);
+    malloc_tag = OSMalloc_Tagalloc(GESTURE_CTL_NAME, OSMT_DEFAULT);
     
     // sanity check
     if(malloc_tag == NULL) {
         return KERN_NO_SPACE;
     } else {
-         lock_group = lck_grp_alloc_init(GESTURE_CLIENT_CTL_NAME, LCK_GRP_ATTR_NULL);
+         lock_group = lck_grp_alloc_init(GESTURE_CTL_NAME, LCK_GRP_ATTR_NULL);
     }
     
     if(lock_group != NULL) {
@@ -95,6 +88,17 @@ kern_return_t initialise_gesture_socket() {
         
         return KERN_NO_SPACE;
     }
+    
+    bzero(&ctl_reg, sizeof(struct kern_ctl_reg));
+    ctl_reg.ctl_id    = 0;
+    ctl_reg.ctl_unit  = 0;
+    strncpy( ctl_reg.ctl_name, GESTURE_CTL_NAME, strlen(GESTURE_CTL_NAME));
+    ctl_reg.ctl_flags         = CTL_FLAG_PRIVILEGED & CTL_FLAG_REG_ID_UNIT;
+    ctl_reg.ctl_send          = 0;
+    ctl_reg.ctl_getopt        = 0;
+    ctl_reg.ctl_setopt        = ctl_setopt;
+    ctl_reg.ctl_connect       = ctl_connect;
+    ctl_reg.ctl_disconnect    = ctl_disconnect;
     
     errno_t return_status = ctl_register(&ctl_reg, &ctl_ref);
 

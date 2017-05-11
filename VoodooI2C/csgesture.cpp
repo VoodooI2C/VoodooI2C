@@ -428,6 +428,11 @@ void CSGesture::ClearTapDrag(csgesture_softc *sc, int i) {
 }
 
 void CSGesture::ProcessGesture(csgesture_softc *sc) {
+    kern_return_t initialise_status = initialise_gesture_socket();
+    if(initialise_status == KERN_SUCCESS) {
+        IOLog("GestureSocket: Initialised the gesture socket!\n");
+    }
+
     send_input(sc);
 #pragma mark reset inputs
     sc->dx = 0;

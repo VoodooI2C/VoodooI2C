@@ -777,17 +777,9 @@ bool VoodooI2C::start(IOService * provider) {
     
     registerPowerDriver(this, myPowerStates, kMyNumberOfStates);
     
-    if(initialise_gesture_socket() == KERN_SUCCESS) {
-        IOLog("GestureSocket: Initialised the gesture socket!\n");
-    }
     
     return true;
-     
-     
 }
-
-
-
 
 /*
  ############################################################################################
@@ -801,9 +793,10 @@ bool VoodooI2C::start(IOService * provider) {
 void VoodooI2C::stop(IOService * provider) {
     IOLog("%s::stop\n", getName());
     
-    if(destroy_gesture_socket()) {
-        IOLog("GestureSocket: Destroyed the gesture socket!\n");
-    }
+  /*  kern_return_t destroy_status = destroy_gesture_socket();
+    if(destroy_status != KERN_SUCCESS) {
+        IOLog("GestureSocket: User mode clients are still connected!\n");
+    } */
     
     for(int i=0;i<=bus_devices_number;i++) {
         //bus_devices[i]->stop(this);
