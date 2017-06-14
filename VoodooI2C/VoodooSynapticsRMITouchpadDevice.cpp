@@ -265,6 +265,17 @@ int VoodooSynapticsRMITouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
         return -1;
     }
     
+    // reset the memory (softc object has garbage values)
+    for(int i = 0;i < MAX_FINGERS; i++) {
+        softc.x[i] = -1;
+        softc.y[i] = -1;
+        softc.p[i] = -1;
+        
+        softc.lastx[i] = -1;
+        softc.lasty[i] = -1;
+        softc.lastp[i] = -1;
+    }
+    
     hid_device->workLoop->retain();
     
     /*
@@ -425,7 +436,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_write_block(uint16_t addr, uint8_t *bu
     ret = rmi_write_report(writeReport, sizeof(writeReport));
     if (ret < 0) {
         IOLog("%s::%s::failed to write request output report (%d)\n", getName(), _controller->_dev->name,
-                  ret);
+              ret);
         goto exit;
     }
     ret = 0;
@@ -514,7 +525,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_scan_pdt()
             retval = rmi_read_block(i, (uint8_t *)&entry, sizeof(entry));
             if (retval) {
                 IOLog("%s::%s::Read of PDT entry at %#06x failed.\n", getName(), _controller->_dev->name,
-                          i);
+                      i);
                 goto error_exit;
             }
             
@@ -731,7 +742,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_populate_f11()
         ret = rmi_read(f11.query_base_addr + query_offset + 1, buf);
         if (ret) {
             IOLog("%s::%s::can not read gesture information: %d.\n", getName(), _controller->_dev->name,
-                      ret);
+                  ret);
             return ret;
         }
         has_palm_detect = !!(buf[0] & BIT(0));
@@ -765,7 +776,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_populate_f11()
                                  + query_offset, buf, 4);
             if (ret) {
                 IOLog("%s::%s::can not read query 15-18: %d.\n", getName(), _controller->_dev->name,
-                          ret);
+                      ret);
                 return ret;
             }
             
@@ -776,7 +787,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_populate_f11()
             y_size_mm = y_size / 10;
             
             IOLog("%s::%s::size in mm: %d x %d\n", getName(), _controller->_dev->name,
-                      x_size_mm, y_size_mm);
+                  x_size_mm, y_size_mm);
             
             /*
              * query 15 - 18 contain the size of the sensor
@@ -837,7 +848,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_populate_f11()
                         f11_ctrl_regs);
         if (ret) {
             IOLog("%s::%s::can not write to control reg 0: %d.\n", getName(), _controller->_dev->name,
-                      ret);
+                  ret);
             return ret;
         }
     }
@@ -848,7 +859,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_populate_f11()
                         &f11_ctrl_regs[11]);
         if (ret) {
             IOLog("%s::%s::can not write to control reg 11: %d.\n", getName(), _controller->_dev->name,
-                      ret);
+                  ret);
             return ret;
         }
     }
@@ -896,7 +907,7 @@ int VoodooSynapticsRMITouchpadDevice::rmi_populate_f30()
                          buf, ctrl2_3_length);
     if (ret) {
         IOLog("%s::%s::can not read ctrl 2&3 block of size %d: %d.\n", getName(), _controller->_dev->name,
-                  ctrl2_3_length, ret);
+              ctrl2_3_length, ret);
         return ret;
     }
     
@@ -1081,9 +1092,7 @@ void VoodooSynapticsRMITouchpadDevice::get_input(OSObject* owner, IOTimerEventSo
     if (rmiInput[0] != RMI_ATTN_REPORT_ID) {
         hid_device->timerSource->setTimeoutMS(10);
         return;
-    }
-    
-    IOLog("Got Input!\n");
+    }   
     
     TrackpadRawInput(&softc, rmiInput, 1);
     hid_device->timerSource->setTimeoutMS(10);

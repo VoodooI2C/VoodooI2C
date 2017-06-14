@@ -433,10 +433,6 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
         IOLog("GestureSocket: Initialised the gesture socket!\n");
     }
     
-    bool dataSent = send_input(sc);
-    if(dataSent) {
-        return;
-    }
     
 #pragma mark reset inputs
     sc->dx = 0;
@@ -472,6 +468,16 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
             a++;
         }
     }
+    
+    bool dataSent = false;
+    if(nfingers != 1 && !sc->buttondown) {
+        dataSent = send_input(sc);
+    }
+    
+    if(dataSent) {
+        return;
+    }
+    
     
 #pragma mark process different gestures
     bool handled = false;
