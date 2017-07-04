@@ -91,8 +91,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "690"
             endingLineNumber = "690"
-            landmarkName = "VoodooI2C::waitBusNotBusyI2C(I2CBus* _dev)"
-            landmarkType = "5">
+            landmarkName = "VoodooI2C::start(IOService * provider)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -136,9 +136,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "433"
-            endingLineNumber = "433"
-            landmarkName = "VoodooI2C::start(IOService * provider)"
-            landmarkType = "5">
+            endingLineNumber = "433">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
