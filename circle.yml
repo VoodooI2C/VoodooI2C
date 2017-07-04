@@ -20,4 +20,4 @@ deployment:
   release:
     branch: master
     commands:
-      - export VOODOOI2C_VERSION="$(cat version.txt)" cd build/Release && zip -r VoodooI2C.zip VoodooI2C.kext && ghr --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION VoodooI2C.zip
+      - export VOODOOI2C_VERSION="$(cat version.txt)" && cd build/Release && zip -r VoodooI2C.zip VoodooI2C.kext && ghr --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION VoodooI2C.zip
