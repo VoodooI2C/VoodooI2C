@@ -121,43 +121,41 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
     /*Known Keys:
      HIDDefaultParameters, HIDClickTime, HIDClickSpace, HIDKeyRepeat, HIDInitialKeyRepeat, HIDPointerAcceleration, HIDScrollAcceleration, HIDPointerButtonMode, HIDF12EjectDelay, EjectDelay, HIDSlowKeysDelay, HIDStickyKeysDisabled, HIDStickyKeysOn, HIDStickyKeysShiftToggles, HIDMouseKeysOptionToggles, HIDFKeyMode, HIDMouseKeysOn, HIDKeyboardModifierMappingPairs, MouseKeysStopsTrackpad, HIDScrollZoomModifierMask, HIDMouseAcceleration, HIDMouseScrollAcceleration, HIDTrackpadAcceleration, HIDTrackpadScrollAcceleration, TrackpadPinch, TrackpadFourFingerVertSwipeGesture, TrackpadRotate, TrackpadHorizScroll, TrackpadFourFingerPinchGesture, TrackpadTwoFingerDoubleTapGesture, TrackpadMomentumScroll, TrackpadThreeFingerTapGesture, TrackpadThreeFingerHorizSwipeGesture, Clicking, TrackpadScroll, DragLock, TrackpadFiveFingerPinchGesture, TrackpadThreeFingerVertSwipeGesture, TrackpadTwoFingerFromRightEdgeSwipeGesture, Dragging, TrackpadRightClick, TrackpadCornerSecondaryClick, TrackpadFourFingerHorizSwipeGesture, TrackpadThreeFingerDrag, JitterNoMove, JitterNoClick, PalmNoAction When Typing, PalmNoAction Permanent, TwofingerNoAction, OutsidezoneNoAction When Typing, Use Panther Settings for W, Trackpad Jitter Milliseconds, USBMouseStopsTrackpad, HIDWaitCursorFrameInterval*/
     
-    if (version_major >= 16){
-        /*
-        macOS 10.12 (and above)
-        Sierra fix requires the cast to be changed to OSBoolean
-        */
-        
-        OSBoolean *clicking = OSDynamicCast(OSBoolean, dict->getObject("Clicking"));
-        if(clicking) {
-            gesturerec->softc->settings.tapToClickEnabled = clicking->isTrue();
-        }
-        
-        OSBoolean *dragging = OSDynamicCast(OSBoolean, dict->getObject("Dragging"));
-        if (dragging){
-            gesturerec->softc->settings.tapDragEnabled = dragging->isTrue();
-        }
-        
-        OSBoolean *hscroll  = OSDynamicCast(OSBoolean, dict->getObject("TrackpadHorizScroll"));
-        if (hscroll){
-            horizontalScroll = hscroll->isTrue();
-        }
-        
+    /*
+     macOS 10.12 (and above)
+     Sierra fix requires the cast to be changed to OSBoolean
+     Still need the OSNumber checks as a last resort, DO NOT clean up the check statements below by checking os version
+     */
+    
+    OSBoolean *clicking = OSDynamicCast(OSBoolean, dict->getObject("Clicking"));
+    if(clicking) {
+        gesturerec->softc->settings.tapToClickEnabled = clicking->isTrue();
     } else {
-        //OS X 10.11 and below
-        
-        OSNumber *clicking = OSDynamicCast(OSNumber, dict->getObject("Clicking"));
-        if (clicking ){
-            gesturerec->softc->settings.tapToClickEnabled = clicking->unsigned32BitValue() & 0x1;
+        OSNumber *clickingNum = OSDynamicCast(OSNumber, dict->getObject("Clicking"));
+        if (clickingNum ){
+            gesturerec->softc->settings.tapToClickEnabled = clickingNum->unsigned32BitValue() & 0x1;
+        }
+    }
+    
+    OSBoolean *dragging = OSDynamicCast(OSBoolean, dict->getObject("Dragging"));
+    if (dragging){
+        gesturerec->softc->settings.tapDragEnabled = dragging->isTrue();
+    } else {
+        OSNumber *draggingNum = OSDynamicCast(OSNumber, dict->getObject("Dragging"));
+        if (draggingNum) {
+            gesturerec->softc->settings.tapDragEnabled = draggingNum->unsigned32BitValue() & 0x1;
         }
         
-        OSNumber *dragging = OSDynamicCast(OSNumber, dict->getObject("Dragging"));
-        if (dragging) {
-            gesturerec->softc->settings.tapDragEnabled = dragging->unsigned32BitValue() & 0x1;
-        }
+    }
+    
+    OSBoolean *hscroll  = OSDynamicCast(OSBoolean, dict->getObject("TrackpadHorizScroll"));
+    if (hscroll){
+        horizontalScroll = hscroll->isTrue();
+    } else {
         
-        OSNumber *hscroll = OSDynamicCast(OSNumber, dict->getObject("TrackpadHorizScroll"));
-        if(hscroll) {
-            horizontalScroll = hscroll->unsigned32BitValue() & 0x1;
+        OSNumber *hscrollNum = OSDynamicCast(OSNumber, dict->getObject("TrackpadHorizScroll"));
+        if(hscrollNum) {
+            horizontalScroll = hscrollNum->unsigned32BitValue() & 0x1;
         }
     }
     

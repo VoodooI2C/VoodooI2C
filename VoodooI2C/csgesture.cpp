@@ -140,9 +140,19 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
 bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     sc->scrollx = 0;
     sc->scrolly = 0;
+    
+    if(sc->buttondown || sc->mouseDownDueToTap) {
+        if (_scrollHandler->isScrolling()) {
+            _scrollHandler->stopScroll();
+        }
+        
+        return false;
+    }
+    
     if (abovethreshold == 2 || sc->scrollingActive) {
         int i1 = iToUse[0];
         int i2 = iToUse[1];
+        
         
         if (!sc->scrollingActive && !sc->scrollInertiaActive) {
             if (sc->truetick[i1] < 8 && sc->truetick[i2] < 8)
@@ -350,7 +360,7 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
     
     sc->tickssinceclick++;
     if (sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
-        if (sc->tickssinceclick > 10) {
+        if (sc->tickssinceclick > 0) {
             sc->mouseDownDueToTap = false;
             sc->mousedown = false;
             sc->buttonmask = 0;
@@ -391,7 +401,7 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
                 buttonmask = MOUSE_BUTTON_3;
             break;
     }
-    if (buttonmask != 0 && sc->tickssinceclick > 10 && sc->ticksincelastrelease == 0) {
+    if (buttonmask != 0 && sc->tickssinceclick > 0 && sc->ticksincelastrelease == 0) {
         sc->idForMouseDown = -1;
         sc->mouseDownDueToTap = true;
         sc->buttonmask = buttonmask;
@@ -458,7 +468,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
     if (!handled)
         handled = ProcessThreeFingerSwipe(sc, abovethreshold, iToUse);
-    if (!handled)
+    if (!handled && !sc->buttondown && !sc->mouseDownDueToTap)
         handledByScroll = handled = ProcessScroll(sc, abovethreshold, iToUse);
     if (!handled)
         handled = ProcessMove(sc, abovethreshold, iToUse);
@@ -483,6 +493,10 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
     if (!sc->mouseDownDueToTap) {
         if (sc->buttondown && !sc->mousedown) {
+            if (_scrollHandler->isScrolling()){
+                _scrollHandler->stopScroll();
+            }
+            
             sc->mousedown = true;
             sc->tickssinceclick = 0;
             
