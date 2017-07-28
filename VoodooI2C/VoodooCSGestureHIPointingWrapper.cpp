@@ -159,6 +159,7 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
         }
     }
     
+    gesturerec->softc->settings.tapToClickEnabled = true;
     gesturerec->softc->settings.multiFingerTap = true;
     
     return super::setParamProperties(dict);
