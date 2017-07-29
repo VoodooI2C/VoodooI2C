@@ -621,8 +621,6 @@ bool VoodooI2C::start(IOService * provider) {
         return false;
     }
     
-    _dev->interruptSource->enable();
-    
     //set up command gate
     
     _dev->commandGate = IOCommandGate::commandGate(this);
@@ -691,14 +689,14 @@ bool VoodooI2C::start(IOService * provider) {
     
     disableI2CInt(_dev);
     
-    
-    
     registerService();
     
     IORegistryIterator* children;
     IORegistryEntry* child;
     
     _dev->busIsAwake = true;
+    
+    _dev->interruptSource->enable();
  
     //enumerate I2C children, TODO: major refactoring
     
@@ -723,13 +721,14 @@ bool VoodooI2C::start(IOService * provider) {
                                     strcmp(getMatchedName((IOService *)child), "ELAN0600") == 0 ||
                                     strcmp(getMatchedName((IOService *)child), "ELAN0605") == 0 ||
                                     strcmp(getMatchedName((IOService *)child), "ELAN1000") == 0)){
-                                bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
+                            bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CElanTouchpadDevice);
                         } else if (strcmp(getMatchedName((IOService *)child), "SYNA0000") == 0){
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooSynapticsRMITouchpadDevice);
                         } else
                             bus_devices[bus_devices_number] = OSTypeAlloc(VoodooI2CHIDDevice);
-                        if ( !bus_devices[bus_devices_number]               ||
-                            !bus_devices[bus_devices_number]->init()       ||
+                        if (!bus_devices[bus_devices_number])
+                            continue;
+                        if (!bus_devices[bus_devices_number]->init()       ||
                             !bus_devices[bus_devices_number]->attach(this, (IOService*)child) )
                         {
                             OSSafeReleaseNULL(bus_devices[bus_devices_number]);
