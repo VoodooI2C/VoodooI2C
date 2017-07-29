@@ -34,6 +34,7 @@
 				<string>pci8086,9d61</string>
 				<string>pci8086,a160</string>
 				<string>pci8086,a161</string>
+				<string>pci8086,a162</string>
 				<string>INT33C2</string>
 				<string>INT33C3</string>
 				<string>INT3432</string>
