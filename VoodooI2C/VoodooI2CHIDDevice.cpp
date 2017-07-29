@@ -414,22 +414,26 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
 //    IOLog("getting input\n");
     UInt rsize;
     int ret;
-    
+    static unsigned char* rdesc_prev = NULL;
+    static UInt rsize_prev = 0;
+    bool new_report = true;
+
     rsize = UInt16(ihid->hdesc.wMaxInputLength);
     
     unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
     
     ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
 
-    //IOLog("===Input (%d)===\n", rsize);
-    //for (int i = 0; i < rsize; i++)
-    //    IOLog("0x%02x ", (UInt8) rdesc[i]);
-    //IOLog("\n");
+//    IOLog("===Input (%d)===\n", rsize);
+//    for (int i = 0; i < rsize; i++)
+//        IOLog("0x%02x ", (UInt8) rdesc[i]);
+//    IOLog("\n");
 
     int return_size = rdesc[0] | rdesc[1] << 8;
     if (return_size == 0) {
         /* host or device initiated RESET completed */
         // test/clear bit?
+        // IOLog("return size is %x\n", return_size);
         hid_device->timerSource->setTimeoutMS(10);
         return;
     }
@@ -441,13 +445,55 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, return_size);
     buffer->writeBytes(0, rdesc + 2, return_size - 2);
 
+#define FILTER_REPEATED_REPORTS /* Needed on my ASUS/Skylake ELAN1000 */
+
+#ifdef FILTER_REPEATED_REPORTS
+    /* Compare to previous report */
+    if (rdesc_prev)
+    {
+        /* See if they're different! */
+        if (rsize == rsize_prev)
+        {
+            if (memcmp(rdesc_prev, rdesc, rsize))
+            {
+                new_report = true;
+            } else {
+                new_report = false;
+            }
+        } else {
+            new_report = true;
+        }
+
+        /* We don't need the previous report anymore */
+        IOFree(rdesc_prev, rsize_prev);
+    }
+    else
+    {
+        new_report = true;
+    }
+
+    /* Keep for next comparison */
+    rdesc_prev = rdesc;
+    rsize_prev = rsize;
+
+    if (new_report)
+    {
+        IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
+        if (err != kIOReturnSuccess)
+            IOLog("Error handling report: 0x%.8x\n", err);
+    }
+
+#else /* non filtered for repeating reports */
     IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
     if (err != kIOReturnSuccess)
         IOLog("Error handling report: 0x%.8x\n", err);
+#endif
 
     buffer->release();
 
+#ifndef FILTER_REPEATED_REPORTS
     IOFree(rdesc, rsize);
+#endif
     
     hid_device->timerSource->setTimeoutMS(10);
 }
@@ -531,14 +577,17 @@ void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescrip
 
 bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
     int ret;
+    unsigned char buf[2];
     
     ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
     
     if (ret)
         return ret;
 
-    ret = i2c_hid_command(ihid, &hid_reset_cmd, NULL, 0);
-    if (ret) {
+    /* Need to read back two NULL bytes after reset! */
+    ret = i2c_hid_command(ihid, &hid_reset_cmd, buf, 2);
+    if (ret || (*buf != 0) || (*(buf+1) != 0))
+    {
         i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
         return ret;
     }
