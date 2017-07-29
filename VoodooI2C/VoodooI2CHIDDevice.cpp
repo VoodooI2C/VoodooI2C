@@ -537,6 +537,8 @@ bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
     
     if (ret)
         return ret;
+    
+    IOSleep(1);
 
     ret = i2c_hid_command(ihid, &hid_reset_cmd, buf, 2);
     if (ret || (*buf != 0) || (*(buf+1) != 0)) {
