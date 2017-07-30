@@ -8,6 +8,7 @@
 #include <string.h>
 #include "VoodooI2CDevice.h"
 #include "VoodooI2CHIDDevice.h"
+#include "VoodooPrecisionTouchpadDevice.h"
 #include "VoodooCyapaGen3Device.h"
 #include "VoodooElanTouchpadDevice.h"
 #include "VoodooI2CAtmelMxtScreenDevice.h"
