@@ -13,7 +13,7 @@ Most i2c-hid touchscreens and trackpads work with minor modifications to the dri
 
 # Releases
 
-The latest version is **v1.0.1s** and can be downloaded on the [release page](https://github.com/alexandred/VoodooI2C/releases).
+The latest version is **v1.0.2** and can be downloaded on the [release page](https://github.com/alexandred/VoodooI2C/releases).
 
 # Compatibility
 
