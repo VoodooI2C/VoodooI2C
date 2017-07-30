@@ -437,7 +437,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
     int abovethreshold = 0;
     int recentlyadded = 0;
-    int iToUse[3] = { -1,-1,-1 };
+    int iToUse[5] = { -1,-1,-1, -1, -1};
     int a = 0;
     
     int nfingers = 0;
