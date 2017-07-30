@@ -1,5 +1,6 @@
 #include "VoodooI2C.h"
 #include "VoodooI2CPCI.h"
+#include "VoodooI2CVirtualDevice.h"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2C, IOService);
@@ -748,6 +749,8 @@ bool VoodooI2C::start(IOService * provider) {
     }
     children->release();
 #warning "End crash with non-HID device"
+    
+    VoodooI2CVirtualDevice* virtualDevice = OSTypeAlloc(VoodooI2CVirtualDevice);
     
     
     
