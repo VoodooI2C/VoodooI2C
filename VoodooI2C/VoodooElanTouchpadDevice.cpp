@@ -112,7 +112,6 @@ bool VoodooI2CElanTouchpadDevice::attach(IOService * provider, IOService* child)
 
 bool VoodooI2CElanTouchpadDevice::probe(IOService* device) {
     
-    
     hid_device = (I2CDevice *)IOMalloc(sizeof(I2CDevice));
     
     //hid_device->_dev = _controller->_dev;
@@ -137,7 +136,7 @@ bool VoodooI2CElanTouchpadDevice::probe(IOService* device) {
     initHIDDevice(hid_device);
     
     //super::stop(device);
-    return 0;
+    return true;
 }
 
 void VoodooI2CElanTouchpadDevice::stop(IOService* device) {
@@ -156,8 +155,10 @@ void VoodooI2CElanTouchpadDevice::stop(IOService* device) {
     //hid_device->interruptSource->disable();
     hid_device->interruptSource = NULL;
     
-    hid_device->workLoop->release();
-    hid_device->workLoop = NULL;
+    if (hid_device->workLoop){
+        hid_device->workLoop->release();
+        hid_device->workLoop = NULL;
+    }
     
     IOFree(hid_device, sizeof(I2CDevice));
     

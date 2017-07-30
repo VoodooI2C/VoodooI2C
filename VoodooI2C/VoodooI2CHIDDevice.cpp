@@ -495,10 +495,10 @@ bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
      
     */
     
-    IOLog("===Report Descriptor===\n");
-    for (int i = 0; i < UInt16(ihid->hdesc.wReportDescLength); i++)
-        IOLog("0x%02x\n", (UInt8) rdesc[i]);
-    IOLog("===Report Descriptor===\n");
+//    IOLog("===Report Descriptor===\n");
+//    for (int i = 0; i < UInt16(ihid->hdesc.wReportDescLength); i++)
+//        IOLog("0x%02x\n", (UInt8) rdesc[i]);
+//    IOLog("===Report Descriptor===\n");
     
     IOFree(rdesc, rsize);
     
@@ -531,14 +531,17 @@ void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescrip
 
 bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
     int ret;
+    unsigned char buf[2];
     
     ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
     
     if (ret)
         return ret;
+    
+    IOSleep(1);
 
-    ret = i2c_hid_command(ihid, &hid_reset_cmd, NULL, 0);
-    if (ret) {
+    ret = i2c_hid_command(ihid, &hid_reset_cmd, buf, 2);
+    if (ret || (*buf != 0) || (*(buf+1) != 0)) {
         i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
         return ret;
     }
