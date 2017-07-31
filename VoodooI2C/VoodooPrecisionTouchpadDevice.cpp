@@ -367,6 +367,8 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
 
     hid_device->trackpadIsAwake = true;
     
+    hid_device->nullReportCount = 0;
+    
     initialize_wrapper();
     registerService();
     
@@ -561,6 +563,22 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
     uint8_t *report = (uint8_t *)IOMalloc(maxLen);
     memset(report, 0, maxLen);
     readI2C(report, maxLen);
+    
+    if (runLoop == 1){
+        if (report[0] == 0x00 && report[1] == 0x00){
+            hid_device->nullReportCount++;
+            
+            if (hid_device->nullReportCount >= 20){
+                IOLog("%s::%s::Too many null reports. Resetting!\n", getName(), _controller->_dev->name);
+                reset_dev();
+                enable_abs();
+                IOFree(report, maxLen);
+                return;
+            }
+        } else {
+            hid_device->nullReportCount = 0;
+        }
+    }
     
     if (report[2] == TOUCHPAD_REPORT_ID){
         int return_size = report[0] | report[1] << 8;

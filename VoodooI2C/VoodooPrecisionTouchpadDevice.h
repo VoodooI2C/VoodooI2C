@@ -90,6 +90,8 @@ public:
 
         bool trackpadIsAwake;
         
+        uint8_t nullReportCount;
+        
         UInt16 hid_descriptor_address;
         
         struct i2c_hid_descr hdesc;
