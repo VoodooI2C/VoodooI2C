@@ -81,8 +81,14 @@ void VoodooI2CPrecisionTouchpadDevice::TrackpadRawInput(struct csgesture_softc *
         if (ContactID >= 0 && ContactID < 15){
             if (ContactStatus & CONFIDENCE_BIT){
                 if (ContactStatus & TIPSWITCH_BIT){
-                    sc->x[ContactID] = report->MTouch.XValue;
-                    sc->y[ContactID] = report->MTouch.YValue;
+                    uint32_t pos_x = report->MTouch.XValue;
+                    uint32_t pos_y = report->MTouch.YValue;
+                    
+                    pos_x /= 3;
+                    pos_y /= 3;
+                    
+                    sc->x[ContactID] = pos_x;
+                    sc->y[ContactID] = pos_y;
                     sc->p[ContactID] = 10;
                 } else {
                     sc->x[ContactID] = -1;
