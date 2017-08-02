@@ -256,6 +256,8 @@ int VoodooSynapticsRMITouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     sc->phyx = max_x;
     sc->phyy = max_y;
     
+    sc->frequency = 10;
+    
     sc->infoSetup = true;
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();

@@ -345,6 +345,8 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     sc->phyx = max_x;
     sc->phyy = max_y;
     
+    sc->frequency = 5;
+    
     sc->infoSetup = true;
     
     for (int i = 0;i < MAX_FINGERS; i++) {
@@ -613,5 +615,5 @@ void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSo
     
     _wrapper->ProcessGesture(&softc);
 
-    hid_device->timerSource->setTimeoutMS(10);
+    hid_device->timerSource->setTimeoutMS(5);
 }

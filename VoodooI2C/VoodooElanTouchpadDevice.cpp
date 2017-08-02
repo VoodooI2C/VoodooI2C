@@ -287,6 +287,8 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     IOLog("%s::%s::[Elan Trackpad test] ProdID: %d Vers: %d Csum: %d SmVers: %d ICType: %d IAPVers: %d Max X: %d Max Y: %d\n", getName(), _controller->_dev->name, prodid, version, ictype, csum, smvers, iapversion, max_x, max_y);
     
+    sc->frequency = 10;
+    
     sc->infoSetup = true;
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();

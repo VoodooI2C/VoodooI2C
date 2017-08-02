@@ -96,9 +96,11 @@ int CSGesture::distancesq(int delta_x, int delta_y){
 }
 
 bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+    int frequmult = 10 / sc->frequency;
+    
     if (abovethreshold == 1 || sc->panningActive) {
         int i = iToUse[0];
-        if (!sc->panningActive && sc->tick[i] < 5)
+        if (!sc->panningActive && sc->tick[i] < (5 * frequmult))
             return false;
         
         _scrollHandler->softc = sc;
@@ -119,7 +121,7 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
             if (j != i) {
                 if (sc->blacklistedids[j] != 1) {
                     if (sc->y[j] > sc->y[i]) {
-                        if (sc->truetick[j] > sc->truetick[i] + 15) {
+                        if (sc->truetick[j] > sc->truetick[i] + (15 * frequmult)) {
                             sc->blacklistedids[j] = 1;
                         }
                     }
@@ -138,6 +140,8 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
 }
 
 bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+    int frequmult = 10 / sc->frequency;
+    
     sc->scrollx = 0;
     sc->scrolly = 0;
     
@@ -155,7 +159,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         
         
         if (!sc->scrollingActive && !sc->scrollInertiaActive) {
-            if (sc->truetick[i1] < 8 && sc->truetick[i2] < 8)
+            if (sc->truetick[i1] < (8 * frequmult) && sc->truetick[i2] < (8 * frequmult))
                 return false;
         }
         
@@ -260,7 +264,7 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
             sc->ticksSinceScrolling = 0;
         else
             sc->ticksSinceScrolling++;
-        if (fngrcount == 2 || sc->ticksSinceScrolling <= 5) {
+        if (fngrcount == 2 || sc->ticksSinceScrolling <= (5 * frequmult)) {
             sc->scrollingActive = true;
             if (abovethreshold == 2){
                 sc->idsForScrolling[0] = iToUse[0];
@@ -412,8 +416,9 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
 }
 
 void CSGesture::ClearTapDrag(csgesture_softc *sc, int i) {
+    int frequmult = 10 / sc->frequency;
     if (i == sc->idForMouseDown && sc->mouseDownDueToTap == true) {
-        if (sc->tick[i] < 10) {
+        if (sc->tick[i] < (10 * frequmult)) {
             //Double Tap
             update_relative_mouse(0, 0, 0, 0, 0);
             update_relative_mouse(sc->buttonmask, 0, 0, 0, 0);
@@ -427,6 +432,7 @@ void CSGesture::ClearTapDrag(csgesture_softc *sc, int i) {
 }
 
 void CSGesture::ProcessGesture(csgesture_softc *sc) {
+    int frequmult = 10 / sc->frequency;
 #pragma mark reset inputs
     sc->dx = 0;
     sc->dy = 0;
@@ -447,7 +453,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     }
     
     for (int i = 0;i < MAX_FINGERS;i++) {
-        if (sc->truetick[i] < 30 && sc->truetick[i] != 0)
+        if (sc->truetick[i] < (30 * frequmult) && sc->truetick[i] != 0)
             recentlyadded++;
         if (sc->tick[i] == 0)
             continue;
@@ -526,13 +532,13 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     for (int i = 0;i < MAX_FINGERS;i++) {
         if (sc->x[i] != -1) {
             if (sc->lastx[i] == -1) {
-                if (sc->ticksincelastrelease < 10 && sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
+                if (sc->ticksincelastrelease < (10 * frequmult) && sc->mouseDownDueToTap && sc->idForMouseDown == -1) {
                     if (sc->settings.tapDragEnabled)
                         sc->idForMouseDown = i; //Associate Tap Drag
                 }
             }
             sc->truetick[i]++;
-            if (sc->tick[i] < 10) {
+            if (sc->tick[i] < (10 * frequmult)) {
                 if (sc->lastx[i] != -1) {
                     sc->totalx[i] += abs(sc->x[i] - sc->lastx[i]);
                     sc->totaly[i] += abs(sc->y[i] - sc->lasty[i]);
@@ -559,7 +565,7 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
                 
                 sc->flextotalx[i] -= sc->xhistory[i][0];
                 sc->flextotaly[i] -= sc->yhistory[i][0];
-                for (int j = 1;j < 10;j++) {
+                for (int j = 1;j < (10 * frequmult);j++) {
                     sc->xhistory[i][j - 1] = sc->xhistory[i][j];
                     sc->yhistory[i][j - 1] = sc->yhistory[i][j];
                 }
@@ -575,11 +581,11 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
             ClearTapDrag(sc, i);
             if (sc->lastx[i] != -1)
                 sc->ticksincelastrelease = -1;
-            for (int j = 0;j < 10;j++) {
+            for (int j = 0;j < (10 * frequmult);j++) {
                 sc->xhistory[i][j] = 0;
                 sc->yhistory[i][j] = 0;
             }
-            if (sc->tick[i] < 10 && sc->tick[i] != 0) {
+            if (sc->tick[i] < (10 * frequmult) && sc->tick[i] != 0) {
                 releasedfingers++;
             }
             sc->totalx[i] = 0;

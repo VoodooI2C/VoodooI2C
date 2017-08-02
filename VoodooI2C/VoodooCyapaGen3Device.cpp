@@ -203,6 +203,9 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     sc->product_id[15] = '\0';
     
     sprintf(sc->firmware_version, "%d.%d", cap.fw_maj_ver, cap.fw_min_ver);
+    
+    sc->frequency = 10;
+    
     sc->infoSetup = true;
     
     cyapa_set_power_mode(CMD_POWER_MODE_FULL);
