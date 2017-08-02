@@ -153,7 +153,8 @@ void VoodooSynapticsRMITouchpadDevice::TrackpadRawInput(struct csgesture_softc *
         index += rmi_f11_input(sc, &report[index]);
     }
     
-    _wrapper->ProcessGesture(sc);
+    if (_wrapper)
+        _wrapper->ProcessGesture(sc);
 }
 
 bool VoodooSynapticsRMITouchpadDevice::attach(IOService * provider, IOService* child)
@@ -222,6 +223,8 @@ void VoodooSynapticsRMITouchpadDevice::stop(IOService* device) {
     hid_device->workLoop = NULL;
     
     IOFree(hid_device, sizeof(I2CDevice));
+    
+    PMstop();
     
     //hid_device->provider->close(this);
     
@@ -341,7 +344,11 @@ void VoodooSynapticsRMITouchpadDevice::initialize_wrapper(void) {
 }
 
 void VoodooSynapticsRMITouchpadDevice::destroy_wrapper(void) {
-    _wrapper->destroy_wrapper();
+    if (_wrapper){
+        _wrapper->destroy_wrapper();
+        delete _wrapper;
+        _wrapper = NULL;
+    }
 }
 
 #define EIO              5      /* I/O error */

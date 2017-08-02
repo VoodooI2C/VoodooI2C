@@ -177,6 +177,8 @@ void VoodooI2CPrecisionTouchpadDevice::stop(IOService* device) {
     
     IOFree(hid_device, sizeof(I2CDevice));
     
+    PMstop();
+    
     //hid_device->provider->close(this);
     
 }
@@ -417,7 +419,11 @@ void VoodooI2CPrecisionTouchpadDevice::initialize_wrapper(void) {
 }
 
 void VoodooI2CPrecisionTouchpadDevice::destroy_wrapper(void) {
-    _wrapper->destroy_wrapper();
+    if (_wrapper){
+        _wrapper->destroy_wrapper();
+        delete _wrapper;
+        _wrapper = NULL;
+    }
 }
 
 #define EIO              5      /* I/O error */
@@ -613,7 +619,8 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
 void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
     readInput(1);
     
-    _wrapper->ProcessGesture(&softc);
+    if (_wrapper)
+        _wrapper->ProcessGesture(&softc);
 
     hid_device->timerSource->setTimeoutMS(5);
 }

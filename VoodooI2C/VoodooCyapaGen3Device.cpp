@@ -38,7 +38,8 @@ void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyap
     
     sc->buttondown = (regs->fngr & CYAPA_FNGR_LEFT);
     
-    _wrapper->ProcessGesture(sc);
+    if (_wrapper)
+        _wrapper->ProcessGesture(sc);
 }
 
 bool VoodooI2CCyapaGen3Device::attach(IOService * provider, IOService* child)
@@ -107,6 +108,8 @@ void VoodooI2CCyapaGen3Device::stop(IOService* device) {
     hid_device->workLoop = NULL;
     
     IOFree(hid_device, sizeof(I2CDevice));
+    
+    PMstop();
     
     //hid_device->provider->close(this);
     
@@ -290,7 +293,11 @@ void VoodooI2CCyapaGen3Device::initialize_wrapper(void) {
 }
 
 void VoodooI2CCyapaGen3Device::destroy_wrapper(void) {
-    _wrapper->destroy_wrapper();
+    if (_wrapper){
+        _wrapper->destroy_wrapper();
+        delete _wrapper;
+        _wrapper = NULL;
+    }
 }
 
 #define EIO              5      /* I/O error */
