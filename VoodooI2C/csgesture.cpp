@@ -103,8 +103,10 @@ bool CSGesture::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[
         if (!sc->panningActive && sc->tick[i] < (5 * frequmult))
             return false;
         
-        _scrollHandler->softc = sc;
-        _scrollHandler->stopScroll();
+        if (_scrollHandler){
+            _scrollHandler->softc = sc;
+            _scrollHandler->stopScroll();
+        }
         
         if (sc->panningActive && i == -1)
             i = sc->idForPanning;
@@ -146,8 +148,10 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
     sc->scrolly = 0;
     
     if(sc->buttondown || sc->mouseDownDueToTap) {
-        if (_scrollHandler->isScrolling()) {
-            _scrollHandler->stopScroll();
+        if (_scrollHandler){
+            if (_scrollHandler->isScrolling()) {
+                _scrollHandler->stopScroll();
+            }
         }
         
         return false;
@@ -243,11 +247,13 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
         if (abs(scrollx) < 5 && abs(scrolly) < 5 && !sc->scrollingActive)
             return false;
 
-        _scrollHandler->softc = sc;
-        _scrollHandler->ProcessScroll(filterNegative(sc->x[i1]),
+        if (_scrollHandler){
+            _scrollHandler->softc = sc;
+            _scrollHandler->ProcessScroll(filterNegative(sc->x[i1]),
                                       filterNegative(sc->y[i1]),
                                       filterNegative(sc->x[i2]),
                                       filterNegative(sc->y[i2]));
+        }
         //_pointingWrapper->updateScroll(sc->scrolly, sc->scrollx, 0);
         
         int fngrcount = 0;
@@ -283,9 +289,10 @@ bool CSGesture::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUs
 
 bool CSGesture::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
     if (abovethreshold == 3 || abovethreshold == 4) {
-        _scrollHandler->softc = sc;
-        _scrollHandler->stopScroll();
-        
+        if (_scrollHandler){
+            _scrollHandler->softc = sc;
+            _scrollHandler->stopScroll();
+        }
         int i1 = iToUse[0];
         int delta_x1 = sc->x[i1] - sc->lastx[i1];
         int delta_y1 = sc->y[i1] - sc->lasty[i1];
@@ -385,9 +392,11 @@ void CSGesture::TapToClickOrDrag(csgesture_softc *sc, int button) {
     if (button == 0)
         return;
     
-    if (_scrollHandler->isScrolling()){
-        _scrollHandler->stopScroll();
-        return;
+    if (_scrollHandler){
+        if (_scrollHandler->isScrolling()){
+            _scrollHandler->stopScroll();
+            return;
+        }
     }
     
     int buttonmask = 0;
@@ -499,8 +508,10 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
     
     if (!sc->mouseDownDueToTap) {
         if (sc->buttondown && !sc->mousedown) {
-            if (_scrollHandler->isScrolling()){
-                _scrollHandler->stopScroll();
+            if (_scrollHandler){
+                if (_scrollHandler->isScrolling()){
+                    _scrollHandler->stopScroll();
+                }
             }
             
             sc->mousedown = true;
@@ -628,7 +639,9 @@ void CSGesture::wakeFromSleep(){
 }
 
 void CSGesture::initialize_wrapper(IOService *service) {
-    destroy_wrapper();
+    _wrapper = NULL;
+    _pointingWrapper = NULL;
+    _scrollHandler = NULL;
     
     //IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     _wrapper = new VoodooCSGestureHIDWrapper;
@@ -670,6 +683,15 @@ void CSGesture::initialize_wrapper(IOService *service) {
 }
 
 void CSGesture::destroy_wrapper(void) {
+    if (_scrollHandler != NULL){
+        _scrollHandler->stop();
+        _scrollHandler->_pointingWrapper = NULL;
+        _scrollHandler->_gestureEngine = NULL;
+        _scrollHandler->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        _scrollHandler->release();
+        _scrollHandler = NULL;
+    }
+    
     if (_wrapper != NULL) {
         _wrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
         _wrapper->release();
@@ -681,17 +703,11 @@ void CSGesture::destroy_wrapper(void) {
         _pointingWrapper->release();
         _pointingWrapper = NULL;
     }
-    
-    if (_scrollHandler != NULL){
-        _scrollHandler->stop();
-        _scrollHandler->terminate(kIOServiceRequired | kIOServiceSynchronous);
-        _scrollHandler->release();
-        _scrollHandler = NULL;
-    }
 }
 
 void CSGesture::update_relative_mouse(char button, char x, char y, char wheelPosition, char wheelHPosition){
-    _pointingWrapper->updateRelativeMouse(x, y, button);
+    if (_pointingWrapper)
+        _pointingWrapper->updateRelativeMouse(x, y, button);
 }
 
 void CSGesture::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODES]) {
@@ -705,10 +721,11 @@ void CSGesture::update_keyboard(uint8_t shiftKeys, uint8_t keyCodes[KBD_KEY_CODE
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report));
     buffer->writeBytes(0, &report, sizeof(report));
     
-    IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
-    if (err != kIOReturnSuccess)
-        IOLog("Error handling report: 0x%.8x\n", err);
-    
+    if (_wrapper){
+        IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
+        if (err != kIOReturnSuccess)
+            IOLog("Error handling report: 0x%.8x\n", err);
+    }
     buffer->release();
     
 }
