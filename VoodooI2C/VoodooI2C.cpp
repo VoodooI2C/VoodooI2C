@@ -21,15 +21,6 @@ struct dw_scl_sda_cfg {
     uint32_t sda_hold;
 };
 
-/* BayTrail HCNT/LCNT/SDA hold time */
-static struct dw_scl_sda_cfg byt_config = {
-    .ss_hcnt = 0x200,
-    .fs_hcnt = 0x55,
-    .ss_lcnt = 0x200,
-    .fs_lcnt = 0x99,
-    .sda_hold = 0x6,
-};
-
 /* Haswell HCNT/LCNT/SDA hold time */
 static struct dw_scl_sda_cfg hsw_config = {
     .ss_hcnt = 0x01b0,

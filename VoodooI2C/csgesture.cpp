@@ -558,9 +558,6 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
                 int absx = abs(sc->x[i] - sc->lastx[i]);
                 int absy = abs(sc->y[i] - sc->lasty[i]);
                 
-                int newtotalx = sc->flextotalx[i] - sc->xhistory[i][0] + absx;
-                int newtotaly = sc->flextotaly[i] - sc->yhistory[i][0] + absy;
-                
                 sc->totalx[i] += absx;
                 sc->totaly[i] += absy;
                 
