@@ -81,8 +81,14 @@ void VoodooI2CPrecisionTouchpadDevice::TrackpadRawInput(struct csgesture_softc *
         if (ContactID >= 0 && ContactID < 15){
             if (ContactStatus & CONFIDENCE_BIT){
                 if (ContactStatus & TIPSWITCH_BIT){
-                    sc->x[ContactID] = report->MTouch.XValue;
-                    sc->y[ContactID] = report->MTouch.YValue;
+                    uint32_t pos_x = report->MTouch.XValue;
+                    uint32_t pos_y = report->MTouch.YValue;
+                    
+                    pos_x /= 3;
+                    pos_y /= 3;
+                    
+                    sc->x[ContactID] = pos_x;
+                    sc->y[ContactID] = pos_y;
                     sc->p[ContactID] = 10;
                 } else {
                     sc->x[ContactID] = -1;
@@ -170,6 +176,8 @@ void VoodooI2CPrecisionTouchpadDevice::stop(IOService* device) {
     }
     
     IOFree(hid_device, sizeof(I2CDevice));
+    
+    PMstop();
     
     //hid_device->provider->close(this);
     
@@ -339,6 +347,8 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     sc->phyx = max_x;
     sc->phyy = max_y;
     
+    sc->frequency = 5;
+    
     sc->infoSetup = true;
     
     for (int i = 0;i < MAX_FINGERS; i++) {
@@ -409,7 +419,11 @@ void VoodooI2CPrecisionTouchpadDevice::initialize_wrapper(void) {
 }
 
 void VoodooI2CPrecisionTouchpadDevice::destroy_wrapper(void) {
-    _wrapper->destroy_wrapper();
+    if (_wrapper){
+        _wrapper->destroy_wrapper();
+        delete _wrapper;
+        _wrapper = NULL;
+    }
 }
 
 #define EIO              5      /* I/O error */
@@ -605,7 +619,8 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
 void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
     readInput(1);
     
-    _wrapper->ProcessGesture(&softc);
+    if (_wrapper)
+        _wrapper->ProcessGesture(&softc);
 
-    hid_device->timerSource->setTimeoutMS(10);
+    hid_device->timerSource->setTimeoutMS(5);
 }

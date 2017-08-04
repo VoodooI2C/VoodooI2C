@@ -52,6 +52,13 @@ void CSGestureScroll::disableScrollingDelayLaunch(){
         return;
     
     cancelDelayScroll = false;
+    
+    if (_disableScrollDelayTimer){
+        _disableScrollDelayTimer->cancelTimeout();
+        _disableScrollDelayTimer->release();
+        _disableScrollDelayTimer = NULL;
+    }
+    
     _disableScrollDelayTimer = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &CSGestureScroll::disableScrollDelayed));
     _workLoop->addEventSource(_disableScrollDelayTimer);
     _disableScrollDelayTimer->setTimeoutMS(300);

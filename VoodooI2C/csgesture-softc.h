@@ -62,8 +62,8 @@ struct csgesture_softc {
     int lasty[15];
     int lastp[15];
     
-    int xhistory[15][10];
-    int yhistory[15][10];
+    int xhistory[15][50];
+    int yhistory[15][50];
     
     int flextotalx[15];
     int flextotaly[15];
@@ -81,6 +81,8 @@ struct csgesture_softc {
     int truetick[15];
     int ticksincelastrelease;
     int tickssinceclick;
+    
+    int frequency; //maximum 10 ms, minimum 2 ms
 };
 
 #endif /* csgesture_softc_h */

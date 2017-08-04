@@ -91,7 +91,8 @@ void VoodooI2CElanTouchpadDevice::TrackpadRawInput(struct csgesture_softc *sc, u
     }
     sc->buttondown = (tp_info & 0x01);
     
-    _wrapper->ProcessGesture(sc);
+    if (_wrapper)
+        _wrapper->ProcessGesture(sc);
 }
 
 bool VoodooI2CElanTouchpadDevice::attach(IOService * provider, IOService* child)
@@ -161,6 +162,8 @@ void VoodooI2CElanTouchpadDevice::stop(IOService* device) {
     }
     
     IOFree(hid_device, sizeof(I2CDevice));
+    
+    PMstop();
     
     //hid_device->provider->close(this);
     
@@ -285,7 +288,9 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     sc->phyx = max_x;
     sc->phyy = max_y;
     
-    IOLog("%s::%s::[Elan Trackpad test] ProdID: %d Vers: %d Csum: %d SmVers: %d ICType: %d IAPVers: %d Max X: %d Max Y: %d\n", getName(), _controller->_dev->name, prodid, version, ictype, csum, smvers, iapversion, max_x, max_y);
+    IOLog("%s::%s::[Elan Trackpad] ProdID: %d Vers: %d Csum: %d SmVers: %d ICType: %d IAPVers: %d Max X: %d Max Y: %d\n", getName(), _controller->_dev->name, prodid, version, ictype, csum, smvers, iapversion, max_x, max_y);
+    
+    sc->frequency = 5;
     
     sc->infoSetup = true;
     
@@ -370,7 +375,11 @@ void VoodooI2CElanTouchpadDevice::initialize_wrapper(void) {
 }
 
 void VoodooI2CElanTouchpadDevice::destroy_wrapper(void) {
-    _wrapper->destroy_wrapper();
+    if (_wrapper){
+        _wrapper->destroy_wrapper();
+        delete _wrapper;
+        _wrapper = NULL;
+    }
 }
 
 #define EIO              5      /* I/O error */
@@ -573,5 +582,5 @@ void VoodooI2CElanTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource*
     }
     
     TrackpadRawInput(&softc, prevreport, 1);
-    hid_device->timerSource->setTimeoutMS(10);
+    hid_device->timerSource->setTimeoutMS(5);
 }

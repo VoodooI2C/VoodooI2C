@@ -72,6 +72,8 @@ public:
         
         bool reading;
         
+        bool deviceIsAwake;
+        
     } I2CDevice;
     
     I2CDevice* hid_device;
@@ -172,6 +174,7 @@ public:
     
     struct i2c_hid_cmd hid_set_power_cmd = { I2C_HID_CMD(0x08) };
     
+    virtual IOReturn setPowerState(unsigned long powerState, IOService *whatDevice) override;
     
     int initHIDDevice(I2CDevice *hid_device);
     
