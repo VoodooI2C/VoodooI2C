@@ -633,28 +633,23 @@ void CSGesture::initialize_wrapper(IOService *service) {
     _pointingWrapper = NULL;
     _scrollHandler = NULL;
     
-    //IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     _wrapper = new VoodooCSGestureHIDWrapper;
     if (_wrapper->init()) {
-        //IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->gestureEngine = this;
         _wrapper->attach(service);
         _wrapper->start(service);
     }
     else {
-        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->release();
         _wrapper = NULL;
     }
     
     _pointingWrapper = new VoodooCSGestureHIPointingWrapper;
     if (_pointingWrapper->init()){
-        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _pointingWrapper->gesturerec = this;
         _pointingWrapper->attach(service);
         _pointingWrapper->start(service);
     } else {
-        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _pointingWrapper->release();
         _pointingWrapper = NULL;
     }
