@@ -6,6 +6,7 @@
 //
 
 #include "VoodooI2CController.hpp"
+#include "VoodooI2CControllerNub.hpp"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CController, IOService);
@@ -90,6 +91,46 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 }
 
 /**
+ Publishes a `VoodooI2CControllerNub` entry into the IORegistry for matching
+
+ @return returns kIOReturnSuccess if successful, else kIOReturnError
+ */
+
+IOReturn VoodooI2CController::publishNub() {
+    IOLog("%s::%s Publishing nub\n", getName(), physical_device->name);
+
+    nub = new VoodooI2CControllerNub;
+
+    if (!nub || !nub->init()) {
+        IOLog("%s::%s Could not initialise nub", getName(), physical_device->name);
+        goto exit;
+    }
+
+    if (!nub->attach(this)) {
+        IOLog("%s::%s Could not attach nub", getName(), physical_device->name);
+        goto exit;
+    }
+
+    if (!nub->start(this)) {
+        IOLog("%s::%s Could not start nub", getName(), physical_device->name);
+        goto exit;
+    }
+
+    nub->registerService();
+
+    return kIOReturnSuccess;
+
+exit:
+    if (nub) {
+        nub->stop(this);
+            nub->release();
+            nub = NULL;
+    }
+
+    return kIOReturnError;
+}
+
+/**
  Reads the register of the controller at the offset
 
  @param offset
@@ -98,6 +139,38 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
  */
 UInt32 VoodooI2CController::readRegister(int offset) {
     return *(const volatile UInt32 *)(physical_device->mmap->getVirtualAddress() + offset);
+}
+
+/**
+ Releases the driver resources retained by `start`
+ */
+
+void VoodooI2CController::releaseResources() {
+    if (physical_device) {
+        if (nub) {
+            nub->detach(this);
+            OSSafeRelease(nub);
+        }
+
+        if (physical_device->mmap) {
+            physical_device->mmap->release();
+            physical_device->mmap = NULL;
+        }
+
+        if (physical_device->interrupt_source) {
+            physical_device->interrupt_source->disable();
+            physical_device->work_loop->removeEventSource(physical_device->interrupt_source);
+            physical_device->interrupt_source->release();
+            physical_device->interrupt_source = NULL;
+        }
+        if (physical_device->work_loop)
+            OSSafeReleaseNULL(physical_device->work_loop);
+
+        physical_device->provider->close(this);
+        OSSafeReleaseNULL(physical_device->provider);
+    }
+
+    PMstop();
 }
 
 /**
@@ -122,7 +195,7 @@ IOReturn VoodooI2CController::setPowerState(unsigned long whichState, IOService 
 
 bool VoodooI2CController::start(IOService* provider) {
     if (!super::start(provider)) {
-        return false;
+        goto exit;
     }
 
     physical_device->provider = provider;
@@ -135,12 +208,13 @@ bool VoodooI2CController::start(IOService* provider) {
     IOLog("%s::%s Starting I2C controller\n", getName(), physical_device->name);
 
     physical_device->provider->retain();
-    if (!physical_device->provider->open(this))
-        return NULL;
+    if (!physical_device->provider->open(this)) {
+        IOLog("%s::%s Could not open provider\n", getName(), physical_device->name);
+    }
 
     physical_device->work_loop = reinterpret_cast<IOWorkLoop*>(getWorkLoop());
     if (!physical_device->work_loop) {
-        IOLog("%s::%s Failed to get work loop\n", getName(), physical_device->name);
+        IOLog("%s::%s Could not get work loop\n", getName(), physical_device->name);
         return NULL;
     }
 
@@ -151,18 +225,22 @@ bool VoodooI2CController::start(IOService* provider) {
 
     if (!physical_device->interrupt_source || physical_device->work_loop->addEventSource(physical_device->interrupt_source) != kIOReturnSuccess) {
         IOLog("%s::%s::Could not add interrupt source to work loop\n", getName(), physical_device->name);
-        return NULL;
+        goto exit;
     }
 
     physical_device->interrupt_source->enable();
 
     physical_device->command_gate = IOCommandGate::commandGate(this);
     if (!physical_device->command_gate || (physical_device->work_loop->addEventSource(physical_device->command_gate) != kIOReturnSuccess)) {
-        IOLog("%s::%s::Failed to open command gate\n", getName(), physical_device->name);
-        return false;
+        IOLog("%s::%s Could not open command gate\n", getName(), physical_device->name);
+        goto exit;
     }
 
     return true;
+
+exit:
+    releaseResources();
+    return false;
 }
 
 /**
@@ -172,35 +250,13 @@ bool VoodooI2CController::start(IOService* provider) {
  */
 
 void VoodooI2CController::stop(IOService* provider) {
-    if (physical_device) {
-        if (physical_device->mmap) {
-            physical_device->mmap->release();
-            physical_device->mmap = NULL;
-        }
-
-        if (physical_device->command_gate) {
-            physical_device->work_loop->removeEventSource(physical_device->command_gate);
-            physical_device->command_gate->release();
-            physical_device->command_gate = NULL;
-        }
-
-        if (physical_device->interrupt_source) {
-            physical_device->interrupt_source->disable();
-            physical_device->work_loop->removeEventSource(physical_device->interrupt_source);
-            physical_device->interrupt_source->release();
-            physical_device->interrupt_source = NULL;
-        }
-        if (physical_device->work_loop)
-            OSSafeReleaseNULL(physical_device->work_loop);
-
-       // if (physical_device->pci_device)
-        //    physical_device->pci_device = NULL;
-
-        physical_device->provider->close(this);
-        OSSafeReleaseNULL(physical_device->provider);
+    if (nub) {
+        nub->stop(this);
+        nub->release();
+        nub = NULL;
     }
 
-    PMstop();
+    releaseResources();
 
     super::stop(provider);
 }

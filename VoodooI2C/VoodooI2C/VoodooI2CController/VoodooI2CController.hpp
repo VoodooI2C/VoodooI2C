@@ -23,8 +23,8 @@
 #define kACPIDevicePathKey "acpi-path"
 #endif
 
-#define kIOPMPowerOff               0
-#define kVoodooI2CIOPMNumberPowerStates 2
+#define kIOPMPowerOff                       0
+#define kVoodooI2CIOPMNumberPowerStates     2
 
 enum VoodooI2CACPIControllerACPIPowerState {
     kVoodooI2CACPIControllerACPIPowerStateOn = 1,
@@ -49,6 +49,7 @@ typedef struct {
     IOWorkLoop* work_loop;
 } VoodooI2CControllerPhysicalDevice;
 
+class VoodooI2CControllerNub;
 
 class VoodooI2CController : public IOService {
   OSDeclareDefaultStructors(VoodooI2CController);
@@ -64,11 +65,13 @@ class VoodooI2CController : public IOService {
 
     // data members
 
+    VoodooI2CControllerNub* nub;
     VoodooI2CControllerPhysicalDevice* physical_device;
 
  protected:
     virtual void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     IOReturn mapMemory();
+    IOReturn publishNub();
     // void releaseMemory();
 
  private:
@@ -80,6 +83,7 @@ class VoodooI2CController : public IOService {
 
     virtual void free();
     virtual bool init(OSDictionary* properties);
+    void releaseResources();
     virtual IOReturn setPowerState(unsigned long whichState, IOService * whatDevice);
 };
 

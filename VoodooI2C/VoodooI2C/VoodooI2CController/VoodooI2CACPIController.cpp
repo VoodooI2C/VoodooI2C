@@ -90,6 +90,11 @@ bool VoodooI2CACPIController::start(IOService* provider) {
         return false;
     }
 
+    if (publishNub() != kIOReturnSuccess) {
+        IOLog("%s::%s Could not publish nub\n", getName(), physical_device->name);
+        return false;
+    }
+
     registerService();
 
     return true;

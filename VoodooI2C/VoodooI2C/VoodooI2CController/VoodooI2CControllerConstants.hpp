@@ -1,0 +1,80 @@
+//
+//  VoodooI2CControllerConstants.h
+//  VoodooI2C
+//
+//  Created by Alexandre on 05/08/2017.
+//  Copyright © 2017 Alexandre Daoud. All rights reserved.
+//
+
+#ifndef VoodooI2CControllerConstants_h
+#define VoodooI2CControllerConstants_h
+
+#define LPSS_PRIVATE_CLOCK_GATING              0x800
+
+#define DW_IC_CON_MASTER                0x1
+#define DW_IC_CON_SPEED_STD             0x2
+#define DW_IC_CON_SPEED_FAST            0x4
+#define DW_IC_CON_10BITADDR_MASTER      0x10
+#define DW_IC_CON_RESTART_EN            0x20
+#define DW_IC_CON_SLAVE_DISABLE         0x40
+
+#define I2C_FUNC_I2C                    0x00000001
+#define I2C_FUNC_10BIT_ADDR             0x00000002
+#define I2C_FUNC_SMBUS_READ_BYTE        0x00020000
+#define I2C_FUNC_SMBUS_WRITE_BYTE       0x00040000
+#define I2C_FUNC_SMBUS_READ_BYTE_DATA   0x00080000
+#define I2C_FUNC_SMBUS_WRITE_BYTE_DATA  0x00100000
+#define I2C_FUNC_SMBUS_READ_WORD_DATA   0x00200000
+#define I2C_FUNC_SMBUS_WRITE_WORD_DATA  0x00400000
+#define I2C_FUNC_SMBUS_READ_I2C_BLOCK   0x04000000
+#define I2C_FUNC_SMBUS_WRITE_I2C_BLOCK  0x08000000
+
+#define I2C_FUNC_SMBUS_BYTE (I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE)
+#define I2C_FUNC_SMBUS_BYTE_DATA (I2C_FUNC_SMBUS_READ_BYTE_DATA | I2C_FUNC_SMBUS_WRITE_BYTE_DATA)
+#define I2C_FUNC_SMBUS_WORD_DATA (I2C_FUNC_SMBUS_READ_WORD_DATA | I2C_FUNC_SMBUS_WRITE_WORD_DATA)
+#define I2C_FUNC_SMBUS_I2C_BLOCK (I2C_FUNC_SMBUS_READ_I2C_BLOCK | I2C_FUNC_SMBUS_WRITE_I2C_BLOCK)
+
+#define DW_IC_CON 0x0
+#define DW_IC_TAR 0x4
+#define DW_IC_SAR 0x8
+#define DW_IC_DATA_CMD 0x10
+#define DW_IC_SS_SCL_HCNT 0x14
+#define DW_IC_SS_SCL_LCNT 0x18
+#define DW_IC_FS_SCL_HCNT 0x1c
+#define DW_IC_FS_SCL_LCNT 0x20
+#define DW_IC_INTR_STAT 0x2c
+#define DW_IC_INTR_MASK 0x30
+#define DW_IC_RAW_INTR_STAT 0x34
+#define DW_IC_RX_TL 0x38
+#define DW_IC_TX_TL 0x3c
+#define DW_IC_CLR_INTR 0x40
+#define DW_IC_CLR_RX_UNDER 0x44
+#define DW_IC_CLR_RX_OVER 0x48
+#define DW_IC_CLR_TX_OVER 0x4c
+#define DW_IC_CLR_RD_REQ 0x50
+#define DW_IC_CLR_TX_ABRT 0x54
+#define DW_IC_CLR_RX_DONE 0x58
+#define DW_IC_CLR_ACTIVITY 0x5c
+#define DW_IC_CLR_STOP_DET 0x60
+#define DW_IC_CLR_START_DET 0x64
+#define DW_IC_CLR_GEN_CALL 0x68
+#define DW_IC_ENABLE 0x6c
+#define DW_IC_STATUS 0x70
+#define DW_IC_TXFLR 0x74
+#define DW_IC_RXFLR 0x78
+#define DW_IC_SDA_HOLD 0x7c
+#define DW_IC_TX_ABRT_SOURCE 0x80
+#define DW_IC_DMA_CR 0x88
+#define DW_IC_DMA_TDLR 0x8c
+#define DW_IC_DMA_RDLR 0x90
+#define DW_IC_SDA_SETUP 0x94
+#define DW_IC_ENABLE_STATUS 0x9c
+#define DW_IC_FS_SPKLEN 0xA0
+#define DW_IC_COMP_PARAM_1 0xf4
+#define DW_IC_COMP_VERSION 0xf8
+#define DW_IC_SDA_HOLD_MIN_VERS 0x3131312A
+#define DW_IC_COMP_TYPE 0xfc
+#define DW_IC_COMP_TYPE_VALUE 0x44570140
+
+
+#endif /* VoodooI2CControllerConstants_h */

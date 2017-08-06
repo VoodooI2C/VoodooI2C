@@ -131,6 +131,11 @@ bool VoodooI2CPCIController::start(IOService* provider) {
 
     skylakeLPSSResetHack();
 
+    if (publishNub() != kIOReturnSuccess) {
+        IOLog("%s::%s Could not publish nub\n", getName(), physical_device->name);
+        return false;
+    }
+
     registerService();
 
     return true;

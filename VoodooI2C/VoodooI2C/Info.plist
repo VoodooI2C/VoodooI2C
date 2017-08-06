@@ -57,7 +57,17 @@
             <key>IOProviderClass</key>
             <string>IOService</string>
         </dict>
-
+        <key>VoodooI2CControllerDriver</key>
+        <dict>
+            <key>IOClass</key>
+            <string>VoodooI2CControllerDriver</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.alexandred.VoodooI2C</string>
+            <key>IOProbeScore</key>
+            <integer>9999</integer>
+            <key>IOProviderClass</key>
+            <string>VoodooI2CControllerNub</string>
+        </dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
