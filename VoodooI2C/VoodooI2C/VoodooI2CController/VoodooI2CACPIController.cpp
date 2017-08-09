@@ -12,24 +12,13 @@
 OSDefineMetaClassAndStructors(VoodooI2CACPIController, VoodooI2CController);
 
 /**
- Handles an interrupt when the controller asserts its interrupt line
- 
- @param owner    OSOBject* that owns this interrupt
- @param src      IOInterruptEventSource*
- @param intCount int representing the index of the interrupt in the provider
- */
-
-void VoodooI2CACPIController::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
-}
-
-/**
  Evalues the ACPI power state methods
 
  @param enabled
 
  @return returns kIOReturnSuccess if successful, else returns kIOReturnNoPower
  */
-IOReturn VoodooI2CACPIController::setACPIPowerState(VoodooI2CPowerState enabled) {
+IOReturn VoodooI2CACPIController::setACPIPowerState(VoodooI2CState enabled) {
     if (enabled) {
         IOLog("%s::%s Set ACPI power state _PS0\n", getName(), physical_device->name);
         if (!physical_device->acpi_device->evaluateObject("_PS0"))
@@ -54,12 +43,12 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
     if (whichState == kIOPMPowerOff) {
         physical_device->awake = false;
 
-        setACPIPowerState(kVoodooI2CPowerStateOff);
+        setACPIPowerState(kVoodooI2CStateOff);
 
         IOLog("%s::%s Going to sleep\n", getName(), physical_device->name);
     } else {
         if (!physical_device->awake) {
-            setACPIPowerState(kVoodooI2CPowerStateOn);
+            setACPIPowerState(kVoodooI2CStateOn);
 
             physical_device->awake = true;
             IOLog("%s::%s Woke up\n", getName(), physical_device->name);
@@ -83,7 +72,7 @@ bool VoodooI2CACPIController::start(IOService* provider) {
 
     physical_device->acpi_device = OSDynamicCast(IOACPIPlatformDevice, provider);
 
-    setACPIPowerState(kVoodooI2CPowerStateOn);
+    setACPIPowerState(kVoodooI2CStateOn);
 
     if (mapMemory() != kIOReturnSuccess) {
         IOLog("%s::%s Could not map memory\n", getName(), physical_device->name);
@@ -107,7 +96,7 @@ bool VoodooI2CACPIController::start(IOService* provider) {
  */
 
 void VoodooI2CACPIController::stop(IOService* provider) {
-    setACPIPowerState(kVoodooI2CPowerStateOff);
+    setACPIPowerState(kVoodooI2CStateOff);
 
     super::stop(provider);
 }

@@ -23,7 +23,6 @@ class VoodooI2CPCIController : public VoodooI2CController {
  private:
     void configurePCI();
     IOReturn getACPIDevice();
-    void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     IOReturn setPowerState(unsigned long whichState, IOService * whatDevice);
     inline void skylakeLPSSResetHack();
     bool start(IOService* provider);

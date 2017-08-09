@@ -11,8 +11,12 @@
 
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
+#include <IOKit/IOWorkLoop.h>
+#include <IOKit/IOInterruptEventSource.h>
+#include <IOKit/IOCommandGate.h>
 
 class VoodooI2CController;
+class VoodooI2CControllerDriver;
 
 class VoodooI2CControllerNub : public IOService {
     OSDeclareDefaultStructors(VoodooI2CControllerNub);
@@ -21,8 +25,10 @@ class VoodooI2CControllerNub : public IOService {
     // data members
 
     VoodooI2CController* controller;
+    VoodooI2CControllerDriver* driver;
     const char* name;
     IOCommandGate* command_gate;
+    IOInterruptEventSource* interrupt_source;
     IOWorkLoop* work_loop;
 
     // function members
@@ -36,6 +42,7 @@ class VoodooI2CControllerNub : public IOService {
     void writeRegister(UInt32 value, int offset);
 
  private:
+    void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     void releaseResources();
 };
 

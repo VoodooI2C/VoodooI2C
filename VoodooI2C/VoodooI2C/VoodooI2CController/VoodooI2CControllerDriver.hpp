@@ -12,13 +12,22 @@
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
+#include <IOKit/acpi/IOACPIPlatformDevice.h>
 
 #include "VoodooI2CControllerConstants.hpp"
 #include "VoodooI2CControllerNub.hpp"
+#include "../VoodooI2CDevice/VoodooI2CDeviceNub.hpp"
 #include "../../../Miscellaneous/helpers.hpp"
 
 // The default values in the following struct are for Haswell PCI as
 // specified in Linux::i2c-designware-pcidrv.c
+
+typedef struct {
+    UInt16 address;
+    UInt8 *buffer;
+    UInt16 flags;
+    UInt16 length;
+} VoodooI2CControllerBusMessage;
 
 typedef struct {
     UInt32 ss_hcnt = 0x01b0;
@@ -29,13 +38,30 @@ typedef struct {
 } VoodooI2CControllerBusConfig;
 
 typedef struct {
-    const char* name;
+    UInt32 abort_source;
     VoodooI2CControllerBusConfig* acpi_config;
-    UInt32 functionality;
+    bool awake;
     UInt32 bus_config;
-    UInt rx_fifo_depth = 32;
-    UInt tx_fifo_depth = 32;
+    int command_error;
+    bool command_complete = false;
+    UInt32 functionality;
+    VoodooI2CControllerBusMessage* messages;
+    int message_error;
+    int message_number;
+    int message_read_index;
+    int message_write_index;
+    const char* name;
+    UInt32 receive_buffer_length;
+    UInt8 *receive_buffer;
+    UInt receive_fifo_depth;
+    int receive_outstanding;
+    UInt status;
+    UInt32 transaction_buffer_length;
+    UInt8 *transaction_buffer;
+    UInt transaction_fifo_depth;
 } VoodooI2CControllerBusDevice;
+
+class VoodooI2CController;
 
 class VoodooI2CControllerDriver : public IOService {
   OSDeclareDefaultStructors(VoodooI2CControllerDriver);
@@ -44,23 +70,35 @@ class VoodooI2CControllerDriver : public IOService {
     // data members
 
     VoodooI2CControllerBusDevice* bus_device;
+    OSArray* device_nubs;
     VoodooI2CControllerNub* nub;
 
     // function members
-    // bool attach(IOService* provider);
-    // void detach(IOService* provider);
-    VoodooI2CControllerDriver* probe(IOService* provider, SInt32* score);
-    bool init(OSDictionary* properties);
-    void free();
-    bool start(IOService* provider);
-    // void stop(IOService* provider);
 
- protected:
+    void free();
+    void handleInterrupt();
+    bool init(OSDictionary* properties);
+    VoodooI2CControllerDriver* probe(IOService* provider, SInt32* score);
+    bool start(IOService* provider);
+    void stop(IOService* provider);
+
  private:
-    IOReturn toggleBusState(VoodooI2CPowerState enabled);
-    inline void toggleClockGating(VoodooI2CPowerState enabled);
     IOReturn getBusConfig();
+    void handleAbortI2C();
     IOReturn initialiseBus();
+    IOReturn prepareTransferI2C(VoodooI2CControllerBusMessage* messages, int* number);
+    IOReturn publishNubs();
+    UInt32 readClearInterruptBits();
+    void readFromBus();
+    void requestTransferI2C();
+    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
+    IOReturn toggleBusState(VoodooI2CState enabled);
+    inline void toggleClockGating(VoodooI2CState enabled);
+    void toggleInterrupts(VoodooI2CState enabled);
+    IOReturn transferI2C(VoodooI2CControllerBusMessage* messages, int number);
+    IOReturn transferI2CGated(VoodooI2CControllerBusMessage* messages, int* number);
+    void transferMessageToBus();
+    IOReturn waitBusNotBusyI2C();
 };
 
 

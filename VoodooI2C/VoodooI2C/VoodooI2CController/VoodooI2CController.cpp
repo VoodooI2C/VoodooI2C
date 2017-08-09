@@ -16,7 +16,7 @@ OSDefineMetaClassAndStructors(VoodooI2CController, IOService);
  */
 
 void VoodooI2CController::free() {
-    IOFree(physical_device, sizeof(physical_device));
+    IOFree(physical_device, sizeof(VoodooI2CControllerPhysicalDevice));
 
     super::free();
 }
@@ -43,22 +43,7 @@ bool VoodooI2CController::init(OSDictionary* properties) {
 }
 
 /**
- Handles an interrupt when the controller asserts its interrupt line
-
- @param owner    OSOBject* that owns this interrupt
- @param src      IOInterruptEventSource*
- @param intCount int representing the index of the interrupt in the provider
- */
-
-void VoodooI2CController::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
-}
-
-/**
- Starts the physical I2C controller
-
- @param provider IOService* representing the matched entry in the IORegistry
-
- @return returns true on succesful start, else returns false
+ Maps the controller's memory to a virtual address
  */
 
 IOReturn VoodooI2CController::mapMemory() {
@@ -157,15 +142,6 @@ void VoodooI2CController::releaseResources() {
             physical_device->mmap = NULL;
         }
 
-        if (physical_device->interrupt_source) {
-            physical_device->interrupt_source->disable();
-            physical_device->work_loop->removeEventSource(physical_device->interrupt_source);
-            physical_device->interrupt_source->release();
-            physical_device->interrupt_source = NULL;
-        }
-        if (physical_device->work_loop)
-            OSSafeReleaseNULL(physical_device->work_loop);
-
         physical_device->provider->close(this);
         OSSafeReleaseNULL(physical_device->provider);
     }
@@ -181,7 +157,8 @@ void VoodooI2CController::releaseResources() {
 
  @return returns kIOPMAckImplied if power state has been set else maximum number of milliseconds needed for the device to be in the correct state
  */
-IOReturn VoodooI2CController::setPowerState(unsigned long whichState, IOService * whatDevice) {
+
+IOReturn VoodooI2CController::setPowerState(unsigned long whichState, IOService* whatDevice) {
     return kIOPMAckImplied;
 }
 
@@ -203,37 +180,13 @@ bool VoodooI2CController::start(IOService* provider) {
 
     PMinit();
     physical_device->provider->joinPMtree(this);
-    registerPowerDriver(this, VoodooI2CControllerPowerStates, kVoodooI2CIOPMNumberPowerStates);
+    registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
     IOLog("%s::%s Starting I2C controller\n", getName(), physical_device->name);
 
     physical_device->provider->retain();
     if (!physical_device->provider->open(this)) {
         IOLog("%s::%s Could not open provider\n", getName(), physical_device->name);
-    }
-
-    physical_device->work_loop = reinterpret_cast<IOWorkLoop*>(getWorkLoop());
-    if (!physical_device->work_loop) {
-        IOLog("%s::%s Could not get work loop\n", getName(), physical_device->name);
-        return NULL;
-    }
-
-    physical_device->work_loop->retain();
-
-    physical_device->interrupt_source =
-    IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CController::interruptOccured), physical_device->provider);
-
-    if (!physical_device->interrupt_source || physical_device->work_loop->addEventSource(physical_device->interrupt_source) != kIOReturnSuccess) {
-        IOLog("%s::%s::Could not add interrupt source to work loop\n", getName(), physical_device->name);
-        goto exit;
-    }
-
-    physical_device->interrupt_source->enable();
-
-    physical_device->command_gate = IOCommandGate::commandGate(this);
-    if (!physical_device->command_gate || (physical_device->work_loop->addEventSource(physical_device->command_gate) != kIOReturnSuccess)) {
-        IOLog("%s::%s Could not open command gate\n", getName(), physical_device->name);
-        goto exit;
     }
 
     return true;

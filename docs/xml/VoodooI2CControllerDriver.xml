@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CControllerDriver" interface="true" name="VoodooI2CControllerDriver" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CControllerDriver::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CControllerDriver::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  <field id="VoodooI2CControllerDriver::bus_device" name="bus_device">
+    <brief>data members</brief>
+    <type name="VoodooI2CControllerBusDevice" qualifier="*" ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice" />
+  </field>
+  <field id="VoodooI2CControllerDriver::device_nubs" name="device_nubs">
+    <type name="OSArray" qualifier="*" />
+  </field>
+  <field id="VoodooI2CControllerDriver::nub" name="nub">
+    <type name="VoodooI2CControllerNub" qualifier="*" ref="VoodooI2CControllerNub#VoodooI2CControllerNub" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver" />
+  <method abstract="yes" id="VoodooI2CControllerDriver::free" name="free" virtual="yes">
+    <brief>function members</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::handleInterrupt" name="handleInterrupt">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::init" name="init" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::init::properties" name="properties">
+      <type name="OSDictionary" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::probe" name="probe" virtual="yes">
+    <return>
+      <type name="VoodooI2CControllerDriver" qualifier="*" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::probe::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::probe::score" name="score">
+      <type name="SInt32" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+    <argument id="VoodooI2CControllerDriver::VoodooI2CControllerDriver::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CControllerDriver::~VoodooI2CControllerDriver" name="~VoodooI2CControllerDriver" virtual="yes" />
+  <variable access="private" id="VoodooI2CControllerDriver::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::getBusConfig" name="getBusConfig">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::handleAbortI2C" name="handleAbortI2C">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::initialiseBus" name="initialiseBus">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::prepareTransferI2C" name="prepareTransferI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::prepareTransferI2C::messages" name="messages">
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::prepareTransferI2C::number" name="number">
+      <type builtin="yes" name="int" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::publishNubs" name="publishNubs">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::readClearInterruptBits" name="readClearInterruptBits">
+    <return>
+      <type name="UInt32" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::readFromBus" name="readFromBus">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::requestTransferI2C" name="requestTransferI2C">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::setPowerState" name="setPowerState" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::setPowerState::whichState" name="whichState">
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::setPowerState::whatDevice" name="whatDevice">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::toggleBusState" name="toggleBusState">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::toggleBusState::enabled" name="enabled">
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::toggleClockGating" name="toggleClockGating">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::toggleClockGating::enabled" name="enabled">
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::toggleInterrupts" name="toggleInterrupts">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::toggleInterrupts::enabled" name="enabled">
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferI2C" name="transferI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::transferI2C::messages" name="messages">
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::transferI2C::number" name="number">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferI2CGated" name="transferI2CGated">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::transferI2CGated::messages" name="messages">
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::transferI2CGated::number" name="number">
+      <type builtin="yes" name="int" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferMessageToBus" name="transferMessageToBus">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::waitBusNotBusyI2C" name="waitBusNotBusyI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+</class>

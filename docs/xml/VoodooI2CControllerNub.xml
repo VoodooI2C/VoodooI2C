@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CControllerNub" interface="true" name="VoodooI2CControllerNub" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CControllerNub::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CControllerNub::MetaClass#VoodooI2CControllerNub::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CControllerNub::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CControllerNub::MetaClass#VoodooI2CControllerNub::MetaClass" />
+  <field id="VoodooI2CControllerNub::controller" name="controller">
+    <brief>data members</brief>
+    <type name="VoodooI2CController" qualifier="*" ref="VoodooI2CController#VoodooI2CController" />
+  </field>
+  <field id="VoodooI2CControllerNub::driver" name="driver">
+    <type name="VoodooI2CControllerDriver" qualifier="*" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver" />
+  </field>
+  <field id="VoodooI2CControllerNub::name" name="name">
+    <type builtin="yes" name="char" qualifier=" const *" />
+  </field>
+  <field id="VoodooI2CControllerNub::command_gate" name="command_gate">
+    <type name="IOCommandGate" qualifier="*" />
+  </field>
+  <field id="VoodooI2CControllerNub::interrupt_source" name="interrupt_source">
+    <type name="IOInterruptEventSource" qualifier="*" />
+  </field>
+  <field id="VoodooI2CControllerNub::work_loop" name="work_loop">
+    <type name="IOWorkLoop" qualifier="*" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub" />
+  <method abstract="yes" id="VoodooI2CControllerNub::attach" name="attach" virtual="yes">
+    <brief>function members</brief>
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CControllerNub::attach::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::detach" name="detach" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerNub::detach::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::getACPIParams" name="getACPIParams">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerNub::getACPIParams::method" name="method">
+      <type builtin="yes" name="char" qualifier=" const *" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::getACPIParams::hcnt" name="hcnt">
+      <type name="UInt32" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::getACPIParams::lcnt" name="lcnt">
+      <type name="UInt32" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::getACPIParams::sda_hold" name="sda_hold">
+      <type name="UInt32" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::readRegister" name="readRegister">
+    <return>
+      <type name="UInt32" />
+    </return>
+    <argument id="VoodooI2CControllerNub::readRegister::offset" name="offset">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CControllerNub::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerNub::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::writeRegister" name="writeRegister">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerNub::writeRegister::value" name="value">
+      <type name="UInt32" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::writeRegister::offset" name="offset">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub">
+    <argument id="VoodooI2CControllerNub::VoodooI2CControllerNub::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CControllerNub::~VoodooI2CControllerNub" name="~VoodooI2CControllerNub" virtual="yes" />
+  <variable access="private" id="VoodooI2CControllerNub::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <method abstract="yes" access="private" id="VoodooI2CControllerNub::interruptOccured" name="interruptOccured">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerNub::interruptOccured::owner" name="owner">
+      <type name="OSObject" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::interruptOccured::src" name="src">
+      <type name="IOInterruptEventSource" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::interruptOccured::intCount" name="intCount">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerNub::releaseResources" name="releaseResources">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+</class>

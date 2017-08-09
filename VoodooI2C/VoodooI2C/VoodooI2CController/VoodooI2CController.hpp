@@ -12,10 +12,6 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include <IOKit/pci/IOPCIDevice.h>
-#include <IOKit/IOWorkLoop.h>
-#include <IOKit/IOInterruptEventSource.h>
-#include <IOKit/IOLocks.h>
-#include <IOKit/IOCommandGate.h>
 
 #include "../../../Miscellaneous/helpers.hpp"
 
@@ -23,30 +19,13 @@
 #define kACPIDevicePathKey "acpi-path"
 #endif
 
-#define kIOPMPowerOff                       0
-#define kVoodooI2CIOPMNumberPowerStates     2
-
-enum VoodooI2CACPIControllerACPIPowerState {
-    kVoodooI2CACPIControllerACPIPowerStateOn = 1,
-    kVoodooI2CACPIControllerACPIPowerStateOff = 0
-};
-
-static IOPMPowerState VoodooI2CControllerPowerStates[kVoodooI2CIOPMNumberPowerStates] = {
-    {1, kIOPMPowerOff, kIOPMPowerOff, kIOPMPowerOff, 0, 0, 0, 0, 0, 0, 0, 0},
-    {1, kIOPMPowerOn, kIOPMPowerOn, kIOPMPowerOn, 0, 0, 0, 0, 0, 0, 0, 0}
-};
-
 typedef struct {
     IOACPIPlatformDevice* acpi_device;
     bool awake = true;
-    IOCommandGate* command_gate;
-    IOInterruptEventSource* interrupt_source;
     const char* name;
     IOPCIDevice* pci_device;
-    VoodooI2CACPIControllerACPIPowerState power_state;
     IOMemoryMap* mmap;
     IOService* provider;
-    IOWorkLoop* work_loop;
 } VoodooI2CControllerPhysicalDevice;
 
 class VoodooI2CControllerNub;
@@ -69,7 +48,6 @@ class VoodooI2CController : public IOService {
     VoodooI2CControllerPhysicalDevice* physical_device;
 
  protected:
-    virtual void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     IOReturn mapMemory();
     IOReturn publishNub();
     // void releaseMemory();

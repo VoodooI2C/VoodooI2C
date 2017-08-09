@@ -1,0 +1,615 @@
+<?xml version='1.0' encoding='utf-8'?>
+<report id="report" title="Documention generator" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <doc>
+This page provides a documentation coverage report. Any undocumented symbols
+are reported here together with the location of where you should document them.
+
+This report contains the following sections:
+
+1. [Coverage](#report/coverage): The documented symbols coverage.
+2. [Arguments](#report/arguments): Errors about undocumented, misspelled function arguments and
+return values.
+3. [References](#report/references): Unresolved cross references.
+</doc>
+  <coverage>
+    <type documented="0" name="function" undocumented="1">
+      <undocumented id="getMatchedName" name="getMatchedName">
+        <location column="1" file="../Miscellaneous/helpers.hpp" line="20" />
+      </undocumented>
+    </type>
+    <type documented="1" name="struct" undocumented="3">
+      <undocumented id="VoodooI2CControllerBusConfig" name="VoodooI2CControllerBusConfig">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="32" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice" name="VoodooI2CControllerBusDevice">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="40" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice" name="VoodooI2CControllerPhysicalDevice">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="22" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="22" />
+      </undocumented>
+    </type>
+    <type documented="0" name="enum" undocumented="1">
+      <undocumented id="VoodooI2CState" name="VoodooI2CState">
+        <location column="1" file="../Miscellaneous/helpers.hpp" line="22" />
+      </undocumented>
+    </type>
+    <type documented="0" name="class" undocumented="12">
+      <undocumented id="VoodooI2CACPIController" name="VoodooI2CACPIController">
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="14" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CController" name="VoodooI2CController">
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="33" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="18" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="64" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="19" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="66" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub" name="VoodooI2CControllerNub">
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="31" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+        <location column="1" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="16" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController" name="VoodooI2CPCIController">
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+    </type>
+    <type documented="5" name="field" undocumented="44">
+      <undocumented id="VoodooI2CController::physical_device" name="physical_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="48" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::fs_hcnt" name="fs_hcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="34" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::fs_lcnt" name="fs_lcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="36" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="36" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::sda_hold" name="sda_hold">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="37" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="37" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::ss_hcnt" name="ss_hcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="33" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::ss_lcnt" name="ss_lcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="35" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="35" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::abort_source" name="abort_source">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="41" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::acpi_config" name="acpi_config">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="42" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::awake" name="awake">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="43" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="43" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::bus_config" name="bus_config">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="44" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="44" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::command_complete" name="command_complete">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="46" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="46" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::command_error" name="command_error">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="45" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::functionality" name="functionality">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="47" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="47" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_error" name="message_error">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="49" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="49" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_number" name="message_number">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="50" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="50" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_read_index" name="message_read_index">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="51" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="51" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_write_index" name="message_write_index">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="52" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="52" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::messages" name="messages">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="48" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="48" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::name" name="name">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="53" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="53" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_buffer" name="receive_buffer">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="55" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="55" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_buffer_length" name="receive_buffer_length">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="54" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="54" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_fifo_depth" name="receive_fifo_depth">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="56" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="56" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_outstanding" name="receive_outstanding">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="57" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="57" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::status" name="status">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="58" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::transaction_buffer" name="transaction_buffer">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="60" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="60" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::transaction_buffer_length" name="transaction_buffer_length">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="59" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="59" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::transaction_fifo_depth" name="transaction_fifo_depth">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="61" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="61" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::address" name="address">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="26" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::buffer" name="buffer">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="27" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::flags" name="flags">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="28" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::length" name="length">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="29" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::device_nubs" name="device_nubs">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="73" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::nub" name="nub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::command_gate" name="command_gate">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::driver" name="driver">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::interrupt_source" name="interrupt_source">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::name" name="name">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::work_loop" name="work_loop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::acpi_device" name="acpi_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="23" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::awake" name="awake">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="24" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::mmap" name="mmap">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="27" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::name" name="name">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="25" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::pci_device" name="pci_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="26" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::provider" name="provider">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="28" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="28" />
+      </undocumented>
+    </type>
+    <type documented="0" name="constructor" undocumented="18">
+      <undocumented id="VoodooI2CACPIController::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::VoodooI2CACPIController" name="VoodooI2CACPIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::VoodooI2CACPIController" name="VoodooI2CACPIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::VoodooI2CController" name="VoodooI2CController">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::VoodooI2CController" name="VoodooI2CController">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+    </type>
+    <type documented="0" name="variable" undocumented="19">
+      <undocumented id="VoodooI2CACPIController::gMetaClass" name="gMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::metaClass" name="metaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::superClass" name="superClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::gMetaClass" name="gMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::metaClass" name="metaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::superClass" name="superClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::gMetaClass" name="gMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::metaClass" name="metaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::superClass" name="superClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::gMetaClass" name="gMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::metaClass" name="metaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::superClass" name="superClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::gMetaClass" name="gMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::metaClass" name="metaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::superClass" name="superClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
+        <location column="1" file="../Miscellaneous/helpers.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::gMetaClass" name="gMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::metaClass" name="metaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::superClass" name="superClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+    </type>
+    <type documented="0" name="destructor" undocumented="6">
+      <undocumented id="VoodooI2CACPIController::~VoodooI2CACPIController" name="~VoodooI2CACPIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::~VoodooI2CController" name="~VoodooI2CController">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::~VoodooI2CControllerDriver" name="~VoodooI2CControllerDriver">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::~VoodooI2CControllerNub" name="~VoodooI2CControllerNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::~VoodooI2CDeviceNub" name="~VoodooI2CDeviceNub">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::~VoodooI2CPCIController" name="~VoodooI2CPCIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+    </type>
+    <type documented="6" name="method" undocumented="64">
+      <undocumented id="VoodooI2CACPIController::MetaClass::alloc" name="alloc">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::getMetaClass" name="getMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::setACPIPowerState" name="setACPIPowerState">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::stop" name="stop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::MetaClass::alloc" name="alloc">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::getMetaClass" name="getMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::init" name="init">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="63" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::mapMemory" name="mapMemory">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="51" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::publishNub" name="publishNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="52" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::readRegister" name="readRegister">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::releaseResources" name="releaseResources">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="64" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::setPowerState" name="setPowerState">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="65" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::stop" name="stop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::writeRegister" name="writeRegister">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="43" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::MetaClass::alloc" name="alloc">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::getBusConfig" name="getBusConfig">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="86" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::getMetaClass" name="getMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::handleAbortI2C" name="handleAbortI2C">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="87" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::handleInterrupt" name="handleInterrupt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="79" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::init" name="init">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="80" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::initialiseBus" name="initialiseBus">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="88" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::prepareTransferI2C" name="prepareTransferI2C">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="89" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::probe" name="probe">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="81" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::publishNubs" name="publishNubs">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="90" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::readClearInterruptBits" name="readClearInterruptBits">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="91" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::readFromBus" name="readFromBus">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="92" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::requestTransferI2C" name="requestTransferI2C">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="93" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::setPowerState" name="setPowerState">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="94" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="82" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::stop" name="stop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="83" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::toggleBusState" name="toggleBusState">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="95" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::toggleClockGating" name="toggleClockGating">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="96" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::toggleInterrupts" name="toggleInterrupts">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="97" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::transferI2C" name="transferI2C">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="98" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::transferI2CGated" name="transferI2CGated">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="99" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::transferMessageToBus" name="transferMessageToBus">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="100" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::waitBusNotBusyI2C" name="waitBusNotBusyI2C">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="101" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::MetaClass::alloc" name="alloc">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::detach" name="detach">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="37" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::getACPIParams" name="getACPIParams">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::getMetaClass" name="getMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::interruptOccured" name="interruptOccured">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::readRegister" name="readRegister">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::releaseResources" name="releaseResources">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="46" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::stop" name="stop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::writeRegister" name="writeRegister">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::MetaClass::alloc" name="alloc">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::detach" name="detach">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::free" name="free">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::getMetaClass" name="getMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::init" name="init">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::stop" name="stop">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::MetaClass::alloc" name="alloc">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::configurePCI" name="configurePCI">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::getACPIDevice" name="getACPIDevice">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::getMetaClass" name="getMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::setPowerState" name="setPowerState">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::skylakeLPSSResetHack" name="skylakeLPSSResetHack">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::stop" name="stop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="29" />
+      </undocumented>
+    </type>
+    <type documented="0" name="enumvalue" undocumented="2">
+      <undocumented id="kVoodooI2CStateOff" name="kVoodooI2CStateOff">
+        <location column="5" file="../Miscellaneous/helpers.hpp" line="23" />
+      </undocumented>
+      <undocumented id="kVoodooI2CStateOn" name="kVoodooI2CStateOn">
+        <location column="5" file="../Miscellaneous/helpers.hpp" line="24" />
+      </undocumented>
+    </type>
+  </coverage>
+  <arguments>
+    <function id="VoodooI2CController::probe" name="probe">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="39" />
+      <undocumented-return />
+      <undocumented name="score" />
+      <undocumented name="provider" />
+    </function>
+    <function id="VoodooI2CACPIController::setPowerState" name="setPowerState">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="24" />
+      <undocumented-return />
+      <undocumented name="whichState" />
+      <undocumented name="whatDevice" />
+    </function>
+    <function id="VoodooI2CControllerNub::attach" name="attach">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="36" />
+      <undocumented-return />
+      <undocumented name="provider" />
+    </function>
+    <function id="VoodooI2CDeviceNub::attach" name="attach">
+      <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="23" />
+      <undocumented-return />
+      <undocumented name="child" />
+      <undocumented name="provider" />
+    </function>
+  </arguments>
+  <references />
+</report>

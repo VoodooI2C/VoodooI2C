@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CPCIController" interface="true" name="VoodooI2CPCIController" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="VoodooI2CController" ref="VoodooI2CController#VoodooI2CController" />
+  </base>
+  <variable id="VoodooI2CPCIController::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CPCIController::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController" />
+  <method abstract="yes" id="VoodooI2CPCIController::getMetaClass" name="getMetaClass" override="yes" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+    <override name="VoodooI2CController::getMetaClass" ref="VoodooI2CController#VoodooI2CController::getMetaClass" />
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
+    <argument id="VoodooI2CPCIController::VoodooI2CPCIController::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CPCIController::~VoodooI2CPCIController" name="~VoodooI2CPCIController" virtual="yes" />
+  <variable access="private" id="VoodooI2CPCIController::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::configurePCI" name="configurePCI">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::getACPIDevice" name="getACPIDevice">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::setPowerState" name="setPowerState" override="yes" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CPCIController::setPowerState::whichState" name="whichState">
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CPCIController::setPowerState::whatDevice" name="whatDevice">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CController::setPowerState" ref="VoodooI2CController#VoodooI2CController::setPowerState" />
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::skylakeLPSSResetHack" name="skylakeLPSSResetHack">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::start" name="start" override="yes" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CPCIController::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CController::start" ref="VoodooI2CController#VoodooI2CController::start" />
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::stop" name="stop" override="yes" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CPCIController::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CController::stop" ref="VoodooI2CController#VoodooI2CController::stop" />
+  </method>
+</class>

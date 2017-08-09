@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CDeviceNub" interface="true" name="VoodooI2CDeviceNub" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CDeviceNub::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CDeviceNub::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub" />
+  <method abstract="yes" id="VoodooI2CDeviceNub::attach" name="attach">
+    <brief>function members</brief>
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::attach::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::attach::child" name="child">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::detach" name="detach" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::detach::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::free" name="free" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::init" name="init" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::init::properties" name="properties">
+      <type name="OSDictionary" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+    <argument id="VoodooI2CDeviceNub::VoodooI2CDeviceNub::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CDeviceNub::~VoodooI2CDeviceNub" name="~VoodooI2CDeviceNub" virtual="yes" />
+  <variable access="private" id="VoodooI2CDeviceNub::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+</class>

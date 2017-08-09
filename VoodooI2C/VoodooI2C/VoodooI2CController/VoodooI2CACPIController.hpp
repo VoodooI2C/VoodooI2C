@@ -17,13 +17,12 @@ class VoodooI2CACPIController : public VoodooI2CController {
  private:
     // data members
 
-    VoodooI2CPowerState acpi_power_state;
+    VoodooI2CState acpi_power_state;
 
     // function members
 
-    void interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount);
     IOReturn setPowerState(unsigned long whichState, IOService * whatDevice);
-    IOReturn setACPIPowerState(VoodooI2CPowerState enabled);
+    IOReturn setACPIPowerState(VoodooI2CState enabled);
     bool start(IOService* provider);
     void stop(IOService* provider);
 };

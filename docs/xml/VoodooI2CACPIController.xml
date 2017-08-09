@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CACPIController" interface="true" name="VoodooI2CACPIController" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="VoodooI2CController" ref="VoodooI2CController#VoodooI2CController" />
+  </base>
+  <variable id="VoodooI2CACPIController::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CACPIController::MetaClass#VoodooI2CACPIController::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CACPIController::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CACPIController::MetaClass#VoodooI2CACPIController::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CACPIController::VoodooI2CACPIController" name="VoodooI2CACPIController" />
+  <method abstract="yes" id="VoodooI2CACPIController::getMetaClass" name="getMetaClass" override="yes" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+    <override name="VoodooI2CController::getMetaClass" ref="VoodooI2CController#VoodooI2CController::getMetaClass" />
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CACPIController::VoodooI2CACPIController" name="VoodooI2CACPIController">
+    <argument id="VoodooI2CACPIController::VoodooI2CACPIController::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CACPIController::~VoodooI2CACPIController" name="~VoodooI2CACPIController" virtual="yes" />
+  <variable access="private" id="VoodooI2CACPIController::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CACPIController::acpi_power_state" name="acpi_power_state">
+    <brief>data members</brief>
+    <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CACPIController::setACPIPowerState" name="setACPIPowerState">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CACPIController::setACPIPowerState::enabled" name="enabled">
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CACPIController::setPowerState" name="setPowerState" override="yes" virtual="yes">
+    <brief>function members</brief>
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CACPIController::setPowerState::whichState" name="whichState">
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CACPIController::setPowerState::whatDevice" name="whatDevice">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CController::setPowerState" ref="VoodooI2CController#VoodooI2CController::setPowerState" />
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CACPIController::start" name="start" override="yes" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CACPIController::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CController::start" ref="VoodooI2CController#VoodooI2CController::start" />
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CACPIController::stop" name="stop" override="yes" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CACPIController::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CController::stop" ref="VoodooI2CController#VoodooI2CController::stop" />
+  </method>
+</class>

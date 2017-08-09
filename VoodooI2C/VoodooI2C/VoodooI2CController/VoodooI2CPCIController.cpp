@@ -57,17 +57,6 @@ IOReturn VoodooI2CPCIController::getACPIDevice() {
 }
 
 /**
- Handles an interrupt when the controller asserts its interrupt line
- 
- @param owner    OSOBject* that owns this interrupt
- @param src      IOInterruptEventSource*
- @param intCount int representing the index of the interrupt in the provider
- */
-
-void VoodooI2CPCIController::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
-}
-
-/**
  Called by the system's power manager to set power states
  
  @param whichState either kIOPMPowerOff or kIOPMPowerOn
@@ -76,7 +65,7 @@ void VoodooI2CPCIController::interruptOccured(OSObject* owner, IOInterruptEventS
  @return returns kIOPMAckImplied if power state has been set else maximum number of milliseconds needed for the device to be in the correct state
  */
 
-IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOService * whatDevice) {
+IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOService* whatDevice) {
     if (whichState == kIOPMPowerOff) {
         physical_device->awake = false;
 

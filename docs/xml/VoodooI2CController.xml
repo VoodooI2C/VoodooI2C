@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CController" interface="true" name="VoodooI2CController" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <subclass access="public" name="VoodooI2CACPIController" ref="VoodooI2CACPIController#VoodooI2CACPIController" />
+  <subclass access="public" name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController" />
+  <variable id="VoodooI2CController::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CController::MetaClass#VoodooI2CController::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CController::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CController::MetaClass#VoodooI2CController::MetaClass" />
+  <field id="VoodooI2CController::nub" name="nub">
+    <brief>data members</brief>
+    <type name="VoodooI2CControllerNub" qualifier="*" ref="VoodooI2CControllerNub#VoodooI2CControllerNub" />
+  </field>
+  <field id="VoodooI2CController::physical_device" name="physical_device">
+    <type name="VoodooI2CControllerPhysicalDevice" qualifier="*" ref="VoodooI2CControllerPhysicalDevice#VoodooI2CControllerPhysicalDevice" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CController::VoodooI2CController" name="VoodooI2CController" />
+  <method abstract="yes" id="VoodooI2CController::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CController::probe" name="probe" virtual="yes">
+    <brief>function members</brief>
+    <return>
+      <type name="VoodooI2CController" qualifier="*" ref="VoodooI2CController#VoodooI2CController" />
+    </return>
+    <argument id="VoodooI2CController::probe::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CController::probe::score" name="score">
+      <type name="SInt32" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CController::readRegister" name="readRegister">
+    <return>
+      <type name="UInt32" />
+    </return>
+    <argument id="VoodooI2CController::readRegister::offset" name="offset">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CController::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CController::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CController::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CController::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CController::writeRegister" name="writeRegister">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CController::writeRegister::value" name="value">
+      <type name="UInt32" />
+    </argument>
+    <argument id="VoodooI2CController::writeRegister::offset" name="offset">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CController::VoodooI2CController" name="VoodooI2CController">
+    <argument id="VoodooI2CController::VoodooI2CController::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CController::~VoodooI2CController" name="~VoodooI2CController" virtual="yes" />
+  <method abstract="yes" access="protected" id="VoodooI2CController::mapMemory" name="mapMemory">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="protected" id="VoodooI2CController::publishNub" name="publishNub">
+    <return>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <variable access="private" id="VoodooI2CController::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CController::debug_logging" name="debug_logging">
+    <brief>data members</brief>
+    <type builtin="yes" name="bool" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CController::free" name="free" virtual="yes">
+    <brief>function memmbers</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CController::init" name="init" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CController::init::properties" name="properties">
+      <type name="OSDictionary" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CController::releaseResources" name="releaseResources">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CController::setPowerState" name="setPowerState" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CController::setPowerState::whichState" name="whichState">
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CController::setPowerState::whatDevice" name="whatDevice">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+</class>

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<index xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <variable id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
+    <type class="array" size="2">
+      <type name="IOPMPowerState" />
+    </type>
+  </variable>
+  <class name="VoodooI2CACPIController" ref="VoodooI2CACPIController#VoodooI2CACPIController">
+    <class name="MetaClass" ref="VoodooI2CACPIController::MetaClass#VoodooI2CACPIController::MetaClass" />
+  </class>
+  <class name="VoodooI2CController" ref="VoodooI2CController#VoodooI2CController">
+    <class name="MetaClass" ref="VoodooI2CController::MetaClass#VoodooI2CController::MetaClass" />
+  </class>
+  <struct name="VoodooI2CControllerBusConfig" ref="VoodooI2CControllerBusConfig#VoodooI2CControllerBusConfig" />
+  <struct name="VoodooI2CControllerBusDevice" ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice" />
+  <struct name="VoodooI2CControllerBusMessage" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage">
+    <brief>The default values in the following struct are for Haswell PCI as</brief>
+  </struct>
+  <class name="VoodooI2CControllerDriver" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">
+    <class name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  </class>
+  <class name="VoodooI2CControllerNub" ref="VoodooI2CControllerNub#VoodooI2CControllerNub">
+    <class name="MetaClass" ref="VoodooI2CControllerNub::MetaClass#VoodooI2CControllerNub::MetaClass" />
+  </class>
+  <struct name="VoodooI2CControllerPhysicalDevice" ref="VoodooI2CControllerPhysicalDevice#VoodooI2CControllerPhysicalDevice" />
+  <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub">
+    <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
+  </class>
+  <class name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController">
+    <class name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />
+  </class>
+  <enum anonymous="yes" id="VoodooI2CState" name="VoodooI2CState">
+    <enumvalue id="kVoodooI2CStateOff" name="kVoodooI2CStateOff" value="0" />
+    <enumvalue id="kVoodooI2CStateOn" name="kVoodooI2CStateOn" value="1" />
+  </enum>
+  <function id="getMatchedName" name="getMatchedName">
+    <return>
+      <type builtin="yes" name="char" qualifier=" const *" />
+    </return>
+    <argument id="getMatchedName::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </function>
+  <report name="Documentation generator" ref="report" />
+</index>
