@@ -10,6 +10,7 @@
 #define VoodooI2C_VoodooHIDWrapper_h
 
 #include <IOKit/hid/IOHIDDevice.h>
+#include <IOKit/hid/IOHIDInterface.h>
 
 class VoodooI2CHIDDevice;
 
@@ -41,6 +42,8 @@ public:
     virtual OSNumber* newVendorIDNumber() const;
     
     virtual OSNumber* newLocationIDNumber() const;
+    
+    IOHIDInterface* interface;
 };
 
 #endif /* VoodooI2C_VoodooHIDWrapper_h */

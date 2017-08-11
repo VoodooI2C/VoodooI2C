@@ -26,6 +26,7 @@ bool VoodooHIDWrapper::start(IOService *provider) {
 
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     setProperty("HIDDefaultBehavior", OSString::withCString("Trackpad"));
+    
     return IOHIDDevice::start(provider);
 }
 
@@ -69,12 +70,12 @@ OSString* VoodooHIDWrapper::newManufacturerString() const {
 
 OSNumber* VoodooHIDWrapper::newPrimaryUsageNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    return OSNumber::withNumber(kHIDUsage_Dig_TouchScreen, 32);
+    return OSNumber::withNumber(0x1, 32);
 }
 
 OSNumber* VoodooHIDWrapper::newPrimaryUsagePageNumber() const {
     IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
-    return OSNumber::withNumber(kHIDPage_Digitizer, 32);
+    return OSNumber::withNumber(0x2, 32);
 }
 
 OSNumber* VoodooHIDWrapper::newProductIDNumber() const {
