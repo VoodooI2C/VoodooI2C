@@ -567,6 +567,107 @@ bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
     
 };
 
+SInt32 VoodooI2CHIDDevice::writeI2C(uint8_t *values, size_t len) {
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = hid_device->addr,
+            .flags = 0,
+            .len = (uint16_t)len,
+            .buf = values,
+        },
+    };
+    int ret;
+    
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
+    
+    return ret;
+}
+
+int VoodooI2CHIDDevice::write_feature(uint8_t reportID, uint8_t *buf, size_t buf_len){
+    uint16_t dataReg = ihid->hdesc.wDataRegister;
+    
+    uint8_t reportType = 0x03;
+    
+    uint8_t idx = 0;
+    
+    uint16_t size;
+    uint16_t args_len;
+    
+    size = 2 +
+    (reportID ? 1 : 0)	/* reportID */ +
+    buf_len		/* buf */;
+    args_len = (reportID >= 0x0F ? 1 : 0) /* optional third byte */ +
+    2			/* dataRegister */ +
+    size			/* args */;
+    
+    uint8_t *args = (uint8_t *)IOMalloc(args_len);
+    memset(args, 0, args_len);
+    
+    if (reportID >= 0x0F) {
+        args[idx++] = reportID;
+        reportID = 0x0F;
+    }
+    
+    args[idx++] = dataReg & 0xFF;
+    args[idx++] = dataReg >> 8;
+    
+    args[idx++] = size & 0xFF;
+    args[idx++] = size >> 8;
+    
+    if (reportID)
+        args[idx++] = reportID;
+    
+    memcpy(&args[idx], buf, buf_len);
+    
+    uint8_t len = 4;
+    union command *cmd = (union command *)IOMalloc(4 + args_len);
+    memset(cmd, 0, 4+args_len);
+    cmd->c.reg = ihid->hdesc.wCommandRegister;
+    cmd->c.opcode = 0x03;
+    cmd->c.reportTypeID = reportID | reportType << 4;
+    
+    uint8_t *rawCmd = (uint8_t *)cmd;
+    
+    memcpy(rawCmd + len, args, args_len);
+    len += args_len;
+    writeI2C(rawCmd, len);
+    
+    IOFree(cmd, 4+args_len);
+    IOFree(args, args_len);
+    return 0;
+}
+
+
+int VoodooI2CHIDDevice::get_report(IOMemoryDescriptor* buffer, UInt8 reportType, UInt8 reportID)
+{
+    UInt8 args[3];
+    int ret;
+    int args_len = 0;
+    UInt16 readRegister = ihid->hdesc.wDataRegister;
+    unsigned char *buf_recv;
+    int data_len;
+    
+    if (reportID >= 0x0F) {
+        args[args_len++] = reportID;
+        reportID = 0x0F;
+    }
+    
+    args[args_len++] = readRegister & 0xFF;
+    args[args_len++] = readRegister >> 8;
+    
+    ret = __i2c_hid_command(ihid, &hid_get_report_cmd, reportID,
+                            reportType, args, args_len, buf_recv, data_len);
+    if (ret) {
+        IOLog("failed to get report from device\n");
+        return ret;
+    }
+    
+    buffer->writeBytes(0, buf_recv, data_len);
+    
+    return 0;
+}
+
+
 void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
     UInt rsize;
     int ret;

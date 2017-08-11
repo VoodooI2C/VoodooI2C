@@ -159,6 +159,8 @@ public:
                                         .wait = true
     };
     
+    struct i2c_hid_cmd hid_get_report_cmd =	{ I2C_HID_CMD(0x02) };
+    
     struct i2c_hid_cmd hid_descr_cmd = { .length = 2};
     
     struct i2c_hid_cmd hid_input_cmd = {
@@ -205,6 +207,13 @@ public:
     int i2c_get_slave_address(I2CDevice* hid_device);
     
     bool i2c_hid_hwreset(i2c_hid *ihid);
+    
+    int write_feature(uint8_t reportID, uint8_t *buf, size_t buf_len);
+    
+    SInt32 writeI2C(uint8_t *values, size_t len);
+    
+    int get_report(IOMemoryDescriptor* buffer, UInt8 reportType, UInt8 reportID);
+
 
 };
 
