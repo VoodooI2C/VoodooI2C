@@ -136,18 +136,6 @@
 
 #define EAGAIN 35
 
-#define RMI_PAGE_SELECT_REGISTER 0xff
-#define RMI_I2C_PAGE(addr) (((addr) >> 8) & 0x0ff)
-
-#define PDT_START_SCAN_LOCATION 0x00e9
-#define PDT_END_SCAN_LOCATION 0x0005
-
-#define RMI4_END_OF_PDT(id) ((id) == 0x00 || (id) == 0xff)
-#define RMI4_MAX_PAGE 0xff
-#define RMI4_PAGE_SIZE 0x100
-
-#define RMI_PRODUCT_ID_LENGTH 10
-
 #define __le16 SInt16
 #define __le32 SInt32
 
