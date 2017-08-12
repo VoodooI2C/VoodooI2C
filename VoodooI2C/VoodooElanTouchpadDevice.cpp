@@ -90,9 +90,6 @@ void VoodooI2CElanTouchpadDevice::TrackpadRawInput(struct csgesture_softc *sc, u
         }
     }
     sc->buttondown = (tp_info & 0x01);
-    
-    if (_wrapper)
-        _wrapper->ProcessGesture(sc);
 }
 
 bool VoodooI2CElanTouchpadDevice::attach(IOService * provider, IOService* child)
@@ -152,9 +149,12 @@ void VoodooI2CElanTouchpadDevice::stop(IOService* device) {
         hid_device->timerSource = NULL;
     }
     
-    //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
-    //hid_device->interruptSource->disable();
-    hid_device->interruptSource = NULL;
+    if (hid_device->interruptSource){
+        hid_device->interruptSource->disable();
+        hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource->release();
+        hid_device->interruptSource = NULL;
+    }
     
     if (hid_device->workLoop){
         hid_device->workLoop->release();
@@ -303,17 +303,14 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->retain();
     
-    /*
-     hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->provider);
+    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CElanTouchpadDevice::InterruptOccured), hid_device->provider);
+    
+    if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
+        IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
+        goto err;
+    }
      
-     if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
-     IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
-     stop(this);
-     return -1;
-     }
-     
-     hid_device->interruptSource->enable();
-     */
+    hid_device->interruptSource->enable();
     
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CElanTouchpadDevice::get_input));
     if (!hid_device->timerSource){
@@ -334,6 +331,7 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
      */
 
     hid_device->trackpadIsAwake = true;
+    hid_device->reading = false;
     
     initialize_wrapper();
     registerService();
@@ -562,25 +560,40 @@ int VoodooI2CElanTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_device){
     data->release();
     
     return 0;
-    
 }
 
-void VoodooI2CElanTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    IOLog("interrupt\n");
-    if (hid_device->reading)
-        return;
-    //i2c_hid_get_input(ihid);
-}
-
-void VoodooI2CElanTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
+static void elan_i2c_readReport(VoodooI2CElanTouchpadDevice *device){
     uint8_t report[ETP_MAX_REPORT_LEN];
-    readI2C(0, sizeof(report), report);
+    device->readI2C(0, sizeof(report), report);
     
     if (report[0] != 0xff){
         for (int i = 0;i < ETP_MAX_REPORT_LEN; i++)
-            prevreport[i] = report[i];
+            device->prevreport[i] = report[i];
     }
     
-    TrackpadRawInput(&softc, prevreport, 1);
+    device->TrackpadRawInput(&device->softc, device->prevreport, 1);
+    device->hid_device->reading = false;
+}
+
+void VoodooI2CElanTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
+    if (hid_device->reading)
+        return;
+    
+    hid_device->reading = true;
+    
+    thread_t newThread;
+    kern_return_t kr = kernel_thread_start((thread_continue_t)elan_i2c_readReport, this, &newThread);
+    if (kr != KERN_SUCCESS){
+        hid_device->reading = false;
+        IOLog("Thread error!\n");
+    } else {
+        thread_deallocate(newThread);
+    }
+}
+
+void VoodooI2CElanTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
+    if (_wrapper)
+        _wrapper->ProcessGesture(&softc);
+    
     hid_device->timerSource->setTimeoutMS(5);
 }
