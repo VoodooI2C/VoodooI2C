@@ -305,16 +305,17 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CElanTouchpadDevice::InterruptOccured), hid_device->provider);
     
-    if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
-        IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
+    if (!hid_device->interruptSource) {
+        IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
         goto err;
     }
-     
+    
+    hid_device->workLoop->addEventSource(hid_device->interruptSource);
     hid_device->interruptSource->enable();
     
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CElanTouchpadDevice::get_input));
     if (!hid_device->timerSource){
-        IOLog("%s", "Timer Err!\n");
+        IOLog("%s::%s::Timer Error!\n", getName(), _controller->_dev->name);
         goto err;
     }
     
