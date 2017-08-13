@@ -10,6 +10,25 @@
 #include "VoodooI2C.h"
 #include "VoodooHIDWrapper.h"
 
+#define I2C_HID_PWR_ON  0x00
+#define I2C_HID_PWR_SLEEP 0x01
+
+union command {
+    uint8_t data[4];
+    struct __attribute__((__packed__)) cmd {
+        uint16_t reg;
+        uint8_t reportTypeID;
+        uint8_t opcode;
+    } c;
+};
+
+struct __attribute__((__packed__))  i2c_hid_cmd {
+    unsigned int registerIndex;
+    uint8_t opcode;
+    unsigned int length;
+    bool wait;
+};
+
 OSDefineMetaClassAndStructors(VoodooI2CHIDDevice, VoodooI2CDevice);
 
 bool VoodooI2CHIDDevice::attach(IOService * provider, IOService* child)
@@ -50,6 +69,12 @@ bool VoodooI2CHIDDevice::probe(IOService* device) {
         return false;
     }
     
+    ret = i2c_hid_descriptor_address(hid_device);
+    if (ret < 0){
+        IOLog("%s::%s::Failed to get an address for a HID descriptor, aborting.\n", getName(), _controller->_dev->name);
+        IOFree(hid_device, sizeof(I2CDevice));
+        return false;
+    }
     
     IOLog("%s::%s::HID Probe called for i2c 0x%02x\n", getName(), _controller->_dev->name, hid_device->addr);
     
@@ -78,11 +103,11 @@ void VoodooI2CHIDDevice::stop(IOService* device) {
     hid_device->workLoop->release();
     hid_device->workLoop = NULL;
     
-    
-    
-    
-    i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    IOFree(ihid, sizeof(i2c_hid));
+    if (hid_device->rsize > 0){
+        IOFree(hid_device->rdesc, hid_device->rsize);
+        hid_device->rdesc = NULL;
+        hid_device->rsize = 0;
+    }
     
     IOFree(hid_device, sizeof(I2CDevice));
     
@@ -106,48 +131,35 @@ void VoodooI2CHIDDevice::detach( IOService * provider )
 int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
-    int ret;
-    UInt16 hidRegister;
+    hid_device->rsize = 0;
     
-    ihid = (i2c_hid*)IOMalloc(sizeof(i2c_hid));
+    if (fetch_hid_descriptor()){
+        IOLog("%s::%s::Error fetching HID Descriptor!\n", getName(), _controller->_dev->name);
+        return -1;
+    }
     
-    ihid->client = hid_device;
+    if (fetch_report_descriptor()){
+        IOLog("%s::%s::Error fetching HID Report Descriptor!\n", getName(), _controller->_dev->name);
+        return -1;
+    }
     
-    ret = i2c_hid_acpi_pdata(ihid);
+    int ret = 0;
     
-    ihid->client = hid_device;
+    reset_dev();
     
-    
-    hidRegister = ihid->pdata.hid_descriptor_address;
-    
-    ihid->wHIDDescRegister = (__le16)hidRegister;
-    
-    ret = i2c_hid_alloc_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    if (ret < 0)
-        goto err;
-    
-    //ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
-    //if(ret<0)
-     //   goto err;
-    
-    
-    ret = i2c_hid_fetch_hid_descriptor(ihid);
-    if (ret < 0)
-        goto err;
-    
-    setProperty("HIDDescLength", (UInt32)ihid->hdesc.wHIDDescLength, 32);
-    setProperty("bcdVersion", (UInt32)ihid->hdesc.bcdVersion, 32);
-    setProperty("ReportDescLength", (UInt32)ihid->hdesc.wReportDescLength, 32);
-    setProperty("ReportDescRegister", (UInt32)ihid->hdesc.wReportDescRegister, 32);
-    setProperty("InputRegister", (UInt32)ihid->hdesc.wInputRegister, 32);
-    setProperty("MaxInputLength", (UInt32)ihid->hdesc.wMaxInputLength, 32);
-    setProperty("OutputRegister", (UInt32)ihid->hdesc.wOutputRegister, 32);
-    setProperty("MaxOutputLength", (UInt32)ihid->hdesc.wMaxOutputLength, 32);
-    setProperty("CommandRegister", (UInt32)ihid->hdesc.wCommandRegister, 32);
-    setProperty("DataRegister", (UInt32)ihid->hdesc.wDataRegister, 32);
-    setProperty("vendorID", (UInt32)ihid->hdesc.wVendorID, 32);
-    setProperty("productID", (UInt32)ihid->hdesc.wProductID, 32);
-    setProperty("VersionID", (UInt32)ihid->hdesc.wVersionID, 32);
+    setProperty("HIDDescLength", (UInt32)hid_device->hdesc.wHIDDescLength, 32);
+    setProperty("bcdVersion", (UInt32)hid_device->hdesc.bcdVersion, 32);
+    setProperty("ReportDescLength", (UInt32)hid_device->hdesc.wReportDescLength, 32);
+    setProperty("ReportDescRegister", (UInt32)hid_device->hdesc.wReportDescRegister, 32);
+    setProperty("InputRegister", (UInt32)hid_device->hdesc.wInputRegister, 32);
+    setProperty("MaxInputLength", (UInt32)hid_device->hdesc.wMaxInputLength, 32);
+    setProperty("OutputRegister", (UInt32)hid_device->hdesc.wOutputRegister, 32);
+    setProperty("MaxOutputLength", (UInt32)hid_device->hdesc.wMaxOutputLength, 32);
+    setProperty("CommandRegister", (UInt32)hid_device->hdesc.wCommandRegister, 32);
+    setProperty("DataRegister", (UInt32)hid_device->hdesc.wDataRegister, 32);
+    setProperty("vendorID", (UInt32)hid_device->hdesc.wVendorID, 32);
+    setProperty("productID", (UInt32)hid_device->hdesc.wProductID, 32);
+    setProperty("VersionID", (UInt32)hid_device->hdesc.wVersionID, 32);
     
     
     hid_device->workLoop = (IOWorkLoop*)getWorkLoop();
@@ -171,26 +183,16 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
      hid_device->interruptSource->enable();
      */
     
-    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::i2c_hid_get_input));
+    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::get_input));
     if (!hid_device->timerSource){
         goto err;
     }
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
     hid_device->timerSource->setTimeoutMS(200);
-     /*
-     
-     hid_device->commandGate = IOCommandGate::commandGate(this);
-     
-     if (!hid_device->commandGate || (_dev->workLoop->addEventSource(hid_device->commandGate) != kIOReturnSuccess)) {
-     IOLog("%s::%s::Failed to open HID command gate\n", getName(), _dev->name);
-     return -1;
-     }
-     */
-    
-    i2c_hid_get_report_descriptor(ihid);
     
     hid_device->deviceIsAwake = true;
+    hid_device->reading = false;
 
     initialize_wrapper();
     registerService();
@@ -220,8 +222,12 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     return 0;
     
 err:
-    i2c_hid_free_buffers(ihid, HID_MIN_BUFFER_SIZE);
-    IOFree(ihid, sizeof(i2c_hid));
+    if (hid_device->rsize > 0){
+        IOFree(hid_device->rdesc, hid_device->rsize);
+        hid_device->rdesc = NULL;
+        hid_device->rsize = 0;
+    }
+    
     PMstop();
     return ret;
 }
@@ -229,15 +235,12 @@ err:
 void VoodooI2CHIDDevice::initialize_wrapper(void) {
     destroy_wrapper();
 
-    IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     _wrapper = new VoodooHIDWrapper;
     if (_wrapper->init()) {
-        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->attach(this);
         _wrapper->start(this);
     }
     else {
-        IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
         _wrapper->release();
         _wrapper = NULL;
     }
@@ -251,44 +254,70 @@ void VoodooI2CHIDDevice::destroy_wrapper(void) {
     }
 }
 
-int VoodooI2CHIDDevice::i2c_hid_acpi_pdata(i2c_hid *ihid) {
-
-    UInt32 guid_1 = 0x3CDFF6F7;
-    UInt32 guid_2 = 0x45554267;
-    UInt32 guid_3 = 0x0AB305AD;
-    UInt32 guid_4 = 0xDE38893D;
+int VoodooI2CHIDDevice::fetch_hid_descriptor(){
+    uint8_t length = 2;
     
+    union command cmd;
+    cmd.c.reg = hid_device->hid_descriptor_address;
     
-    OSObject *result = NULL;
-    OSObject *params[3];
-    char buffer[16];
+    writeI2C(cmd.data, length);
     
-    memcpy(buffer, &guid_1, 4);
-    memcpy(buffer + 4, &guid_2, 4);
-    memcpy(buffer + 8, &guid_3, 4);
-    memcpy(buffer + 12, &guid_4, 4);
+    memset(&hid_device->hdesc, 0, sizeof(i2c_hid_descr));
     
+    readI2C((uint8_t *)&hid_device->hdesc, sizeof(i2c_hid_descr));
     
-    params[0] = OSData::withBytes(buffer, 16);
-    params[1] = OSNumber::withNumber(0x1, 8);
-    params[2] = OSNumber::withNumber(0x1, 8);
+    IOLog("%s::%s::BCD Version: 0x%x\n", getName(), _controller->_dev->name, hid_device->hdesc.bcdVersion);
+    if (hid_device->hdesc.bcdVersion == 0x0100 && hid_device->hdesc.wHIDDescLength == sizeof(i2c_hid_descr))
+        return 0;
+    return 1;
+}
+        
+int VoodooI2CHIDDevice::fetch_report_descriptor(){
+    hid_device->rsize = hid_device->hdesc.wReportDescLength;
+    uint8_t length = 2;
     
-    ihid->client->provider->evaluateObject("_DSM", &result, params, 3);
-    if (!result)
-        ihid->client->provider->evaluateObject("XDSM", &result, params, 3);
+    union command cmd;
+    cmd.c.reg = hid_device->hdesc.wReportDescRegister;
+    
+    writeI2C(cmd.data, length);
+    
+    hid_device->rdesc = (uint8_t *)IOMalloc(hid_device->rsize);
+    memset(hid_device->rdesc, 0, hid_device->rsize);
+    
+    readI2C(hid_device->rdesc, hid_device->rsize);
+    
+    return 0;
+};
 
+int VoodooI2CHIDDevice::set_power(int power_state){
+    uint8_t length = 4;
+    
+    union command cmd;
+    cmd.c.reg = hid_device->hdesc.wCommandRegister;
+    cmd.c.opcode = 0x08;
+    cmd.c.reportTypeID = power_state;
+    
+    return writeI2C(cmd.data, length);
+}
 
-    OSNumber* number = OSDynamicCast(OSNumber, result);
-    if (number)
-        ihid->pdata.hid_descriptor_address = number->unsigned32BitValue();
-
-    if (result)
-        result->release();
-
-    params[0]->release();
-    params[1]->release();
-    params[2]->release();
-
+int VoodooI2CHIDDevice::reset_dev(){
+    set_power(I2C_HID_PWR_ON);
+    
+    IOSleep(1);
+    
+    uint8_t length = 4;
+    
+    union command cmd;
+    cmd.c.reg = hid_device->hdesc.wCommandRegister;
+    cmd.c.opcode = 0x01;
+    cmd.c.reportTypeID = 0;
+    
+    writeI2C(cmd.data, length);
+    
+    IOSleep(1);
+    
+    uint8_t nullBytes[2];
+    readI2C(nullBytes, 2);
     return 0;
 }
 
@@ -316,12 +345,57 @@ IOReturn VoodooI2CHIDDevice::setPowerState(unsigned long powerState, IOService *
         
         //Waking up from Sleep
         if (!hid_device->timerSource){
-            hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::i2c_hid_get_input));
+            hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::get_input));
             hid_device->workLoop->addEventSource(hid_device->timerSource);
             hid_device->timerSource->setTimeoutMS(10);
         }
     }
     return kIOPMAckImplied;
+}
+
+int VoodooI2CHIDDevice::i2c_hid_descriptor_address(I2CDevice *hid_device) {
+    
+    UInt32 guid_1 = 0x3CDFF6F7;
+    UInt32 guid_2 = 0x45554267;
+    UInt32 guid_3 = 0x0AB305AD;
+    UInt32 guid_4 = 0xDE38893D;
+    
+    
+    OSObject *result = NULL;
+    OSObject *params[3];
+    char buffer[16];
+    
+    memcpy(buffer, &guid_1, 4);
+    memcpy(buffer + 4, &guid_2, 4);
+    memcpy(buffer + 8, &guid_3, 4);
+    memcpy(buffer + 12, &guid_4, 4);
+    
+    
+    params[0] = OSData::withBytes(buffer, 16);
+    params[1] = OSNumber::withNumber(0x1, 8);
+    params[2] = OSNumber::withNumber(0x1, 8);
+    
+    hid_device->provider->evaluateObject("_DSM", &result, params, 3);
+    if (!result)
+        hid_device->provider->evaluateObject("XDSM", &result, params, 3);
+    if (!result)
+        return -1;
+    
+    
+    OSNumber* number = OSDynamicCast(OSNumber, result);
+    if (number)
+        hid_device->hid_descriptor_address = number->unsigned32BitValue();
+    if (!number)
+        return -1;
+    
+    if (result)
+        result->release();
+    
+    params[0]->release();
+    params[1]->release();
+    params[2]->release();
+    
+    return 0;
 }
 
 int VoodooI2CHIDDevice::i2c_get_slave_address(I2CDevice* hid_device){
@@ -339,128 +413,37 @@ int VoodooI2CHIDDevice::i2c_get_slave_address(I2CDevice* hid_device){
     
 }
 
-int VoodooI2CHIDDevice::i2c_hid_alloc_buffers(i2c_hid *ihid, UInt report_size) {
-    int args_len = sizeof(UInt8) + sizeof(UInt16) + sizeof(UInt16) + report_size;
-    
-    ihid->inbuf = (char *)IOMalloc(report_size);
-    ihid->argsbuf = (char *)IOMalloc(report_size);
-    ihid->cmdbuf = (char *)IOMalloc(sizeof(union command) + args_len);
-    
-    if(!ihid->inbuf || !ihid->argsbuf || !ihid->cmdbuf) {
-        i2c_hid_free_buffers(ihid, report_size);
-        return -1;
-    }
-    
-    ihid->bufsize = report_size;
-    
-    return 0;
-}
-
-void VoodooI2CHIDDevice::i2c_hid_free_buffers(i2c_hid *ihid, UInt report_size) {
-    IOFree(ihid->inbuf, report_size);
-    IOFree(ihid->argsbuf, report_size);
-    IOFree(ihid->cmdbuf, sizeof(UInt8) + sizeof(UInt16) + sizeof(UInt16) + report_size);
-    ihid->inbuf = NULL;
-    ihid->cmdbuf = NULL;
-    ihid->argsbuf = NULL;
-    ihid->bufsize = 0;
-}
-
-int VoodooI2CHIDDevice::i2c_hid_fetch_hid_descriptor(i2c_hid *ihid) {
-    struct i2c_hid_desc *hdesc = &ihid->hdesc;
-    UInt dsize;
+SInt32 VoodooI2CHIDDevice::readI2C(uint8_t *values, size_t len){
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = hid_device->addr,
+            .flags = I2C_M_RD,
+            .len = (uint16_t)len,
+            .buf = values,
+        },
+    };
     int ret;
-    
-    ret = i2c_hid_command(ihid, &hid_descr_cmd, ihid->hdesc_buffer, sizeof(struct i2c_hid_desc));
-    
-    if (ret)
-    {
-        IOLog("%s::%s::hid_descr_cmd failed\n", getName(), hid_device->name);
-        return -1;
-    }
-    
-    if((UInt16)(hdesc->bcdVersion) != 0x0100) {
-        IOLog("%s::%s::Unexpected HID descriptor bcdVersion %x\n", getName(), hid_device->name, (UInt16)(hdesc->bcdVersion));
-        return -1;
-    }
-    
-    //dsize = (UInt16)(hdesc->wHIDDescLength);
-    
-    //if (dsize != sizeof(struct i2c_hid_desc)) {
-    //    IOLog("%s::%s::weird size of HID descriptor\n", getName(), _dev->name);
-    //    return -1;
-    //}
-    
-    return 0;
-}
-
-int VoodooI2CHIDDevice::i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, unsigned char *buf_recv, int data_len) {
-    return __i2c_hid_command(ihid, command, 0, 0, NULL, 0, buf_recv, data_len);
-}
-
-int VoodooI2CHIDDevice::__i2c_hid_command(i2c_hid *ihid, struct i2c_hid_cmd *command, UInt8 reportID, UInt8 reportType, UInt8 *args, int args_len, unsigned char *buf_recv, int data_len) {
-    union command *cmd = (union command *)ihid->cmdbuf;
-    int ret;
-    struct i2c_msg msg[2];
-    int msg_num = 1;
-    
-    int length = command->length;
-    bool wait = command->wait;
-    UInt registerIndex = command->registerIndex;
-    
-    if (command == &hid_descr_cmd) {
-        cmd->c.reg = ihid->wHIDDescRegister;
-    } else {
-        cmd->data[0] = ihid->hdesc_buffer[registerIndex];
-        cmd->data[1] = ihid->hdesc_buffer[registerIndex + 1];
-    }
-    
-    if (length > 2) {
-        cmd->c.opcode = command->opcode;
-        cmd->c.reportTypeID = reportID | reportType << 4;
-    }
-    
-    memcpy(cmd->data + length, args, args_len);
-    length += args_len;
-    
-    
-    msg[0].addr = ihid->client->addr;
-    msg[0].flags = 0; //ihid->client->flags & I2C_M_TEN;
-    msg[0].len = length;
-    msg[0].buf = cmd->data;
-    
-    if (data_len > 0) {
-        msg[1].addr = ihid->client->addr;
-        msg[1].flags = I2C_M_RD;
-        msg[1].len = data_len;
-        msg[1].buf = buf_recv;
-        msg_num = 2;
-        hid_device->reading = true;
-    }
-    
-    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)msg, msg_num);
-    
-    if (data_len > 0)
-        hid_device->reading = false;
-    
-    if (ret != msg_num)
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)msgs, ARRAY_SIZE(msgs));
+    if (ret != ARRAY_SIZE(msgs))
         return ret < 0 ? ret : -1;
-    
-    ret = 0;
-    
-    return ret;
+    return 0;
 }
 
-int VoodooI2CHIDDevice::i2c_hid_set_power(i2c_hid *ihid, int power_state) {
+SInt32 VoodooI2CHIDDevice::writeI2C(uint8_t *values, size_t len){
+    struct VoodooI2C::i2c_msg msgs[] = {
+        {
+            .addr = hid_device->addr,
+            .flags = 0,
+            .len = (uint16_t)len,
+            .buf = values,
+        },
+    };
     int ret;
     
-    ret = __i2c_hid_command(ihid, &hid_set_power_cmd, power_state, NULL, 0, NULL, 0, NULL);
-    if (ret)
-        IOLog("failed to change power settings \n");
+    ret = _controller->i2c_transfer((VoodooI2C::i2c_msg*)&msgs, ARRAY_SIZE(msgs));
     
     return ret;
 }
-
 
 void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     IOLog("interrupt\n");
@@ -471,36 +454,25 @@ void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSourc
     
 }
 
-void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* sender) {
-//    IOLog("getting input\n");
-    UInt rsize;
-    int ret;
+void VoodooI2CHIDDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
+    uint16_t maxLen = hid_device->hdesc.wMaxInputLength;
     
-    rsize = UInt16(ihid->hdesc.wMaxInputLength);
+    unsigned char* report = (unsigned char *)IOMalloc(maxLen);
     
-    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
-    
-    ret = i2c_hid_command(ihid, &hid_input_cmd, rdesc, rsize);
+    int ret = readI2C(report, maxLen);
 
-    //IOLog("===Input (%d)===\n", rsize);
-    //for (int i = 0; i < rsize; i++)
-    //    IOLog("0x%02x ", (UInt8) rdesc[i]);
-    //IOLog("\n");
-
-    int return_size = rdesc[0] | rdesc[1] << 8;
+    int return_size = report[0] | report[1] << 8;
     if (return_size == 0) {
-        /* host or device initiated RESET completed */
-        // test/clear bit?
         hid_device->timerSource->setTimeoutMS(10);
         return;
     }
 
-    if (return_size > rsize) {
-        IOLog("%s: Incomplete report %d/%d\n", __func__, rsize, return_size);
+    if (return_size > maxLen) {
+        IOLog("%s: Incomplete report %d/%d\n", __func__, maxLen, return_size);
     }
 
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, return_size);
-    buffer->writeBytes(0, rdesc + 2, return_size - 2);
+    buffer->writeBytes(0, report + 2, return_size - 2);
 
     IOReturn err = _wrapper->handleReport(buffer, kIOHIDReportTypeInput);
     if (err != kIOReturnSuccess)
@@ -508,104 +480,12 @@ void VoodooI2CHIDDevice::i2c_hid_get_input(OSObject* owner, IOTimerEventSource* 
 
     buffer->release();
 
-    IOFree(rdesc, rsize);
+    IOFree(report, maxLen);
     
     hid_device->timerSource->setTimeoutMS(10);
 }
 
-bool VoodooI2CHIDDevice::i2c_hid_get_report_descriptor(i2c_hid *ihid){
-    UInt rsize;
-    int ret;
-    
-    IOLog("reg: 0x%x\n",ihid->hdesc.wReportDescRegister);
-    
-    rsize = UInt16(ihid->hdesc.wReportDescLength);
-    
-    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
-    
-    i2c_hid_hwreset(ihid);
-    
-    if (!rdesc){
-        return -1;
-    }
-    /*
-    if (!rsize || rsize > HID_MAX_DESCRIPTOR_SIZE){
-        IOLog("%s::%s::Weird size of report descriptor (%u)\n", getName(), hid_device->name, rsize);ƒ
-        return 1;
-    }
-    */
-    
-    ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
-    
-    if (!ret){
-        IOLog("it worked!\n");
-    }
-    
-    
-    
-    //_controller->registerDump(_controller->_dev);
-    
-    /*
-    if (ret) {
-        IOLog("%s::%s::Reading report descriptor failed", getName(), hid_device->name);
-        return -1;
-    }
-    
-    
-    IOLog("%s::%s::Report descriptor: %s\n", getName(), hid_device->name, rdesc);
-     
-    */
-    
-//    IOLog("===Report Descriptor===\n");
-//    for (int i = 0; i < UInt16(ihid->hdesc.wReportDescLength); i++)
-//        IOLog("0x%02x\n", (UInt8) rdesc[i]);
-//    IOLog("===Report Descriptor===\n");
-    
-    IOFree(rdesc, rsize);
-    
-    return 0;
-    
-};
-
 void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
-    UInt rsize;
-    int ret;
-    
-    IOLog("Report descriptor register: 0x%x\n",ihid->hdesc.wReportDescRegister);
-    
-    rsize = UInt16(ihid->hdesc.wReportDescLength);
-    
-    unsigned char* rdesc = (unsigned char *)IOMalloc(rsize);
-    
-    i2c_hid_hwreset(ihid);
-    
-    ret = i2c_hid_command(ihid, &hid_report_desc_cmd, rdesc, rsize);
-
-    if (!ret)
-        IOLog("Report descriptor was fetched\n");
-
-    buffer->writeBytes(0, rdesc, rsize);
-    IOLog("Report Descriptor written to buffer (%d)\n", rsize);
-
-    IOFree(rdesc, rsize);
+    buffer->writeBytes(0, hid_device->rdesc, hid_device->rsize);
+    IOLog("Report Descriptor written to buffer (%d)\n", hid_device->rsize);
 }
-
-bool VoodooI2CHIDDevice::i2c_hid_hwreset(i2c_hid *ihid) {
-    int ret;
-    unsigned char buf[2];
-    
-    ret = i2c_hid_set_power(ihid, I2C_HID_PWR_ON);
-    
-    if (ret)
-        return ret;
-    
-    IOSleep(1);
-
-    ret = i2c_hid_command(ihid, &hid_reset_cmd, buf, 2);
-    if (ret || (*buf != 0) || (*(buf+1) != 0)) {
-        i2c_hid_set_power(ihid, I2C_HID_PWR_SLEEP);
-        return ret;
-    }
-    
-    return 0;
-};
