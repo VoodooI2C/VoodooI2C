@@ -481,11 +481,6 @@ void VoodooI2CHIDDevice::get_input(OSObject* owner, IOTimerEventSource* sender) 
 
 static void i2c_hid_readReport(VoodooI2CHIDDevice *device){
     device->get_input(NULL, NULL);
-    
-    unsigned char *report = (unsigned char *)IOMalloc(device->hid_device->hdesc.wMaxInputLength);
-    device->readI2C(report, device->hid_device->hdesc.wMaxInputLength);
-    IOFree(report, device->hid_device->hdesc.wMaxInputLength);
-    
     device->hid_device->reading = false;
 }
 
