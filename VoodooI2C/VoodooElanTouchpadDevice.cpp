@@ -257,9 +257,6 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     elan_i2c_read_cmd(ETP_I2C_XY_TRACENUM_CMD, val2);
     
-    uint8_t x_traces = val2[0];
-    uint8_t y_traces = val2[1];
-    
     elan_i2c_read_cmd(ETP_I2C_RESOLUTION_CMD, val2);
     
     hw_res_x = val2[0];
@@ -492,8 +489,6 @@ IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IO
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         if (!hid_device->trackpadIsAwake){
-            int ret = 0;
-    
             elan_i2c_write_cmd(ETP_I2C_STAND_CMD, ETP_I2C_RESET);
             
             /* Wait for the device to reset */
@@ -513,7 +508,6 @@ IOReturn VoodooI2CElanTouchpadDevice::setPowerState(unsigned long powerState, IO
             uint8_t prodid = val2[0];
             
             elan_i2c_read_cmd(ETP_I2C_SM_VERSION_CMD, val2);
-            uint8_t smvers = val2[0];
             uint8_t ictype = val2[1];
             
             if (elan_check_ASUS_special_fw(prodid, ictype)){ //some Elan trackpads on certain ASUS laptops are buggy (linux commit 2de4fcc64685def3e586856a2dc636df44532395)
