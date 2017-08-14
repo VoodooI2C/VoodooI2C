@@ -57,17 +57,16 @@ public:
         void* _dev;
         
         IOWorkLoop* workLoop;
-        //IOCommandGate* commandGate;
         
         IOInterruptEventSource *interruptSource;
         
         IOACPIPlatformDevice* provider;
         
-        IOTimerEventSource* timerSource;
-        
         char* name;
         
         bool reading;
+        
+        bool touchScreenIsAwake;
         
     } I2CDevice;
     
@@ -111,6 +110,8 @@ public:
     
     void write_report_to_buffer(IOMemoryDescriptor *buffer);
     void write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer);
+    
+    virtual IOReturn setPowerState(unsigned long powerState, IOService *whatDevice) override;
     
     int i2c_get_slave_address(I2CDevice* hid_device);
     

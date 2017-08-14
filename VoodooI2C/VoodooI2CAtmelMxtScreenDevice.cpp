@@ -214,15 +214,10 @@ void VoodooI2CAtmelMxtScreenDevice::stop(IOService* device) {
     
     destroy_wrapper();
     
-    if (hid_device->timerSource){
-        hid_device->timerSource->cancelTimeout();
-        hid_device->timerSource->release();
-        hid_device->timerSource = NULL;
-    }
-    
     if (hid_device->interruptSource){
-        //hid_device->interruptSource->disable();
-        //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource->disable();
+        hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource->release();
         hid_device->interruptSource = NULL;
     }
     
@@ -233,6 +228,8 @@ void VoodooI2CAtmelMxtScreenDevice::stop(IOService* device) {
         IOFree(core.buf, totsize);
     
     IOFree(hid_device, sizeof(I2CDevice));
+    
+    PMstop();
     
     //hid_device->provider->close(this);
     
@@ -405,6 +402,8 @@ int VoodooI2CAtmelMxtScreenDevice::mxt_read_t100_config()
 }
 
 int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
+    PMinit();
+    
     int ret;
     
     int blksize;
@@ -556,38 +555,43 @@ int VoodooI2CAtmelMxtScreenDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->retain();
     
+    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CAtmelMxtScreenDevice::InterruptOccured), hid_device->provider);
     
-     /*hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CAtmelMxtScreenDevice::InterruptOccured), hid_device->provider);
-     
-     if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
-     IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
-     stop(this);
-     return -1;
-     }
-     
-     hid_device->interruptSource->enable();*/
-    
-    
-    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CAtmelMxtScreenDevice::get_input));
-    if (!hid_device->timerSource){
-        IOLog("%s", "Timer Err!\n");
+    if (!hid_device->interruptSource) {
+        IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
         goto err;
     }
     
-    hid_device->workLoop->addEventSource(hid_device->timerSource);
-    hid_device->timerSource->setTimeoutMS(10);
-    /*
-     
-     hid_device->commandGate = IOCommandGate::commandGate(this);
-     
-     if (!hid_device->commandGate || (_dev->workLoop->addEventSource(hid_device->commandGate) != kIOReturnSuccess)) {
-     IOLog("%s::%s::Failed to open HID command gate\n", getName(), _dev->name);
-     return -1;
-     }
-     */
+    hid_device->workLoop->addEventSource(hid_device->interruptSource);
+    hid_device->interruptSource->enable();
+    
+    hid_device->touchScreenIsAwake = true;
+    hid_device->reading = false;
     
     initialize_wrapper();
     registerService();
+    
+#define kMyNumberOfStates 2
+    
+    static IOPMPowerState myPowerStates[kMyNumberOfStates];
+    // Zero-fill the structures.
+    bzero (myPowerStates, sizeof(myPowerStates));
+    // Fill in the information about your device's off state:
+    myPowerStates[0].version = 1;
+    myPowerStates[0].capabilityFlags = kIOPMPowerOff;
+    myPowerStates[0].outputPowerCharacter = kIOPMPowerOff;
+    myPowerStates[0].inputPowerRequirement = kIOPMPowerOff;
+    // Fill in the information about your device's on state:
+    myPowerStates[1].version = 1;
+    myPowerStates[1].capabilityFlags = kIOPMPowerOn;
+    myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
+    myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
+    
+    
+    
+    this->_controller->joinPMtree(this);
+    
+    registerPowerDriver(this, myPowerStates, kMyNumberOfStates);
     
     return 0;
     
@@ -670,6 +674,23 @@ SInt32 VoodooI2CAtmelMxtScreenDevice::writeI2C16(uint16_t reg, size_t len, uint8
     return ret;
 }
 
+IOReturn VoodooI2CAtmelMxtScreenDevice::setPowerState(unsigned long powerState, IOService *whatDevice){
+    if (powerState == 0){
+        hid_device->touchScreenIsAwake = false;
+        
+        IOLog("%s::Going to sleep!\n", getName());
+    } else {
+        if (!hid_device->touchScreenIsAwake){
+            atmel_reset_device();
+            
+            hid_device->touchScreenIsAwake = true;
+        } else {
+            IOLog("%s::Touch screen already awake! Not reinitializing.\n", getName());
+        }
+    }
+    return kIOPMAckImplied;
+}
+
 int VoodooI2CAtmelMxtScreenDevice::i2c_get_slave_address(I2CDevice* hid_device){
     OSObject* result = NULL;
     
@@ -683,13 +704,6 @@ int VoodooI2CAtmelMxtScreenDevice::i2c_get_slave_address(I2CDevice* hid_device){
     
     return 0;
     
-}
-
-void VoodooI2CAtmelMxtScreenDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    IOLog("interrupt\n");
-    if (hid_device->reading)
-        return;
-    //i2c_hid_get_input(ihid);
 }
 
 int VoodooI2CAtmelMxtScreenDevice::ProcessMessagesUntilInvalid() {
@@ -920,13 +934,28 @@ update_count:
     return true;
 }
 
-void VoodooI2CAtmelMxtScreenDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
-    if (T44_address)
-        DeviceReadT44();
+static void atmelMxt_readReport(VoodooI2CAtmelMxtScreenDevice *device){
+    if (device->T44_address)
+        device->DeviceReadT44();
     else
-        DeviceRead();
+        device->DeviceRead();
+    device->hid_device->reading = false;
+}
+
+void VoodooI2CAtmelMxtScreenDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
+    if (hid_device->reading)
+        return;
     
-    hid_device->timerSource->setTimeoutMS(10);
+    hid_device->reading = true;
+    
+    thread_t newThread;
+    kern_return_t kr = kernel_thread_start((thread_continue_t)atmelMxt_readReport, this, &newThread);
+    if (kr != KERN_SUCCESS){
+        hid_device->reading = false;
+        IOLog("Thread error!\n");
+    } else {
+        thread_deallocate(newThread);
+    }
 }
 
 int VoodooI2CAtmelMxtScreenDevice::reportDescriptorLength(){
