@@ -318,15 +318,6 @@ int VoodooI2CElanTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
     hid_device->timerSource->setTimeoutMS(10);
-    /*
-     
-     hid_device->commandGate = IOCommandGate::commandGate(this);
-     
-     if (!hid_device->commandGate || (_dev->workLoop->addEventSource(hid_device->commandGate) != kIOReturnSuccess)) {
-     IOLog("%s::%s::Failed to open HID command gate\n", getName(), _dev->name);
-     return -1;
-     }
-     */
 
     hid_device->trackpadIsAwake = true;
     hid_device->reading = false;

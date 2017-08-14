@@ -144,12 +144,6 @@ public:
 #define I2C_M_TEN 0x0010
 #define I2C_M_RD 0x0001
 #define I2C_M_RECV_LEN 0x0400
-        
-#define I2C_HID_READ_PENDING (1 << 2);
-        
-#define I2C_HID_CMD(opcode_) \
-.opcode = opcode_, .length = 4,\
-.registerIndex = offsetof(struct i2c_hid_desc, wCommandRegister)
     };
     
     uint8_t prevreport[ETP_MAX_REPORT_LEN];
