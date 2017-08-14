@@ -96,9 +96,12 @@ void VoodooI2CHIDDevice::stop(IOService* device) {
         hid_device->timerSource = NULL;
     }
     
-    //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
-    //hid_device->interruptSource->disable();
-    hid_device->interruptSource = NULL;
+    if (hid_device->interruptSource){
+        hid_device->interruptSource->disable();
+        hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource->release();
+        hid_device->interruptSource = NULL;
+    }
     
     hid_device->workLoop->release();
     hid_device->workLoop = NULL;
@@ -138,14 +141,14 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
         return -1;
     }
     
+    reset_dev();
+    
     if (fetch_report_descriptor()){
         IOLog("%s::%s::Error fetching HID Report Descriptor!\n", getName(), _controller->_dev->name);
         return -1;
     }
     
     int ret = 0;
-    
-    reset_dev();
     
     setProperty("HIDDescLength", (UInt32)hid_device->hdesc.wHIDDescLength, 32);
     setProperty("bcdVersion", (UInt32)hid_device->hdesc.bcdVersion, 32);
@@ -170,29 +173,24 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     }
 
     hid_device->workLoop->retain();
-
-    /*
-     hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->provider);
-     
-     if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
-         IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
-         stop(this);
-         return -1;
-     }
-     
-     hid_device->interruptSource->enable();
-     */
     
-    hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::get_input));
+    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->provider);
+    
+    if (!hid_device->interruptSource) {
+        goto err;
+    }
+    hid_device->workLoop->addEventSource(hid_device->interruptSource);
+    hid_device->interruptSource->enable();
+    
+    hid_device->timerSource = NULL;
+    
+    /*hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::get_input));
     if (!hid_device->timerSource){
         goto err;
     }
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
-    hid_device->timerSource->setTimeoutMS(200);
-    
-    hid_device->deviceIsAwake = true;
-    hid_device->reading = false;
+    hid_device->timerSource->setTimeoutMS(200);*/
 
     initialize_wrapper();
     registerService();
@@ -216,6 +214,9 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     
     
     this->_controller->joinPMtree(this);
+    
+    hid_device->deviceIsAwake = true;
+    hid_device->reading = false;
     
     registerPowerDriver(this, myPowerStates, kMyNumberOfStates);
     
@@ -344,11 +345,11 @@ IOReturn VoodooI2CHIDDevice::setPowerState(unsigned long powerState, IOService *
         }
         
         //Waking up from Sleep
-        if (!hid_device->timerSource){
+        /*if (!hid_device->timerSource){
             hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CHIDDevice::get_input));
             hid_device->workLoop->addEventSource(hid_device->timerSource);
             hid_device->timerSource->setTimeoutMS(10);
-        }
+        }*/
     }
     return kIOPMAckImplied;
 }
@@ -445,15 +446,6 @@ SInt32 VoodooI2CHIDDevice::writeI2C(uint8_t *values, size_t len){
     return ret;
 }
 
-void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    IOLog("interrupt\n");
-    if (hid_device->reading)
-        return;
-    
-    //i2c_hid_get_input(ihid);
-    
-}
-
 void VoodooI2CHIDDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
     uint16_t maxLen = hid_device->hdesc.wMaxInputLength;
     
@@ -463,13 +455,15 @@ void VoodooI2CHIDDevice::get_input(OSObject* owner, IOTimerEventSource* sender) 
 
     int return_size = report[0] | report[1] << 8;
     if (return_size == 0) {
-        hid_device->timerSource->setTimeoutMS(10);
+        //hid_device->timerSource->setTimeoutMS(5);
         return;
     }
 
     if (return_size > maxLen) {
         IOLog("%s: Incomplete report %d/%d\n", __func__, maxLen, return_size);
+        return;
     }
+    
 
     IOBufferMemoryDescriptor *buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, return_size);
     buffer->writeBytes(0, report + 2, return_size - 2);
@@ -482,7 +476,34 @@ void VoodooI2CHIDDevice::get_input(OSObject* owner, IOTimerEventSource* sender) 
 
     IOFree(report, maxLen);
     
-    hid_device->timerSource->setTimeoutMS(10);
+    //hid_device->timerSource->setTimeoutMS(5);
+}
+
+static void i2c_hid_readReport(VoodooI2CHIDDevice *device){
+    device->get_input(NULL, NULL);
+    
+    unsigned char *report = (unsigned char *)IOMalloc(device->hid_device->hdesc.wMaxInputLength);
+    device->readI2C(report, device->hid_device->hdesc.wMaxInputLength);
+    IOFree(report, device->hid_device->hdesc.wMaxInputLength);
+    
+    device->hid_device->reading = false;
+}
+
+void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
+    if (hid_device->reading)
+        return;
+    
+    hid_device->reading = true;
+    
+    thread_t newThread;
+    kern_return_t kr = kernel_thread_start((thread_continue_t)i2c_hid_readReport, this, &newThread);
+    if (kr != KERN_SUCCESS){
+        hid_device->reading = false;
+        IOLog("Thread error!\n");
+    } else {
+        thread_deallocate(newThread);
+    }
+    
 }
 
 void VoodooI2CHIDDevice::write_report_descriptor_to_buffer(IOBufferMemoryDescriptor *buffer){
