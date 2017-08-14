@@ -149,6 +149,8 @@ public:
         
         bool reading;
         
+        bool trackpadIsAwake;
+        
     } I2CDevice;
     
     struct i2c_msg {

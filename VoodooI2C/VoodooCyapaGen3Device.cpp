@@ -37,9 +37,6 @@ void VoodooI2CCyapaGen3Device::TrackpadRawInput(struct csgesture_softc *sc, cyap
     }
     
     sc->buttondown = (regs->fngr & CYAPA_FNGR_LEFT);
-    
-    if (_wrapper)
-        _wrapper->ProcessGesture(sc);
 }
 
 bool VoodooI2CCyapaGen3Device::attach(IOService * provider, IOService* child)
@@ -100,9 +97,12 @@ void VoodooI2CCyapaGen3Device::stop(IOService* device) {
         hid_device->timerSource = NULL;
     }
     
-    //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
-    //hid_device->interruptSource->disable();
-    hid_device->interruptSource = NULL;
+    if (hid_device->interruptSource){
+        hid_device->interruptSource->disable();
+        hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource->release();
+        hid_device->interruptSource = NULL;
+    }
     
     hid_device->workLoop->release();
     hid_device->workLoop = NULL;
@@ -223,17 +223,15 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->retain();
     
-    /*
-     hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->provider);
-     
-     if (hid_device->workLoop->addEventSource(hid_device->interruptSource) != kIOReturnSuccess) {
-     IOLog("%s::%s::Could not add interrupt source to workloop\n", getName(), _controller->_dev->name);
-     stop(this);
-     return -1;
-     }
-     
-     hid_device->interruptSource->enable();
-     */
+    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CCyapaGen3Device::InterruptOccured), hid_device->provider);
+    
+    if (!hid_device->interruptSource) {
+        IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
+        goto err;
+    }
+    
+    hid_device->workLoop->addEventSource(hid_device->interruptSource);
+    hid_device->interruptSource->enable();
     
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
     if (!hid_device->timerSource){
@@ -243,15 +241,8 @@ int VoodooI2CCyapaGen3Device::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->addEventSource(hid_device->timerSource);
     hid_device->timerSource->setTimeoutMS(10);
-    /*
-     
-     hid_device->commandGate = IOCommandGate::commandGate(this);
-     
-     if (!hid_device->commandGate || (_dev->workLoop->addEventSource(hid_device->commandGate) != kIOReturnSuccess)) {
-     IOLog("%s::%s::Failed to open HID command gate\n", getName(), _dev->name);
-     return -1;
-     }
-     */
+    
+    hid_device->reading = false;
     
     initialize_wrapper();
     registerService();
@@ -353,8 +344,14 @@ IOReturn VoodooI2CCyapaGen3Device::setPowerState(unsigned long powerState, IOSer
         if (_wrapper)
             _wrapper->prepareToSleep();
         
+        hid_device->trackpadIsAwake = false;
+        
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
+        if (!hid_device->trackpadIsAwake){
+            hid_device->trackpadIsAwake = true;
+        }
+        
         //Waking up from Sleep
         if (!hid_device->timerSource){
             hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCyapaGen3Device::get_input));
@@ -385,17 +382,33 @@ int VoodooI2CCyapaGen3Device::i2c_get_slave_address(I2CDevice* hid_device){
     
 }
 
+static void cyapa_getReport(VoodooI2CCyapaGen3Device *device){
+    cyapa_regs regs;
+    device->readI2C(0, sizeof(regs), (uint8_t *)&regs);
+    
+    device->TrackpadRawInput(&device->softc, &regs, 1);
+    device->hid_device->reading = false;
+}
+
 void VoodooI2CCyapaGen3Device::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     IOLog("interrupt\n");
     if (hid_device->reading)
         return;
-    //i2c_hid_get_input(ihid);
+    
+    hid_device->reading = true;
+    
+    thread_t newThread;
+    kern_return_t kr = kernel_thread_start((thread_continue_t)cyapa_getReport, this, &newThread);
+    if (kr != KERN_SUCCESS){
+        hid_device->reading = false;
+        IOLog("Thread error!\n");
+    } else {
+        thread_deallocate(newThread);
+    }
 }
 
 void VoodooI2CCyapaGen3Device::get_input(OSObject* owner, IOTimerEventSource* sender) {
-    cyapa_regs regs;
-    readI2C(0, sizeof(regs), (uint8_t *)&regs);
-    
-    TrackpadRawInput(&softc, &regs, 1);
-    hid_device->timerSource->setTimeoutMS(10);
+    if (_wrapper)
+        _wrapper->ProcessGesture(&softc);
+    hid_device->timerSource->setTimeoutMS(5);
 }
