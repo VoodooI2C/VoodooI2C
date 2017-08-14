@@ -96,7 +96,7 @@ void VoodooI2C::disableI2CInt(I2CBus* _dev) {
  */
 
 void VoodooI2C::enableI2CDevice(I2CBus* _dev, bool enable) {
-    int timeout = 5000; //increased to compensate for missing usleep below
+    int timeout = 100; //increased to compensate for missing usleep below
     
     do {
         writel(_dev, enable, DW_IC_ENABLE);
@@ -325,14 +325,10 @@ bool VoodooI2C::initI2CBus(I2CBus* _dev) {
     
     
     //write transit buffer depth in DW_IC_TX_TL
-    writel(_dev, _dev->tx_fifo_depth - 1, DW_IC_TX_TL);
+    writel(_dev, _dev->tx_fifo_depth / 2, DW_IC_TX_TL);
     
     //write receive buffer depth in DW_IC_RX_TL
     writel(_dev, 0, DW_IC_RX_TL);
-    
-    
-    //set default i2c target address in DW_IC_TAR, TODO: remove this, don't think we need it
-    writel(_dev, 0x2c, DW_IC_TAR);
     
     
     //write I2C master configuration to DW_IC_CON
