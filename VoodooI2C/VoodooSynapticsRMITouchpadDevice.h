@@ -79,7 +79,7 @@ struct rmi_function {
 #define PDT_END_SCAN_LOCATION	0x0005
 #define RMI4_END_OF_PDT(id) ((id) == 0x00 || (id) == 0xff)
 
-typedef struct __attribute__((__packed__)) pdt_entry {
+struct __attribute__((__packed__)) pdt_entry {
     uint8_t query_base_addr : 8;
     uint8_t command_base_addr : 8;
     uint8_t control_base_addr : 8;

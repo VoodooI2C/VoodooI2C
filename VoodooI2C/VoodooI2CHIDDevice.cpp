@@ -336,8 +336,6 @@ IOReturn VoodooI2CHIDDevice::setPowerState(unsigned long powerState, IOService *
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         if (!hid_device->deviceIsAwake){
-            int ret = 0;
-            
             hid_device->deviceIsAwake = true;
             IOLog("%s::Woke up from Sleep!\n", getName());
         } else {
@@ -451,7 +449,7 @@ void VoodooI2CHIDDevice::get_input(OSObject* owner, IOTimerEventSource* sender) 
     
     unsigned char* report = (unsigned char *)IOMalloc(maxLen);
     
-    int ret = readI2C(report, maxLen);
+    readI2C(report, maxLen);
 
     int return_size = report[0] | report[1] << 8;
     if (return_size == 0) {

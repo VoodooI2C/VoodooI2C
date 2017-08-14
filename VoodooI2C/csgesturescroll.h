@@ -8,7 +8,7 @@
 #ifndef csgesturescroll_h
 #define csgesturescroll_h
 
-typedef class VoodooCSGestureHIPointingWrapper;
+class VoodooCSGestureHIPointingWrapper;
 
 class CSGestureScroll : public IOService {
     typedef IOService super;
