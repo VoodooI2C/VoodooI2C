@@ -166,9 +166,12 @@ void VoodooI2CPrecisionTouchpadDevice::stop(IOService* device) {
         hid_device->timerSource = NULL;
     }
     
-    //hid_device->workLoop->removeEventSource(hid_device->interruptSource);
-    //hid_device->interruptSource->disable();
-    hid_device->interruptSource = NULL;
+    if (hid_device->interruptSource){
+        hid_device->interruptSource->disable();
+        hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        hid_device->interruptSource->release();
+        hid_device->interruptSource = NULL;
+    }
     
     if (hid_device->workLoop){
         hid_device->workLoop->release();
@@ -366,9 +369,21 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->retain();
     
+    hid_device->interruptSource = NULL;
+    
+    /*hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->provider, 0);
+    
+    if (!hid_device->interruptSource) {
+        IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
+        goto err;
+    }
+    
+    hid_device->workLoop->addEventSource(hid_device->interruptSource);
+    hid_device->interruptSource->enable();*/
+    
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CPrecisionTouchpadDevice::get_input));
     if (!hid_device->timerSource){
-        IOLog("%s", "Timer Err!\n");
+        IOLog("%s::%s::Timer Error!\n", getName(), _controller->_dev->name);
         goto err;
     }
     
@@ -551,12 +566,19 @@ int VoodooI2CPrecisionTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_devic
     
     OSData* data = OSDynamicCast(OSData, result);
     
-    hid_device->addr = *(int*)data->getBytesNoCopy(16,1) & 0xFF;
+    uint8_t *crs = (uint8_t *)data->getBytesNoCopy();
+    VoodooI2CACPICRSParser crsParser;
+    crsParser.parse_acpi_crs(crs, 0, data->getLength());
+    
+    if (crsParser.foundI2C)
+        hid_device->addr = crsParser.i2cInfo.address;
     
     data->release();
     
-    return 0;
-    
+    if (crsParser.foundI2C)
+        return 0;
+    else
+        return -1;
 }
 
 void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){

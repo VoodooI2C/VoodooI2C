@@ -33,6 +33,8 @@
 		F1AB82D11C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */; };
 		F1AD63621E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AD63601E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp */; };
 		F1AD63631E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = F1AD63611E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h */; };
+		F1C2CBC11F439ED200906F09 /* VoodooI2CACPICRSParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1C2CBBF1F439ED200906F09 /* VoodooI2CACPICRSParser.cpp */; };
+		F1C2CBC21F439ED200906F09 /* VoodooI2CACPICRSParser.h in Headers */ = {isa = PBXBuildFile; fileRef = F1C2CBC01F439ED200906F09 /* VoodooI2CACPICRSParser.h */; };
 		F1FA896C1D7FAAC90019F9CF /* AverageClasses.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */; };
 		F1FA896F1D7FAAF10019F9CF /* csgesturescroll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */; };
 		F1FA89701D7FAAF10019F9CF /* csgesturescroll.h in Headers */ = {isa = PBXBuildFile; fileRef = F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */; };
@@ -71,6 +73,8 @@
 		F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCSGestureHIDWrapper.h; sourceTree = "<group>"; };
 		F1AD63601E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooSynapticsRMITouchpadDevice.cpp; sourceTree = "<group>"; };
 		F1AD63611E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooSynapticsRMITouchpadDevice.h; sourceTree = "<group>"; };
+		F1C2CBBF1F439ED200906F09 /* VoodooI2CACPICRSParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CACPICRSParser.cpp; sourceTree = "<group>"; };
+		F1C2CBC01F439ED200906F09 /* VoodooI2CACPICRSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CACPICRSParser.h; sourceTree = "<group>"; };
 		F1FA896B1D7FAAC90019F9CF /* AverageClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AverageClasses.h; sourceTree = "<group>"; };
 		F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csgesturescroll.cpp; sourceTree = "<group>"; };
 		F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csgesturescroll.h; sourceTree = "<group>"; };
@@ -124,6 +128,7 @@
 				F1AD635F1E090E1D00F0BC23 /* Synaptics RMI Trackpad Driver */,
 				308C59891BC61FE00078D1B1 /* VoodooHIDWrapper.h */,
 				308C59871BC61FD20078D1B1 /* VoodooHIDWrapper.cpp */,
+				F1C2CBC31F439ED800906F09 /* ACPI Parser */,
 			);
 			path = VoodooI2C;
 			sourceTree = "<group>";
@@ -185,8 +190,8 @@
 				F191539B1D25CE14007972A7 /* csgesture.cpp */,
 				F1FA896D1D7FAAF10019F9CF /* csgesturescroll.cpp */,
 				F1FA896E1D7FAAF10019F9CF /* csgesturescroll.h */,
-				F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */,
 				F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */,
+				F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */,
 				F198572F1D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp */,
 				F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */,
 			);
@@ -200,6 +205,15 @@
 				F1AD63611E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h */,
 			);
 			name = "Synaptics RMI Trackpad Driver";
+			sourceTree = "<group>";
+		};
+		F1C2CBC31F439ED800906F09 /* ACPI Parser */ = {
+			isa = PBXGroup;
+			children = (
+				F1C2CBBF1F439ED200906F09 /* VoodooI2CACPICRSParser.cpp */,
+				F1C2CBC01F439ED200906F09 /* VoodooI2CACPICRSParser.h */,
+			);
+			name = "ACPI Parser";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,6 +235,7 @@
 				F17D8FF91CBABF15002F9115 /* VoodooAtmelTouchWrapper.h in Headers */,
 				F19857321D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h in Headers */,
 				F1AD63631E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.h in Headers */,
+				F1C2CBC21F439ED200906F09 /* VoodooI2CACPICRSParser.h in Headers */,
 				F1FA89701D7FAAF10019F9CF /* csgesturescroll.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,6 +315,7 @@
 				308C59881BC61FD20078D1B1 /* VoodooHIDWrapper.cpp in Sources */,
 				ACF45CFA1A7FDE76005C2BBE /* VoodooI2CHIDDevice.cpp in Sources */,
 				F153120A1CB96C8300BE6BFC /* VoodooI2CAtmelMxtScreenDevice.cpp in Sources */,
+				F1C2CBC11F439ED200906F09 /* VoodooI2CACPICRSParser.cpp in Sources */,
 				F19857311D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.cpp in Sources */,
 				F191539C1D25CE14007972A7 /* csgesture.cpp in Sources */,
 				AC45AFEF1A32543B008E6857 /* VoodooI2C.cpp in Sources */,

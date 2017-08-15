@@ -541,11 +541,19 @@ int VoodooI2CElanTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_device){
     
     OSData* data = OSDynamicCast(OSData, result);
     
-    hid_device->addr = *(int*)data->getBytesNoCopy(16,1) & 0xFF;
+    uint8_t *crs = (uint8_t *)data->getBytesNoCopy();
+    VoodooI2CACPICRSParser crsParser;
+    crsParser.parse_acpi_crs(crs, 0, data->getLength());
+    
+    if (crsParser.foundI2C)
+        hid_device->addr = crsParser.i2cInfo.address;
     
     data->release();
     
-    return 0;
+    if (crsParser.foundI2C)
+        return 0;
+    else
+        return -1;
 }
 
 static void elan_i2c_readReport(VoodooI2CElanTouchpadDevice *device){
