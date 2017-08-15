@@ -33,13 +33,24 @@ struct gpio_int_info {
     uint16_t pinNumber;
 };
 
+struct gpio_io_info {
+    bool resourceConsumer;
+    uint8_t ioRestriction;
+    bool sharing;
+    
+    uint8_t pinConfig;
+    uint16_t pinNumber;
+};
+
 class VoodooI2CACPICRSParser {
 public:
     bool foundI2C;
     bool foundGPIOInt;
+    bool foundGPIOIO;
     
     i2c_info i2cInfo;
     gpio_int_info gpioInt;
+    gpio_io_info gpioIO;
     
     VoodooI2CACPICRSParser();
     void parse_acpi_crs(uint8_t *crs, uint32_t offset, uint32_t sz);

@@ -119,6 +119,19 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t *crs, uint32_t offset, uint
         gpioInt.pinConfig = pinConfig;
         gpioInt.pinNumber = pinNumber;
     }
+    
+    if (gpiotype == 1){
+        //GPIOIo
+        
+        foundGPIOIO = true;
+        
+        gpioIO.resourceConsumer = flags & 0x1;
+        gpioIO.ioRestriction = gpioFlags & 0x3;
+        gpioIO.sharing = (gpioFlags >> 3) & 0x1;
+        
+        gpioIO.pinConfig = pinConfig;
+        gpioIO.pinNumber = pinNumber;
+    }
 }
 
 void VoodooI2CACPICRSParser::parse_acpi_crs(uint8_t *crs, uint32_t offset, uint32_t sz){
