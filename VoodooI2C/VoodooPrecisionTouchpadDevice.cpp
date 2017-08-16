@@ -131,7 +131,7 @@ bool VoodooI2CPrecisionTouchpadDevice::probe(IOService* device) {
     hid_device->provider = OSDynamicCast(IOACPIPlatformDevice, device);
     hid_device->provider->retain();
     
-    int ret = i2c_get_slave_address(hid_device);
+    int ret = get_device_resources(hid_device);
     if (ret < 0){
         IOLog("%s::%s::Failed to get a slave address for an I2C device, aborting.\n", getName(), _controller->_dev->name);
         IOFree(hid_device, sizeof(I2CDevice));
@@ -383,7 +383,6 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
         hid_device->gpioController = getGPIOController();
         if (hid_device->gpioController){
             hid_device->usingGPIOInt = true;
-            hid_device->gpioIRQ = IRQ_TYPE_LEVEL_LOW;
             IOLog("%s::%s::Using GPIO Pin: %d. IRQ: %d\n", getName(), _controller->_dev->name, hid_device->gpioPin, hid_device->gpioIRQ);
             hid_device->gpioController->setInterruptTypeForPin(hid_device->gpioPin, hid_device->gpioIRQ);
             hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->gpioController, hid_device->gpioPin);
@@ -578,7 +577,7 @@ int VoodooI2CPrecisionTouchpadDevice::i2c_hid_descriptor_address(I2CDevice *hid_
     return 0;
 }
 
-int VoodooI2CPrecisionTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_device){
+int VoodooI2CPrecisionTouchpadDevice::get_device_resources(I2CDevice* hid_device){
     OSObject* result = NULL;
     
     hid_device->provider->evaluateObject("_CRS", &result);
@@ -595,36 +594,7 @@ int VoodooI2CPrecisionTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_devic
     if (crsParser.foundGPIOInt){
         hid_device->hasGPIOInt = true;
         hid_device->gpioPin = crsParser.gpioInt.pinNumber;
-        
-        int irq = 0;
-        if (crsParser.gpioInt.levelInterrupt){
-            switch (crsParser.gpioInt.interruptPolarity){
-                case 0:
-                    irq = IRQ_TYPE_LEVEL_HIGH;
-                    break;
-                case 1:
-                    irq = IRQ_TYPE_LEVEL_LOW;
-                    break;
-                default:
-                    irq = IRQ_TYPE_LEVEL_LOW;
-                    break;
-            }
-        } else {
-            switch (crsParser.gpioInt.interruptPolarity) {
-                case 0:
-                    irq = IRQ_TYPE_EDGE_FALLING;
-                    break;
-                case 1:
-                    irq = IRQ_TYPE_EDGE_RISING;
-                    break;
-                case 2:
-                    irq = IRQ_TYPE_EDGE_BOTH;
-                default:
-                    irq = IRQ_TYPE_EDGE_FALLING;
-                    break;
-            }
-        }
-        hid_device->gpioIRQ = irq;
+        hid_device->gpioIRQ = crsParser.gpioInt.irqType;
     } else {
         hid_device->hasGPIOInt = false;
     }

@@ -31,6 +31,8 @@ struct gpio_int_info {
     
     uint8_t pinConfig;
     uint16_t pinNumber;
+    
+    int irqType;
 };
 
 struct gpio_io_info {

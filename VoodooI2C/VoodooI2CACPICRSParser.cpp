@@ -11,6 +11,7 @@
 #include "VoodooI2CACPICRSParser.h"
 #include <IOKit/IOLib.h>
 #include <string.h>
+#include "linuxirq.h"
 
 VoodooI2CACPICRSParser::VoodooI2CACPICRSParser(){
     foundGPIOInt = false;
@@ -109,7 +110,7 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t *crs, uint32_t offset, uint
         foundGPIOInt = true;
         
         gpioInt.resourceConsumer = flags & 0x1;
-        gpioInt.levelInterrupt = gpioFlags & 0x1;
+        gpioInt.levelInterrupt = !(gpioFlags & 0x1);
         
         gpioInt.interruptPolarity = (gpioFlags >> 1) & 0x3;
         
@@ -118,6 +119,36 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t *crs, uint32_t offset, uint
         
         gpioInt.pinConfig = pinConfig;
         gpioInt.pinNumber = pinNumber;
+        
+        int irq = 0;
+        if (gpioInt.levelInterrupt){
+            switch (gpioInt.interruptPolarity){
+                case 0:
+                    irq = IRQ_TYPE_LEVEL_HIGH;
+                    break;
+                case 1:
+                    irq = IRQ_TYPE_LEVEL_LOW;
+                    break;
+                default:
+                    irq = IRQ_TYPE_LEVEL_LOW;
+                    break;
+            }
+        } else {
+            switch (gpioInt.interruptPolarity) {
+                case 0:
+                    irq = IRQ_TYPE_EDGE_FALLING;
+                    break;
+                case 1:
+                    irq = IRQ_TYPE_EDGE_RISING;
+                    break;
+                case 2:
+                    irq = IRQ_TYPE_EDGE_BOTH;
+                default:
+                    irq = IRQ_TYPE_EDGE_FALLING;
+                    break;
+            }
+        }
+        gpioInt.irqType = irq;
     }
     
     if (gpiotype == 1){
