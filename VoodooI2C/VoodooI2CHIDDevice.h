@@ -95,6 +95,12 @@ public:
         
         uint16_t rsize;
         
+        VoodooGPIO *gpioController;
+        
+        bool hasGPIOInt;
+        bool usingGPIOInt;
+        int gpioPin;
+        int gpioIRQ;
     } I2CDevice;
     
     I2CDevice* hid_device;
@@ -125,7 +131,7 @@ public:
     virtual IOReturn setPowerState(unsigned long powerState, IOService *whatDevice) override;
     
     int i2c_hid_descriptor_address(I2CDevice *hid_device);
-    int i2c_get_slave_address(I2CDevice* hid_device);
+    int get_device_resources(I2CDevice* hid_device);
     
     SInt32 readI2C(uint8_t *values, size_t len);
     SInt32 writeI2C(uint8_t *values, size_t len);

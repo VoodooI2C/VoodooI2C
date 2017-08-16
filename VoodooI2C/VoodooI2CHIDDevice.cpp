@@ -62,7 +62,7 @@ bool VoodooI2CHIDDevice::probe(IOService* device) {
     hid_device->provider = OSDynamicCast(IOACPIPlatformDevice, device);
     hid_device->provider->retain();
     
-    int ret = i2c_get_slave_address(hid_device);
+    int ret = get_device_resources(hid_device);
     if (ret < 0){
         IOLog("%s::%s::Failed to get a slave address for an I2C device, aborting.\n", getName(), _controller->_dev->name);
         IOFree(hid_device, sizeof(I2CDevice));
@@ -93,6 +93,12 @@ void VoodooI2CHIDDevice::stop(IOService* device) {
     if (hid_device->interruptSource){
         hid_device->interruptSource->disable();
         hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+        
+        if (hid_device->usingGPIOInt){
+            hid_device->gpioController->release();
+            hid_device->gpioController = NULL;
+        }
+        
         hid_device->interruptSource->release();
         hid_device->interruptSource = NULL;
     }
@@ -129,6 +135,7 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
     hid_device->rsize = 0;
+    hid_device->reading = true;
     
     if (fetch_hid_descriptor()){
         IOLog("%s::%s::Error fetching HID Descriptor!\n", getName(), _controller->_dev->name);
@@ -168,11 +175,36 @@ int VoodooI2CHIDDevice::initHIDDevice(I2CDevice *hid_device) {
 
     hid_device->workLoop->retain();
     
+    hid_device->gpioController = NULL;
+    
     hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->provider);
     
+    hid_device->usingGPIOInt = false;
     if (!hid_device->interruptSource) {
-        goto err;
+        if (hid_device->hasGPIOInt){
+            IOLog("%s::%s::Getting GPIO Controller...\n", getName(), _controller->_dev->name);
+            hid_device->gpioController = getGPIOController();
+            if (hid_device->gpioController){
+                hid_device->usingGPIOInt = true;
+                IOLog("%s::%s::Using GPIO Pin: %d. IRQ: %d\n", getName(), _controller->_dev->name, hid_device->gpioPin, hid_device->gpioIRQ);
+                hid_device->gpioController->setInterruptTypeForPin(hid_device->gpioPin, hid_device->gpioIRQ);
+                hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CHIDDevice::InterruptOccured), hid_device->gpioController, hid_device->gpioPin);
+                if (hid_device->interruptSource)
+                    hid_device->interruptSource->retain();
+                else {
+                    IOLog("%s::%s::GPIO Interrupt Error!\n", getName(), _controller->_dev->name);
+                    goto err;
+                }
+            } else {
+                IOLog("%s::%s::GPIO Controller Error!\n", getName(), _controller->_dev->name);
+                goto err;
+            }
+        } else {
+            IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
+            goto err;
+        }
     }
+    
     hid_device->workLoop->addEventSource(hid_device->interruptSource);
     hid_device->interruptSource->enable();
 
@@ -310,6 +342,7 @@ IOReturn VoodooI2CHIDDevice::setPowerState(unsigned long powerState, IOService *
     if (powerState == 0){
         //Going to sleep
         hid_device->deviceIsAwake = false;
+        IOSleep(100);
         
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
@@ -368,7 +401,7 @@ int VoodooI2CHIDDevice::i2c_hid_descriptor_address(I2CDevice *hid_device) {
     return 0;
 }
 
-int VoodooI2CHIDDevice::i2c_get_slave_address(I2CDevice* hid_device){
+int VoodooI2CHIDDevice::get_device_resources(I2CDevice* hid_device){
     OSObject* result = NULL;
     
     hid_device->provider->evaluateObject("_CRS", &result);
@@ -381,6 +414,14 @@ int VoodooI2CHIDDevice::i2c_get_slave_address(I2CDevice* hid_device){
     
     if (crsParser.foundI2C)
         hid_device->addr = crsParser.i2cInfo.address;
+    
+    if (crsParser.foundGPIOInt){
+        hid_device->hasGPIOInt = true;
+        hid_device->gpioPin = crsParser.gpioInt.pinNumber;
+        hid_device->gpioIRQ = crsParser.gpioInt.irqType;
+    } else {
+        hid_device->hasGPIOInt = false;
+    }
     
     data->release();
     
@@ -460,6 +501,8 @@ static void i2c_hid_readReport(VoodooI2CHIDDevice *device){
 
 void VoodooI2CHIDDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     if (hid_device->reading)
+        return;
+    if (!hid_device->deviceIsAwake)
         return;
     
     hid_device->reading = true;

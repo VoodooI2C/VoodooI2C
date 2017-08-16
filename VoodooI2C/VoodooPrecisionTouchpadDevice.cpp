@@ -319,6 +319,8 @@ void VoodooI2CPrecisionTouchpadDevice::enable_abs(){
 int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     PMinit();
     
+    hid_device->reading = true;
+    
     if (fetch_hid_descriptor()){
         IOLog("%s::%s::Error fetching HID Descriptor!\n", getName(), _controller->_dev->name);
         return -1;
@@ -377,23 +379,31 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->gpioController = NULL;
     
-    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->provider, 0);
+    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->provider);
+    
     hid_device->usingGPIOInt = false;
-    if (!hid_device->interruptSource && hid_device->hasGPIOInt) {
-        hid_device->gpioController = getGPIOController();
-        if (hid_device->gpioController){
-            hid_device->usingGPIOInt = true;
-            IOLog("%s::%s::Using GPIO Pin: %d. IRQ: %d\n", getName(), _controller->_dev->name, hid_device->gpioPin, hid_device->gpioIRQ);
-            hid_device->gpioController->setInterruptTypeForPin(hid_device->gpioPin, hid_device->gpioIRQ);
-            hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->gpioController, hid_device->gpioPin);
-            hid_device->interruptSource->retain();
+    if (!hid_device->interruptSource) {
+        if (hid_device->hasGPIOInt){
+            hid_device->gpioController = getGPIOController();
+            if (hid_device->gpioController){
+                hid_device->usingGPIOInt = true;
+                IOLog("%s::%s::Using GPIO Pin: %d. IRQ: %d\n", getName(), _controller->_dev->name, hid_device->gpioPin, hid_device->gpioIRQ);
+                hid_device->gpioController->setInterruptTypeForPin(hid_device->gpioPin, hid_device->gpioIRQ);
+                hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->gpioController, hid_device->gpioPin);
+                if (hid_device->interruptSource)
+                    hid_device->interruptSource->retain();
+                else {
+                    IOLog("%s::%s::GPIO Interrupt Error!\n", getName(), _controller->_dev->name);
+                    goto err;
+                }
+            } else {
+                IOLog("%s::%s::GPIO Controller Error!\n", getName(), _controller->_dev->name);
+                goto err;
+            }
         } else {
-            IOLog("%s::%s::GPIO Controller Error!\n", getName(), _controller->_dev->name);
+            IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
             goto err;
         }
-    } else {
-        IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
-        goto err;
     }
     
     hid_device->workLoop->addEventSource(hid_device->interruptSource);
@@ -503,15 +513,23 @@ IOReturn VoodooI2CPrecisionTouchpadDevice::setPowerState(unsigned long powerStat
             hid_device->timerSource = NULL;
         }
         
+        hid_device->trackpadIsAwake = false;
+        
         if (_wrapper)
             _wrapper->prepareToSleep();
 
-        hid_device->trackpadIsAwake = false;
+        IOSleep(100); //Wait for Transactions to stop
         
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         if (!hid_device->trackpadIsAwake){
             int ret = 0;
+            
+            hid_device->reading = true;
+            IOLog("%s::Resetting Device...\n", getName());
+            reset_dev();
+            enable_abs();
+            hid_device->reading = false;
 
             hid_device->trackpadIsAwake = true;
             IOLog("%s::Woke up from Sleep!\n", getName());
@@ -664,6 +682,8 @@ static void precisionTouchpad_readReport(VoodooI2CPrecisionTouchpadDevice *devic
 
 void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
     if (hid_device->reading)
+        return;
+    if (!hid_device->trackpadIsAwake)
         return;
     
     hid_device->reading = true;
