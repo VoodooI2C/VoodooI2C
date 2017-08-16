@@ -69,6 +69,8 @@
 		F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCSGestureHIPointingWrapper.h; sourceTree = "<group>"; };
 		F19963071CAD6EE3002E2D29 /* VoodooI2CDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CDevice.cpp; sourceTree = "<group>"; };
 		F19963081CAD6EE3002E2D29 /* VoodooI2CDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooI2CDevice.h; sourceTree = "<group>"; };
+		F1A37CC51F441D680062185A /* linuxirq.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = linuxirq.h; sourceTree = "<group>"; };
+		F1A37CC61F441D830062185A /* VoodooGPIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoodooGPIO.h; sourceTree = "<group>"; };
 		F1AB82CE1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooCSGestureHIDWrapper.cpp; sourceTree = "<group>"; };
 		F1AB82CF1C1E8F5E003EFE34 /* VoodooCSGestureHIDWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoodooCSGestureHIDWrapper.h; sourceTree = "<group>"; };
 		F1AD63601E090E5600F0BC23 /* VoodooSynapticsRMITouchpadDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooSynapticsRMITouchpadDevice.cpp; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 		AC45AFE91A32543B008E6857 /* VoodooI2C */ = {
 			isa = PBXGroup;
 			children = (
+				F1A37CC41F441D5B0062185A /* GPIO */,
 				AC45AFEC1A32543B008E6857 /* VoodooI2C.h */,
 				AC45AFEE1A32543B008E6857 /* VoodooI2C.cpp */,
 				F18F3CF91D88C1C600CCED2B /* VoodooI2CPCI.cpp */,
@@ -196,6 +199,15 @@
 				F19857301D7F80AE00BAB4BB /* VoodooCSGestureHIPointingWrapper.h */,
 			);
 			name = "Multitouch Support";
+			sourceTree = "<group>";
+		};
+		F1A37CC41F441D5B0062185A /* GPIO */ = {
+			isa = PBXGroup;
+			children = (
+				F1A37CC61F441D830062185A /* VoodooGPIO.h */,
+				F1A37CC51F441D680062185A /* linuxirq.h */,
+			);
+			name = GPIO;
 			sourceTree = "<group>";
 		};
 		F1AD635F1E090E1D00F0BC23 /* Synaptics RMI Trackpad Driver */ = {

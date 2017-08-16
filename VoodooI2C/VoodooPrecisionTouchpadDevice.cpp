@@ -169,6 +169,13 @@ void VoodooI2CPrecisionTouchpadDevice::stop(IOService* device) {
     if (hid_device->interruptSource){
         hid_device->interruptSource->disable();
         hid_device->workLoop->removeEventSource(hid_device->interruptSource);
+    
+        if (hid_device->usingGPIOInt){
+            hid_device->gpioController->deregisterInterrupt(hid_device->gpioPin);
+            hid_device->gpioController->release();
+            hid_device->gpioController = NULL;
+        }
+
         hid_device->interruptSource->release();
         hid_device->interruptSource = NULL;
     }
@@ -369,17 +376,29 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     
     hid_device->workLoop->retain();
     
-    hid_device->interruptSource = NULL;
+    hid_device->gpioController = NULL;
     
-    /*hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->provider, 0);
-    
-    if (!hid_device->interruptSource) {
+    hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->provider, 0);
+    hid_device->usingGPIOInt = false;
+    if (!hid_device->interruptSource && hid_device->hasGPIOInt) {
+        hid_device->gpioController = getGPIOController();
+        if (hid_device->gpioController){
+            hid_device->usingGPIOInt = true;
+            hid_device->gpioIRQ = IRQ_TYPE_LEVEL_LOW;
+            IOLog("%s::%s::Using GPIO Pin: %d. IRQ: %d\n", getName(), _controller->_dev->name, hid_device->gpioPin, hid_device->gpioIRQ);
+            hid_device->interruptSource = hid_device->gpioController->interruptForPin(hid_device->gpioPin, hid_device->gpioIRQ, this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured));
+            hid_device->interruptSource->retain();
+        } else {
+            IOLog("%s::%s::GPIO Controller Error!\n", getName(), _controller->_dev->name);
+            goto err;
+        }
+    } else {
         IOLog("%s::%s::Interrupt Error!\n", getName(), _controller->_dev->name);
         goto err;
     }
     
     hid_device->workLoop->addEventSource(hid_device->interruptSource);
-    hid_device->interruptSource->enable();*/
+    hid_device->interruptSource->enable();
     
     hid_device->timerSource = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CPrecisionTouchpadDevice::get_input));
     if (!hid_device->timerSource){
@@ -393,6 +412,8 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     hid_device->trackpadIsAwake = true;
     
     hid_device->nullReportCount = 0;
+    
+    hid_device->reading = false;
     
     initialize_wrapper();
     registerService();
@@ -412,8 +433,6 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
     myPowerStates[1].capabilityFlags = kIOPMPowerOn;
     myPowerStates[1].outputPowerCharacter = kIOPMPowerOn;
     myPowerStates[1].inputPowerRequirement = kIOPMPowerOn;
-    
-    
     
     this->_controller->joinPMtree(this);
     
@@ -573,19 +592,49 @@ int VoodooI2CPrecisionTouchpadDevice::i2c_get_slave_address(I2CDevice* hid_devic
     if (crsParser.foundI2C)
         hid_device->addr = crsParser.i2cInfo.address;
     
+    if (crsParser.foundGPIOInt){
+        hid_device->hasGPIOInt = true;
+        hid_device->gpioPin = crsParser.gpioInt.pinNumber;
+        
+        int irq = 0;
+        if (crsParser.gpioInt.levelInterrupt){
+            switch (crsParser.gpioInt.interruptPolarity){
+                case 0:
+                    irq = IRQ_TYPE_LEVEL_HIGH;
+                    break;
+                case 1:
+                    irq = IRQ_TYPE_LEVEL_LOW;
+                    break;
+                default:
+                    irq = IRQ_TYPE_LEVEL_LOW;
+                    break;
+            }
+        } else {
+            switch (crsParser.gpioInt.interruptPolarity) {
+                case 0:
+                    irq = IRQ_TYPE_EDGE_FALLING;
+                    break;
+                case 1:
+                    irq = IRQ_TYPE_EDGE_RISING;
+                    break;
+                case 2:
+                    irq = IRQ_TYPE_EDGE_BOTH;
+                default:
+                    irq = IRQ_TYPE_EDGE_FALLING;
+                    break;
+            }
+        }
+        hid_device->gpioIRQ = irq;
+    } else {
+        hid_device->hasGPIOInt = false;
+    }
+    
     data->release();
     
     if (crsParser.foundI2C)
         return 0;
     else
         return -1;
-}
-
-void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
-    IOLog("interrupt\n");
-    if (hid_device->reading)
-        return;
-    //i2c_hid_get_input(ihid);
 }
 
 void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
@@ -600,7 +649,7 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
     memset(report, 0, maxLen);
     readI2C(report, maxLen);
     
-    if (runLoop == 1){
+    /*if (runLoop == 1){
         if (report[0] == 0x00 && report[1] == 0x00){
             hid_device->nullReportCount++;
             
@@ -614,7 +663,7 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
         } else {
             hid_device->nullReportCount = 0;
         }
-    }
+    }*/
     
     if (report[2] == TOUCHPAD_REPORT_ID){
         int return_size = report[0] | report[1] << 8;
@@ -627,20 +676,41 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
         
         TrackpadRawInput(&softc, (uint8_t *)&inputReport, 1);
         
-        if (runLoop){
+        /*if (runLoop){
             if (inputReport.ContactCount > 0){
                 for (int i = 0; i < inputReport.ContactCount; i++){
                     readInput(0);
                 }
             }
-        }
+        }*/
     }
     IOFree(report, maxLen);
 }
 
-void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
-    readInput(1);
+static void precisionTouchpad_readReport(VoodooI2CPrecisionTouchpadDevice *device){
+    device->readInput(1);
+    device->hid_device->reading = false;
+}
+
+void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
+    if (hid_device->reading)
+        return;
     
+    hid_device->reading = true;
+    
+    thread_t newThread;
+    kern_return_t kr = kernel_thread_start((thread_continue_t)precisionTouchpad_readReport, this, &newThread);
+    if (kr != KERN_SUCCESS){
+        hid_device->reading = false;
+        IOLog("Thread error!\n");
+    } else {
+        
+        thread_deallocate(newThread);
+    }
+
+}
+
+void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
     if (_wrapper)
         _wrapper->ProcessGesture(&softc);
 

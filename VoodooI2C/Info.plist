@@ -62,6 +62,8 @@
 		<string>13.0</string>
 		<key>com.apple.kpi.mach</key>
 		<string>13.0</string>
+		<key>org.coolstar.VoodooGPIO</key>
+		<string>1.0</string>
 	</dict>
 </dict>
 </plist>

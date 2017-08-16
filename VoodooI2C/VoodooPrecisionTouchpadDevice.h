@@ -76,7 +76,6 @@ public:
         void* _dev;
         
         IOWorkLoop* workLoop;
-        //IOCommandGate* commandGate;
         
         IOInterruptEventSource *interruptSource;
         
@@ -95,6 +94,13 @@ public:
         UInt16 hid_descriptor_address;
         
         struct i2c_hid_descr hdesc;
+        
+        VoodooGPIO *gpioController;
+        
+        bool hasGPIOInt;
+        bool usingGPIOInt;
+        int gpioPin;
+        int gpioIRQ;
     } I2CDevice;
     
     struct i2c_msg {
