@@ -171,7 +171,6 @@ void VoodooI2CPrecisionTouchpadDevice::stop(IOService* device) {
         hid_device->workLoop->removeEventSource(hid_device->interruptSource);
     
         if (hid_device->usingGPIOInt){
-            hid_device->gpioController->deregisterInterrupt(hid_device->gpioPin);
             hid_device->gpioController->release();
             hid_device->gpioController = NULL;
         }
@@ -386,7 +385,8 @@ int VoodooI2CPrecisionTouchpadDevice::initHIDDevice(I2CDevice *hid_device) {
             hid_device->usingGPIOInt = true;
             hid_device->gpioIRQ = IRQ_TYPE_LEVEL_LOW;
             IOLog("%s::%s::Using GPIO Pin: %d. IRQ: %d\n", getName(), _controller->_dev->name, hid_device->gpioPin, hid_device->gpioIRQ);
-            hid_device->interruptSource = hid_device->gpioController->interruptForPin(hid_device->gpioPin, hid_device->gpioIRQ, this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured));
+            hid_device->gpioController->setInterruptTypeForPin(hid_device->gpioPin, hid_device->gpioIRQ);
+            hid_device->interruptSource = IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CPrecisionTouchpadDevice::InterruptOccured), hid_device->gpioController, hid_device->gpioPin);
             hid_device->interruptSource->retain();
         } else {
             IOLog("%s::%s::GPIO Controller Error!\n", getName(), _controller->_dev->name);
