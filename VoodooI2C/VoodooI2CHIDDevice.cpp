@@ -342,11 +342,20 @@ IOReturn VoodooI2CHIDDevice::setPowerState(unsigned long powerState, IOService *
     if (powerState == 0){
         //Going to sleep
         hid_device->deviceIsAwake = false;
-        IOSleep(100);
+        while (hid_device->reading){
+            IOSleep(10);
+        }
+        hid_device->reading = true;
+        set_power(I2C_HID_PWR_SLEEP);
+        hid_device->reading = false;
         
         IOLog("%s::Going to Sleep!\n", getName());
     } else {
         if (!hid_device->deviceIsAwake){
+            hid_device->reading = true;
+            reset_dev();
+            hid_device->reading = false;
+            
             hid_device->deviceIsAwake = true;
             IOLog("%s::Woke up from Sleep!\n", getName());
         } else {
