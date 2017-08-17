@@ -635,28 +635,15 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
     
     uint8_t *report = (uint8_t *)IOMalloc(maxLen);
     memset(report, 0, maxLen);
-    readI2C(report, maxLen);
-    
-    /*if (runLoop == 1){
-        if (report[0] == 0x00 && report[1] == 0x00){
-            hid_device->nullReportCount++;
-            
-            if (hid_device->nullReportCount >= 20){
-                IOLog("%s::%s::Too many null reports. Resetting!\n", getName(), _controller->_dev->name);
-                reset_dev();
-                enable_abs();
-                IOFree(report, maxLen);
-                return;
-            }
-        } else {
-            hid_device->nullReportCount = 0;
-        }
-    }*/
+    int ret = readI2C(report, maxLen);
     
     if (report[2] == TOUCHPAD_REPORT_ID){
         int return_size = report[0] | report[1] << 8;
         if (return_size - 2 != sizeof(TOUCHPAD_INPUT_REPORT)){
             report[2] = 0xff; //Invalidate Report ID so it's not parsed;
+        } else {
+            clock_nsec_t n_now;
+            clock_get_system_nanotime(&hid_device->lastRead, &n_now);
         }
         
         struct TOUCHPAD_INPUT_REPORT inputReport;
@@ -664,13 +651,15 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
         
         TrackpadRawInput(&softc, (uint8_t *)&inputReport, 1);
         
-        /*if (runLoop){
+        if (runLoop){
             if (inputReport.ContactCount > 0){
                 for (int i = 0; i < inputReport.ContactCount; i++){
                     readInput(0);
                 }
             }
-        }*/
+        }
+    } else if (report[2] != 255) {
+        IOLog("%s::Invalid Report ID %d\n", getName(), report[2]);
     }
     IOFree(report, maxLen);
 }
@@ -678,6 +667,7 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
 static void precisionTouchpad_readReport(VoodooI2CPrecisionTouchpadDevice *device){
     device->readInput(1);
     device->hid_device->reading = false;
+    device->hid_device->interruptSource->enable();
 }
 
 void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
@@ -686,12 +676,15 @@ void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInter
     if (!hid_device->trackpadIsAwake)
         return;
     
+    hid_device->interruptSource->disable();
+    
     hid_device->reading = true;
     
     thread_t newThread;
     kern_return_t kr = kernel_thread_start((thread_continue_t)precisionTouchpad_readReport, this, &newThread);
     if (kr != KERN_SUCCESS){
         hid_device->reading = false;
+        hid_device->interruptSource->enable();
         IOLog("Thread error!\n");
     } else {
         
@@ -703,6 +696,25 @@ void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInter
 void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSource* sender) {
     if (_wrapper)
         _wrapper->ProcessGesture(&softc);
+    
+    clock_nsec_t n_now;
+    clock_sec_t now;
+    clock_get_system_nanotime(&now, &n_now);
+    
+    if (hid_device->trackpadIsAwake){
+        if (now >= (hid_device->lastRead + 60)){
+            hid_device->interruptSource->disable();
+            IOLog("%s::%s::Watchdog resetting device!\n", getName(), _controller->_dev->name);
+            while (hid_device->reading)
+                IOSleep(2);
+            hid_device->reading = true;
+            reset_dev();
+            enable_abs();
+            hid_device->reading = false;
+            hid_device->interruptSource->enable();
+            hid_device->lastRead = now;
+        }
+    }
 
     hid_device->timerSource->setTimeoutMS(5);
 }
