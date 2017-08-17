@@ -97,7 +97,7 @@ public:
         
         VoodooGPIO *gpioController;
         
-        clock_sec_t lastRead;
+        //clock_sec_t lastRead;
         
         bool hasGPIOInt;
         bool usingGPIOInt;

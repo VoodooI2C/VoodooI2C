@@ -642,8 +642,8 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
         if (return_size - 2 != sizeof(TOUCHPAD_INPUT_REPORT)){
             report[2] = 0xff; //Invalidate Report ID so it's not parsed;
         } else {
-            clock_nsec_t n_now;
-            clock_get_system_nanotime(&hid_device->lastRead, &n_now);
+            //clock_nsec_t n_now;
+            //clock_get_system_nanotime(&hid_device->lastRead, &n_now);
         }
         
         struct TOUCHPAD_INPUT_REPORT inputReport;
@@ -667,7 +667,7 @@ void VoodooI2CPrecisionTouchpadDevice::readInput(int runLoop){
 static void precisionTouchpad_readReport(VoodooI2CPrecisionTouchpadDevice *device){
     device->readInput(1);
     device->hid_device->reading = false;
-    device->hid_device->interruptSource->enable();
+    //device->hid_device->interruptSource->enable();
 }
 
 void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount){
@@ -676,7 +676,7 @@ void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInter
     if (!hid_device->trackpadIsAwake)
         return;
     
-    hid_device->interruptSource->disable();
+    //hid_device->interruptSource->disable();
     
     hid_device->reading = true;
     
@@ -684,7 +684,7 @@ void VoodooI2CPrecisionTouchpadDevice::InterruptOccured(OSObject* owner, IOInter
     kern_return_t kr = kernel_thread_start((thread_continue_t)precisionTouchpad_readReport, this, &newThread);
     if (kr != KERN_SUCCESS){
         hid_device->reading = false;
-        hid_device->interruptSource->enable();
+        //hid_device->interruptSource->enable();
         IOLog("Thread error!\n");
     } else {
         
@@ -697,7 +697,7 @@ void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSo
     if (_wrapper)
         _wrapper->ProcessGesture(&softc);
     
-    clock_nsec_t n_now;
+    /*clock_nsec_t n_now;
     clock_sec_t now;
     clock_get_system_nanotime(&now, &n_now);
     
@@ -714,7 +714,7 @@ void VoodooI2CPrecisionTouchpadDevice::get_input(OSObject* owner, IOTimerEventSo
             hid_device->interruptSource->enable();
             hid_device->lastRead = now;
         }
-    }
+    }*/
 
     hid_device->timerSource->setTimeoutMS(5);
 }
