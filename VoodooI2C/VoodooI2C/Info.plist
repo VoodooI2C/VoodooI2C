@@ -17,7 +17,9 @@
 	<key>CFBundleShortVersionString</key>
 	<string>2.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+    <string>2.0.0</string>
+    <key>OSBundleCompatibleVersion</key>
+    <string>2.0.0</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>VoodooI2CPCIController</key>

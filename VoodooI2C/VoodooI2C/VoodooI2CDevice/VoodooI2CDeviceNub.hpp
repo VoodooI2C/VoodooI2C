@@ -12,6 +12,7 @@
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
+#include <IOKit/acpi/IOACPIPlatformDevice.h>
 
 class VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);
@@ -29,6 +30,8 @@ class VoodooI2CDeviceNub : public IOService {
 
  protected:
  private:
+    IOACPIPlatformDevice *acpi_device;
+    bool get_device_resources();
 };
 
 

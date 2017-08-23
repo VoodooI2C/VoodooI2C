@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CACPICRSParser" interface="true" name="VoodooI2CACPICRSParser" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="VoodooI2CACPICRSParser::foundI2C" name="foundI2C">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="VoodooI2CACPICRSParser::foundGPIOInt" name="foundGPIOInt">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="VoodooI2CACPICRSParser::foundGPIOIO" name="foundGPIOIO">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="VoodooI2CACPICRSParser::i2cInfo" name="i2cInfo">
+    <type name="i2c_info" ref="i2c_info#i2c_info" />
+  </field>
+  <field id="VoodooI2CACPICRSParser::gpioInt" name="gpioInt">
+    <type name="gpio_int_info" ref="gpio_int_info#gpio_int_info" />
+  </field>
+  <field id="VoodooI2CACPICRSParser::gpioIO" name="gpioIO">
+    <type name="gpio_io_info" ref="gpio_io_info#gpio_io_info" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CACPICRSParser::VoodooI2CACPICRSParser" name="VoodooI2CACPICRSParser" />
+  <method abstract="yes" id="VoodooI2CACPICRSParser::parse_acpi_crs" name="parse_acpi_crs">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_crs::crs" name="crs">
+      <type name="uint8_t" qualifier=" const *" />
+    </argument>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_crs::offset" name="offset">
+      <type name="uint32_t" />
+    </argument>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_crs::sz" name="sz">
+      <type name="uint32_t" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CACPICRSParser::parse_acpi_gpio" name="parse_acpi_gpio">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_gpio::crs" name="crs">
+      <type name="uint8_t" qualifier=" const *" />
+    </argument>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_gpio::offset" name="offset">
+      <type name="uint32_t" />
+    </argument>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_gpio::sz" name="sz">
+      <type name="uint32_t" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CACPICRSParser::parse_acpi_serialbus" name="parse_acpi_serialbus">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_serialbus::crs" name="crs">
+      <type name="uint8_t" qualifier=" const *" />
+    </argument>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_serialbus::offset" name="offset">
+      <type name="uint32_t" />
+    </argument>
+    <argument id="VoodooI2CACPICRSParser::parse_acpi_serialbus::sz" name="sz">
+      <type name="uint32_t" />
+    </argument>
+  </method>
+</class>

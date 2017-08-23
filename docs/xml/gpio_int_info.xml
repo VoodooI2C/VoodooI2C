@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<struct id="gpio_int_info" name="gpio_int_info" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="gpio_int_info::resourceConsumer" name="resourceConsumer">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="gpio_int_info::levelInterrupt" name="levelInterrupt">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="gpio_int_info::interruptPolarity" name="interruptPolarity">
+    <type name="uint8_t" />
+  </field>
+  <field id="gpio_int_info::sharedInterrupt" name="sharedInterrupt">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="gpio_int_info::wakeInterrupt" name="wakeInterrupt">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="gpio_int_info::pinConfig" name="pinConfig">
+    <type name="uint8_t" />
+  </field>
+  <field id="gpio_int_info::pinNumber" name="pinNumber">
+    <type name="uint16_t" />
+  </field>
+  <field id="gpio_int_info::irqType" name="irqType">
+    <type builtin="yes" name="int" />
+  </field>
+</struct>

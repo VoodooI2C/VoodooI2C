@@ -74,4 +74,12 @@
   <variable access="private" id="VoodooI2CDeviceNub::superClass" name="superClass">
     <type name="OSMetaClass" qualifier=" const const *" />
   </variable>
+  <field access="private" id="VoodooI2CDeviceNub::acpi_device" name="acpi_device">
+    <type name="IOACPIPlatformDevice" qualifier="*" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::get_device_resources" name="get_device_resources">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+  </method>
 </class>

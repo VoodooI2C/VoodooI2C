@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<struct id="gpio_io_info" name="gpio_io_info" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="gpio_io_info::resourceConsumer" name="resourceConsumer">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="gpio_io_info::ioRestriction" name="ioRestriction">
+    <type name="uint8_t" />
+  </field>
+  <field id="gpio_io_info::sharing" name="sharing">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="gpio_io_info::pinConfig" name="pinConfig">
+    <type name="uint8_t" />
+  </field>
+  <field id="gpio_io_info::pinNumber" name="pinNumber">
+    <type name="uint16_t" />
+  </field>
+</struct>

@@ -86,7 +86,7 @@ class VoodooI2CControllerDriver : public IOService {
 
     /* Handles an interrupt that has been asserted by the controller */
 
-    void handleInterrupt();
+    void handleInterrupt(OSObject* owner, IOInterruptEventSource* src, int intCount);
 
     /* Initialises <VoodooI2CControllerDriver> class
      * @properties OSDictionary* representing the matched personality
@@ -138,7 +138,20 @@ class VoodooI2CControllerDriver : public IOService {
 
     void stop(IOService* provider);
 
+    /* Directs the command gate to add an I2C transfer routine to the work loop
+     * @messages The messages to be transferred
+     * @number   The number of messages
+     *
+     * @return *kIOReturnSuccess* on success, *kIOReturnError* otherwise
+     */
+
+    IOReturn transferI2C(VoodooI2CControllerBusMessage* messages, int number);
+
  private:
+    IOCommandGate* command_gate;
+    IOInterruptEventSource* interrupt_source;
+    IOWorkLoop* work_loop;
+
     /* Requests the nub to fetch bus configuration values from the ACPI tables
      *
      * This function evaluates the *SSCN* and *FMCN* methods in the ACPI tables via
@@ -203,6 +216,8 @@ class VoodooI2CControllerDriver : public IOService {
 
     void readFromBus();
 
+    void releaseResources();
+
     /* Requests the bus to prepare for an I2C transfer routine
      *
      * This function informs the bus that the driver would like to commence an I2C transfer routine. At this point
@@ -252,15 +267,6 @@ class VoodooI2CControllerDriver : public IOService {
      */
 
     void toggleInterrupts(VoodooI2CState enabled);
-
-    /* Directs the command gate to add an I2C transfer routine to the work loop
-     * @messages The messages to be transferred
-     * @number   The number of messages
-     *
-     * @return *kIOReturnSuccess* on success, *kIOReturnError* otherwise
-     */
-
-    IOReturn transferI2C(VoodooI2CControllerBusMessage* messages, int number);
 
     /* Attempts an I2C transfer routine
      * @messages The messages to be transferred

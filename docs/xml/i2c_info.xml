@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<struct id="i2c_info" name="i2c_info" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="i2c_info::resourceConsumer" name="resourceConsumer">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="i2c_info::deviceInitiated" name="deviceInitiated">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="i2c_info::addressMode10Bit" name="addressMode10Bit">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="i2c_info::busSpeed" name="busSpeed">
+    <type name="uint32_t" />
+  </field>
+  <field id="i2c_info::address" name="address">
+    <type name="uint16_t" />
+  </field>
+</struct>

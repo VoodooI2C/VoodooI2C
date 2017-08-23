@@ -23,15 +23,6 @@ device and the I2C bus iself.
   <field id="VoodooI2CControllerNub::name" name="name">
     <type builtin="yes" name="char" qualifier=" const *" />
   </field>
-  <field id="VoodooI2CControllerNub::command_gate" name="command_gate">
-    <type name="IOCommandGate" qualifier="*" />
-  </field>
-  <field id="VoodooI2CControllerNub::interrupt_source" name="interrupt_source">
-    <type name="IOInterruptEventSource" qualifier="*" />
-  </field>
-  <field id="VoodooI2CControllerNub::work_loop" name="work_loop">
-    <type name="IOWorkLoop" qualifier="*" />
-  </field>
   <constructor abstract="yes" id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub" />
   <method abstract="yes" id="VoodooI2CControllerNub::attach" name="attach" virtual="yes">
     <brief> Attaches the nub to the physical controller</brief>
@@ -61,6 +52,22 @@ entry in the IOService plane.
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::disableInterrupt" name="disableInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerNub::disableInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::enableInterrupt" name="enableInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerNub::enableInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
   <method abstract="yes" id="VoodooI2CControllerNub::getACPIParams" name="getACPIParams">
     <brief> Evaluates ACPI methods pertaining to the controller's ACPI device in the ACPI tables</brief>
     <return>
@@ -85,35 +92,61 @@ otherwise</doc>
       <type name="UInt32" qualifier="*" />
     </argument>
   </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::getInterruptType" name="getInterruptType" virtual="yes">
+    <brief> Passes to <ref ref="VoodooI2CController#VoodooI2CController::readRegister">VoodooI2CController::readRegister</ref>
+    </brief>
+    <return>
+      <doc>The value of the register</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerNub::getInterruptType::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::getInterruptType::interruptType" name="interruptType">
+      <type builtin="yes" name="int" qualifier="*" />
+    </argument>
+  </method>
   <method abstract="yes" id="VoodooI2CControllerNub::getMetaClass" name="getMetaClass" virtual="yes">
     <return>
       <type name="OSMetaClass" qualifier=" const *" />
     </return>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::readRegister" name="readRegister">
-    <brief> Passes to <ref ref="VoodooI2CController#VoodooI2CController::readRegister">VoodooI2CController::readRegister</ref>
-    </brief>
     <return>
-      <doc>The value of the register</doc>
       <type name="UInt32" />
     </return>
     <argument id="VoodooI2CControllerNub::readRegister::offset" name="offset">
-      <doc>The offset of the register relative to the controller's base address</doc>
       <type builtin="yes" name="int" />
     </argument>
   </method>
-  <method abstract="yes" id="VoodooI2CControllerNub::start" name="start" virtual="yes">
+  <method abstract="yes" id="VoodooI2CControllerNub::registerInterrupt" name="registerInterrupt" virtual="yes">
     <brief> Starts the controller nub</brief>
     <doc>This function starts the controller nub and is responsible for allocating the resources needed by the nub and
-its driver. This includes instantiating <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::work_loop">VoodooI2CControllerNub::work_loop</ref>, <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::interrupt_source">VoodooI2CControllerNub::interrupt_source</ref> and <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::command_gate">VoodooI2CControllerNub::command_gate</ref>.
+its driver. This includes instantiating &amp;lt;work\_loop&amp;gt;, &amp;lt;interrupt\_source&amp;gt; and &amp;lt;command\_gate&amp;gt;.
 
 </doc>
     <return>
       <doc>*true* on successful start, *false* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerNub::registerInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::registerInterrupt::target" name="target">
+      <type name="OSObject" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::registerInterrupt::handler" name="handler">
+      <type name="IOInterruptAction" />
+    </argument>
+    <argument id="VoodooI2CControllerNub::registerInterrupt::refcon" name="refcon">
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::start" name="start" virtual="yes">
+    <return>
       <type builtin="yes" name="bool" />
     </return>
     <argument id="VoodooI2CControllerNub::start::provider" name="provider">
-      <doc>The physical controller</doc>
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
@@ -130,6 +163,14 @@ its driver. This includes instantiating <ref ref="VoodooI2CControllerNub#VoodooI
     <argument id="VoodooI2CControllerNub::stop::provider" name="provider">
       <doc>The physical controller</doc>
       <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerNub::unregisterInterrupt" name="unregisterInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerNub::unregisterInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::writeRegister" name="writeRegister">

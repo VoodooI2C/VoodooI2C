@@ -38,6 +38,14 @@ void VoodooI2CControllerNub::detach(IOService* provider) {
     super::detach(provider);
 }
 
+IOReturn VoodooI2CControllerNub::disableInterrupt(int source) {
+    return controller->physical_device->provider->disableInterrupt(source);
+}
+
+IOReturn VoodooI2CControllerNub::enableInterrupt(int source) {
+    return controller->physical_device->provider->enableInterrupt(source);
+}
+
 IOReturn VoodooI2CControllerNub::getACPIParams(const char* method, UInt32* hcnt, UInt32* lcnt, UInt32* sda_hold) {
     OSObject *object;
     IOReturn status = controller->physical_device->acpi_device->evaluateObject(method, &object);
@@ -82,78 +90,36 @@ exit:
     return kIOReturnNotFound;
 }
 
-void VoodooI2CControllerNub::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
-    if (driver)
-        driver->handleInterrupt();
+IOReturn VoodooI2CControllerNub::getInterruptType(int source, int *interruptType) {
+    return controller->physical_device->provider->getInterruptType(source, interruptType);
 }
 
 UInt32 VoodooI2CControllerNub::readRegister(int offset) {
     return controller->readRegister(offset);
 }
 
-/**
- Releases the driver resources retained by `start`
- */
-
-void VoodooI2CControllerNub::releaseResources() {
-    if (command_gate) {
-        work_loop->removeEventSource(command_gate);
-        command_gate->release();
-        command_gate = NULL;
-    }
-
-    if (interrupt_source) {
-        interrupt_source->disable();
-        work_loop->removeEventSource(interrupt_source);
-        interrupt_source->release();
-        interrupt_source = NULL;
-    }
-
-    if (work_loop)
-        OSSafeReleaseNULL(work_loop);
+IOReturn VoodooI2CControllerNub::registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon) {
+    return controller->physical_device->provider->registerInterrupt(source, target, handler, refcon);
 }
 
 bool VoodooI2CControllerNub::start(IOService* provider) {
     if (!super::start(provider))
         return false;
 
-    PMinit();
-
-    work_loop = reinterpret_cast<IOWorkLoop*>(getWorkLoop());
-    if (!work_loop) {
-        IOLog("%s::%s Could not get work loop\n", getName(), name);
-        goto exit;
-    }
-
-    interrupt_source =
-    IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CControllerNub::interruptOccured), controller->physical_device->provider);
-
-    if (!interrupt_source || work_loop->addEventSource(interrupt_source) != kIOReturnSuccess) {
-        IOLog("%s::%s::Could not add interrupt source to work loop\n", getName(), name);
-        goto exit;
-    }
-
-    interrupt_source->enable();
-
-    command_gate = IOCommandGate::commandGate(this);
-    if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
-        IOLog("%s::%s Could not open command gate\n", getName(), name);
-        goto exit;
-    }
-
-    work_loop->retain();
-
     return true;
-
-exit:
-    releaseResources();
-    return false;
 }
 
 void VoodooI2CControllerNub::stop(IOService* provider) {
-    releaseResources();
     super::stop(provider);
 }
+
+IOReturn VoodooI2CControllerNub::unregisterInterrupt(int source) {
+    return controller->physical_device->provider->unregisterInterrupt(source);
+}
+
+/**
+ Passes to the `writeRegister` command in `VoodooI2CController`
+ */
 
 void VoodooI2CControllerNub::writeRegister(UInt32 value, int offset) {
     controller->writeRegister(value, offset);

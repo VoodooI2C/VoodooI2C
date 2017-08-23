@@ -7,6 +7,7 @@
 //
 
 #include "VoodooI2CDeviceNub.hpp"
+#include "VoodooI2CACPICRSParser.hpp"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CDeviceNub, IOService);
@@ -23,7 +24,13 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
     if (!super::attach(provider))
         return false;
 
-    // child->attach(this);
+    setProperty("acpi-device", child);
+    acpi_device = OSDynamicCast(IOACPIPlatformDevice, child);
+
+    if (!get_device_resources())
+        return false;
+
+    setName(child->getName());
 
     return true;
 }
@@ -61,6 +68,35 @@ void VoodooI2CDeviceNub::free() {
     super::free();
 }
 
+bool VoodooI2CDeviceNub::get_device_resources() {
+    OSObject *result = NULL;
+    acpi_device->evaluateObject("_CRS", &result);
+
+    OSData *data = OSDynamicCast(OSData, result);
+    if (!data)
+        return false;
+
+    const uint8_t *crs = reinterpret_cast<const uint8_t*>(data->getBytesNoCopy());
+    VoodooI2CACPICRSParser crsParser;
+    crsParser.parse_acpi_crs(crs, 0, data->getLength());
+
+    if (crsParser.foundI2C) {
+        setProperty("addrWidth", OSNumber::withNumber(crsParser.i2cInfo.addressMode10Bit ? 10 : 7, 8));
+        setProperty("i2cAddress", OSNumber::withNumber(crsParser.i2cInfo.address, 16));
+        setProperty("sclHz", OSNumber::withNumber(crsParser.i2cInfo.busSpeed, 32));
+    } else {
+        return false;
+    }
+
+    if (crsParser.foundGPIOInt) {
+        setProperty("gpioPin", OSNumber::withNumber(crsParser.gpioInt.pinNumber, 16));
+        setProperty("gpioIRQ", OSNumber::withNumber(crsParser.gpioInt.irqType, 16));
+    }
+
+    data->release();
+    return true;
+}
+
 /**
  Starts the class
  
@@ -72,6 +108,8 @@ void VoodooI2CDeviceNub::free() {
 bool VoodooI2CDeviceNub::start(IOService* provider) {
     if (!super::start(provider))
         return false;
+
+    registerService();
 
     return true;
 }

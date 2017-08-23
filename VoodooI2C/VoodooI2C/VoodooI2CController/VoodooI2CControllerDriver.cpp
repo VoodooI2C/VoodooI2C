@@ -18,7 +18,7 @@
 OSDefineMetaClassAndStructors(VoodooI2CControllerDriver, IOService);
 
 void VoodooI2CControllerDriver::free() {
-    IOFree(device_nubs, sizeof(device_nubs));
+    OSSafeReleaseNULL(device_nubs);
 
     IOFree(bus_device->acpi_config, sizeof(VoodooI2CControllerBusConfig));
     IOFree(bus_device, sizeof(VoodooI2CControllerBusDevice));
@@ -81,7 +81,7 @@ void VoodooI2CControllerDriver::handleAbortI2C() {
     IOLog("%s::%s I2C Transaction error: 0x%08x - aborting\n", getName(), bus_device->name, bus_device->abort_source);
 }
 
-void VoodooI2CControllerDriver::handleInterrupt() {
+void VoodooI2CControllerDriver::handleInterrupt(OSObject* owner, IOInterruptEventSource* src, int intCount) {
     UInt32 status, enabled;
 
     enabled = readRegister(DW_IC_ENABLE);
@@ -108,7 +108,7 @@ void VoodooI2CControllerDriver::handleInterrupt() {
 
 wakeup:
     if ((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device->message_error) {
-        nub->command_gate->commandWakeup(&bus_device->command_complete);
+        command_gate->commandWakeup(&bus_device->command_complete);
     }
 }
 
@@ -120,7 +120,7 @@ bool VoodooI2CControllerDriver::init(OSDictionary* properties) {
     bus_device->acpi_config = reinterpret_cast<VoodooI2CControllerBusConfig*>(IOMalloc(sizeof(VoodooI2CControllerBusConfig)));
     bus_device->awake = true;
 
-    device_nubs = reinterpret_cast<OSArray*>(IOMalloc(sizeof(OSArray)));
+    device_nubs = OSArray::withCapacity(1);
 
     return true;
 }
@@ -147,7 +147,7 @@ IOReturn VoodooI2CControllerDriver::initialiseBus() {
     else
         IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device->name);
 
-    writeRegister(bus_device->transaction_fifo_depth - 1, DW_IC_TX_TL);
+    writeRegister(bus_device->transaction_fifo_depth / 2, DW_IC_TX_TL);
     writeRegister(0, DW_IC_RX_TL);
     writeRegister(bus_device->bus_config, DW_IC_CON);
 
@@ -175,7 +175,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
 
     nanoseconds_to_absolutetime(10000, &abstime);
 
-    sleep = nub->command_gate->commandSleep(&bus_device->command_complete, abstime);
+    sleep = command_gate->commandSleep(&bus_device->command_complete, abstime);
 
     if ( sleep == THREAD_TIMED_OUT ) {
         IOLog("%s::%s Timeout waiting for bus to accept transfer request\n", getName(), bus_device->name);
@@ -197,14 +197,14 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
         return kIOReturnError;
 
     if (!bus_device->command_error)
-        return kIOReturnError;
+        return kIOReturnSuccess;
 
     if (bus_device->command_error == DW_IC_ERR_TX_ABRT) {
         handleAbortI2C();
         return kIOReturnError;
     }
 
-    return kIOReturnSuccess;
+    return kIOReturnNotReady;
 }
 
 VoodooI2CControllerDriver* VoodooI2CControllerDriver::probe(IOService* provider, SInt32* score) {
@@ -255,14 +255,16 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
 
                     VoodooI2CDeviceNub* device_nub = OSTypeAlloc(VoodooI2CDeviceNub);
 
-                        if (!device_nub->init(child->dictionaryWithProperties())) {
+                        if (!device_nub->init(child->dictionaryWithProperties()) ||
+                            !device_nub->attach(this, child) ||
+                            !device_nub->start(this)) {
                             IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device->name, getMatchedName(child));
                             OSSafeReleaseNULL(device_nub);
+
+                            continue;
                         }
 
-                    // device_nub->registerService();
-
-                    // device_nubs->setObject(device_nub);
+                    device_nubs->setObject(device_nub);
                 }
                 iterator->release();
             }
@@ -330,9 +332,10 @@ void VoodooI2CControllerDriver::readFromBus() {
         receive_valid = readRegister(DW_IC_RXFLR);
 
         /** collect data from receive buffer */
-        for (; length > 0 && receive_valid > 0; length--, receive_valid--)
+        for (; length > 0 && receive_valid > 0; length--, receive_valid--) {
             *buffer++ = readRegister(DW_IC_DATA_CMD);
-        bus_device->receive_outstanding--;
+            bus_device->receive_outstanding--;
+        }
 
         /** if there are still more messages to read, set status to read in progress and continue
             else remove read in progress status */
@@ -345,6 +348,24 @@ void VoodooI2CControllerDriver::readFromBus() {
             bus_device->status &= ~STATUS_READ_IN_PROGRESS;
         }
     }
+}
+
+void VoodooI2CControllerDriver::releaseResources() {
+    if (command_gate) {
+        work_loop->removeEventSource(command_gate);
+        command_gate->release();
+        command_gate = NULL;
+    }
+
+    if (interrupt_source) {
+        interrupt_source->disable();
+        work_loop->removeEventSource(interrupt_source);
+        interrupt_source->release();
+        interrupt_source = NULL;
+    }
+
+    if (work_loop)
+        OSSafeReleaseNULL(work_loop);
 }
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
@@ -405,13 +426,42 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
         return false;
 
     PMinit();
+
+    work_loop = reinterpret_cast<IOWorkLoop*>(getWorkLoop());
+    if (!work_loop) {
+        IOLog("%s::%s Could not get work loop\n", getName(), bus_device->name);
+        goto exit;
+    }
+
+    interrupt_source =
+    IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CControllerDriver::handleInterrupt), nub);
+
+    if (!interrupt_source || work_loop->addEventSource(interrupt_source) != kIOReturnSuccess) {
+        IOLog("%s::%s::Could not add interrupt source to work loop\n", getName(), bus_device->name);
+        goto exit;
+    }
+    interrupt_source->enable();
+
+    command_gate = IOCommandGate::commandGate(this);
+    if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
+        IOLog("%s::%s Could not open command gate\n", getName(), bus_device->name);
+        goto exit;
+    }
+    work_loop->retain();
+
     nub->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
-    if (getBusConfig() != kIOReturnSuccess)
+    if (getBusConfig() != kIOReturnSuccess) {
         IOLog("%s::%s Warning: Error getting bus config, using defaults where necessary\n", getName(), bus_device->name);
-    else
+        bus_device->acpi_config->ss_hcnt = 0x01b0;
+        bus_device->acpi_config->fs_hcnt = 0x48;
+        bus_device->acpi_config->ss_lcnt = 0x01fb;
+        bus_device->acpi_config->fs_lcnt = 0xa0;
+        bus_device->acpi_config->sda_hold = 0x9;
+    } else {
         IOLog("%s::%s Got bus configuration values\n", getName(), bus_device->name);
+    }
 
     bus_device->functionality = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
     bus_device->bus_config = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE | DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
@@ -423,18 +473,27 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     toggleInterrupts(kVoodooI2CStateOff);
 
+    interrupt_source->enable();
+
     publishNubs();
 
     return true;
+exit:
+    releaseResources();
+    return false;
 }
 
 void VoodooI2CControllerDriver::stop(IOService* provider) {
-    toggleBusState(kVoodooI2CStateOn);
-
     if (device_nubs) {
-        device_nubs->release();
-        device_nubs = NULL;
+        while (device_nubs->getCount() > 0) {
+            VoodooI2CDeviceNub *nub = reinterpret_cast<VoodooI2CDeviceNub*>(device_nubs->getLastObject());
+            nub->detach(this);
+            device_nubs->removeObject(device_nubs->getCount() - 1);
+            OSSafeReleaseNULL(nub);
+        }
     }
+
+    toggleBusState(kVoodooI2CStateOff);
 
     PMstop();
 
@@ -473,7 +532,7 @@ void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {
 }
 
 IOReturn VoodooI2CControllerDriver::transferI2C(VoodooI2CControllerBusMessage* messages, int number) {
-    return nub->command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CControllerDriver::transferI2CGated), messages, &number);
+    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CControllerDriver::transferI2CGated), messages, &number);
 }
 
 IOReturn VoodooI2CControllerDriver::transferI2CGated(VoodooI2CControllerBusMessage* messages, int* number) {

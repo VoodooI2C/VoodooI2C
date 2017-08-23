@@ -30,9 +30,6 @@ class VoodooI2CControllerNub : public IOService {
     VoodooI2CController* controller;
     VoodooI2CControllerDriver* driver;
     const char* name;
-    IOCommandGate* command_gate;
-    IOInterruptEventSource* interrupt_source;
-    IOWorkLoop* work_loop;
 
     /* Attaches the nub to the physical controller
      * @provider The physical controller
@@ -54,6 +51,10 @@ class VoodooI2CControllerNub : public IOService {
 
     void detach(IOService* provider);
 
+    IOReturn disableInterrupt(int source);
+
+    IOReturn enableInterrupt(int source);
+
     /* Evaluates ACPI methods pertaining to the controller's ACPI device in the ACPI tables
      * @method   The name of the method to be evaluated
      * @hcnt     Pointer to the *UInt32* where we store the high count
@@ -72,6 +73,8 @@ class VoodooI2CControllerNub : public IOService {
      * @return The value of the register
      */
 
+    IOReturn getInterruptType(int source, int *interruptType);
+
     UInt32 readRegister(int offset);
 
     /* Starts the controller nub
@@ -82,6 +85,8 @@ class VoodooI2CControllerNub : public IOService {
      *
      * @return *true* on successful start, *false* otherwise
      */
+
+    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon);
 
     bool start(IOService* provider);
 
@@ -104,6 +109,8 @@ class VoodooI2CControllerNub : public IOService {
      */
 
     void writeRegister(UInt32 value, int offset);
+
+    IOReturn unregisterInterrupt(int source);
 
  private:
     /* Handles an interrupt when the controller asserts its interrupt line

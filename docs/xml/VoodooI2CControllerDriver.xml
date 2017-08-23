@@ -43,6 +43,15 @@ allocated in <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::init
     <return>
       <type builtin="yes" name="void" />
     </return>
+    <argument id="VoodooI2CControllerDriver::handleInterrupt::owner" name="owner">
+      <type name="OSObject" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::handleInterrupt::src" name="src">
+      <type name="IOInterruptEventSource" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::handleInterrupt::intCount" name="intCount">
+      <type builtin="yes" name="int" />
+    </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerDriver::init" name="init" virtual="yes">
     <brief> Initialises <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> and <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> class</brief>
@@ -113,6 +122,21 @@ stopping the associated device nubs.
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::transferI2C" name="transferI2C">
+    <brief> Directs the command gate to add an I2C transfer routine to the work loop</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on success, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::transferI2C::messages" name="messages">
+      <doc>The messages to be transferred</doc>
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::transferI2C::number" name="number">
+      <doc>The number of messages</doc>
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
   <constructor abstract="yes" access="protected" id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
     <argument id="VoodooI2CControllerDriver::VoodooI2CControllerDriver::" name="">
       <type name="OSMetaClass" qualifier=" const *" />
@@ -122,6 +146,15 @@ stopping the associated device nubs.
   <variable access="private" id="VoodooI2CControllerDriver::superClass" name="superClass">
     <type name="OSMetaClass" qualifier=" const const *" />
   </variable>
+  <field access="private" id="VoodooI2CControllerDriver::command_gate" name="command_gate">
+    <type name="IOCommandGate" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CControllerDriver::interrupt_source" name="interrupt_source">
+    <type name="IOInterruptEventSource" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CControllerDriver::work_loop" name="work_loop">
+    <type name="IOWorkLoop" qualifier="*" />
+  </field>
   <method abstract="yes" access="private" id="VoodooI2CControllerDriver::getBusConfig" name="getBusConfig">
     <brief> Requests the nub to fetch bus configuration values from the ACPI tables</brief>
     <doc>This function evaluates the *SSCN* and *FMCN* methods in the ACPI tables via
@@ -199,6 +232,11 @@ waiting to be read.
       <type builtin="yes" name="void" />
     </return>
   </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::releaseResources" name="releaseResources">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
   <method abstract="yes" access="private" id="VoodooI2CControllerDriver::requestTransferI2C" name="requestTransferI2C">
     <brief> Requests the bus to prepare for an I2C transfer routine</brief>
     <doc>This function informs the bus that the driver would like to commence an I2C transfer routine. At this point
@@ -261,21 +299,6 @@ waiting for a message to save power.
     </return>
     <argument id="VoodooI2CControllerDriver::toggleInterrupts::enabled" name="enabled">
       <type name="VoodooI2CState" ref="index#VoodooI2CState" />
-    </argument>
-  </method>
-  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferI2C" name="transferI2C">
-    <brief> Directs the command gate to add an I2C transfer routine to the work loop</brief>
-    <return>
-      <doc>*kIOReturnSuccess* on success, *kIOReturnError* otherwise</doc>
-      <type name="IOReturn" />
-    </return>
-    <argument id="VoodooI2CControllerDriver::transferI2C::messages" name="messages">
-      <doc>The messages to be transferred</doc>
-      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
-    </argument>
-    <argument id="VoodooI2CControllerDriver::transferI2C::number" name="number">
-      <doc>The number of messages</doc>
-      <type builtin="yes" name="int" />
     </argument>
   </method>
   <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferI2CGated" name="transferI2CGated">
