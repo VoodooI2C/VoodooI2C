@@ -23,7 +23,7 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
     if (!super::attach(provider))
         return false;
 
-    child->attach(this);
+    // child->attach(this);
 
     return true;
 }

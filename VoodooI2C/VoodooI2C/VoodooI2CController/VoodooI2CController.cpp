@@ -11,23 +11,11 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CController, IOService);
 
-/**
- Frees VoodooI2CController class - releases objects instantiated in `init`
- */
-
 void VoodooI2CController::free() {
     IOFree(physical_device, sizeof(VoodooI2CControllerPhysicalDevice));
 
     super::free();
 }
-
-/**
- Initialises VoodooI2CController class
-
- @param properties OSDictionary* representing the matched personality
-
- @return returns true on successful initialisation, else returns false
- */
 
 bool VoodooI2CController::init(OSDictionary* properties) {
     if (!super::init(properties)) {
@@ -42,10 +30,6 @@ bool VoodooI2CController::init(OSDictionary* properties) {
     return true;
 }
 
-/**
- Maps the controller's memory to a virtual address
- */
-
 IOReturn VoodooI2CController::mapMemory() {
     if (physical_device->provider->getDeviceMemoryCount() == 0) {
         return kIOReturnDeviceError;
@@ -56,15 +40,6 @@ IOReturn VoodooI2CController::mapMemory() {
     }
 }
 
-/**
- Implemented to beat Apple's own LPSS kexts
- 
- @param provider IOService* representing the matched entry in the IORegistry
- @param score    Probe score as specified in the matched personality
- 
- @return returns a pointer to this instance of VoodooI2CController
- */
-
 VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* score) {
     if (!super::probe(provider, score)) {
         if (debug_logging)
@@ -74,12 +49,6 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 
     return this;
 }
-
-/**
- Publishes a `VoodooI2CControllerNub` entry into the IORegistry for matching
-
- @return returns kIOReturnSuccess if successful, else kIOReturnError
- */
 
 IOReturn VoodooI2CController::publishNub() {
     IOLog("%s::%s Publishing nub\n", getName(), physical_device->name);
@@ -115,20 +84,9 @@ exit:
     return kIOReturnError;
 }
 
-/**
- Reads the register of the controller at the offset
-
- @param offset
-
- @return returns the value of the register
- */
 UInt32 VoodooI2CController::readRegister(int offset) {
     return *(const volatile UInt32 *)(physical_device->mmap->getVirtualAddress() + offset);
 }
-
-/**
- Releases the driver resources retained by `start`
- */
 
 void VoodooI2CController::releaseResources() {
     if (physical_device) {
@@ -149,26 +107,9 @@ void VoodooI2CController::releaseResources() {
     PMstop();
 }
 
-/**
- Called by the system's power manager to set power states
-
- @param whichState either kIOPMPowerOff or kIOPMPowerOn
- @param whatDevice Power management policy maker
-
- @return returns kIOPMAckImplied if power state has been set else maximum number of milliseconds needed for the device to be in the correct state
- */
-
 IOReturn VoodooI2CController::setPowerState(unsigned long whichState, IOService* whatDevice) {
     return kIOPMAckImplied;
 }
-
-/**
- Starts the physical I2C controller
- 
- @param provider IOService* representing the matched entry in the IORegistry
- 
- @return returns true on succesful start, else returns false
- */
 
 bool VoodooI2CController::start(IOService* provider) {
     if (!super::start(provider)) {
@@ -196,12 +137,6 @@ exit:
     return false;
 }
 
-/**
- Stops the physical I2C controller and undoes the effects of `start` and `probe`
-
- @param provider IOService* representing the matched entry in the IORegistry
- */
-
 void VoodooI2CController::stop(IOService* provider) {
     if (nub) {
         nub->stop(this);
@@ -213,13 +148,6 @@ void VoodooI2CController::stop(IOService* provider) {
 
     super::stop(provider);
 }
-
-/**
- Writes the `value` into the controller's register at the `offset`
-
- @param value
- @param offset
- */
 
 void VoodooI2CController::writeRegister(UInt32 value, int offset) {
     *(volatile UInt32 *)(physical_device->mmap->getVirtualAddress() + offset) = value;

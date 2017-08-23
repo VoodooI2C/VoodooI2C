@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <class id="VoodooI2CControllerNub" interface="true" name="VoodooI2CControllerNub" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Implements a controller nub to which an instance of <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">VoodooI2CControllerDriver</ref> may attach</brief>
+  <doc>The members of this class are responsible for acting as a middle-man between the physical
+device and the I2C bus iself.
+</doc>
   <base access="public">
     <type name="IOService" />
   </base>
@@ -11,7 +15,6 @@
   </variable>
   <class name="MetaClass" ref="VoodooI2CControllerNub::MetaClass#VoodooI2CControllerNub::MetaClass" />
   <field id="VoodooI2CControllerNub::controller" name="controller">
-    <brief>data members</brief>
     <type name="VoodooI2CController" qualifier="*" ref="VoodooI2CController#VoodooI2CController" />
   </field>
   <field id="VoodooI2CControllerNub::driver" name="driver">
@@ -31,36 +34,54 @@
   </field>
   <constructor abstract="yes" id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub" />
   <method abstract="yes" id="VoodooI2CControllerNub::attach" name="attach" virtual="yes">
-    <brief>function members</brief>
+    <brief> Attaches the nub to the physical controller</brief>
+    <doc>This function attaches the nub to the physical controller so that it appears as a child entry
+in the IOService plane.
+
+</doc>
     <return>
+      <doc>*true* on succesful attach, *false* otherwise</doc>
       <type builtin="yes" name="bool" />
     </return>
     <argument id="VoodooI2CControllerNub::attach::provider" name="provider">
+      <doc>The physical controller</doc>
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::detach" name="detach" virtual="yes">
+    <brief> Detaches the nub from the physical controller</brief>
+    <doc>This function detaches the nub from the physical controller so that it is removed as a child
+entry in the IOService plane.
+</doc>
     <return>
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CControllerNub::detach::provider" name="provider">
+      <doc>The physical controller</doc>
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::getACPIParams" name="getACPIParams">
+    <brief> Evaluates ACPI methods pertaining to the controller's ACPI device in the ACPI tables</brief>
     <return>
+      <doc>*kIOReturnSuccess* on successful retrieval of all desired values, *kIOReturnNotFound*
+otherwise</doc>
       <type name="IOReturn" />
     </return>
     <argument id="VoodooI2CControllerNub::getACPIParams::method" name="method">
+      <doc>The name of the method to be evaluated</doc>
       <type builtin="yes" name="char" qualifier=" const *" />
     </argument>
     <argument id="VoodooI2CControllerNub::getACPIParams::hcnt" name="hcnt">
+      <doc>Pointer to the *UInt32* where we store the high count</doc>
       <type name="UInt32" qualifier="*" />
     </argument>
     <argument id="VoodooI2CControllerNub::getACPIParams::lcnt" name="lcnt">
+      <doc>Pointer to the *UInt32* where we store the low count</doc>
       <type name="UInt32" qualifier="*" />
     </argument>
     <argument id="VoodooI2CControllerNub::getACPIParams::sda_hold" name="sda_hold">
+      <doc>Pointer to the *UInt32* where we store the SDA hold time</doc>
       <type name="UInt32" qualifier="*" />
     </argument>
   </method>
@@ -70,37 +91,60 @@
     </return>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::readRegister" name="readRegister">
+    <brief> Passes to <ref ref="VoodooI2CController#VoodooI2CController::readRegister">VoodooI2CController::readRegister</ref>
+    </brief>
     <return>
+      <doc>The value of the register</doc>
       <type name="UInt32" />
     </return>
     <argument id="VoodooI2CControllerNub::readRegister::offset" name="offset">
+      <doc>The offset of the register relative to the controller's base address</doc>
       <type builtin="yes" name="int" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::start" name="start" virtual="yes">
+    <brief> Starts the controller nub</brief>
+    <doc>This function starts the controller nub and is responsible for allocating the resources needed by the nub and
+its driver. This includes instantiating <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::work_loop">VoodooI2CControllerNub::work_loop</ref>, <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::interrupt_source">VoodooI2CControllerNub::interrupt_source</ref> and <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::command_gate">VoodooI2CControllerNub::command_gate</ref>.
+
+</doc>
     <return>
+      <doc>*true* on successful start, *false* otherwise</doc>
       <type builtin="yes" name="bool" />
     </return>
     <argument id="VoodooI2CControllerNub::start::provider" name="provider">
+      <doc>The physical controller</doc>
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::stop" name="stop" virtual="yes">
+    <brief> Stops the controller nub</brief>
+    <doc>This function stops the controller nub and is responsible for deallocating the nub's resources by calling
+<ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::releaseResources">VoodooI2CControllerNub::releaseResources</ref>.
+
+</doc>
     <return>
+      <doc>*true* on successful start, *false* otherwise</doc>
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CControllerNub::stop::provider" name="provider">
+      <doc>The physical controller</doc>
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::writeRegister" name="writeRegister">
+    <brief> Passes to <ref ref="VoodooI2CController#VoodooI2CController::writeRegister">VoodooI2CController::writeRegister</ref>
+    </brief>
     <return>
+      <doc>The value of the register</doc>
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CControllerNub::writeRegister::value" name="value">
+      <doc>The *UInt32* value to be written</doc>
       <type name="UInt32" />
     </argument>
     <argument id="VoodooI2CControllerNub::writeRegister::offset" name="offset">
+      <doc>The offset of the register relative to the controller's base address</doc>
       <type builtin="yes" name="int" />
     </argument>
   </method>
@@ -114,20 +158,32 @@
     <type name="OSMetaClass" qualifier=" const const *" />
   </variable>
   <method abstract="yes" access="private" id="VoodooI2CControllerNub::interruptOccured" name="interruptOccured">
+    <brief> Handles an interrupt when the controller asserts its interrupt line</brief>
+    <doc>This function is called by the operating system when the controller asserts its interrupt line.
+It's only purpose is to delegate the interrupt to the attached driver.
+</doc>
     <return>
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CControllerNub::interruptOccured::owner" name="owner">
+      <doc>The owner of this interrupt</doc>
       <type name="OSObject" qualifier="*" />
     </argument>
     <argument id="VoodooI2CControllerNub::interruptOccured::src" name="src">
+      <doc>The interrupt event source</doc>
       <type name="IOInterruptEventSource" qualifier="*" />
     </argument>
     <argument id="VoodooI2CControllerNub::interruptOccured::intCount" name="intCount">
+      <doc>The index of the interrupt in the provider</doc>
       <type builtin="yes" name="int" />
     </argument>
   </method>
   <method abstract="yes" access="private" id="VoodooI2CControllerNub::releaseResources" name="releaseResources">
+    <brief> Releases resources allocated in <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::start">VoodooI2CControllerNub::start</ref>
+    </brief>
+    <doc>This function is called during a graceful exit from <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::start">VoodooI2CControllerNub::start</ref> and during
+execution of <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::stop">VoodooI2CControllerNub::stop</ref> in order to release resources retained by <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::start">VoodooI2CControllerNub::start</ref>.
+</doc>
     <return>
       <type builtin="yes" name="void" />
     </return>

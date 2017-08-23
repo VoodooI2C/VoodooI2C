@@ -6,6 +6,8 @@
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
 
+#include <IOKit/hidevent/IOHIDEventDriver.h>
+#include <IOKit/hidevent/IOHIDEventService.h>
 #include "VoodooI2CControllerDriver.hpp"
 #include "VoodooI2CController.hpp"
 
@@ -14,10 +16,6 @@
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CControllerDriver, IOService);
-
-/**
- Frees VoodooI2CControllerNub class - releases objects instantiated in `init`
- */
 
 void VoodooI2CControllerDriver::free() {
     IOFree(device_nubs, sizeof(device_nubs));
@@ -83,11 +81,6 @@ void VoodooI2CControllerDriver::handleAbortI2C() {
     IOLog("%s::%s I2C Transaction error: 0x%08x - aborting\n", getName(), bus_device->name, bus_device->abort_source);
 }
 
-
-/**
- Handles an interrupt that has been asserted by the controller
- */
-
 void VoodooI2CControllerDriver::handleInterrupt() {
     UInt32 status, enabled;
 
@@ -111,21 +104,13 @@ void VoodooI2CControllerDriver::handleInterrupt() {
         readFromBus();
 
     if (status & DW_IC_INTR_TX_EMPTY)
-        // transferToBus(_dev);
+        transferMessageToBus();
 
 wakeup:
     if ((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device->message_error) {
         nub->command_gate->commandWakeup(&bus_device->command_complete);
     }
 }
-
-/**
- Initialises VoodooI2CControllerNub class
- 
- @param properties OSDictionary* representing the matched personality
- 
- @return returns true on successful initialisation, else returns false
- */
 
 bool VoodooI2CControllerDriver::init(OSDictionary* properties) {
     if (!super::init(properties))
@@ -169,17 +154,6 @@ IOReturn VoodooI2CControllerDriver::initialiseBus() {
     return kIOReturnSuccess;
 }
 
-
-
-/**
- Prepares the driver for an I2C transfer routine
-
- @param messages VoodooI2CControllerBusMessage* representing the messages to be transferred
- @param number   int* representing the number of messages
-
- @return returns kIOReturnSuccess on successful preparation, else returns kIOReturnTimeout
-         or kIOReturnDeviceBusy
- */
 IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMessage* messages, int* number) {
     AbsoluteTime abstime;
     IOReturn sleep;
@@ -233,15 +207,6 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     return kIOReturnSuccess;
 }
 
-/**
- Probes the device to determine whether or not we can drive it
- 
- @param provider IOService* representing the matched entry in the IORegistry
- @param score    Probe score as specified in the matched personality
- 
- @return returns a pointer to this instance of VoodooI2CControllerDriver
- */
-
 VoodooI2CControllerDriver* VoodooI2CControllerDriver::probe(IOService* provider, SInt32* score) {
     UInt32 reg;
 
@@ -294,6 +259,7 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
                             IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device->name, getMatchedName(child));
                             OSSafeReleaseNULL(device_nub);
                         }
+
                     // device_nub->registerService();
 
                     // device_nubs->setObject(device_nub);
@@ -307,13 +273,6 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
 
     return kIOReturnSuccess;
 }
-
-
-/**
- Determines what type of interrupt has fired
-
- @return returns UInt32 representing the type of interrupt
- */
 
 UInt32 VoodooI2CControllerDriver::readClearInterruptBits() {
     UInt32 stat;
@@ -424,15 +383,6 @@ void VoodooI2CControllerDriver::requestTransferI2C() {
     toggleInterrupts(kVoodooI2CStateOn);
 }
 
-/**
- Called by the system's power manager to set power states
- 
- @param whichState either kIOPMPowerOff or kIOPMPowerOn
- @param whatDevice Power management policy maker
- 
- @return returns kIOPMAckImplied if power state has been set else maximum number of milliseconds needed for the device to be in the correct state
- */
-
 IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOService *whatDevice) {
     if (!whichState) {
         bus_device->awake = false;
@@ -449,14 +399,6 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
     }
     return kIOPMAckImplied;
 }
-
-/**
- Starts the bus
- 
- @param provider IOService* representing the nub
- 
- @return returns true on succesful start, else returns false
- */
 
 bool VoodooI2CControllerDriver::start(IOService* provider) {
     if (!super::start(provider))
@@ -486,27 +428,18 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     return true;
 }
 
-/**
- Stops the bus and undoes the effects of `start` and `probe`
- 
- @param provider IOService* representing the matched entry in the IORegistry
- */
-
 void VoodooI2CControllerDriver::stop(IOService* provider) {
     toggleBusState(kVoodooI2CStateOn);
+
+    if (device_nubs) {
+        device_nubs->release();
+        device_nubs = NULL;
+    }
 
     PMstop();
 
     super::stop(provider);
 }
-
-/**
- Toggle the bus's enabled state
- 
- @param enabled VoodooI2CPowerState representing the enabled state
- 
- @return returns kIOReturnSuccess on successful state toggle, else returns kIOReturnTimeout
- */
 
 IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
     int timeout = 500;
@@ -526,21 +459,10 @@ IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
     return kIOReturnTimeout;
 }
 
-/**
- Toggle clock gating to save power
-
- @param enabled VoodooI2CPowerState representing the state of the clock gating
- */
-
 inline void VoodooI2CControllerDriver::toggleClockGating(VoodooI2CState enabled) {
     writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
 }
 
-/**
- Toggle interrupts by masking
-
- @param enabled VoodooI2CPowerState representing state of the masking
- */
 void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {
     if (!enabled) {
         writeRegister(0, DW_IC_INTR_MASK);
@@ -550,27 +472,9 @@ void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {
     }
 }
 
-/**
- Directs the command gate to add an I2C transfer routine to the work loop
-
- @param messages VoodooI2CControllerBusMessage* representing the messages to be transferred
- @param number   int representing the number of messages
-
- @return returns kIOReturnSuccess on successful
- */
 IOReturn VoodooI2CControllerDriver::transferI2C(VoodooI2CControllerBusMessage* messages, int number) {
     return nub->command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CControllerDriver::transferI2CGated), messages, &number);
 }
-
-
-/**
- Attempts an I2C transfer routine
-
- @param messages VoodooI2CControllerBusMessage* representing the messages to be transferred
- @param number   int representing the number of messages
-
- @return returns kIOReturnSuccess on successful
- */
 
 IOReturn VoodooI2CControllerDriver::transferI2CGated(VoodooI2CControllerBusMessage* messages, int* number) {
     IOReturn ret;
@@ -584,10 +488,6 @@ IOReturn VoodooI2CControllerDriver::transferI2CGated(VoodooI2CControllerBusMessa
 
     return ret;
 }
-
-/**
- Transfers an I2C protocol message to the bus
- */
 
 void VoodooI2CControllerDriver::transferMessageToBus() {
     VoodooI2CControllerBusMessage *messages = bus_device->messages;

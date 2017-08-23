@@ -11,10 +11,6 @@
 #define super VoodooI2CController
 OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
 
-/**
- Configures the PCI provider
- */
-
 void VoodooI2CPCIController::configurePCI() {
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device->name);
     physical_device->pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
@@ -22,14 +18,6 @@ void VoodooI2CPCIController::configurePCI() {
     physical_device->pci_device->setBusMasterEnable(true);
     physical_device->pci_device->setMemoryEnable(true);
 }
-
-/**
- Finds the ACPI device associated to the PCI provider
- 
- @param device IORegistry* representing the matched IORegistry entry
- 
- @return returns kIOReturnSuccess on succesful get, else returns kIOReturnError;
- */
 
 IOReturn VoodooI2CPCIController::getACPIDevice() {
     OSString*  acpi_path;
@@ -56,15 +44,6 @@ IOReturn VoodooI2CPCIController::getACPIDevice() {
     return kIOReturnSuccess;
 }
 
-/**
- Called by the system's power manager to set power states
- 
- @param whichState either kIOPMPowerOff or kIOPMPowerOn
- @param whatDevice Power management policy maker
- 
- @return returns kIOPMAckImplied if power state has been set else maximum number of milliseconds needed for the device to be in the correct state
- */
-
 IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOService* whatDevice) {
     if (whichState == kIOPMPowerOff) {
         physical_device->awake = false;
@@ -82,22 +61,9 @@ IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOServi
     return kIOPMAckImplied;
 }
 
-/**
- Skylake LPSS reset hack. We do this here instead of in the driver to avoid having to check
- what provider type (ACPI vs PCI) the controller has
- */
-
 void VoodooI2CPCIController::skylakeLPSSResetHack() {
     writeRegister((LPSS_PRIV_RESETS_FUNC | LPSS_PRIV_RESETS_IDMA), (LPSS_PRIV + LPSS_PRIV_RESETS));
 }
-
-/**
- Starts the physical I2C controller
- 
- @param provider IOService* representing the matched entry in the IORegistry
- 
- @return returns true on succesful start, else returns false
- */
 
 bool VoodooI2CPCIController::start(IOService* provider) {
     if (!super::start(provider)) {
@@ -129,12 +95,6 @@ bool VoodooI2CPCIController::start(IOService* provider) {
 
     return true;
 }
-
-/**
- Stops the physical I2C controller and undoes the effects of `start`
- 
- @param provider IOService* representing the matched entry in the IORegistry
- */
 
 void VoodooI2CPCIController::stop(IOService* provider) {
     super::stop(provider);

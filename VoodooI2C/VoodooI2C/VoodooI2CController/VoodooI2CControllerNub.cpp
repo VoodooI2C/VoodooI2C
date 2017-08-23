@@ -13,14 +13,6 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CControllerNub, IOService);
 
-/**
- Attaches the nub to the physical I2C controller
- 
- @param provider IOService* representing the provider
- 
- @return returns true on succesful attach, else returns false
- */
-
 bool VoodooI2CControllerNub::attach(IOService* provider) {
     if (!super::attach(provider)) {
         IOLog("%s super::attach failed", getName());
@@ -37,12 +29,6 @@ bool VoodooI2CControllerNub::attach(IOService* provider) {
     return true;
 }
 
-/**
- Detaches the nub from the physical I2C controller
- 
- @param provider IOService* representing the provider
- */
-
 void VoodooI2CControllerNub::detach(IOService* provider) {
     if (controller) {
         controller->release();
@@ -52,17 +38,6 @@ void VoodooI2CControllerNub::detach(IOService* provider) {
     super::detach(provider);
 }
 
-/**
- Evaluates ACPI methods pertaining to the ACPI device for the controller in the ACPI tables
-
- @param method   const char* containg the method name
- @param hcnt     pointer to UInt32 containg the high count
- @param lcnt     pointer to UInt32 containg the low count
- @param sda_hold pointer to sda_hold containing the SDA hold time
-
- @return returns kIOReturnSuccess on successful retrieval of all desired values,
-         else returns kIOReturnNotFound
- */
 IOReturn VoodooI2CControllerNub::getACPIParams(const char* method, UInt32* hcnt, UInt32* lcnt, UInt32* sda_hold) {
     OSObject *object;
     IOReturn status = controller->physical_device->acpi_device->evaluateObject(method, &object);
@@ -107,22 +82,10 @@ exit:
     return kIOReturnNotFound;
 }
 
-/**
- Handles an interrupt when the controller asserts its interrupt line
- 
- @param owner    OSOBject* that owns this interrupt
- @param src      IOInterruptEventSource*
- @param intCount int representing the index of the interrupt in the provider
- */
-
 void VoodooI2CControllerNub::interruptOccured(OSObject* owner, IOInterruptEventSource* src, int intCount) {
     if (driver)
         driver->handleInterrupt();
 }
-
-/**
- Passes to the `readRegister` command in `VoodooI2CController`
- */
 
 UInt32 VoodooI2CControllerNub::readRegister(int offset) {
     return controller->readRegister(offset);
@@ -149,13 +112,6 @@ void VoodooI2CControllerNub::releaseResources() {
     if (work_loop)
         OSSafeReleaseNULL(work_loop);
 }
-
-/**
- Starts the controller nub
- 
- @param provider IOService* representing the physical controller
- @return returns true on succesful start, else returns false
- */
 
 bool VoodooI2CControllerNub::start(IOService* provider) {
     if (!super::start(provider))
@@ -194,20 +150,10 @@ exit:
     return false;
 }
 
-/**
- Stops the physical I2C controller and undoes the effects of `start` and `probe`
- 
- @param provider IOService* representing the matched entry in the IORegistry
- */
-
 void VoodooI2CControllerNub::stop(IOService* provider) {
     releaseResources();
     super::stop(provider);
 }
-
-/**
- Passes to the `writeRegister` command in `VoodooI2CController`
- */
 
 void VoodooI2CControllerNub::writeRegister(UInt32 value, int offset) {
     controller->writeRegister(value, offset);

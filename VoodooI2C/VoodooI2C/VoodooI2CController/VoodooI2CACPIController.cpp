@@ -11,13 +11,6 @@
 #define super VoodooI2CController
 OSDefineMetaClassAndStructors(VoodooI2CACPIController, VoodooI2CController);
 
-/**
- Evalues the ACPI power state methods
-
- @param enabled
-
- @return returns kIOReturnSuccess if successful, else returns kIOReturnNoPower
- */
 IOReturn VoodooI2CACPIController::setACPIPowerState(VoodooI2CState enabled) {
     if (enabled) {
         IOLog("%s::%s Set ACPI power state _PS0\n", getName(), physical_device->name);

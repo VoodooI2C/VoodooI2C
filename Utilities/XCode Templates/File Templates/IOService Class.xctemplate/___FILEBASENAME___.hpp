@@ -17,9 +17,6 @@ class ___FILEBASENAMEASIDENTIFIER___ : public ___VARIABLE_superClass___ {
   OSDeclareDefaultStructors(___FILEBASENAMEASIDENTIFIER___);
 
  public:
-    // data members
-
-    // function members
     bool attach(IOService* provider);
     void detach(IOService* provider);
     bool init(OSDictionary* properties);
