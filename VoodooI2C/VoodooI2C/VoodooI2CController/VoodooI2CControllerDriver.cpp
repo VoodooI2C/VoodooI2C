@@ -541,7 +541,7 @@ IOReturn VoodooI2CControllerDriver::transferI2CGated(VoodooI2CControllerBusMessa
 
     for (ret = 0, tries = 0; tries <= 5; tries++) {
         ret = prepareTransferI2C(messages, number);
-        if (ret != kIOReturnSuccess)
+        if (ret != kIOReturnNotReady)
             break;
     }
 
