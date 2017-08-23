@@ -495,6 +495,8 @@ void VoodooI2CControllerDriver::stop(IOService* provider) {
 
     toggleBusState(kVoodooI2CStateOff);
 
+    releaseResources();
+    
     PMstop();
 
     super::stop(provider);
