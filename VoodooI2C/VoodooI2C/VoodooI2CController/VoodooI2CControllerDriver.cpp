@@ -6,8 +6,6 @@
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
 
-#include <IOKit/hidevent/IOHIDEventDriver.h>
-#include <IOKit/hidevent/IOHIDEventService.h>
 #include "VoodooI2CControllerDriver.hpp"
 #include "VoodooI2CController.hpp"
 
@@ -496,7 +494,7 @@ void VoodooI2CControllerDriver::stop(IOService* provider) {
     toggleBusState(kVoodooI2CStateOff);
 
     releaseResources();
-    
+
     PMstop();
 
     super::stop(provider);

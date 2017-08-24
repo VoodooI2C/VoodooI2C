@@ -25,8 +25,24 @@
 		ACF810E91F3304720031A6F5 /* VoodooI2CControllerNub.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACF810E71F3304720031A6F5 /* VoodooI2CControllerNub.hpp */; };
 		ACFCBA901F33644D00F9B59C /* VoodooI2CControllerDriver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACFCBA8E1F33644D00F9B59C /* VoodooI2CControllerDriver.cpp */; };
 		ACFCBA911F33644D00F9B59C /* VoodooI2CControllerDriver.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACFCBA8F1F33644D00F9B59C /* VoodooI2CControllerDriver.hpp */; };
-		F1C8F7101F4E0ABE00B0C2B5 /* VoodooI2CController in Resources */ = {isa = PBXBuildFile; fileRef = F1C8F70F1F4E0ABE00B0C2B5 /* VoodooI2CController */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AC09558E1F4EE10C0052E343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F1F172C51F42263A00AD98FA;
+			remoteInfo = VoodooGPIO;
+		};
+		AC0955901F4EE1650052E343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F1F172C41F42263A00AD98FA;
+			remoteInfo = VoodooGPIO;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPIController.cpp; path = VoodooI2CController/VoodooI2CACPIController.cpp; sourceTree = "<group>"; };
@@ -36,6 +52,7 @@
 		AC0955771F4ED4F60052E343 /* linuxirq.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = linuxirq.hpp; path = ../../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp; sourceTree = "<group>"; };
 		AC0955781F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPICRSParser.cpp; path = ../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.cpp; sourceTree = "<group>"; };
 		AC0955791F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CACPICRSParser.hpp; path = ../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp; sourceTree = "<group>"; };
+		AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooGPIO.xcodeproj; path = ../../Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj; sourceTree = "<group>"; };
 		AC0A265A1F35F7FB00122252 /* VoodooI2CControllerConstants.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerConstants.hpp; path = VoodooI2CController/VoodooI2CControllerConstants.hpp; sourceTree = "<group>"; };
 		AC0AD4561F3842800070A642 /* VoodooI2CDeviceNub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CDeviceNub.cpp; path = VoodooI2CDevice/VoodooI2CDeviceNub.cpp; sourceTree = "<group>"; };
 		AC0AD4571F3842800070A642 /* VoodooI2CDeviceNub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CDeviceNub.hpp; path = VoodooI2CDevice/VoodooI2CDeviceNub.hpp; sourceTree = "<group>"; };
@@ -50,7 +67,6 @@
 		ACF810E71F3304720031A6F5 /* VoodooI2CControllerNub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerNub.hpp; path = VoodooI2CController/VoodooI2CControllerNub.hpp; sourceTree = "<group>"; };
 		ACFCBA8E1F33644D00F9B59C /* VoodooI2CControllerDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CControllerDriver.cpp; path = VoodooI2CController/VoodooI2CControllerDriver.cpp; sourceTree = "<group>"; };
 		ACFCBA8F1F33644D00F9B59C /* VoodooI2CControllerDriver.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerDriver.hpp; path = VoodooI2CController/VoodooI2CControllerDriver.hpp; sourceTree = "<group>"; };
-		F1C8F70F1F4E0ABE00B0C2B5 /* VoodooI2CController */ = {isa = PBXFileReference; lastKnownFileType = folder; name = VoodooI2CController; path = VoodooI2C/VoodooI2CController; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,21 +83,30 @@
 		AC0955711F4ED49E0052E343 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */,
 				AC0955731F4ED4C50052E343 /* helpers.cpp */,
 				AC0955741F4ED4C50052E343 /* helpers.hpp */,
-				AC0955721F4ED4AA0052E343 /* VoodooI2CCRSParser */,
+				AC0955721F4ED4AA0052E343 /* VoodooI2CACPICRSParser */,
 			);
 			name = Dependencies;
 			sourceTree = "<group>";
 		};
-		AC0955721F4ED4AA0052E343 /* VoodooI2CCRSParser */ = {
+		AC0955721F4ED4AA0052E343 /* VoodooI2CACPICRSParser */ = {
 			isa = PBXGroup;
 			children = (
 				AC0955771F4ED4F60052E343 /* linuxirq.hpp */,
 				AC0955781F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp */,
 				AC0955791F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp */,
 			);
-			name = VoodooI2CCRSParser;
+			name = VoodooI2CACPICRSParser;
+			sourceTree = "<group>";
+		};
+		AC09558B1F4EE10C0052E343 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC09558F1F4EE10C0052E343 /* VoodooGPIO.kext */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		AC0AD4551F38425A0070A642 /* VoodooI2C Device */ = {
@@ -96,7 +121,6 @@
 		AC2603A61F2F294000CF238F = {
 			isa = PBXGroup;
 			children = (
-				F1C8F70F1F4E0ABE00B0C2B5 /* VoodooI2CController */,
 				AC2603B21F2F294000CF238F /* VoodooI2C */,
 				AC2603B11F2F294000CF238F /* Products */,
 			);
@@ -188,10 +212,12 @@
 				AC2603AE1F2F294000CF238F /* Resources */,
 				AC2603BF1F2F508700CF238F /* Linting */,
 				AC4EEE2D1F3B2F1D00D0A6E0 /* ShellScript */,
+				AC0955921F4EE9B00052E343 /* Add GPIO Plugin */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AC0955911F4EE1650052E343 /* PBXTargetDependency */,
 			);
 			name = VoodooI2C;
 			productName = VoodooI2C;
@@ -223,6 +249,12 @@
 			mainGroup = AC2603A61F2F294000CF238F;
 			productRefGroup = AC2603B11F2F294000CF238F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = AC09558B1F4EE10C0052E343 /* Products */;
+					ProjectRef = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				AC2603AF1F2F294000CF238F /* VoodooI2C */,
@@ -230,18 +262,41 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		AC09558F1F4EE10C0052E343 /* VoodooGPIO.kext */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VoodooGPIO.kext;
+			remoteRef = AC09558E1F4EE10C0052E343 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		AC2603AE1F2F294000CF238F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1C8F7101F4E0ABE00B0C2B5 /* VoodooI2CController in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		AC0955921F4EE9B00052E343 /* Add GPIO Plugin */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Add GPIO Plugin";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns\nrm -rf ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns/VoodooGPIO.kext\nmv ${BUILT_PRODUCTS_DIR}/VoodooGPIO.kext ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns";
+		};
 		AC2603BF1F2F508700CF238F /* Linting */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -268,7 +323,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find .*/VoodooI2C .*/Miscellaneous -name \"*.hpp\" | xargs cldoc generate -I. -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge Documentation --basedir .";
+			shellScript = "find .*/VoodooI2C .*/Dependencies -name \"*.hpp\" | xargs cldoc generate -I. -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge Documentation --basedir .";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -290,6 +345,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AC0955911F4EE1650052E343 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VoodooGPIO;
+			targetProxy = AC0955901F4EE1650052E343 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AC2603B81F2F294000CF238F /* Debug */ = {

@@ -15,12 +15,12 @@
 #include "linuxirq.hpp"
 
 VoodooI2CACPICRSParser::VoodooI2CACPICRSParser(){
-    foundGPIOInt = false;
-    foundI2C = false;
+    found_gpio_interrupts = false;
+    found_i2c = false;
 }
 
-void VoodooI2CACPICRSParser::parse_acpi_serialbus(uint8_t const* crs, uint32_t offset, uint32_t sz){
-    if (foundI2C)
+void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t offset, uint32_t sz){
+    if (found_i2c)
         return;
     if (offset >= sz)
         return;
@@ -44,19 +44,19 @@ void VoodooI2CACPICRSParser::parse_acpi_serialbus(uint8_t const* crs, uint32_t o
     memcpy(&datalen, crs + offset + 10, sizeof(uint16_t));*/
     
     if (bustype == 1){
-        foundI2C = true;
+        found_i2c = true;
         
-        i2cInfo.resourceConsumer = (flags >> 1) & 0x1;
-        i2cInfo.deviceInitiated = flags & 0x1;
-        i2cInfo.addressMode10Bit = tflags & 0x1;
+        i2c_info.resource_consumer = (flags >> 1) & 0x1;
+        i2c_info.device_initiated = flags & 0x1;
+        i2c_info.address_mode_10Bit = tflags & 0x1;
         
         uint32_t busspeed;
         memcpy(&busspeed, crs + offset + 12, sizeof(uint32_t));
-        i2cInfo.busSpeed = busspeed;
+        i2c_info.bus_speed = busspeed;
         
         uint16_t address;
         memcpy(&address, crs + offset + 16, sizeof(uint16_t));
-        i2cInfo.address = address;
+        i2c_info.address = address;
         
         /*uint8_t i2cLen = len - (12 + datalen - 3);
         
@@ -66,8 +66,8 @@ void VoodooI2CACPICRSParser::parse_acpi_serialbus(uint8_t const* crs, uint32_t o
     }
 }
 
-void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t const* crs, uint32_t offset, uint32_t sz){
-    if (foundGPIOInt)
+void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, uint32_t sz){
+    if (found_gpio_interrupts)
         return;
     if (offset >= sz)
         return;
@@ -79,15 +79,15 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t const* crs, uint32_t offset
     uint16_t len;
     memcpy(&len, crs + offset + 1, sizeof(uint16_t));
     
-    uint8_t gpiotype = crs[offset + 4];
+    uint8_t gpio_type = crs[offset + 4];
     uint8_t flags = crs[offset + 5];
     
-    uint8_t gpioFlags = crs[offset + 7];
+    uint8_t gpio_flags = crs[offset + 7];
     
-    uint8_t pinConfig = crs[offset + 9];
+    uint8_t pin_config = crs[offset + 9];
     
-    uint16_t pinOffset;
-    memcpy(&pinOffset, crs + offset + 14, sizeof(uint16_t));
+    uint16_t pin_offset;
+    memcpy(&pin_offset, crs + offset + 14, sizeof(uint16_t));
     
     /*uint16_t resourceOffset;
     memcpy(&resourceOffset, crs + offset + 17, sizeof(uint16_t));
@@ -95,35 +95,35 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t const* crs, uint32_t offset
     uint16_t vendorOffset;
     memcpy(&vendorOffset, crs + offset + 19, sizeof(uint16_t));*/
     
-    uint16_t pinNumber;
-    memcpy(&pinNumber, crs + offset + pinOffset, sizeof(uint16_t));
+    uint16_t pin_number;
+    memcpy(&pin_number, crs + offset + pin_offset, sizeof(uint16_t));
     
-    if (pinNumber == 0xFFFF) //pinNumber 0xFFFF is invalid
+    if (pin_number == 0xFFFF) //pinNumber 0xFFFF is invalid
         return;
     
     /*char *gpioController = (char *)malloc(vendorOffset - resourceOffset);
     memcpy(gpioController, crs + offset + resourceOffset, vendorOffset - resourceOffset);
     IOLog("GPIO Controller: %s\n", gpioController);*/
     
-    if (gpiotype == 0){
+    if (gpio_type == 0){
         //GPIOInt
         
-        foundGPIOInt = true;
+        found_gpio_interrupts = true;
         
-        gpioInt.resourceConsumer = flags & 0x1;
-        gpioInt.levelInterrupt = !(gpioFlags & 0x1);
+        gpio_interrupts.resource_consumer = flags & 0x1;
+        gpio_interrupts.level_interrupt = !(gpio_flags & 0x1);
         
-        gpioInt.interruptPolarity = (gpioFlags >> 1) & 0x3;
+        gpio_interrupts.interrupt_polarity = (gpio_flags >> 1) & 0x3;
         
-        gpioInt.sharedInterrupt = (gpioFlags >> 3) & 0x1;
-        gpioInt.wakeInterrupt = (gpioFlags >> 4) & 0x1;
+        gpio_interrupts.shared_interrupt = (gpio_flags >> 3) & 0x1;
+        gpio_interrupts.wake_interrupt = (gpio_flags >> 4) & 0x1;
         
-        gpioInt.pinConfig = pinConfig;
-        gpioInt.pinNumber = pinNumber;
+        gpio_interrupts.pin_config = pin_config;
+        gpio_interrupts.pin_number = pin_number;
         
         int irq = 0;
-        if (gpioInt.levelInterrupt){
-            switch (gpioInt.interruptPolarity){
+        if (gpio_interrupts.level_interrupt){
+            switch (gpio_interrupts.interrupt_polarity){
                 case 0:
                     irq = IRQ_TYPE_LEVEL_HIGH;
                     break;
@@ -135,7 +135,7 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t const* crs, uint32_t offset
                     break;
             }
         } else {
-            switch (gpioInt.interruptPolarity) {
+            switch (gpio_interrupts.interrupt_polarity) {
                 case 0:
                     irq = IRQ_TYPE_EDGE_FALLING;
                     break;
@@ -149,24 +149,24 @@ void VoodooI2CACPICRSParser::parse_acpi_gpio(uint8_t const* crs, uint32_t offset
                     break;
             }
         }
-        gpioInt.irqType = irq;
+        gpio_interrupts.irq_type = irq;
     }
     
-    if (gpiotype == 1){
+    if (gpio_type == 1){
         //GPIOIo
         
-        foundGPIOIO = true;
+        found_gpio_io = true;
         
-        gpioIO.resourceConsumer = flags & 0x1;
-        gpioIO.ioRestriction = gpioFlags & 0x3;
-        gpioIO.sharing = (gpioFlags >> 3) & 0x1;
+        gpio_io.resource_consumer = flags & 0x1;
+        gpio_io.io_restriction = gpio_flags & 0x3;
+        gpio_io.sharing = (gpio_flags >> 3) & 0x1;
         
-        gpioIO.pinConfig = pinConfig;
-        gpioIO.pinNumber = pinNumber;
+        gpio_io.pin_config = pin_config;
+        gpio_io.pin_number = pin_number;
     }
 }
 
-void VoodooI2CACPICRSParser::parse_acpi_crs(uint8_t const* crs, uint32_t offset, uint32_t sz){
+void VoodooI2CACPICRSParser::parseACPICRS(uint8_t const* crs, uint32_t offset, uint32_t sz){
     if (offset >= sz)
         return;
     
@@ -176,10 +176,10 @@ void VoodooI2CACPICRSParser::parse_acpi_crs(uint8_t const* crs, uint32_t offset,
     memcpy(&len, crs + offset + 1, sizeof(uint16_t));
     
     if (opcode == 0x8c)
-        parse_acpi_gpio(crs, offset, sz);
+        parseACPIGPIO(crs, offset, sz);
     if (opcode == 0x8e)
-        parse_acpi_serialbus(crs, offset, sz);
+        parseACPISerialBus(crs, offset, sz);
     
     offset += (len + 3);
-    parse_acpi_crs(crs, offset, sz);
+    parseACPICRS(crs, offset, sz);
 }

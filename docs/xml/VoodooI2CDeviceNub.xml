@@ -31,10 +31,37 @@
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::disableInterrupt" name="disableInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::disableInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::enableInterrupt" name="enableInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::enableInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
   <method abstract="yes" id="VoodooI2CDeviceNub::free" name="free" virtual="yes">
     <return>
       <type builtin="yes" name="void" />
     </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::getInterruptType" name="getInterruptType" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::getInterruptType::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::getInterruptType::interruptType" name="interruptType">
+      <type builtin="yes" name="int" qualifier="*" />
+    </argument>
   </method>
   <method abstract="yes" id="VoodooI2CDeviceNub::getMetaClass" name="getMetaClass" virtual="yes">
     <return>
@@ -47,6 +74,23 @@
     </return>
     <argument id="VoodooI2CDeviceNub::init::properties" name="properties">
       <type name="OSDictionary" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::registerInterrupt" name="registerInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::registerInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::registerInterrupt::target" name="target">
+      <type name="OSObject" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::registerInterrupt::handler" name="handler">
+      <type name="IOInterruptAction" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::registerInterrupt::refcon" name="refcon">
+      <type builtin="yes" name="void" qualifier="*" />
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CDeviceNub::start" name="start" virtual="yes">
@@ -65,6 +109,14 @@
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::unregisterInterrupt" name="unregisterInterrupt" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::unregisterInterrupt::source" name="source">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
   <constructor abstract="yes" access="protected" id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
     <argument id="VoodooI2CDeviceNub::VoodooI2CDeviceNub::" name="">
       <type name="OSMetaClass" qualifier=" const *" />
@@ -77,9 +129,29 @@
   <field access="private" id="VoodooI2CDeviceNub::acpi_device" name="acpi_device">
     <type name="IOACPIPlatformDevice" qualifier="*" />
   </field>
-  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::get_device_resources" name="get_device_resources">
+  <field access="private" id="VoodooI2CDeviceNub::controller_name" name="controller_name">
+    <type builtin="yes" name="char" qualifier=" const *" />
+  </field>
+  <field access="private" id="VoodooI2CDeviceNub::gpio_controller" name="gpio_controller">
+    <type name="VoodooGPIO" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CDeviceNub::has_gpio_interrupts" name="has_gpio_interrupts">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field access="private" id="VoodooI2CDeviceNub::gpio_pin" name="gpio_pin">
+    <type name="UInt16" />
+  </field>
+  <field access="private" id="VoodooI2CDeviceNub::gpio_irq" name="gpio_irq">
+    <type builtin="yes" name="int" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::getDeviceResources" name="getDeviceResources">
     <return>
-      <type builtin="yes" name="bool" />
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::getGPIOController" name="getGPIOController">
+    <return>
+      <type name="VoodooGPIO" qualifier="*" />
     </return>
   </method>
 </class>

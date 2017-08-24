@@ -12,53 +12,53 @@
 #define VoodooI2CACPICRSParser_hpp
 
 struct i2c_info {
-    bool resourceConsumer;
-    bool deviceInitiated;
-    bool addressMode10Bit;
+    bool resource_consumer;
+    bool device_initiated;
+    bool address_mode_10Bit;
     
-    uint32_t busSpeed;
+    uint32_t bus_speed;
     uint16_t address;
 };
 
 struct gpio_int_info {
-    bool resourceConsumer;
-    bool levelInterrupt;
+    bool resource_consumer;
+    bool level_interrupt;
     
-    uint8_t interruptPolarity;
+    uint8_t interrupt_polarity;
     
-    bool sharedInterrupt;
-    bool wakeInterrupt;
+    bool shared_interrupt;
+    bool wake_interrupt;
     
-    uint8_t pinConfig;
-    uint16_t pinNumber;
+    uint8_t pin_config;
+    uint16_t pin_number;
     
-    int irqType;
+    int irq_type;
 };
 
 struct gpio_io_info {
-    bool resourceConsumer;
-    uint8_t ioRestriction;
+    bool resource_consumer;
+    uint8_t io_restriction;
     bool sharing;
     
-    uint8_t pinConfig;
-    uint16_t pinNumber;
+    uint8_t pin_config;
+    uint16_t pin_number;
 };
 
 class VoodooI2CACPICRSParser {
 public:
-    bool foundI2C;
-    bool foundGPIOInt;
-    bool foundGPIOIO;
+    bool found_i2c;
+    bool found_gpio_interrupts;
+    bool found_gpio_io;
     
-    i2c_info i2cInfo;
-    gpio_int_info gpioInt;
-    gpio_io_info gpioIO;
+    i2c_info i2c_info;
+    gpio_int_info gpio_interrupts;
+    gpio_io_info gpio_io;
     
     VoodooI2CACPICRSParser();
-    void parse_acpi_crs(uint8_t const* crs, uint32_t offset, uint32_t sz);
+    void parseACPICRS(uint8_t const* crs, uint32_t offset, uint32_t sz);
 private:
-    void parse_acpi_serialbus(uint8_t const* crs, uint32_t offset, uint32_t sz);
-    void parse_acpi_gpio(uint8_t const* crs, uint32_t offset, uint32_t sz);
+    void parseACPISerialBus(uint8_t const* crs, uint32_t offset, uint32_t sz);
+    void parseACPIGPIO(uint8_t const* crs, uint32_t offset, uint32_t sz);
 };
 
 #endif /* VoodooI2CACPICRSParser_hpp */

@@ -92,7 +92,7 @@ void VoodooI2CController::releaseResources() {
     if (physical_device) {
         if (nub) {
             nub->detach(this);
-            OSSafeRelease(nub);
+            OSSafeReleaseNULL(nub);
         }
 
         if (physical_device->mmap) {

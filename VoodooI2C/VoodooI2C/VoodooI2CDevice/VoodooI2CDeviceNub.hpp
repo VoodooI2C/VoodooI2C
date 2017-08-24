@@ -13,7 +13,7 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
-#include "VoodooGPIO.hpp"
+#include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.h"
 
 class VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);
@@ -28,24 +28,25 @@ class VoodooI2CDeviceNub : public IOService {
     void free();
     bool start(IOService* provider);
     void stop(IOService* provider);
-    
-    virtual IOReturn disableInterrupt(int source) override;
-    virtual IOReturn enableInterrupt(int source) override;
-    virtual IOReturn getInterruptType(int source, int *interruptType) override;
-    virtual IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon) override;
-    virtual IOReturn unregisterInterrupt(int source);
- protected:
+
+    IOReturn disableInterrupt(int source);
+    IOReturn enableInterrupt(int source);
+    IOReturn getInterruptType(int source, int *interruptType);
+    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon);
+    IOReturn unregisterInterrupt(int source);
+
  private:
-    IOACPIPlatformDevice *acpi_device;
-    bool get_device_resources();
-    
-    VoodooGPIO *gpioController;
-    VoodooGPIO *getGPIOController();
-    
-    bool hasGPIOInt;
-    
-    UInt16 gpioPin;
-    int gpioIRQ;
+    IOACPIPlatformDevice* acpi_device;
+    const char* controller_name;
+    IOReturn getDeviceResources();
+
+    VoodooGPIO* gpio_controller;
+    VoodooGPIO* getGPIOController();
+
+    bool has_gpio_interrupts;
+
+    UInt16 gpio_pin;
+    int gpio_irq;
 };
 
 
