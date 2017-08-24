@@ -29,6 +29,10 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
 
     if (!get_device_resources())
         return false;
+    
+    if (this->hasGPIOInt){
+        this->gpioController = getGPIOController();
+    }
 
     setName(child->getName());
 
@@ -91,6 +95,12 @@ bool VoodooI2CDeviceNub::get_device_resources() {
     if (crsParser.foundGPIOInt) {
         setProperty("gpioPin", OSNumber::withNumber(crsParser.gpioInt.pinNumber, 16));
         setProperty("gpioIRQ", OSNumber::withNumber(crsParser.gpioInt.irqType, 16));
+        
+        this->hasGPIOInt = true;
+        this->gpioPin = crsParser.gpioInt.pinNumber;
+        this->gpioIRQ = crsParser.gpioInt.irqType;
+    } else {
+        this->hasGPIOInt = false;
     }
 
     data->release();
@@ -121,5 +131,78 @@ bool VoodooI2CDeviceNub::start(IOService* provider) {
  */
 
 void VoodooI2CDeviceNub::stop(IOService* provider) {
+    if (this->gpioController){
+        this->gpioController->release();
+        this->gpioController = NULL;
+    }
+    
     super::stop(provider);
+}
+
+/**
+ Get the GPIO controller instance
+ */
+VoodooGPIO *VoodooI2CDeviceNub::getGPIOController(){
+    VoodooGPIO *gpioController = NULL;
+    
+    OSDictionary *match = serviceMatching("VoodooGPIO");
+    OSIterator *iter = getMatchingServices(match);
+    if (iter){
+        gpioController = OSDynamicCast(VoodooGPIO, iter->getNextObject());
+    
+        if (gpioController != NULL){
+            IOLog("%s::Got GPIO Controller! %s\n", getName(), gpioController->getName());
+        }
+    
+        gpioController->retain();
+    
+        iter->release();
+    }
+    
+    return gpioController;
+}
+
+/*
+Interrupt functions
+*/
+
+IOReturn VoodooI2CDeviceNub::disableInterrupt(int source){
+    if (this->hasGPIOInt){
+        return gpioController->disableInterrupt(this->gpioPin);
+    } else {
+        return acpi_device->disableInterrupt(source);
+    }
+}
+
+IOReturn VoodooI2CDeviceNub::enableInterrupt(int source){
+    if (this->hasGPIOInt){
+         return gpioController->enableInterrupt(this->gpioPin);
+    } else {
+        return acpi_device->enableInterrupt(source);
+    }
+}
+
+IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int *interruptType){
+    if (this->hasGPIOInt){
+        return gpioController->getInterruptType(this->gpioPin, interruptType);
+    } else {
+        return acpi_device->getInterruptType(source, interruptType);
+    }
+}
+
+IOReturn VoodooI2CDeviceNub::registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon){
+    if (this->hasGPIOInt){
+        this->gpioController->setInterruptTypeForPin(this->gpioPin, this->gpioIRQ);
+        return gpioController->registerInterrupt(this->gpioPin, target, handler, refcon);
+    } else {
+        return acpi_device->registerInterrupt(source, target, handler, refcon);
+    }
+}
+
+IOReturn VoodooI2CDeviceNub::unregisterInterrupt(int source){
+    if (this->hasGPIOInt){
+        return this->gpioController->unregisterInterrupt(this->gpioPin);
+    } else {
+        return acpi_device->unregisterInterrupt(source);
+    }
 }
