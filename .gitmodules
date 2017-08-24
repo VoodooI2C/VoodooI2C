@@ -1,0 +1,3 @@
+[submodule "Dependencies/VoodooGPIO"]
+	path = Dependencies/VoodooGPIO
+	url = git://github.com/coolstar/VoodooGPIO.git

@@ -17,7 +17,7 @@
 #include "VoodooI2CControllerConstants.hpp"
 #include "VoodooI2CControllerNub.hpp"
 #include "../VoodooI2CDevice/VoodooI2CDeviceNub.hpp"
-#include "../../../Miscellaneous/helpers.hpp"
+#include "helpers.hpp"
 
 // The default values in the following struct are for Haswell PCI as
 // specified in Linux::i2c-designware-pcidrv.c

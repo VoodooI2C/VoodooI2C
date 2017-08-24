@@ -13,7 +13,7 @@
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include <IOKit/pci/IOPCIDevice.h>
 
-#include "../../../Miscellaneous/helpers.hpp"
+#include "helpers.hpp"
 
 #ifndef kACPIDevicePathKey
 #define kACPIDevicePathKey "acpi-path"
