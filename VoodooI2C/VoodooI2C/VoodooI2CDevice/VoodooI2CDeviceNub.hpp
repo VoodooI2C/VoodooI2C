@@ -25,10 +25,13 @@ class VoodooI2CDeviceNub : public IOService {
     IOReturn disableInterrupt(int source);
     IOReturn enableInterrupt(int source);
     IOReturn getInterruptType(int source, int *interruptType);
+    IOReturn readI2C(UInt8* values, UInt16 length);
     IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon);
     bool start(IOService* provider);
     void stop(IOService* provider);
     IOReturn unregisterInterrupt(int source);
+    IOReturn writeI2C(UInt8* values, UInt16 length);
+    IOReturn writeReadI2C(UInt8* write_buffer, UInt16 write_length, UInt8* read_buffer, UInt16 read_length);
 
  private:
     IOACPIPlatformDevice* acpi_device;
@@ -43,9 +46,6 @@ class VoodooI2CDeviceNub : public IOService {
 
     IOReturn getDeviceResources();
     VoodooGPIO* getGPIOController();
-    IOReturn readI2C(UInt8* values, UInt16 length);
-    IOReturn writeI2C(UInt8* values, UInt16 length);
-    IOReturn writeReadI2C(UInt8* write_buffer, UInt16 write_length, UInt8* read_buffer, UInt16 read_length);
 };
 
 
