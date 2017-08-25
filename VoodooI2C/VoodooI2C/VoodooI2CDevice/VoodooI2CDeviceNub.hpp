@@ -13,8 +13,9 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
-#include "../VoodooI2CController/VoodooI2CControllerDriver.hpp"
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.h"
+
+class VoodooI2CControllerDriver;
 
 class VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);

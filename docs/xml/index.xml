@@ -17,12 +17,23 @@
     <brief> Implements an Intel LPSS Designware I2C Controller</brief>
     <class name="MetaClass" ref="VoodooI2CController::MetaClass#VoodooI2CController::MetaClass" />
   </class>
-  <class name="VoodooI2CControllerDriver" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver" />
+  <struct name="VoodooI2CControllerBusConfig" ref="VoodooI2CControllerBusConfig#VoodooI2CControllerBusConfig" />
+  <struct name="VoodooI2CControllerBusDevice" ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice" />
+  <struct name="VoodooI2CControllerBusMessage" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage">
+    <brief>The default values in the following struct are for Haswell PCI as</brief>
+  </struct>
+  <class name="VoodooI2CControllerDriver" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">
+    <brief> Implements a driver for the Intel LPSS Designware I2C Controller which attaches to a <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub">VoodooI2CControllerNub</ref> object</brief>
+    <class name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  </class>
   <class name="VoodooI2CControllerNub" ref="VoodooI2CControllerNub#VoodooI2CControllerNub">
     <brief> Implements a controller nub to which an instance of <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">VoodooI2CControllerDriver</ref> may attach</brief>
     <class name="MetaClass" ref="VoodooI2CControllerNub::MetaClass#VoodooI2CControllerNub::MetaClass" />
   </class>
   <struct name="VoodooI2CControllerPhysicalDevice" ref="VoodooI2CControllerPhysicalDevice#VoodooI2CControllerPhysicalDevice" />
+  <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub">
+    <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
+  </class>
   <class name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController">
     <brief> Implements a PCI Intel LPSS Designware I2C Controller</brief>
     <class name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />

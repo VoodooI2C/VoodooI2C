@@ -1,2 +1,336 @@
 <?xml version='1.0' encoding='utf-8'?>
-<class id="VoodooI2CControllerDriver" name="VoodooI2CControllerDriver" xmlns="http://jessevdk.github.com/cldoc/1.0" />
+<class id="VoodooI2CControllerDriver" interface="true" name="VoodooI2CControllerDriver" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Implements a driver for the Intel LPSS Designware I2C Controller which attaches to a <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub">VoodooI2CControllerNub</ref> object</brief>
+  <doc>The members of this class are responsible for interfacing with the I2C bus and implementing the I2C protocol. The driver also
+publishes nubs for each I2C slave device attached to the bus it drives.
+</doc>
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CControllerDriver::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CControllerDriver::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  <field id="VoodooI2CControllerDriver::bus_device" name="bus_device">
+    <type name="VoodooI2CControllerBusDevice" qualifier="*" ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice" />
+  </field>
+  <field id="VoodooI2CControllerDriver::device_nubs" name="device_nubs">
+    <type name="OSArray" qualifier="*" />
+  </field>
+  <field id="VoodooI2CControllerDriver::nub" name="nub">
+    <type name="VoodooI2CControllerNub" qualifier="*" ref="VoodooI2CControllerNub#VoodooI2CControllerNub" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver" />
+  <method abstract="yes" id="VoodooI2CControllerDriver::free" name="free" virtual="yes">
+    <brief> Frees <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> and <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> class</brief>
+    <doc>This is the last function called during the unload routine and frees the memory
+allocated in <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::init">VoodooI2CControllerDriver::init</ref>.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::handleInterrupt" name="handleInterrupt">
+    <brief>Handles an interrupt that has been asserted by the controller</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::handleInterrupt::owner" name="owner">
+      <type name="OSObject" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::handleInterrupt::src" name="src">
+      <type name="IOInterruptEventSource" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::handleInterrupt::intCount" name="intCount">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::init" name="init" virtual="yes">
+    <brief> Initialises <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> and <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> class</brief>
+    <doc>This is the first function called during the load routine and allocates the memory
+needed for <ref ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice">VoodooI2CControllerBusDevice</ref>.
+
+</doc>
+    <return>
+      <doc>*true* on successful initialisation, *false* otherwise</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::init::properties" name="properties">
+      <doc>OSDictionary* representing the matched personality</doc>
+      <type name="OSDictionary" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::probe" name="probe" virtual="yes">
+    <brief> Probes the controller to determine whether or not we can drive it</brief>
+    <doc>This function probes the controller to determine if this driver is suitable to
+drive it. This is done by quering the *DW_IC_COMP_TYPE* register. We consider the
+probe successful if the value returned is *DW_IC_COMP_TYPE_VALUE*. Note that
+Linux implements other accepted returned values (which involve modifying the output
+of <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::readRegister">VoodooI2CControllerNub::readRegister</ref>) but we do not implement them as we have yet
+to see such a controller in the wild (yet!).
+
+</doc>
+    <return>
+      <doc>pointer to this instance of <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> and <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::VoodooI2CControllerDriver">VoodooI2CControllerDriver::VoodooI2CControllerDriver</ref> on successful probe, *NULL*
+otherwise</doc>
+      <type name="VoodooI2CControllerDriver" qualifier="*" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::probe::provider" name="provider">
+      <doc>The provider which we have matched against</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::probe::score" name="score">
+      <doc>Probe score as specified in the matched personality</doc>
+      <type name="SInt32" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::start" name="start" virtual="yes">
+    <brief> Starts the bus</brief>
+    <doc>This function is called after <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::probe">VoodooI2CControllerDriver::probe</ref> and is responsible for allocating the resources
+needed by the physical controller. This includes initialising system power management
+and calling <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::initialiseBus">VoodooI2CControllerDriver::initialiseBus</ref> and <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::publishNubs">VoodooI2CControllerDriver::publishNubs</ref>.
+
+</doc>
+    <return>
+      <doc>*true* on successful start, *false* otherwise</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::start::provider" name="provider">
+      <doc>The provider which we have matched against</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::stop" name="stop" virtual="yes">
+    <brief> Stops the bus</brief>
+    <doc>This function is called before <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::free">VoodooI2CControllerDriver::free</ref> and is responsible for deallocating the resources
+that were allocated in <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::start">VoodooI2CControllerDriver::start</ref>. This includes stopping system power management and
+stopping the associated device nubs.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::stop::provider" name="provider">
+      <doc>The provider which we have matched against</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CControllerDriver::transferI2C" name="transferI2C">
+    <brief> Directs the command gate to add an I2C transfer routine to the work loop</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on success, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::transferI2C::messages" name="messages">
+      <doc>The messages to be transferred</doc>
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::transferI2C::number" name="number">
+      <doc>The number of messages</doc>
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+    <argument id="VoodooI2CControllerDriver::VoodooI2CControllerDriver::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CControllerDriver::~VoodooI2CControllerDriver" name="~VoodooI2CControllerDriver" virtual="yes" />
+  <variable access="private" id="VoodooI2CControllerDriver::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CControllerDriver::command_gate" name="command_gate">
+    <type name="IOCommandGate" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CControllerDriver::interrupt_source" name="interrupt_source">
+    <type name="IOInterruptEventSource" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CControllerDriver::work_loop" name="work_loop">
+    <type name="IOWorkLoop" qualifier="*" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::getBusConfig" name="getBusConfig">
+    <brief> Requests the nub to fetch bus configuration values from the ACPI tables</brief>
+    <doc>This function evaluates the *SSCN* and *FMCN* methods in the ACPI tables via
+<ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub::getACPIParams">VoodooI2CControllerNub::getACPIParams</ref>.
+
+</doc>
+    <return>
+      <doc>*kIOReturnSuccess* if all desired values were obtained, *kIOReturnNotFound( if (some or all)
+configuration values are missing</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::handleAbortI2C" name="handleAbortI2C">
+    <brief>Prints an error message when the bus reports a transaction error</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::initialiseBus" name="initialiseBus">
+    <brief> Initialises the bus by writing in configuration values</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on successful initialisation, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::prepareTransferI2C" name="prepareTransferI2C">
+    <brief> Prepares the driver for an I2C transfer routine</brief>
+    <doc>This function prepares the driver for an I2C transfer routine by requesting the bus to start a transfer.
+The driver then spins the current thread using *IOCommandGate::commandSleep* until either:
+
+- The bus informs us that a successful transfer took place after calling <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::transferMessageToBus">VoodooI2CControllerDriver::transferMessageToBus</ref> in
+  <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::handleInterrupt">VoodooI2CControllerDriver::handleInterrupt</ref>.<ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::handleInterrupt">VoodooI2CControllerDriver::handleInterrupt</ref>
+- The driver times out waiting for the bus to become ready.
+- The bus informs us that we cannot start a transfer due to an error.
+
+</doc>
+    <return>
+      <doc>*kIOReturnSuccess* on successful preparation; *kIOReturnBusy* if the bus is busy;
+*kIOReturnTimeout* if the driver timed out waiting for the bus to become ready; *kIOReturnDeviceBusy*
+otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::prepareTransferI2C::messages" name="messages">
+      <doc>The messages to be transferred</doc>
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::prepareTransferI2C::number" name="number">
+      <doc>The number of messages</doc>
+      <type builtin="yes" name="int" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::publishNubs" name="publishNubs">
+    <brief> Traverses the IOACPIPlane to find children and publishes `VoodooI2CDeviceNub` entries</brief>
+    <doc>into the IORegistry for matching
+
+</doc>
+    <return>
+      <doc>*kIOReturnSuccess* on success, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::readClearInterruptBits" name="readClearInterruptBits">
+    <brief> Determines what type of interrupt has fired</brief>
+    <return>
+      <doc>*DW_IC_INT* satus code</doc>
+      <type name="UInt32" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::readFromBus" name="readFromBus">
+    <brief> Reads an I2C message from the bus</brief>
+    <doc>This function is called by <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::handleInterrupt">VoodooI2CControllerDriver::handleInterrupt</ref> when the bus informs us that there is an I2C message
+waiting to be read.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::releaseResources" name="releaseResources">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::requestTransferI2C" name="requestTransferI2C">
+    <brief> Requests the bus to prepare for an I2C transfer routine</brief>
+    <doc>This function informs the bus that the driver would like to commence an I2C transfer routine. At this point
+we only inform the bus of the slave address and enable the bus.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::setPowerState" name="setPowerState" virtual="yes">
+    <brief> Sets the power state of the bus</brief>
+    <doc>This function is called by the operating system's power management services
+to instruct the bus to enter a certain power state.
+
+</doc>
+    <return>
+      <doc>*kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::setPowerState::whichState" name="whichState">
+      <doc>The power state the bus is expected to enter represented by either
+ *kIOPMPowerOn* or *kIOPMPowerOff*</doc>
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::setPowerState::whatDevice" name="whatDevice">
+      <doc>The power management policy maker</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::toggleBusState" name="toggleBusState">
+    <brief> Toggle the bus's enabled state</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on successful state toggle, *kIOReturnTimeout* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::toggleBusState::enabled" name="enabled">
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::toggleClockGating" name="toggleClockGating">
+    <brief> Toggle clock gating to save power</brief>
+    <doc>Clock gating is a method by which power consumption by a particular circuit is reduced. We need to disable the
+I2C controller's clock gate in order to be able to receive messages from the bus. We re-enable it when we aren't
+waiting for a message to save power.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::toggleClockGating::enabled" name="enabled">
+      <doc>The state the clock gate is expected to enter represented by either
+ *kVoodooI2CStateOn* or *kVoodooI2CStateOff*</doc>
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::toggleInterrupts" name="toggleInterrupts">
+    <brief> Toggle the interrupts' enabled state</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on successful state toggle, *kIOReturnTimeout* otherwise</doc>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::toggleInterrupts::enabled" name="enabled">
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferI2CGated" name="transferI2CGated">
+    <brief> Attempts an I2C transfer routine</brief>
+    <return>
+      <doc>returns kIOReturnSuccess on successful</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CControllerDriver::transferI2CGated::messages" name="messages">
+      <doc>The messages to be transferred</doc>
+      <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+    </argument>
+    <argument id="VoodooI2CControllerDriver::transferI2CGated::number" name="number">
+      <doc>The number of messages</doc>
+      <type builtin="yes" name="int" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::transferMessageToBus" name="transferMessageToBus">
+    <brief>Transfers an I2C message to the bus</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CControllerDriver::waitBusNotBusyI2C" name="waitBusNotBusyI2C">
+    <brief> Waits for the bus not to be busy</brief>
+    <doc>This function spins the current thread by a hardocded amount using *IODelay* until the bus states that it is
+ready.
+
+</doc>
+    <return>
+      <doc>*kIOReturnSuccess* on success, *kIOReturnTimeout* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+</class>

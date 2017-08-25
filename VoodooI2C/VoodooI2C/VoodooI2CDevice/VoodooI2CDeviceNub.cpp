@@ -6,6 +6,7 @@
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
 
+#include "../VoodooI2CController/VoodooI2CControllerDriver.hpp"
 #include "VoodooI2CDeviceNub.hpp"
 #include "VoodooI2CACPICRSParser.hpp"
 

@@ -12,7 +12,6 @@
   <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
   <constructor abstract="yes" id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub" />
   <method abstract="yes" id="VoodooI2CDeviceNub::attach" name="attach">
-    <brief>function members</brief>
     <return>
       <type builtin="yes" name="bool" />
     </return>
@@ -20,14 +19,6 @@
       <type name="IOService" qualifier="*" />
     </argument>
     <argument id="VoodooI2CDeviceNub::attach::child" name="child">
-      <type name="IOService" qualifier="*" />
-    </argument>
-  </method>
-  <method abstract="yes" id="VoodooI2CDeviceNub::detach" name="detach" virtual="yes">
-    <return>
-      <type builtin="yes" name="void" />
-    </return>
-    <argument id="VoodooI2CDeviceNub::detach::provider" name="provider">
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
@@ -47,11 +38,6 @@
       <type builtin="yes" name="int" />
     </argument>
   </method>
-  <method abstract="yes" id="VoodooI2CDeviceNub::free" name="free" virtual="yes">
-    <return>
-      <type builtin="yes" name="void" />
-    </return>
-  </method>
   <method abstract="yes" id="VoodooI2CDeviceNub::getInterruptType" name="getInterruptType" virtual="yes">
     <return>
       <type name="IOReturn" />
@@ -67,14 +53,6 @@
     <return>
       <type name="OSMetaClass" qualifier=" const *" />
     </return>
-  </method>
-  <method abstract="yes" id="VoodooI2CDeviceNub::init" name="init" virtual="yes">
-    <return>
-      <type builtin="yes" name="bool" />
-    </return>
-    <argument id="VoodooI2CDeviceNub::init::properties" name="properties">
-      <type name="OSDictionary" qualifier="*" />
-    </argument>
   </method>
   <method abstract="yes" id="VoodooI2CDeviceNub::registerInterrupt" name="registerInterrupt" virtual="yes">
     <return>
@@ -129,20 +107,29 @@
   <field access="private" id="VoodooI2CDeviceNub::acpi_device" name="acpi_device">
     <type name="IOACPIPlatformDevice" qualifier="*" />
   </field>
+  <field access="private" id="VoodooI2CDeviceNub::controller" name="controller">
+    <type name="VoodooI2CControllerDriver" qualifier="*" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver" />
+  </field>
   <field access="private" id="VoodooI2CDeviceNub::controller_name" name="controller_name">
     <type builtin="yes" name="char" qualifier=" const *" />
   </field>
   <field access="private" id="VoodooI2CDeviceNub::gpio_controller" name="gpio_controller">
     <type name="VoodooGPIO" qualifier="*" />
   </field>
-  <field access="private" id="VoodooI2CDeviceNub::has_gpio_interrupts" name="has_gpio_interrupts">
-    <type builtin="yes" name="bool" />
+  <field access="private" id="VoodooI2CDeviceNub::gpio_irq" name="gpio_irq">
+    <type builtin="yes" name="int" />
   </field>
   <field access="private" id="VoodooI2CDeviceNub::gpio_pin" name="gpio_pin">
     <type name="UInt16" />
   </field>
-  <field access="private" id="VoodooI2CDeviceNub::gpio_irq" name="gpio_irq">
-    <type builtin="yes" name="int" />
+  <field access="private" id="VoodooI2CDeviceNub::i2c_address" name="i2c_address">
+    <type name="UInt8" />
+  </field>
+  <field access="private" id="VoodooI2CDeviceNub::has_gpio_interrupts" name="has_gpio_interrupts">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field access="private" id="VoodooI2CDeviceNub::use_10bit_addressing" name="use_10bit_addressing">
+    <type builtin="yes" name="bool" />
   </field>
   <method abstract="yes" access="private" id="VoodooI2CDeviceNub::getDeviceResources" name="getDeviceResources">
     <return>
@@ -153,5 +140,44 @@
     <return>
       <type name="VoodooGPIO" qualifier="*" />
     </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::readI2C" name="readI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::readI2C::values" name="values">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::readI2C::length" name="length">
+      <type name="UInt16" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::writeI2C" name="writeI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::writeI2C::values" name="values">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeI2C::length" name="length">
+      <type name="UInt16" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::writeReadI2C" name="writeReadI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::write_buffer" name="write_buffer">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::write_length" name="write_length">
+      <type name="UInt16" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::read_buffer" name="read_buffer">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::read_length" name="read_length">
+      <type name="UInt16" />
+    </argument>
   </method>
 </class>
