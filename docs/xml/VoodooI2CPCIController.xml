@@ -42,7 +42,7 @@ enforcing PCI power state D0. It then enables the PCI bus master and the memory 
   <method abstract="yes" access="private" id="VoodooI2CPCIController::getACPIDevice" name="getACPIDevice">
     <brief> Finds the ACPI device associated to the PCI provider</brief>
     <doc>Despite a controller being PCI enumerated, some PCs will sill provide bus configuration values (used in
-<ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::getBusConfig">VoodooI2CControllerDriver::getBusConfig</ref>) in the ACPI tables in an ACPI device associated to the controller.
+&amp;lt;VoodooI2CControllerDriver::getBusConfig&amp;gt;) in the ACPI tables in an ACPI device associated to the controller.
 This function traverses the IORegistry plane to seek out such an ACPI device.
 
 </doc>

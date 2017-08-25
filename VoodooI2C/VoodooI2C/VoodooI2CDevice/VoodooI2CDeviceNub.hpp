@@ -13,6 +13,7 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
+#include "../VoodooI2CController/VoodooI2CControllerDriver.hpp"
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.h"
 
 class VoodooI2CDeviceNub : public IOService {
@@ -30,14 +31,20 @@ class VoodooI2CDeviceNub : public IOService {
 
  private:
     IOACPIPlatformDevice* acpi_device;
+    VoodooI2CControllerDriver* controller;
     const char* controller_name;
     VoodooGPIO* gpio_controller;
     int gpio_irq;
     UInt16 gpio_pin;
+    UInt8 i2c_address;
     bool has_gpio_interrupts;
-    
+    bool use_10bit_addressing;
+
     IOReturn getDeviceResources();
     VoodooGPIO* getGPIOController();
+    IOReturn readI2C(UInt8* values, UInt16 length);
+    IOReturn writeI2C(UInt8* values, UInt16 length);
+    IOReturn writeReadI2C(UInt8* write_buffer, UInt16 write_length, UInt8* read_buffer, UInt16 read_length);
 };
 
 
