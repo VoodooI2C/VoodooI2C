@@ -12,14 +12,6 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CDeviceNub, IOService);
 
-/**
- Attaches an IOService object to `this`
- 
- @param provider IOService* representing the provider
- 
- @return returns true on succesful attach, else returns false
- */
-
 bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
     if (!super::attach(provider))
         return false;
@@ -47,37 +39,20 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
     return true;
 }
 
-/**
- Deattaches an IOService object from `this`
- 
- @param provider IOService* representing the provider
- */
-
-void VoodooI2CDeviceNub::detach(IOService* provider) {
-    super::detach(provider);
+IOReturn VoodooI2CDeviceNub::disableInterrupt(int source) {
+    if (this->has_gpio_interrupts) {
+        return gpio_controller->disableInterrupt(this->gpio_pin);
+    } else {
+        return acpi_device->disableInterrupt(source);
+    }
 }
 
-/**
- Initialises class
-
- @param properties OSDictionary* representing the matched personality
-
- @return returns true on successful initialisation, else returns false
- */
-
-bool VoodooI2CDeviceNub::init(OSDictionary* properties) {
-    if (!super::init(properties))
-        return false;
-
-    return true;
-}
-
-/**
- Frees class - releases objects instantiated in `init`
- */
-
-void VoodooI2CDeviceNub::free() {
-    super::free();
+IOReturn VoodooI2CDeviceNub::enableInterrupt(int source) {
+    if (this->has_gpio_interrupts) {
+        return gpio_controller->enableInterrupt(this->gpio_pin);
+    } else {
+        return acpi_device->enableInterrupt(source);
+    }
 }
 
 IOReturn VoodooI2CDeviceNub::getDeviceResources() {
@@ -118,79 +93,24 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     return kIOReturnSuccess;
 }
 
-/**
- Starts the class
- 
- @param provider IOService* representing the matched entry in the IORegistry
- 
- @return returns true on succesful start, else returns false
- */
-
-bool VoodooI2CDeviceNub::start(IOService* provider) {
-    if (!super::start(provider))
-        return false;
-
-    registerService();
-
-    return true;
-}
-
-/**
- Stops the class and undoes the effects of `start` and `probe`
-
- @param provider IOService* representing the matched entry in the IORegistry
- */
-
-void VoodooI2CDeviceNub::stop(IOService* provider) {
-    if (this->gpio_controller) {
-        this->gpio_controller->release();
-        this->gpio_controller = NULL;
-    }
-
-    super::stop(provider);
-}
-
-/**
- Get the GPIO controller instance
- */
-VoodooGPIO *VoodooI2CDeviceNub::getGPIOController() {
+VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
     VoodooGPIO* gpio_controller = NULL;
-
+    
     OSDictionary *match = serviceMatching("VoodooGPIO");
     OSIterator *iterator = getMatchingServices(match);
     if (iterator) {
         gpio_controller = OSDynamicCast(VoodooGPIO, iterator->getNextObject());
-
+        
         if (gpio_controller != NULL) {
             IOLog("%s::Got GPIO Controller! %s\n", getName(), gpio_controller->getName());
         }
-
+        
         gpio_controller->retain();
-
+        
         iterator->release();
     }
-
+    
     return gpio_controller;
-}
-
-/*
-Interrupt functions
-*/
-
-IOReturn VoodooI2CDeviceNub::disableInterrupt(int source) {
-    if (this->has_gpio_interrupts) {
-        return gpio_controller->disableInterrupt(this->gpio_pin);
-    } else {
-        return acpi_device->disableInterrupt(source);
-    }
-}
-
-IOReturn VoodooI2CDeviceNub::enableInterrupt(int source) {
-    if (this->has_gpio_interrupts) {
-         return gpio_controller->enableInterrupt(this->gpio_pin);
-    } else {
-        return acpi_device->enableInterrupt(source);
-    }
 }
 
 IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
@@ -208,6 +128,24 @@ IOReturn VoodooI2CDeviceNub::registerInterrupt(int source, OSObject *target, IOI
     } else {
         return acpi_device->registerInterrupt(source, target, handler, refcon);
     }
+}
+
+bool VoodooI2CDeviceNub::start(IOService* provider) {
+    if (!super::start(provider))
+        return false;
+
+    registerService();
+
+    return true;
+}
+
+void VoodooI2CDeviceNub::stop(IOService* provider) {
+    if (this->gpio_controller) {
+        this->gpio_controller->release();
+        this->gpio_controller = NULL;
+    }
+
+    super::stop(provider);
 }
 
 IOReturn VoodooI2CDeviceNub::unregisterInterrupt(int source) {

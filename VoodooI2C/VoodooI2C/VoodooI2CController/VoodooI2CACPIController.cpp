@@ -24,14 +24,6 @@ IOReturn VoodooI2CACPIController::setACPIPowerState(VoodooI2CState enabled) {
     return kIOReturnSuccess;
 }
 
-/**
- Called by the system's power manager to set power states
- 
- @param whichState either kIOPMPowerOff or kIOPMPowerOn
- @param whatDevice Power management policy maker
- 
- @return returns kIOPMAckImplied if power state has been set else maximum number of milliseconds needed for the device to be in the correct state
- */
 IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOService * whatDevice) {
     if (whichState == kIOPMPowerOff) {
         physical_device->awake = false;
@@ -49,14 +41,6 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
     }
     return kIOPMAckImplied;
 }
-
-/**
- Starts the physical I2C controller
- 
- @param provider IOService* representing the matched entry in the IORegistry
- 
- @return returns true on succesful start, else returns false
- */
 
 bool VoodooI2CACPIController::start(IOService* provider) {
     if (!super::start(provider)) {
@@ -81,12 +65,6 @@ bool VoodooI2CACPIController::start(IOService* provider) {
 
     return true;
 }
-
-/**
- Stops the physical I2C controller and undoes the effects of `start`
- 
- @param provider IOService* representing the matched entry in the IORegistry
- */
 
 void VoodooI2CACPIController::stop(IOService* provider) {
     setACPIPowerState(kVoodooI2CStateOff);

@@ -117,10 +117,6 @@ IOReturn VoodooI2CControllerNub::unregisterInterrupt(int source) {
     return controller->physical_device->provider->unregisterInterrupt(source);
 }
 
-/**
- Passes to the `writeRegister` command in `VoodooI2CController`
- */
-
 void VoodooI2CControllerNub::writeRegister(UInt32 value, int offset) {
     controller->writeRegister(value, offset);
 }

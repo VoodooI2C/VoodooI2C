@@ -24,14 +24,6 @@ void VoodooI2CControllerDriver::free() {
     super::free();
 }
 
-/**
- Requests the nub to fetch bus configuration values from the ACPI tables
-
- @return returns kIOReturnSuccess if all desired values were obtained,
-         else returns kIOReturnNotFound if (some or all) configuration values
-         are missing
- */
-
 IOReturn VoodooI2CControllerDriver::getBusConfig() {
     bool error = false;
 
@@ -122,12 +114,6 @@ bool VoodooI2CControllerDriver::init(OSDictionary* properties) {
 
     return true;
 }
-
-/**
- Initialises the bus by writing in configuration values
-
- @return returns kIOReturnSuccess on successful initialisation, else returns kIOReturnError
- */
 
 IOReturn VoodooI2CControllerDriver::initialiseBus() {
     if (toggleBusState(kVoodooI2CStateOff) != kIOReturnSuccess)
@@ -229,13 +215,6 @@ VoodooI2CControllerDriver* VoodooI2CControllerDriver::probe(IOService* provider,
 
     return this;
 }
-
-/**
- Traverses the IOACPIPlane to find children and publishes `VoodooI2CDeviceNub` entries
- into the IORegistry for matching
- 
- @return returns kIOReturnSuccess if successful, else kIOReturnError
- */
 
 IOReturn VoodooI2CControllerDriver::publishNubs() {
     IOLog("%s::%s Publishing device nubs\n", getName(), bus_device->name);
