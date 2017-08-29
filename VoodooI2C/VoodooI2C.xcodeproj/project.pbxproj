@@ -28,6 +28,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AC0387581F5422FB00ECEDF9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AC0DE5DF1F4FFB4B006149C8;
+			remoteInfo = VoodooI2CHID;
+		};
 		AC09558E1F4EE10C0052E343 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
@@ -42,11 +49,19 @@
 			remoteGlobalIDString = F1F172C41F42263A00AD98FA;
 			remoteInfo = VoodooGPIO;
 		};
+		ACFB95CB1F54294F00867E18 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = AC0DE5DE1F4FFB4B006149C8;
+			remoteInfo = VoodooI2CHID;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPIController.cpp; path = VoodooI2CController/VoodooI2CACPIController.cpp; sourceTree = "<group>"; };
 		AC015C461F32345500516383 /* VoodooI2CACPIController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CACPIController.hpp; path = VoodooI2CController/VoodooI2CACPIController.hpp; sourceTree = "<group>"; };
+		AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CHID.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID.xcodeproj"; sourceTree = "<group>"; };
 		AC0955731F4ED4C50052E343 /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = helpers.cpp; path = ../../Dependencies/helpers.cpp; sourceTree = "<group>"; };
 		AC0955741F4ED4C50052E343 /* helpers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = helpers.hpp; path = ../../Dependencies/helpers.hpp; sourceTree = "<group>"; };
 		AC0955771F4ED4F60052E343 /* linuxirq.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = linuxirq.hpp; path = ../../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp; sourceTree = "<group>"; };
@@ -80,6 +95,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC0387531F54182100ECEDF9 /* VoodooI2C Satellites */ = {
+			isa = PBXGroup;
+			children = (
+				AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */,
+			);
+			name = "VoodooI2C Satellites";
+			sourceTree = "<group>";
+		};
+		AC0387551F5422FB00ECEDF9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC0387591F5422FB00ECEDF9 /* VoodooI2CHID.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		AC0955711F4ED49E0052E343 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +171,7 @@
 				AC0955711F4ED49E0052E343 /* Dependencies */,
 				AC7400B71F3B6EB700937DD5 /* Documentation */,
 				AC6268901F2F6CB9000CBF2D /* VoodooI2C Core */,
+				AC0387531F54182100ECEDF9 /* VoodooI2C Satellites */,
 				AC2603B71F2F294000CF238F /* Info.plist */,
 			);
 			path = VoodooI2C;
@@ -217,6 +249,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				ACFB95CC1F54294F00867E18 /* PBXTargetDependency */,
 				AC0955911F4EE1650052E343 /* PBXTargetDependency */,
 			);
 			name = VoodooI2C;
@@ -254,6 +287,10 @@
 					ProductGroup = AC09558B1F4EE10C0052E343 /* Products */;
 					ProjectRef = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
 				},
+				{
+					ProductGroup = AC0387551F5422FB00ECEDF9 /* Products */;
+					ProjectRef = AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -263,6 +300,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		AC0387591F5422FB00ECEDF9 /* VoodooI2CHID.kext */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VoodooI2CHID.kext;
+			remoteRef = AC0387581F5422FB00ECEDF9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		AC09558F1F4EE10C0052E343 /* VoodooGPIO.kext */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -351,6 +395,11 @@
 			isa = PBXTargetDependency;
 			name = VoodooGPIO;
 			targetProxy = AC0955901F4EE1650052E343 /* PBXContainerItemProxy */;
+		};
+		ACFB95CC1F54294F00867E18 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VoodooI2CHID;
+			targetProxy = ACFB95CB1F54294F00867E18 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

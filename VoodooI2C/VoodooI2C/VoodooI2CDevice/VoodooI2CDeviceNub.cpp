@@ -68,7 +68,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
-    const uint8_t *crs = reinterpret_cast<const uint8_t*>(data->getBytesNoCopy());
+    uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
     VoodooI2CACPICRSParser crs_parser;
     crs_parser.parseACPICRS(crs, 0, data->getLength());
 

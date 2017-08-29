@@ -54,6 +54,17 @@
       <type name="OSMetaClass" qualifier=" const *" />
     </return>
   </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::readI2C" name="readI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::readI2C::values" name="values">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::readI2C::length" name="length">
+      <type name="UInt16" />
+    </argument>
+  </method>
   <method abstract="yes" id="VoodooI2CDeviceNub::registerInterrupt" name="registerInterrupt" virtual="yes">
     <return>
       <type name="IOReturn" />
@@ -93,6 +104,34 @@
     </return>
     <argument id="VoodooI2CDeviceNub::unregisterInterrupt::source" name="source">
       <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::writeI2C" name="writeI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::writeI2C::values" name="values">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeI2C::length" name="length">
+      <type name="UInt16" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CDeviceNub::writeReadI2C" name="writeReadI2C">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::write_buffer" name="write_buffer">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::write_length" name="write_length">
+      <type name="UInt16" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::read_buffer" name="read_buffer">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CDeviceNub::writeReadI2C::read_length" name="read_length">
+      <type name="UInt16" />
     </argument>
   </method>
   <constructor abstract="yes" access="protected" id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
@@ -140,44 +179,5 @@
     <return>
       <type name="VoodooGPIO" qualifier="*" />
     </return>
-  </method>
-  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::readI2C" name="readI2C">
-    <return>
-      <type name="IOReturn" />
-    </return>
-    <argument id="VoodooI2CDeviceNub::readI2C::values" name="values">
-      <type name="UInt8" qualifier="*" />
-    </argument>
-    <argument id="VoodooI2CDeviceNub::readI2C::length" name="length">
-      <type name="UInt16" />
-    </argument>
-  </method>
-  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::writeI2C" name="writeI2C">
-    <return>
-      <type name="IOReturn" />
-    </return>
-    <argument id="VoodooI2CDeviceNub::writeI2C::values" name="values">
-      <type name="UInt8" qualifier="*" />
-    </argument>
-    <argument id="VoodooI2CDeviceNub::writeI2C::length" name="length">
-      <type name="UInt16" />
-    </argument>
-  </method>
-  <method abstract="yes" access="private" id="VoodooI2CDeviceNub::writeReadI2C" name="writeReadI2C">
-    <return>
-      <type name="IOReturn" />
-    </return>
-    <argument id="VoodooI2CDeviceNub::writeReadI2C::write_buffer" name="write_buffer">
-      <type name="UInt8" qualifier="*" />
-    </argument>
-    <argument id="VoodooI2CDeviceNub::writeReadI2C::write_length" name="write_length">
-      <type name="UInt16" />
-    </argument>
-    <argument id="VoodooI2CDeviceNub::writeReadI2C::read_buffer" name="read_buffer">
-      <type name="UInt8" qualifier="*" />
-    </argument>
-    <argument id="VoodooI2CDeviceNub::writeReadI2C::read_length" name="read_length">
-      <type name="UInt16" />
-    </argument>
   </method>
 </class>

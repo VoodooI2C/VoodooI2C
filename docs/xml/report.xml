@@ -274,31 +274,31 @@ return values.
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CDeviceNub::acpi_device" name="acpi_device">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="34" />
-      </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::controller" name="controller">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="35" />
-      </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::controller_name" name="controller_name">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="36" />
-      </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::gpio_controller" name="gpio_controller">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="37" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::gpio_irq" name="gpio_irq">
+      <undocumented id="VoodooI2CDeviceNub::controller" name="controller">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="38" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::gpio_pin" name="gpio_pin">
+      <undocumented id="VoodooI2CDeviceNub::controller_name" name="controller_name">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="39" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::has_gpio_interrupts" name="has_gpio_interrupts">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="41" />
-      </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::i2c_address" name="i2c_address">
+      <undocumented id="VoodooI2CDeviceNub::gpio_controller" name="gpio_controller">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="40" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::use_10bit_addressing" name="use_10bit_addressing">
+      <undocumented id="VoodooI2CDeviceNub::gpio_irq" name="gpio_irq">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::gpio_pin" name="gpio_pin">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::has_gpio_interrupts" name="has_gpio_interrupts">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="44" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::i2c_address" name="i2c_address">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="43" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::use_10bit_addressing" name="use_10bit_addressing">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="45" />
       </undocumented>
       <undocumented id="gpio_int_info::interrupt_polarity" name="interrupt_polarity">
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="27" />
@@ -558,10 +558,10 @@ return values.
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="26" />
       </undocumented>
       <undocumented id="VoodooI2CDeviceNub::getDeviceResources" name="getDeviceResources">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="44" />
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="47" />
       </undocumented>
       <undocumented id="VoodooI2CDeviceNub::getGPIOController" name="getGPIOController">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="45" />
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="48" />
       </undocumented>
       <undocumented id="VoodooI2CDeviceNub::getInterruptType" name="getInterruptType">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="27" />
@@ -570,25 +570,25 @@ return values.
         <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDeviceNub::readI2C" name="readI2C">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="46" />
-      </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::registerInterrupt" name="registerInterrupt">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="28" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::start" name="start">
+      <undocumented id="VoodooI2CDeviceNub::registerInterrupt" name="registerInterrupt">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::stop" name="stop">
+      <undocumented id="VoodooI2CDeviceNub::start" name="start">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="30" />
       </undocumented>
-      <undocumented id="VoodooI2CDeviceNub::unregisterInterrupt" name="unregisterInterrupt">
+      <undocumented id="VoodooI2CDeviceNub::stop" name="stop">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="31" />
       </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::unregisterInterrupt" name="unregisterInterrupt">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="32" />
+      </undocumented>
       <undocumented id="VoodooI2CDeviceNub::writeI2C" name="writeI2C">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="47" />
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="33" />
       </undocumented>
       <undocumented id="VoodooI2CDeviceNub::writeReadI2C" name="writeReadI2C">
-        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="48" />
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="34" />
       </undocumented>
       <undocumented id="VoodooI2CPCIController::MetaClass::alloc" name="alloc">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
