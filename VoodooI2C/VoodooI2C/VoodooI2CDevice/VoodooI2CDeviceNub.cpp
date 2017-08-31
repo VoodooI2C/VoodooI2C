@@ -26,12 +26,17 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         return false;
     }
 
+    controller = OSDynamicCast(VoodooI2CControllerDriver, provider);
+
+    if (!controller) {
+        IOLog("%s::%s Could not get controller\n", controller_name, child->getName());
+        return false;
+    }
+
     if (getDeviceResources() != kIOReturnSuccess) {
         IOLog("%s::%s Could not get device resources\n", controller_name, child->getName());
         return false;
     }
-
-    controller = OSDynamicCast(VoodooI2CControllerDriver, provider);
 
     if (has_gpio_interrupts) {
         gpio_controller = getGPIOController();

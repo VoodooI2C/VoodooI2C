@@ -382,6 +382,9 @@ void VoodooI2CControllerDriver::requestTransferI2C() {
 }
 
 IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOService *whatDevice) {
+    if (whatDevice != this)
+        return kIOPMAckImplied;
+
     if (!whichState) {
         bus_device->awake = false;
         toggleBusState(kVoodooI2CStateOff);

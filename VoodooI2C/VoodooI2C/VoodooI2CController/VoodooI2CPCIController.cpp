@@ -45,6 +45,9 @@ IOReturn VoodooI2CPCIController::getACPIDevice() {
 }
 
 IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOService* whatDevice) {
+    if (whatDevice != this)
+        return kIOPMAckImplied;
+
     if (whichState == kIOPMPowerOff) {
         physical_device->awake = false;
 
