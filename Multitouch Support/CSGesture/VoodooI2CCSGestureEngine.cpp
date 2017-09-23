@@ -105,9 +105,7 @@ int VoodooI2CCSGestureEngine::distancesq(int delta_x, int delta_y){
     return (delta_x * delta_x) + (delta_y*delta_y);
 }
 
-MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultitouchEvent event) {
-    super::handleInterruptReport(event);
-
+MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     int i;
 
     for (i=0; i < event.contact_count; i++) {
@@ -116,7 +114,7 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             continue;
 
         if (transducer->is_valid) {
-            if (transducer->tip_switch) {
+            if (transducer->tip_switch && (CMP_ABSOLUTETIME(&timestamp, &transducer->timestamp)==0)) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
                 if (transducer->tip_pressure.value())

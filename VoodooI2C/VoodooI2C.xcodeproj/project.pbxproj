@@ -584,6 +584,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.0.0;
+				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULE_NAME = com.alexandred.VoodooI2C;
@@ -603,6 +604,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.0.0;
+				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULE_NAME = com.alexandred.VoodooI2C;

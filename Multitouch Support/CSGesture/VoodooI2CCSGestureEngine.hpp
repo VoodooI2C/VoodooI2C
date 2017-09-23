@@ -9,6 +9,8 @@
 #ifndef VoodooI2CCSGestureEngine_hpp
 #define VoodooI2CCSGestureEngine_hpp
 
+#include <libkern/libkern/OSBase.h>
+
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
@@ -72,7 +74,7 @@ public:
     void write_report_to_buffer(IOMemoryDescriptor *buffer);
     void write_report_descriptor_to_buffer(IOMemoryDescriptor *buffer);
 
-    MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event);
+    MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
     bool start(IOService* service);
     void stop(IOService* provider);
 };

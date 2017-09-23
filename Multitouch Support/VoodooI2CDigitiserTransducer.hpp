@@ -99,6 +99,7 @@ class VoodooI2CDigitiserTransducer : public OSObject {
     OSArray*       elements;
     
     UInt32 event_mask;
+    AbsoluteTime timestamp;
 
     void           free();
     bool serialize(OSSerialize* serializer);

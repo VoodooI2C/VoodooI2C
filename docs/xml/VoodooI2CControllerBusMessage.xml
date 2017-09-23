@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <struct id="VoodooI2CControllerBusMessage" name="VoodooI2CControllerBusMessage" typedef="yes" xmlns="http://jessevdk.github.com/cldoc/1.0">
-  <brief>The default values in the following struct are for Haswell PCI as</brief>
-  <doc>specified in Linux::i2c-designware-pcidrv.c</doc>
   <field id="VoodooI2CControllerBusMessage::address" name="address">
     <type name="UInt16" />
   </field>

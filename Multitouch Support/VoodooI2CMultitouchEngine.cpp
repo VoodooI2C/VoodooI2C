@@ -16,7 +16,7 @@ UInt8 VoodooI2CMultitouchEngine::getScore() {
     return 0x0;
 }
 
-MultitouchReturn VoodooI2CMultitouchEngine::handleInterruptReport(VoodooI2CMultitouchEvent event) {
+MultitouchReturn VoodooI2CMultitouchEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     if (event.contact_count)
         IOLog("Contact Count: %d\n", event.contact_count);
     

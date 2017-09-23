@@ -12,7 +12,7 @@
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CMultitouchInterface, IOService);
 
-void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEvent event) {
+void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     int i, count;
     VoodooI2CMultitouchEngine* engine;
 
@@ -21,7 +21,7 @@ void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEven
         if (!engine)
             continue;
 
-        if (engine->handleInterruptReport(event) == MultitouchReturnBreak)
+        if (engine->handleInterruptReport(event, timestamp) == MultitouchReturnBreak)
             break;
     }
 }

@@ -27,7 +27,7 @@ class VoodooI2CMultitouchInterface : public IOService {
     UInt32 physical_max_x = 0;
     UInt32 physical_max_y = 0;
 
-    void handleInterruptReport(VoodooI2CMultitouchEvent event);
+    void handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
     bool open(IOService* client);
     SInt8 orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b);
     bool start(IOService* provider);

@@ -19,12 +19,9 @@
 #include "../VoodooI2CDevice/VoodooI2CDeviceNub.hpp"
 #include "../../../Dependencies/helpers.hpp"
 
-// The default values in the following struct are for Haswell PCI as
-// specified in Linux::i2c-designware-pcidrv.c
-
 typedef struct {
     UInt16 address;
-    UInt8 *buffer;
+    UInt8* buffer;
     UInt16 flags;
     UInt16 length;
 } VoodooI2CControllerBusMessage;
@@ -52,12 +49,12 @@ typedef struct {
     int message_write_index;
     const char* name;
     UInt32 receive_buffer_length;
-    UInt8 *receive_buffer;
+    UInt8* receive_buffer;
     UInt receive_fifo_depth;
     int receive_outstanding;
     UInt status;
     UInt32 transaction_buffer_length;
-    UInt8 *transaction_buffer;
+    UInt8* transaction_buffer;
     UInt transaction_fifo_depth;
 } VoodooI2CControllerBusDevice;
 

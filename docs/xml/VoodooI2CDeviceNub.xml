@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <class id="VoodooI2CDeviceNub" interface="true" name="VoodooI2CDeviceNub" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Implements a device nub to which an instance of a device driver may attach. Examples include &amp;lt;VoodooI2CHIDDevice.&amp;gt;</brief>
+  <doc>The members of this class implement
+</doc>
   <base access="public">
     <type name="IOService" />
   </base>

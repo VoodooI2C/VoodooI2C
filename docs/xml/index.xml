@@ -19,9 +19,7 @@
   </class>
   <struct name="VoodooI2CControllerBusConfig" ref="VoodooI2CControllerBusConfig#VoodooI2CControllerBusConfig" />
   <struct name="VoodooI2CControllerBusDevice" ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice" />
-  <struct name="VoodooI2CControllerBusMessage" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage">
-    <brief>The default values in the following struct are for Haswell PCI as</brief>
-  </struct>
+  <struct name="VoodooI2CControllerBusMessage" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
   <class name="VoodooI2CControllerDriver" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">
     <brief> Implements a driver for the Intel LPSS Designware I2C Controller which attaches to a <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub">VoodooI2CControllerNub</ref> object</brief>
     <class name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
@@ -32,6 +30,7 @@
   </class>
   <struct name="VoodooI2CControllerPhysicalDevice" ref="VoodooI2CControllerPhysicalDevice#VoodooI2CControllerPhysicalDevice" />
   <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub">
+    <brief> Implements a device nub to which an instance of a device driver may attach. Examples include &amp;lt;VoodooI2CHIDDevice.&amp;gt;</brief>
     <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
   </class>
   <class name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController">

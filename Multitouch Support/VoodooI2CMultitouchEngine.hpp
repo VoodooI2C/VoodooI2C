@@ -22,7 +22,7 @@ class VoodooI2CMultitouchEngine : public IOService {
 
  public:
     virtual UInt8 getScore();
-    virtual MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event);
+    virtual MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
     virtual bool start(IOService* provider);
     virtual void stop(IOService* provider);
 

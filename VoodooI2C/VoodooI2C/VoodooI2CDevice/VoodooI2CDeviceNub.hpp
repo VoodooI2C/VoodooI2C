@@ -17,6 +17,11 @@
 
 class VoodooI2CControllerDriver;
 
+/* Implements a device nub to which an instance of a device driver may attach. Examples include <VoodooI2CHIDDevice.>
+ *
+ * The members of this class implement 
+ */
+
 class VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);
 
