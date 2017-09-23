@@ -97,6 +97,8 @@ class VoodooI2CDigitiserTransducer : public OSObject {
 
     IOHIDElement*  collection;
     OSArray*       elements;
+    
+    UInt32 event_mask;
 
     void           free();
     bool serialize(OSSerialize* serializer);
