@@ -114,7 +114,7 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             continue;
 
         if (transducer->is_valid) {
-            if (transducer->tip_switch && (CMP_ABSOLUTETIME(&timestamp, &transducer->timestamp)==0)) {
+            if (transducer->tip_switch && (CMP_ABSOLUTETIME(&timestamp, &transducer->coordinates.x.current.timestamp)==0)) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
                 if (transducer->tip_pressure.value())
@@ -128,7 +128,7 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             }
         }
 
-        if (i == 0) {
+        if (i == 0 && (CMP_ABSOLUTETIME(&timestamp, &transducer->physical_button.current.timestamp) == 0)) {
             softc.buttondown = transducer->physical_button & 0x1;
         }
     }
