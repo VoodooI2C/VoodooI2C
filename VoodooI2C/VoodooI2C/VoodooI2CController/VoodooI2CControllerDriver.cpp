@@ -5,6 +5,7 @@
 //  Created by Alexandre on 03/08/2017.
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
+#include <libkern/OSDebug.h>
 
 #include "VoodooI2CControllerDriver.hpp"
 #include "VoodooI2CController.hpp"
@@ -483,7 +484,7 @@ void VoodooI2CControllerDriver::stop(IOService* provider) {
 }
 
 IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
-    int timeout = 500;
+    int timeout = 1000;
 
     do {
         writeRegister(enabled, DW_IC_ENABLE);
@@ -632,7 +633,7 @@ void VoodooI2CControllerDriver::transferMessageToBus() {
 }
 
 IOReturn VoodooI2CControllerDriver::waitBusNotBusyI2C() {
-    int timeout = TIMEOUT * 100;
+    int timeout = TIMEOUT * 300;
 
     while (readRegister(DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
         if (timeout <= 0) {
