@@ -133,7 +133,31 @@ IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
     }
 }
 
+IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop() {
+    // Do we have a work loop already?, if so return it NOW.
+    if ((vm_address_t) work_loop >> 1)
+        return work_loop;
+
+    if (OSCompareAndSwap(0, 1, reinterpret_cast<IOWorkLoop*>(&work_loop))) {
+        // Construct the workloop and set the cntrlSync variable
+        // to whatever the result is and return
+        work_loop = IOWorkLoop::workLoop();
+    } else {
+        while (reinterpret_cast<IOWorkLoop*>(work_loop) == reinterpret_cast<IOWorkLoop*>(1)) {
+            // Spin around the cntrlSync variable until the
+            // initialization finishes.
+            thread_block(0);
+        }
+    }
+
+    return work_loop;
+}
+
 IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
+    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
+}
+
+IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {
     UInt16 flags = I2C_M_RD;
 
     if (use_10bit_addressing)
@@ -143,7 +167,7 @@ IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
             .address = i2c_address,
             .buffer = values,
             .flags = flags,
-            .length = length,
+            .length = *length,
         },
     };
     return controller->transferI2C(msgs, 1);
@@ -158,13 +182,44 @@ IOReturn VoodooI2CDeviceNub::registerInterrupt(int source, OSObject *target, IOI
     }
 }
 
+void VoodooI2CDeviceNub::releaseResources() {
+    if (command_gate) {
+        work_loop->removeEventSource(command_gate);
+        command_gate->release();
+        command_gate = NULL;
+    }
+
+    if (work_loop) {
+        work_loop->release();
+        work_loop = NULL;
+    }
+}
+
 bool VoodooI2CDeviceNub::start(IOService* provider) {
     if (!super::start(provider))
         return false;
 
+    work_loop = getWorkLoop();
+
+    if (!work_loop) {
+        IOLog("%s Could not get work loop\n", getName());
+        goto exit;
+    }
+
+    work_loop->retain();
+
+    command_gate = IOCommandGate::commandGate(this);
+    if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
+        IOLog("%s Could not open command gate\n", getName());
+        goto exit;
+    }
+
     registerService();
 
     return true;
+exit:
+    releaseResources();
+    return false;
 }
 
 void VoodooI2CDeviceNub::stop(IOService* provider) {
@@ -184,7 +239,11 @@ IOReturn VoodooI2CDeviceNub::unregisterInterrupt(int source) {
     }
 }
 
-IOReturn VoodooI2CDeviceNub::writeI2C(UInt8* values, UInt16 length) {
+IOReturn VoodooI2CDeviceNub::writeI2C(UInt8 *values, UInt16 length) {
+    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::writeI2CGated), values, &length);
+}
+
+IOReturn VoodooI2CDeviceNub::writeI2CGated(UInt8* values, UInt16* length) {
     UInt16 flags = 0;
     if (use_10bit_addressing)
         flags = I2C_M_TEN;
@@ -194,13 +253,16 @@ IOReturn VoodooI2CDeviceNub::writeI2C(UInt8* values, UInt16 length) {
             .address = i2c_address,
             .buffer = values,
             .flags = flags,
-            .length = length,
+            .length = *length,
         },
     };
     return controller->transferI2C(msgs, 1);
 }
 
-IOReturn VoodooI2CDeviceNub::writeReadI2C(UInt8* write_buffer, UInt16 write_length, UInt8* read_buffer, UInt16 read_length) {
+IOReturn VoodooI2CDeviceNub::writeReadI2C(UInt8 *write_buffer, UInt16 write_length, UInt8 *read_buffer, UInt16 read_length) {
+    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::writeReadI2CGated), write_buffer, &write_length, read_buffer, &read_length);
+}
+IOReturn VoodooI2CDeviceNub::writeReadI2CGated(UInt8* write_buffer, UInt16* write_length, UInt8* read_buffer, UInt16* read_length) {
     UInt16 read_flags = I2C_M_RD;
     if (use_10bit_addressing)
         read_flags |= I2C_M_TEN;
@@ -214,13 +276,13 @@ IOReturn VoodooI2CDeviceNub::writeReadI2C(UInt8* write_buffer, UInt16 write_leng
             .address = i2c_address,
             .buffer = write_buffer,
             .flags = write_flags,
-            .length = write_length,
+            .length = *write_length,
         },
         {
             .address = i2c_address,
             .buffer = read_buffer,
             .flags = read_flags,
-            .length = read_length,
+            .length = *read_length,
         }
     };
     return controller->transferI2C(msgs, 2);
