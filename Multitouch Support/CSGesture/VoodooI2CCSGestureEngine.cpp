@@ -107,6 +107,12 @@ int VoodooI2CCSGestureEngine::distancesq(int delta_x, int delta_y){
 
 MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     int i;
+    
+    for (int i = 0;i < event.transducers->getCount(); i++) {
+        softc.x[i] = -1;
+        softc.y[i] = -1;
+        softc.p[i] = -1;
+    }
 
     for (i=0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, event.transducers->getObject(i));
