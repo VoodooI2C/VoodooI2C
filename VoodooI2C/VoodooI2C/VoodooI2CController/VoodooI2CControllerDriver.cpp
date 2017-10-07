@@ -458,6 +458,8 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     publishNubs();
 
+    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+
     return true;
 exit:
     releaseResources();

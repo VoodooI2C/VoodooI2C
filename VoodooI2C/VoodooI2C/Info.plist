@@ -70,36 +70,38 @@
 			<key>IOProviderClass</key>
 			<string>VoodooI2CControllerNub</string>
 		</dict>
-        <key>CSGesture Multitouch Engine</key>
-        <dict>
-            <key>IOClass</key>
-            <string>VoodooI2CCSGestureEngine</string>
-            <key>CFBundleIdentifier</key>
-            <string>com.alexandred.VoodooI2C</string>
-            <key>IOMatchCategory</key>
-            <string>VoodooI2CCSGestureEngine</string>
-            <key>IOProviderClass</key>
-            <string>VoodooI2CMultitouchInterface</string>
-        </dict>
+		<key>CSGesture Multitouch Engine</key>
+		<dict>
+			<key>IOClass</key>
+			<string>VoodooI2CCSGestureEngine</string>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOMatchCategory</key>
+			<string>VoodooI2CCSGestureEngine</string>
+			<key>IOProviderClass</key>
+			<string>VoodooI2CMultitouchInterface</string>
+		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
-    <key>OSBundleLibraries</key>
-    <dict>
-        <key>org.coolstar.VoodooGPIO</key>
-        <string>1.1</string>
-        <key>com.apple.iokit.IOACPIFamily</key>
-        <string>1.4</string>
-        <key>com.apple.iokit.IOHIDFamily</key>
-        <string>2.0</string>
-        <key>com.apple.iokit.IOPCIFamily</key>
-        <string>2.9</string>
-        <key>com.apple.kpi.iokit</key>
-        <string>15.6</string>
-        <key>com.apple.kpi.libkern</key>
-        <string>15.6</string>
-        <key>com.apple.kpi.mach</key>
-        <string>15.6</string>
-    </dict>
+	<key>OSBundleLibraries</key>
+	<dict>
+		<key>com.alexandred.VoodooI2CServices</key>
+		<string>1.0</string>
+		<key>org.coolstar.VoodooGPIO</key>
+		<string>1.1</string>
+		<key>com.apple.iokit.IOACPIFamily</key>
+		<string>1.4</string>
+		<key>com.apple.iokit.IOHIDFamily</key>
+		<string>2.0</string>
+		<key>com.apple.iokit.IOPCIFamily</key>
+		<string>2.9</string>
+		<key>com.apple.kpi.iokit</key>
+		<string>15.6</string>
+		<key>com.apple.kpi.libkern</key>
+		<string>15.6</string>
+		<key>com.apple.kpi.mach</key>
+		<string>15.6</string>
+	</dict>
 </dict>
 </plist>

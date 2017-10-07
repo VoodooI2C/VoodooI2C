@@ -72,6 +72,8 @@ IOReturn VoodooI2CController::publishNub() {
 
     nub->registerService();
 
+    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+
     return kIOReturnSuccess;
 
 exit:
@@ -129,6 +131,9 @@ bool VoodooI2CController::start(IOService* provider) {
     if (!physical_device->provider->open(this)) {
         IOLog("%s::%s Could not open provider\n", getName(), physical_device->name);
     }
+
+    provider->setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    provider->setProperty("isI2CController", OSBoolean::withBoolean(true));
 
     return true;
 

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CServices" interface="true" name="VoodooI2CServices" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CServices::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CServices::MetaClass#VoodooI2CServices::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CServices::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CServices::MetaClass#VoodooI2CServices::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices" />
+  <method abstract="yes" id="VoodooI2CServices::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CServices::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CServices::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CServices::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CServices::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices">
+    <argument id="VoodooI2CServices::VoodooI2CServices::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CServices::~VoodooI2CServices" name="~VoodooI2CServices" virtual="yes" />
+  <variable access="private" id="VoodooI2CServices::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CServices::device_matcher" name="device_matcher">
+    <type name="IONotifier" qualifier="*" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CServices::attachDevice" name="attachDevice">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CServices::attachDevice::target" name="target">
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CServices::attachDevice::ref_con" name="ref_con">
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CServices::attachDevice::new_service" name="new_service">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CServices::attachDevice::notifier" name="notifier">
+      <type name="IONotifier" qualifier="*" />
+    </argument>
+  </method>
+</class>

@@ -52,7 +52,7 @@ return values.
         <location column="1" file="../Dependencies/helpers.hpp" line="22" />
       </undocumented>
     </type>
-    <type documented="6" name="class" undocumented="7">
+    <type documented="6" name="class" undocumented="9">
       <undocumented id="VoodooI2CACPICRSParser" name="VoodooI2CACPICRSParser">
         <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="47" />
       </undocumented>
@@ -74,8 +74,14 @@ return values.
       <undocumented id="VoodooI2CPCIController::MetaClass" name="MetaClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
       </undocumented>
+      <undocumented id="VoodooI2CServices" name="VoodooI2CServices">
+        <location column="1" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::MetaClass" name="MetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
     </type>
-    <type documented="0" name="field" undocumented="83">
+    <type documented="0" name="field" undocumented="84">
       <undocumented id="VoodooI2CACPICRSParser::found_gpio_interrupts" name="found_gpio_interrupts">
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="50" />
       </undocumented>
@@ -307,6 +313,9 @@ return values.
       <undocumented id="VoodooI2CDeviceNub::work_loop" name="work_loop">
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="53" />
       </undocumented>
+      <undocumented id="VoodooI2CServices::device_matcher" name="device_matcher">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="28" />
+      </undocumented>
       <undocumented id="gpio_int_info::interrupt_polarity" name="interrupt_polarity">
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="27" />
       </undocumented>
@@ -362,7 +371,7 @@ return values.
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="15" />
       </undocumented>
     </type>
-    <type documented="0" name="constructor" undocumented="19">
+    <type documented="0" name="constructor" undocumented="22">
       <undocumented id="VoodooI2CACPICRSParser::VoodooI2CACPICRSParser" name="VoodooI2CACPICRSParser">
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="57" />
       </undocumented>
@@ -420,8 +429,17 @@ return values.
       <undocumented id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
       </undocumented>
+      <undocumented id="VoodooI2CServices::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
     </type>
-    <type documented="0" name="variable" undocumented="19">
+    <type documented="0" name="variable" undocumented="23">
       <undocumented id="VoodooI2CACPIController::gMetaClass" name="gMetaClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
       </undocumented>
@@ -479,8 +497,20 @@ return values.
       <undocumented id="VoodooI2CPCIController::superClass" name="superClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
       </undocumented>
+      <undocumented id="VoodooI2CServices::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::metaClass" name="metaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::superClass" name="superClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="gVoodooI2CPlane" name="gVoodooI2CPlane">
+        <location column="1" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="17" />
+      </undocumented>
     </type>
-    <type documented="0" name="destructor" undocumented="6">
+    <type documented="0" name="destructor" undocumented="7">
       <undocumented id="VoodooI2CACPIController::~VoodooI2CACPIController" name="~VoodooI2CACPIController">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
       </undocumented>
@@ -499,8 +529,11 @@ return values.
       <undocumented id="VoodooI2CPCIController::~VoodooI2CPCIController" name="~VoodooI2CPCIController">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
       </undocumented>
+      <undocumented id="VoodooI2CServices::~VoodooI2CServices" name="~VoodooI2CServices">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
     </type>
-    <type documented="52" name="method" undocumented="39">
+    <type documented="52" name="method" undocumented="44">
       <undocumented id="VoodooI2CACPICRSParser::parseACPICRS" name="parseACPICRS">
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="58" />
       </undocumented>
@@ -617,6 +650,21 @@ return values.
       </undocumented>
       <undocumented id="VoodooI2CPCIController::getMetaClass" name="getMetaClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::attachDevice" name="attachDevice">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::start" name="start">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::stop" name="stop">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="24" />
       </undocumented>
     </type>
     <type documented="0" name="enumvalue" undocumented="24">

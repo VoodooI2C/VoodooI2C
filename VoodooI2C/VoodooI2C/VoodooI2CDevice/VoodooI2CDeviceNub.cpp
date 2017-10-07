@@ -216,6 +216,8 @@ bool VoodooI2CDeviceNub::start(IOService* provider) {
 
     registerService();
 
+    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+
     return true;
 exit:
     releaseResources();
