@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <index xmlns="http://jessevdk.github.com/cldoc/1.0">
-  <variable id="gVoodooI2CPlane" name="gVoodooI2CPlane">
-    <type name="IORegistryPlane" qualifier=" const *" />
-  </variable>
   <variable id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
     <type class="array" size="2">
       <type name="IOPMPowerState" />
@@ -35,6 +32,9 @@
   <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub">
     <brief> Implements a device nub to which an instance of a device driver may attach. Examples include &amp;lt;VoodooI2CHIDDevice.&amp;gt;</brief>
     <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
+  </class>
+  <class name="VoodooI2CLogger" ref="VoodooI2CLogger#VoodooI2CLogger">
+    <class name="MetaClass" ref="VoodooI2CLogger::MetaClass#VoodooI2CLogger::MetaClass" />
   </class>
   <class name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController">
     <brief> Implements a PCI Intel LPSS Designware I2C Controller</brief>

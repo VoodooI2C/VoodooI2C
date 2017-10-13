@@ -17,16 +17,40 @@
 
 class VoodooI2CControllerDriver;
 
-/* Implements a device nub to which an instance of a device driver may attach. Examples include <VoodooI2CHIDDevice.>
+/* Implements a device nub to which an instance of a device driver may attach. Examples include <VoodooI2CHIDDevice>
  *
- * The members of this class implement 
+ * The members of this class are responsible for low-level interfacing with an I2C slave device. The public
+ * member functions that are not inherited from <IOService> collectively form the so-called 'device API'.
+ * Device drivers access the API in order to perform low-level hardware operations such as receiving interrupts
+ * and I2C protocol messaging.
  */
 
 class VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);
 
  public:
+    /* Attaches <VoodooI2CController> class
+     * @provider A <VoodooI2CControllerDriver> object
+     * @child An <IOACPIPlatformDevice> representing the physical ACPI slave device.
+     *
+     * This function is called by <VoodooI2CControllerDriver> in order for the nub to attach itself
+     * and perform its initialisation routine.
+     *
+     * @return *true* if the successfully attached and initialised, *false* otherwise
+     */
+
     bool attach(IOService* provider, IOService* child);
+
+    /* Disables an interrupt source
+     * @source An <int> representing the index of the interrupt source in the case of APIC interrupts
+     *
+     * This function disables the interrupt source via the GPIO controller or passing it onto the APCI device
+     * depending on the configuration
+     *
+     * @return *kIOReturnSuccess* if the interrupt is sucessfully disabled, *kIOReturnNoInterrupt* if the interrupt source
+     * is invalid
+     */
+
     IOReturn disableInterrupt(int source);
     IOReturn enableInterrupt(int source);
     IOReturn getInterruptType(int source, int *interruptType);

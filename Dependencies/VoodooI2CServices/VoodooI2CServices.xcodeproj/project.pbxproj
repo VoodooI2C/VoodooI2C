@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC2049841F8AE9DA00BEC53C /* VoodooI2CLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC2049821F8AE9DA00BEC53C /* VoodooI2CLogger.cpp */; };
+		AC2049851F8AE9DA00BEC53C /* VoodooI2CLogger.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC2049831F8AE9DA00BEC53C /* VoodooI2CLogger.hpp */; };
 		AC2DC73B1F7F0E7A0071CDCA /* VoodooI2CServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC2DC7391F7F0E7A0071CDCA /* VoodooI2CServices.cpp */; };
 		AC2DC73C1F7F0E7A0071CDCA /* VoodooI2CServices.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC2DC73A1F7F0E7A0071CDCA /* VoodooI2CServices.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AC2049821F8AE9DA00BEC53C /* VoodooI2CLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CLogger.cpp; sourceTree = "<group>"; };
+		AC2049831F8AE9DA00BEC53C /* VoodooI2CLogger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CLogger.hpp; sourceTree = "<group>"; };
 		AC2DC71C1F7F0D450071CDCA /* VoodooI2CServices.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2CServices.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC2DC7231F7F0D450071CDCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC2DC7391F7F0E7A0071CDCA /* VoodooI2CServices.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CServices.cpp; sourceTree = "<group>"; };
@@ -51,6 +55,8 @@
 				AC2DC7231F7F0D450071CDCA /* Info.plist */,
 				AC2DC7391F7F0E7A0071CDCA /* VoodooI2CServices.cpp */,
 				AC2DC73A1F7F0E7A0071CDCA /* VoodooI2CServices.hpp */,
+				AC2049821F8AE9DA00BEC53C /* VoodooI2CLogger.cpp */,
+				AC2049831F8AE9DA00BEC53C /* VoodooI2CLogger.hpp */,
 			);
 			path = VoodooI2CServices;
 			sourceTree = "<group>";
@@ -63,6 +69,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC2DC73C1F7F0E7A0071CDCA /* VoodooI2CServices.hpp in Headers */,
+				AC2049851F8AE9DA00BEC53C /* VoodooI2CLogger.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC2049841F8AE9DA00BEC53C /* VoodooI2CLogger.cpp in Sources */,
 				AC2DC73B1F7F0E7A0071CDCA /* VoodooI2CServices.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

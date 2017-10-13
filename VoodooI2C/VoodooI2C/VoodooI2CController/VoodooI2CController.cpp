@@ -70,8 +70,6 @@ IOReturn VoodooI2CController::publishNub() {
         goto exit;
     }
 
-    nub->registerService();
-
     setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
 
     return kIOReturnSuccess;

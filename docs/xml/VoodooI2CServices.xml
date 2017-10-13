@@ -6,6 +6,9 @@
   <variable id="VoodooI2CServices::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CServices::MetaClass#VoodooI2CServices::MetaClass" />
   </variable>
+  <variable id="VoodooI2CServices::gVoodooI2CPlane" name="gVoodooI2CPlane">
+    <type name="IORegistryPlane" qualifier=" const *" />
+  </variable>
   <variable id="VoodooI2CServices::metaClass" name="metaClass">
     <type name="OSMetaClass" qualifier=" const const *" />
   </variable>
@@ -44,7 +47,10 @@
   <field access="private" id="VoodooI2CServices::device_matcher" name="device_matcher">
     <type name="IONotifier" qualifier="*" />
   </field>
-  <method abstract="yes" access="private" id="VoodooI2CServices::attachDevice" name="attachDevice">
+  <field access="private" id="VoodooI2CServices::terminate_matcher" name="terminate_matcher">
+    <type name="IONotifier" qualifier="*" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CServices::attachDevice" name="attachDevice" static="yes">
     <return>
       <type builtin="yes" name="bool" />
     </return>
@@ -58,6 +64,23 @@
       <type name="IOService" qualifier="*" />
     </argument>
     <argument id="VoodooI2CServices::attachDevice::notifier" name="notifier">
+      <type name="IONotifier" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CServices::detachDevice" name="detachDevice" static="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CServices::detachDevice::target" name="target">
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CServices::detachDevice::ref_con" name="ref_con">
+      <type builtin="yes" name="void" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CServices::detachDevice::new_service" name="new_service">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CServices::detachDevice::notifier" name="notifier">
       <type name="IONotifier" qualifier="*" />
     </argument>
   </method>
