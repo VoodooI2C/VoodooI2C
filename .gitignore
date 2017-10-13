@@ -21,3 +21,6 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+
+.DS_Store
+VoodooI2C\ Satellites/*
