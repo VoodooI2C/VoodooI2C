@@ -126,7 +126,6 @@ class VoodooI2CDeviceNub : public IOService {
 
     void stop(IOService* provider);
 
-    
     /* Unregisters a slave for interrupts
      * @source he index of the interrupt source in the case of APIC interrupts
      *
@@ -134,7 +133,6 @@ class VoodooI2CDeviceNub : public IOService {
      *
      * @return *kIOReturnSuccess* upon a successful unregistration, *kIOReturnNoInterrupt* if the interrupt source is invalid
      */
-
 
     IOReturn unregisterInterrupt(int source);
 

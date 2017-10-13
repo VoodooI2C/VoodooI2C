@@ -30,7 +30,7 @@
   </class>
   <struct name="VoodooI2CControllerPhysicalDevice" ref="VoodooI2CControllerPhysicalDevice#VoodooI2CControllerPhysicalDevice" />
   <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub">
-    <brief> Implements a device nub to which an instance of a device driver may attach. Examples include &amp;lt;VoodooI2CHIDDevice.&amp;gt;</brief>
+    <brief> Implements a device nub to which an instance of a device driver may attach. Examples include &amp;lt;VoodooI2CHIDDevice&amp;gt;</brief>
     <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
   </class>
   <class name="VoodooI2CLogger" ref="VoodooI2CLogger#VoodooI2CLogger">
