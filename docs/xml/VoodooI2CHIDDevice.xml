@@ -202,7 +202,7 @@ that were allocated in <ref ref="VoodooI2CHIDDevice#VoodooI2CHIDDevice::start">V
     </return>
     <argument id="VoodooI2CHIDDevice::setHIDPowerState::state" name="state">
       <doc>The power state that the device should enter</doc>
-      <type name="VoodooI2CState" />
+      <type name="VoodooI2CState" ref="index#VoodooI2CState" />
     </argument>
   </method>
   <method abstract="yes" access="protected" id="VoodooI2CHIDDevice::setPowerState" name="setPowerState" virtual="yes">

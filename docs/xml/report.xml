@@ -12,36 +12,607 @@ return values.
 3. [References](#report/references): Unresolved cross references.
 </doc>
   <coverage>
-    <type documented="0" name="typedef" undocumented="1">
+    <type documented="0" name="function" undocumented="1">
+      <undocumented id="getMatchedName" name="getMatchedName">
+        <location column="1" file="../Dependencies/helpers.hpp" line="20" />
+      </undocumented>
+    </type>
+    <type documented="0" name="typedef" undocumented="5">
+      <undocumented id="DigitiserTransducerButtonState" name="DigitiserTransducerButtonState">
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="43" />
+      </undocumented>
+      <undocumented id="DigitiserTransducuerType" name="DigitiserTransducuerType">
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="45" />
+      </undocumented>
+      <undocumented id="MultitouchReturn" name="MultitouchReturn">
+        <location column="1" file="../Multitouch Support/MultitouchHelpers.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::super" name="super">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="17" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDeviceCommand" name="VoodooI2CHIDDeviceCommand">
         <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="23" />
       </undocumented>
     </type>
-    <type documented="0" name="struct" undocumented="2">
+    <type documented="0" name="struct" undocumented="18">
+      <undocumented id="DigitiserTransducerAziAltiOrentation" name="DigitiserTransducerAziAltiOrentation">
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="62" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="62" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerCoordinates" name="DigitiserTransducerCoordinates">
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="51" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="51" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerDimensions" name="DigitiserTransducerDimensions">
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="57" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="57" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerTiltOrientation" name="DigitiserTransducerTiltOrientation">
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="68" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="68" />
+      </undocumented>
+      <undocumented id="ValueWithTime" name="ValueWithTime">
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::(anonymous::1)" name="(anonymous::1)">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig" name="VoodooI2CControllerBusConfig">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="29" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice" name="VoodooI2CControllerBusDevice">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="37" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="37" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage" name="VoodooI2CControllerBusMessage">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="22" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice" name="VoodooI2CControllerPhysicalDevice">
+        <location column="9" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="22" />
+        <location column="1" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="22" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDeviceHIDDescriptor" name="VoodooI2CHIDDeviceHIDDescriptor">
         <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="32" />
         <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEvent" name="VoodooI2CMultitouchEvent">
+        <location column="9" file="../Multitouch Support/MultitouchHelpers.hpp" line="15" />
+        <location column="1" file="../Multitouch Support/MultitouchHelpers.hpp" line="15" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::(anonymous::1)" name="(anonymous::1)">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="44" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadFeatureReport" name="VoodooI2CPrecisionTouchpadFeatureReport">
+        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="25" />
+        <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="25" />
       </undocumented>
       <undocumented id="cmd" name="cmd">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="25" />
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="25" />
       </undocumented>
+      <undocumented id="gpio_int_info" name="gpio_int_info">
+        <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="23" />
+      </undocumented>
+      <undocumented id="gpio_io_info" name="gpio_io_info">
+        <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="38" />
+      </undocumented>
+      <undocumented id="i2c_info" name="i2c_info">
+        <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="14" />
+      </undocumented>
     </type>
     <type documented="0" name="union" undocumented="1">
+      <undocumented id="(anonymous::3)" name="(anonymous::3)">
+        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="23" />
+        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="23" />
+      </undocumented>
+    </type>
+    <type documented="0" name="enum" undocumented="3">
       <undocumented id="(anonymous::1)" name="(anonymous::1)">
-        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="23" />
-        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="23" />
+        <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="12" />
+      </undocumented>
+      <undocumented id="(anonymous::2)" name="(anonymous::2)">
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="45" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CState" name="VoodooI2CState">
+        <location column="1" file="../Dependencies/helpers.hpp" line="22" />
       </undocumented>
     </type>
-    <type documented="21" name="method" undocumented="2">
-      <undocumented id="VoodooI2CHIDDevice::MetaClass::alloc" name="alloc">
-        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
-      </undocumented>
-      <undocumented id="VoodooI2CHIDDevice::getMetaClass" name="getMetaClass">
-        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
+    <type documented="0" name="conversionfunction" undocumented="1">
+      <undocumented id="TimeTrackedValue::operator bool" name="operator bool">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="28" />
       </undocumented>
     </type>
-    <type documented="0" name="field" undocumented="31">
+    <type documented="7" name="class" undocumented="29">
+      <undocumented id="TimeTrackedValue" name="TimeTrackedValue">
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper" name="VoodooCSGestureHIPointingWrapper">
+        <location column="1" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="16" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass" name="MetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser" name="VoodooI2CACPICRSParser">
+        <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="47" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine" name="VoodooI2CCSGestureEngine">
+        <location column="1" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="14" />
+        <location column="1" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::MetaClass" name="MetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CHIDDevice::MetaClass" name="MetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger" name="VoodooI2CLogger">
+        <location column="1" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::MetaClass" name="MetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine" name="VoodooI2CMultitouchEngine">
+        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="20" />
+        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver" name="VoodooI2CMultitouchHIDEventDriver">
+        <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::MetaClass" name="MetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
+        <location column="1" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="30" />
+        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="18" />
+        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver" name="VoodooI2CPrecisionTouchpadHIDEventDriver">
+        <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass" name="MetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices" name="VoodooI2CServices">
+        <location column="1" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::MetaClass" name="MetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+    </type>
+    <type documented="0" name="field" undocumented="189">
+      <undocumented id="DigitiserTransducerAziAltiOrentation::altitude" name="altitude">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="64" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="64" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerAziAltiOrentation::azimuth" name="azimuth">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="63" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="63" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerAziAltiOrentation::twist" name="twist">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="65" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="65" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerCoordinates::x" name="x">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerCoordinates::y" name="y">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="53" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="53" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerCoordinates::z" name="z">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerDimensions::height" name="height">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="59" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="59" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerDimensions::width" name="width">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="58" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="58" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerTiltOrientation::x_tilt" name="x_tilt">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="69" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="69" />
+      </undocumented>
+      <undocumented id="DigitiserTransducerTiltOrientation::y_tilt" name="y_tilt">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="70" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="70" />
+      </undocumented>
+      <undocumented id="TimeTrackedValue::current" name="current">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="25" />
+      </undocumented>
+      <undocumented id="TimeTrackedValue::last" name="last">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="26" />
+      </undocumented>
+      <undocumented id="ValueWithTime::timestamp" name="timestamp">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="20" />
+      </undocumented>
+      <undocumented id="ValueWithTime::value" name="value">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::gesturerec" name="gesturerec">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::horizontalScroll" name="horizontalScroll">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::found_gpio_interrupts" name="found_gpio_interrupts">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="50" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::found_gpio_io" name="found_gpio_io">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="51" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::found_i2c" name="found_i2c">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="49" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::gpio_interrupts" name="gpio_interrupts">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="54" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::gpio_io" name="gpio_io">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="55" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::i2c_info" name="i2c_info">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="53" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::_pointingWrapper" name="_pointingWrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="36" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::_scrollHandler" name="_scrollHandler">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="37" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::_wrapper" name="_wrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="35" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::buttonMask" name="buttonMask">
+        <location column="9" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::lastmouse" name="lastmouse">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::productID" name="productID">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="71" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::softc" name="softc">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="52" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::vendorID" name="vendorID">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="70" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::x" name="x">
+        <location column="9" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::y" name="y">
+        <location column="9" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::debug_logging" name="debug_logging">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="120" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::nub" name="nub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="95" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::physical_device" name="physical_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="96" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::fs_hcnt" name="fs_hcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="31" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::fs_lcnt" name="fs_lcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="33" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::sda_hold" name="sda_hold">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="34" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::ss_hcnt" name="ss_hcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="30" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusConfig::ss_lcnt" name="ss_lcnt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="32" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::abort_source" name="abort_source">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="38" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::acpi_config" name="acpi_config">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="39" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::awake" name="awake">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="40" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::bus_config" name="bus_config">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="41" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::command_complete" name="command_complete">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="43" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="43" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::command_error" name="command_error">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="42" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::functionality" name="functionality">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="44" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="44" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_error" name="message_error">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="46" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="46" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_number" name="message_number">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="47" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="47" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_read_index" name="message_read_index">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="48" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="48" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::message_write_index" name="message_write_index">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="49" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="49" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::messages" name="messages">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="45" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::name" name="name">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="50" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="50" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_buffer" name="receive_buffer">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="52" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="52" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_buffer_length" name="receive_buffer_length">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="51" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="51" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_fifo_depth" name="receive_fifo_depth">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="53" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="53" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::receive_outstanding" name="receive_outstanding">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="54" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="54" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::status" name="status">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="55" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="55" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::transaction_buffer" name="transaction_buffer">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="57" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="57" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::transaction_buffer_length" name="transaction_buffer_length">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="56" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="56" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusDevice::transaction_fifo_depth" name="transaction_fifo_depth">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="58" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::address" name="address">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="23" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::buffer" name="buffer">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="24" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::flags" name="flags">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="25" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerBusMessage::length" name="length">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="26" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::bus_device" name="bus_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="72" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::command_gate" name="command_gate">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="148" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::device_nubs" name="device_nubs">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="73" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::interrupt_source" name="interrupt_source">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="149" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::nub" name="nub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::work_loop" name="work_loop">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="150" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::controller" name="controller">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::driver" name="driver">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::name" name="name">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::acpi_device" name="acpi_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="23" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::awake" name="awake">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="24" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::mmap" name="mmap">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="27" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::name" name="name">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="25" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::pci_device" name="pci_device">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="26" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerPhysicalDevice::provider" name="provider">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="28" />
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::acpi_device" name="acpi_device">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="165" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::command_gate" name="command_gate">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="166" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::controller" name="controller">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="167" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::controller_name" name="controller_name">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="168" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::gpio_controller" name="gpio_controller">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="169" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::gpio_irq" name="gpio_irq">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="170" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::gpio_pin" name="gpio_pin">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="171" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::has_gpio_interrupts" name="has_gpio_interrupts">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="173" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::i2c_address" name="i2c_address">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="172" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::use_10bit_addressing" name="use_10bit_addressing">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="174" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::work_loop" name="work_loop">
+        <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="175" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::barrel_pressure" name="barrel_pressure">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::barrel_switch" name="barrel_switch">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::battery_strength" name="battery_strength">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::eraser" name="eraser">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::invert" name="invert">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::azi_alti_orientation" name="azi_alti_orientation">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::collection" name="collection">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="101" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::coordinates" name="coordinates">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="79" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::dimensions" name="dimensions">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="82" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::elements" name="elements">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="102" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::event_mask" name="event_mask">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="104" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::id" name="id">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="94" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::in_range" name="in_range">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="97" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::is_valid" name="is_valid">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="98" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::last_coordinates" name="last_coordinates">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="80" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::last_dimensions" name="last_dimensions">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="83" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::logical_max_x" name="logical_max_x">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="91" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::logical_max_y" name="logical_max_y">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="92" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::physical_button" name="physical_button">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="77" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::secondary_id" name="secondary_id">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="95" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::tilt_orientation" name="tilt_orientation">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="86" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::timestamp" name="timestamp">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="105" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::tip_pressure" name="tip_pressure">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="89" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::tip_switch" name="tip_switch">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="88" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::type" name="type">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="99" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::acpi_device" name="acpi_device">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="220" />
       </undocumented>
@@ -134,6 +705,82 @@ return values.
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="45" />
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="45" />
       </undocumented>
+      <undocumented id="VoodooI2CLogger::logging_level" name="logging_level">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::interface" name="interface">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEvent::contact_count" name="contact_count">
+        <location column="5" file="../Multitouch Support/MultitouchHelpers.hpp" line="16" />
+        <location column="5" file="../Multitouch Support/MultitouchHelpers.hpp" line="16" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEvent::transducers" name="transducers">
+        <location column="5" file="../Multitouch Support/MultitouchHelpers.hpp" line="17" />
+        <location column="5" file="../Multitouch Support/MultitouchHelpers.hpp" line="17" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::absolute_axis_removal_percentage" name="absolute_axis_removal_percentage">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::awake" name="awake">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="66" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::contact_count_element" name="contact_count_element">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="43" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::digitiser" name="digitiser">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="44" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::hid_interface" name="hid_interface">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::input_mode_element" name="input_mode_element">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::multitouch_interface" name="multitouch_interface">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="70" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::native" name="native">
+        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="46" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::supported_elements" name="supported_elements">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="71" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::transducers" name="transducers">
+        <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::engines" name="engines">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::logical_max_x" name="logical_max_x">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::logical_max_y" name="logical_max_y">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::physical_max_x" name="physical_max_x">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::physical_max_y" name="physical_max_y">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadFeatureReport::reserved" name="reserved">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="27" />
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadFeatureReport::value" name="value">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="26" />
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::ready" name="ready">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::device_matcher" name="device_matcher">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::terminate_matcher" name="terminate_matcher">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="30" />
+      </undocumented>
       <undocumented id="c" name="c">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="25" />
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="25" />
@@ -154,8 +801,146 @@ return values.
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="24" />
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="24" />
       </undocumented>
+      <undocumented id="gpio_int_info::interrupt_polarity" name="interrupt_polarity">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="27" />
+      </undocumented>
+      <undocumented id="gpio_int_info::irq_type" name="irq_type">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="35" />
+      </undocumented>
+      <undocumented id="gpio_int_info::level_interrupt" name="level_interrupt">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="25" />
+      </undocumented>
+      <undocumented id="gpio_int_info::pin_config" name="pin_config">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="32" />
+      </undocumented>
+      <undocumented id="gpio_int_info::pin_number" name="pin_number">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="33" />
+      </undocumented>
+      <undocumented id="gpio_int_info::resource_consumer" name="resource_consumer">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="24" />
+      </undocumented>
+      <undocumented id="gpio_int_info::shared_interrupt" name="shared_interrupt">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="29" />
+      </undocumented>
+      <undocumented id="gpio_int_info::wake_interrupt" name="wake_interrupt">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="30" />
+      </undocumented>
+      <undocumented id="gpio_io_info::io_restriction" name="io_restriction">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="40" />
+      </undocumented>
+      <undocumented id="gpio_io_info::pin_config" name="pin_config">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="43" />
+      </undocumented>
+      <undocumented id="gpio_io_info::pin_number" name="pin_number">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="44" />
+      </undocumented>
+      <undocumented id="gpio_io_info::resource_consumer" name="resource_consumer">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="39" />
+      </undocumented>
+      <undocumented id="gpio_io_info::sharing" name="sharing">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="41" />
+      </undocumented>
+      <undocumented id="i2c_info::address" name="address">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="20" />
+      </undocumented>
+      <undocumented id="i2c_info::address_mode_10Bit" name="address_mode_10Bit">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="17" />
+      </undocumented>
+      <undocumented id="i2c_info::bus_speed" name="bus_speed">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="19" />
+      </undocumented>
+      <undocumented id="i2c_info::device_initiated" name="device_initiated">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="16" />
+      </undocumented>
+      <undocumented id="i2c_info::resource_consumer" name="resource_consumer">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="15" />
+      </undocumented>
     </type>
-    <type documented="0" name="constructor" undocumented="3">
+    <type documented="0" name="constructor" undocumented="52">
+      <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::VoodooCSGestureHIPointingWrapper" name="VoodooCSGestureHIPointingWrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::VoodooCSGestureHIPointingWrapper" name="VoodooCSGestureHIPointingWrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::VoodooI2CACPICRSParser" name="VoodooI2CACPICRSParser">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="57" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::VoodooI2CACPIController" name="VoodooI2CACPIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::VoodooI2CACPIController" name="VoodooI2CACPIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::VoodooI2CCSGestureEngine" name="VoodooI2CCSGestureEngine">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::VoodooI2CCSGestureEngine" name="VoodooI2CCSGestureEngine">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::VoodooI2CController" name="VoodooI2CController">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::VoodooI2CController" name="VoodooI2CController">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::VoodooI2CControllerDriver" name="VoodooI2CControllerDriver">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::VoodooI2CControllerNub" name="VoodooI2CControllerNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
@@ -165,8 +950,152 @@ return values.
       <undocumented id="VoodooI2CHIDDevice::VoodooI2CHIDDevice" name="VoodooI2CHIDDevice">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
+      <undocumented id="VoodooI2CLogger::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::VoodooI2CLogger" name="VoodooI2CLogger">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::VoodooI2CLogger" name="VoodooI2CLogger">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::VoodooI2CMultitouchEngine" name="VoodooI2CMultitouchEngine">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::VoodooI2CMultitouchEngine" name="VoodooI2CMultitouchEngine">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::VoodooI2CMultitouchHIDEventDriver" name="VoodooI2CMultitouchHIDEventDriver">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::VoodooI2CMultitouchHIDEventDriver" name="VoodooI2CMultitouchHIDEventDriver">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::VoodooI2CPrecisionTouchpadHIDEventDriver" name="VoodooI2CPrecisionTouchpadHIDEventDriver">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::VoodooI2CPrecisionTouchpadHIDEventDriver" name="VoodooI2CPrecisionTouchpadHIDEventDriver">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::MetaClass::MetaClass" name="MetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
     </type>
-    <type documented="0" name="variable" undocumented="3">
+    <type documented="0" name="variable" undocumented="53">
+      <undocumented id="VoodooCSGestureHIPointingWrapper::gMetaClass" name="gMetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::metaClass" name="metaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::superClass" name="superClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::gMetaClass" name="gMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::metaClass" name="metaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::superClass" name="superClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::gMetaClass" name="gMetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::metaClass" name="metaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::superClass" name="superClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::gMetaClass" name="gMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::metaClass" name="metaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::superClass" name="superClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::gMetaClass" name="gMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::metaClass" name="metaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::superClass" name="superClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::gMetaClass" name="gMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::metaClass" name="metaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::superClass" name="superClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::gMetaClass" name="gMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::metaClass" name="metaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::superClass" name="superClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::metaClass" name="metaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::superClass" name="superClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::metaClass" name="metaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::superClass" name="superClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::gMetaClass" name="gMetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
@@ -176,22 +1105,592 @@ return values.
       <undocumented id="VoodooI2CHIDDevice::superClass" name="superClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
+      <undocumented id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
+        <location column="1" file="../Dependencies/helpers.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::metaClass" name="metaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::superClass" name="superClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::metaClass" name="metaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::superClass" name="superClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::gMetaClass" name="gMetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::metaClass" name="metaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::superClass" name="superClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::metaClass" name="metaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::superClass" name="superClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::gMetaClass" name="gMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::metaClass" name="metaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::superClass" name="superClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::gMetaClass" name="gMetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::metaClass" name="metaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::superClass" name="superClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::gMetaClass" name="gMetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::gVoodooI2CPlane" name="gVoodooI2CPlane">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::metaClass" name="metaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::superClass" name="superClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
     </type>
-    <type documented="0" name="destructor" undocumented="1">
+    <type documented="0" name="destructor" undocumented="17">
+      <undocumented id="VoodooCSGestureHIPointingWrapper::~VoodooCSGestureHIPointingWrapper" name="~VoodooCSGestureHIPointingWrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::~VoodooI2CACPIController" name="~VoodooI2CACPIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::~VoodooI2CCSGestureEngine" name="~VoodooI2CCSGestureEngine">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::~VoodooI2CController" name="~VoodooI2CController">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::~VoodooI2CControllerDriver" name="~VoodooI2CControllerDriver">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::~VoodooI2CControllerNub" name="~VoodooI2CControllerNub">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::~VoodooI2CDeviceNub" name="~VoodooI2CDeviceNub">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::~VoodooI2CDigitiserStylus" name="~VoodooI2CDigitiserStylus">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::~VoodooI2CDigitiserTransducer" name="~VoodooI2CDigitiserTransducer">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::~VoodooI2CHIDDevice" name="~VoodooI2CHIDDevice">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
-    </type>
-    <type documented="1" name="class" undocumented="2">
-      <undocumented id="VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
-        <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="49" />
+      <undocumented id="VoodooI2CLogger::~VoodooI2CLogger" name="~VoodooI2CLogger">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
       </undocumented>
-      <undocumented id="VoodooI2CHIDDevice::MetaClass" name="MetaClass">
+      <undocumented id="VoodooI2CMultitouchEngine::~VoodooI2CMultitouchEngine" name="~VoodooI2CMultitouchEngine">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::~VoodooI2CMultitouchHIDEventDriver" name="~VoodooI2CMultitouchHIDEventDriver">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::~VoodooI2CMultitouchInterface" name="~VoodooI2CMultitouchInterface">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::~VoodooI2CPCIController" name="~VoodooI2CPCIController">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::~VoodooI2CPrecisionTouchpadHIDEventDriver" name="~VoodooI2CPrecisionTouchpadHIDEventDriver">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::~VoodooI2CServices" name="~VoodooI2CServices">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+    </type>
+    <type documented="94" name="method" undocumented="108">
+      <undocumented id="TimeTrackedValue::update" name="update">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="32" />
+      </undocumented>
+      <undocumented id="TimeTrackedValue::value" name="value">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::alloc" name="alloc">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::buttonCount" name="buttonCount">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::deviceType" name="deviceType">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="35" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::getMetaClass" name="getMetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::init" name="init">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::interfaceID" name="interfaceID">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="36" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::resolution" name="resolution">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::setParamProperties" name="setParamProperties">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::start" name="start">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::stop" name="stop">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::updateRelativeMouse" name="updateRelativeMouse">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooCSGestureHIPointingWrapper::updateScroll" name="updateScroll">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::parseACPICRS" name="parseACPICRS">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::parseACPIGPIO" name="parseACPIGPIO">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="61" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPICRSParser::parseACPISerialBus" name="parseACPISerialBus">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="60" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::MetaClass::alloc" name="alloc">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CACPIController::getMetaClass" name="getMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CACPIController.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::ClearTapDrag" name="ClearTapDrag">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="60" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::MetaClass::alloc" name="alloc">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::ProcessGesture" name="ProcessGesture">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="61" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::ProcessScroll" name="ProcessScroll">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="56" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe" name="ProcessThreeFingerSwipe">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="57" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::TapToClickOrDrag" name="TapToClickOrDrag">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="59" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::destroy_wrapper" name="destroy_wrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="68" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::distancesq" name="distancesq">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::getMetaClass" name="getMetaClass">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::handleInterruptReport" name="handleInterruptReport">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="77" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::initialize_wrapper" name="initialize_wrapper">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="67" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::reportDescriptorLength" name="reportDescriptorLength">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="73" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::start" name="start">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="78" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::stop" name="stop">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="79" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::update_keyboard" name="update_keyboard">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="50" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::wakeFromSleep" name="wakeFromSleep">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="65" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::write_report_descriptor_to_buffer" name="write_report_descriptor_to_buffer">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="75" />
+      </undocumented>
+      <undocumented id="VoodooI2CCSGestureEngine::write_report_to_buffer" name="write_report_to_buffer">
+        <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::MetaClass::alloc" name="alloc">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CController::getMetaClass" name="getMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CController.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::MetaClass::alloc" name="alloc">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::getMetaClass" name="getMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerDriver::releaseResources" name="releaseResources">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="216" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::MetaClass::alloc" name="alloc">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::disableInterrupt" name="disableInterrupt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="55" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::enableInterrupt" name="enableInterrupt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="57" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::getMetaClass" name="getMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::readRegister" name="readRegister">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="79" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::start" name="start">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="92" />
+      </undocumented>
+      <undocumented id="VoodooI2CControllerNub::unregisterInterrupt" name="unregisterInterrupt">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="114" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::MetaClass::alloc" name="alloc">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDeviceNub::getMetaClass" name="getMetaClass">
+        <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::free" name="free">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="107" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::serialize" name="serialize">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="108" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::transducer" name="transducer">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="109" />
+      </undocumented>
+      <undocumented id="VoodooI2CHIDDevice::MetaClass::alloc" name="alloc">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CHIDDevice::getMetaClass" name="getMetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CLogger::start" name="start">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::getScore" name="getScore">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::handleInterruptReport" name="handleInterruptReport">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::start" name="start">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchEngine::stop" name="stop">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::MetaClass::alloc" name="alloc">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::calibrateJustifiedPreferredStateElement" name="calibrateJustifiedPreferredStateElement">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="49" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::didTerminate" name="didTerminate">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="50" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::getMetaClass" name="getMetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="39" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerReport" name="handleDigitizerReport">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="51" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerTransducerReport" name="handleDigitizerTransducerReport">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="52" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport" name="handleInterruptReport">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="53" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::handleStart" name="handleStart">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="54" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::handleStop" name="handleStop">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="63" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerElement" name="parseDigitizerElement">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="55" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerTransducerElement" name="parseDigitizerTransducerElement">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="56" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::parseElements" name="parseElements">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="57" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::processDigitizerElements" name="processDigitizerElements">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="58" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::publishMultitouchInterface" name="publishMultitouchInterface">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="59" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::setButtonState" name="setButtonState">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="60" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::setDigitizerProperties" name="setDigitizerProperties">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="61" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::setPowerState" name="setPowerState">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="62" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchHIDEventDriver::start" name="start">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="64" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::handleInterruptReport" name="handleInterruptReport">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::open" name="open">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::orderEngines" name="orderEngines">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::start" name="start">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CMultitouchInterface::stop" name="stop">
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::MetaClass::alloc" name="alloc">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPCIController::getMetaClass" name="getMetaClass">
+        <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass::alloc" name="alloc">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::enterPrecisionTouchpadMode" name="enterPrecisionTouchpadMode">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::getMetaClass" name="getMetaClass">
+        <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="31" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleInterruptReport" name="handleInterruptReport">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleStart" name="handleStart">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="35" />
+      </undocumented>
+      <undocumented id="VoodooI2CPrecisionTouchpadHIDEventDriver::setPowerState" name="setPowerState">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="36" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::MetaClass::alloc" name="alloc">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::attachDevice" name="attachDevice">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::detachDevice" name="detachDevice">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::getMetaClass" name="getMetaClass">
+        <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="19" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::start" name="start">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CServices::stop" name="stop">
+        <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="25" />
+      </undocumented>
+    </type>
+    <type documented="0" name="enumvalue" undocumented="27">
+      <undocumented id="IRQ_DISABLE_UNLAZY" name="IRQ_DISABLE_UNLAZY">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="36" />
+      </undocumented>
+      <undocumented id="IRQ_IS_POLLED" name="IRQ_IS_POLLED">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="35" />
+      </undocumented>
+      <undocumented id="IRQ_LEVEL" name="IRQ_LEVEL">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="25" />
+      </undocumented>
+      <undocumented id="IRQ_MOVE_PCNTXT" name="IRQ_MOVE_PCNTXT">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="31" />
+      </undocumented>
+      <undocumented id="IRQ_NESTED_THREAD" name="IRQ_NESTED_THREAD">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="32" />
+      </undocumented>
+      <undocumented id="IRQ_NOAUTOEN" name="IRQ_NOAUTOEN">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="29" />
+      </undocumented>
+      <undocumented id="IRQ_NOPROBE" name="IRQ_NOPROBE">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="27" />
+      </undocumented>
+      <undocumented id="IRQ_NOREQUEST" name="IRQ_NOREQUEST">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="28" />
+      </undocumented>
+      <undocumented id="IRQ_NOTHREAD" name="IRQ_NOTHREAD">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="33" />
+      </undocumented>
+      <undocumented id="IRQ_NO_BALANCING" name="IRQ_NO_BALANCING">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="30" />
+      </undocumented>
+      <undocumented id="IRQ_PER_CPU" name="IRQ_PER_CPU">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="26" />
+      </undocumented>
+      <undocumented id="IRQ_PER_CPU_DEVID" name="IRQ_PER_CPU_DEVID">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="34" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_DEFAULT" name="IRQ_TYPE_DEFAULT">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="21" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_EDGE_BOTH" name="IRQ_TYPE_EDGE_BOTH">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="16" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_EDGE_FALLING" name="IRQ_TYPE_EDGE_FALLING">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="15" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_EDGE_RISING" name="IRQ_TYPE_EDGE_RISING">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="14" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_LEVEL_HIGH" name="IRQ_TYPE_LEVEL_HIGH">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="17" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_LEVEL_LOW" name="IRQ_TYPE_LEVEL_LOW">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="18" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_LEVEL_MASK" name="IRQ_TYPE_LEVEL_MASK">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="19" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_NONE" name="IRQ_TYPE_NONE">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="13" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_PROBE" name="IRQ_TYPE_PROBE">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="23" />
+      </undocumented>
+      <undocumented id="IRQ_TYPE_SENSE_MASK" name="IRQ_TYPE_SENSE_MASK">
+        <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="20" />
+      </undocumented>
+      <undocumented id="kDigitiserTransducerFinger" name="kDigitiserTransducerFinger">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="46" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="46" />
+      </undocumented>
+      <undocumented id="kDigitiserTransducerPuck" name="kDigitiserTransducerPuck">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="48" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="48" />
+      </undocumented>
+      <undocumented id="kDigitiserTransducerStylus" name="kDigitiserTransducerStylus">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="47" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="47" />
+      </undocumented>
+      <undocumented id="kVoodooI2CStateOff" name="kVoodooI2CStateOff">
+        <location column="5" file="../Dependencies/helpers.hpp" line="23" />
+      </undocumented>
+      <undocumented id="kVoodooI2CStateOn" name="kVoodooI2CStateOn">
+        <location column="5" file="../Dependencies/helpers.hpp" line="24" />
       </undocumented>
     </type>
   </coverage>
   <arguments>
+    <function id="VoodooI2CControllerNub::getInterruptType" name="getInterruptType">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="77" />
+      <undocumented name="source" />
+      <undocumented name="interruptType" />
+      <misspelled name="offset" />
+    </function>
+    <function id="VoodooI2CControllerNub::registerInterrupt" name="registerInterrupt">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="90" />
+      <undocumented name="source" />
+      <undocumented name="handler" />
+      <undocumented name="target" />
+      <undocumented name="refcon" />
+      <misspelled name="provider" />
+    </function>
+    <function id="VoodooI2CControllerDriver::handleInterrupt" name="handleInterrupt">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="86" />
+      <undocumented name="owner" />
+      <undocumented name="src" />
+      <undocumented name="intCount" />
+    </function>
+    <function id="VoodooI2CControllerDriver::toggleBusState" name="toggleBusState">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="246" />
+      <undocumented name="enabled" />
+      <misspelled name="param" />
+    </function>
+    <function id="VoodooI2CControllerDriver::toggleInterrupts" name="toggleInterrupts">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerDriver.hpp" line="266" />
+      <undocumented name="enabled" />
+      <misspelled name="param" />
+    </function>
+    <function id="VoodooI2CDeviceNub::getGPIOController" name="getGPIOController">
+      <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="187" />
+      <undocumented-return />
+    </function>
+    <function id="VoodooI2CCSGestureEngine::update_relative_mouse" name="update_relative_mouse">
+      <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="48" />
+      <undocumented name="y" />
+      <undocumented name="x" />
+      <undocumented name="button" />
+      <undocumented name="wheelHPosition" />
+      <undocumented name="wheelPosition" />
+    </function>
+    <function id="VoodooI2CCSGestureEngine::ProcessMove" name="ProcessMove">
+      <location column="5" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="55" />
+      <undocumented-return />
+      <undocumented name="sc" />
+      <undocumented name="abovethreshold" />
+      <undocumented name="iToUse" />
+    </function>
     <function id="VoodooI2CHIDDevice::interruptOccured" name="interruptOccured">
       <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="240" />
       <undocumented name="owner" />
@@ -200,6 +1699,27 @@ return values.
     </function>
   </arguments>
   <references>
+    <method id="VoodooI2CControllerNub::registerInterrupt" name="registerInterrupt">
+      <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CControllerNub.hpp" line="90" />
+      <doctype name="doc">
+        <ref name="work_loop" />
+        <ref name="interrupt_source" />
+        <ref name="command_gate" />
+      </doctype>
+    </method>
+    <class id="VoodooI2CDeviceNub" name="VoodooI2CDeviceNub">
+      <location column="1" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="28" />
+      <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="49" />
+      <doctype name="doc">
+        <ref name="IOService" />
+      </doctype>
+    </class>
+    <method id="VoodooI2CDeviceNub::getGPIOController" name="getGPIOController">
+      <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="187" />
+      <doctype name="brief">
+        <ref name="VoodooGPIO" />
+      </doctype>
+    </method>
     <method id="VoodooI2CHIDDevice::handleStart" name="handleStart">
       <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="116" />
       <doctype name="doc">

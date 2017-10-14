@@ -33,7 +33,7 @@
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CMultitouchInterface::handleInterruptReport::event" name="event">
-      <type name="VoodooI2CMultitouchEvent" />
+      <type name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
     </argument>
     <argument id="VoodooI2CMultitouchInterface::handleInterruptReport::timestamp" name="timestamp">
       <type name="AbsoluteTime" />

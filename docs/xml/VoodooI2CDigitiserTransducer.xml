@@ -3,6 +3,7 @@
   <base access="public">
     <type name="OSObject" />
   </base>
+  <subclass access="public" name="VoodooI2CDigitiserStylus" ref="VoodooI2CDigitiserStylus#VoodooI2CDigitiserStylus" />
   <variable id="VoodooI2CDigitiserTransducer::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CDigitiserTransducer::MetaClass#VoodooI2CDigitiserTransducer::MetaClass" />
   </variable>

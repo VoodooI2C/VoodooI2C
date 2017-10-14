@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <class id="VoodooI2CCSGestureEngine" interface="true" name="VoodooI2CCSGestureEngine" xmlns="http://jessevdk.github.com/cldoc/1.0">
   <base access="private">
-    <type name="VoodooI2CMultitouchEngine" />
+    <type name="VoodooI2CMultitouchEngine" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine" />
   </base>
   <variable id="VoodooI2CCSGestureEngine::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CCSGestureEngine::MetaClass#VoodooI2CCSGestureEngine::MetaClass" />
@@ -36,21 +36,23 @@
       <type builtin="yes" name="void" />
     </return>
   </method>
-  <method abstract="yes" id="VoodooI2CCSGestureEngine::getMetaClass" name="getMetaClass" virtual="yes">
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::getMetaClass" name="getMetaClass" override="yes" virtual="yes">
     <return>
       <type name="OSMetaClass" qualifier=" const *" />
     </return>
+    <override name="VoodooI2CMultitouchEngine::getMetaClass" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine::getMetaClass" />
   </method>
-  <method abstract="yes" id="VoodooI2CCSGestureEngine::handleInterruptReport" name="handleInterruptReport" virtual="yes">
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::handleInterruptReport" name="handleInterruptReport" override="yes" virtual="yes">
     <return>
-      <type name="MultitouchReturn" />
+      <type name="MultitouchReturn" ref="index#MultitouchReturn" />
     </return>
     <argument id="VoodooI2CCSGestureEngine::handleInterruptReport::event" name="event">
-      <type name="VoodooI2CMultitouchEvent" />
+      <type name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
     </argument>
     <argument id="VoodooI2CCSGestureEngine::handleInterruptReport::timestamp" name="timestamp">
       <type name="AbsoluteTime" />
     </argument>
+    <override name="VoodooI2CMultitouchEngine::handleInterruptReport" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine::handleInterruptReport" />
   </method>
   <method abstract="yes" id="VoodooI2CCSGestureEngine::initialize_wrapper" name="initialize_wrapper">
     <return>
@@ -128,21 +130,23 @@
       <type builtin="yes" name="int" />
     </return>
   </method>
-  <method abstract="yes" id="VoodooI2CCSGestureEngine::start" name="start" virtual="yes">
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::start" name="start" override="yes" virtual="yes">
     <return>
       <type builtin="yes" name="bool" />
     </return>
     <argument id="VoodooI2CCSGestureEngine::start::service" name="service">
       <type name="IOService" qualifier="*" />
     </argument>
+    <override name="VoodooI2CMultitouchEngine::start" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine::start" />
   </method>
-  <method abstract="yes" id="VoodooI2CCSGestureEngine::stop" name="stop" virtual="yes">
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::stop" name="stop" override="yes" virtual="yes">
     <return>
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CCSGestureEngine::stop::provider" name="provider">
       <type name="IOService" qualifier="*" />
     </argument>
+    <override name="VoodooI2CMultitouchEngine::stop" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine::stop" />
   </method>
   <method abstract="yes" id="VoodooI2CCSGestureEngine::TapToClickOrDrag" name="TapToClickOrDrag">
     <return>
@@ -200,7 +204,7 @@
     <type name="VoodooCSGestureHIDWrapper" qualifier="*" />
   </field>
   <field access="private" id="VoodooI2CCSGestureEngine::_pointingWrapper" name="_pointingWrapper">
-    <type name="VoodooCSGestureHIPointingWrapper" qualifier="*" />
+    <type name="VoodooCSGestureHIPointingWrapper" qualifier="*" ref="VoodooCSGestureHIPointingWrapper#VoodooCSGestureHIPointingWrapper" />
   </field>
   <field access="private" id="VoodooI2CCSGestureEngine::_scrollHandler" name="_scrollHandler">
     <type name="CSGestureScroll" qualifier="*" />

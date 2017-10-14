@@ -1,12 +1,120 @@
 <?xml version='1.0' encoding='utf-8'?>
 <index xmlns="http://jessevdk.github.com/cldoc/1.0">
-  <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub" />
+  <variable id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
+    <type class="array" size="2">
+      <type name="IOPMPowerState" />
+    </type>
+  </variable>
+  <struct name="DigitiserTransducerAziAltiOrentation" ref="DigitiserTransducerAziAltiOrentation#DigitiserTransducerAziAltiOrentation" />
+  <struct name="DigitiserTransducerCoordinates" ref="DigitiserTransducerCoordinates#DigitiserTransducerCoordinates" />
+  <struct name="DigitiserTransducerDimensions" ref="DigitiserTransducerDimensions#DigitiserTransducerDimensions" />
+  <struct name="DigitiserTransducerTiltOrientation" ref="DigitiserTransducerTiltOrientation#DigitiserTransducerTiltOrientation" />
+  <struct name="gpio_int_info" ref="gpio_int_info#gpio_int_info" />
+  <struct name="gpio_io_info" ref="gpio_io_info#gpio_io_info" />
+  <struct name="i2c_info" ref="i2c_info#i2c_info" />
+  <class name="TimeTrackedValue" ref="TimeTrackedValue#TimeTrackedValue" />
+  <struct name="ValueWithTime" ref="ValueWithTime#ValueWithTime" />
+  <class name="VoodooCSGestureHIPointingWrapper" ref="VoodooCSGestureHIPointingWrapper#VoodooCSGestureHIPointingWrapper">
+    <class name="MetaClass" ref="VoodooCSGestureHIPointingWrapper::MetaClass#VoodooCSGestureHIPointingWrapper::MetaClass" />
+  </class>
+  <class name="VoodooI2CACPIController" ref="VoodooI2CACPIController#VoodooI2CACPIController">
+    <brief> Implements an ACPI Intel LPSS Designware I2C Controller</brief>
+    <class name="MetaClass" ref="VoodooI2CACPIController::MetaClass#VoodooI2CACPIController::MetaClass" />
+  </class>
+  <class name="VoodooI2CACPICRSParser" ref="VoodooI2CACPICRSParser#VoodooI2CACPICRSParser" />
+  <class name="VoodooI2CController" ref="VoodooI2CController#VoodooI2CController">
+    <brief> Implements an Intel LPSS Designware I2C Controller</brief>
+    <class name="MetaClass" ref="VoodooI2CController::MetaClass#VoodooI2CController::MetaClass" />
+  </class>
+  <struct name="VoodooI2CControllerBusConfig" ref="VoodooI2CControllerBusConfig#VoodooI2CControllerBusConfig" />
+  <struct name="VoodooI2CControllerBusDevice" ref="VoodooI2CControllerBusDevice#VoodooI2CControllerBusDevice" />
+  <struct name="VoodooI2CControllerBusMessage" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+  <class name="VoodooI2CControllerDriver" ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">
+    <brief> Implements a driver for the Intel LPSS Designware I2C Controller which attaches to a <ref ref="VoodooI2CControllerNub#VoodooI2CControllerNub">VoodooI2CControllerNub</ref> object</brief>
+    <class name="MetaClass" ref="VoodooI2CControllerDriver::MetaClass#VoodooI2CControllerDriver::MetaClass" />
+  </class>
+  <class name="VoodooI2CControllerNub" ref="VoodooI2CControllerNub#VoodooI2CControllerNub">
+    <brief> Implements a controller nub to which an instance of <ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver">VoodooI2CControllerDriver</ref> may attach</brief>
+    <class name="MetaClass" ref="VoodooI2CControllerNub::MetaClass#VoodooI2CControllerNub::MetaClass" />
+  </class>
+  <struct name="VoodooI2CControllerPhysicalDevice" ref="VoodooI2CControllerPhysicalDevice#VoodooI2CControllerPhysicalDevice" />
+  <class name="VoodooI2CCSGestureEngine" ref="VoodooI2CCSGestureEngine#VoodooI2CCSGestureEngine">
+    <class name="MetaClass" ref="VoodooI2CCSGestureEngine::MetaClass#VoodooI2CCSGestureEngine::MetaClass" />
+  </class>
+  <class name="VoodooI2CDeviceNub" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub">
+    <brief> Implements a device nub to which an instance of a device driver may attach. Examples include <ref ref="VoodooI2CHIDDevice#VoodooI2CHIDDevice">VoodooI2CHIDDevice</ref>
+    </brief>
+    <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
+  </class>
+  <class name="VoodooI2CDigitiserStylus" ref="VoodooI2CDigitiserStylus#VoodooI2CDigitiserStylus">
+    <class name="MetaClass" ref="VoodooI2CDigitiserStylus::MetaClass#VoodooI2CDigitiserStylus::MetaClass" />
+  </class>
+  <class name="VoodooI2CDigitiserTransducer" ref="VoodooI2CDigitiserTransducer#VoodooI2CDigitiserTransducer">
+    <class name="MetaClass" ref="VoodooI2CDigitiserTransducer::MetaClass#VoodooI2CDigitiserTransducer::MetaClass" />
+  </class>
   <class name="VoodooI2CHIDDevice" ref="VoodooI2CHIDDevice#VoodooI2CHIDDevice">
     <brief> Implements an I2C-HID device as specified by Microsoft's protocol in the following document: https://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=2&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwig7InH--3WAhUVOsAKHTyeCIsQFggwMAE&amp;url=http%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F7%2Fd%2Fd%2F7dd44bb7-2a7a-4505-ac1c-7227d3d96d5b%2Fhid-over-i2c-protocol-spec-v1-0.docx&amp;usg=AOvVaw32joJ2ViKHgpCbccKBdj2A</brief>
     <class name="MetaClass" ref="VoodooI2CHIDDevice::MetaClass#VoodooI2CHIDDevice::MetaClass" />
   </class>
   <struct name="VoodooI2CHIDDeviceHIDDescriptor" ref="VoodooI2CHIDDeviceHIDDescriptor#VoodooI2CHIDDeviceHIDDescriptor" />
-  <union anonymous="yes" id="(anonymous::1)" name="(anonymous::1)">
+  <class name="VoodooI2CLogger" ref="VoodooI2CLogger#VoodooI2CLogger">
+    <class name="MetaClass" ref="VoodooI2CLogger::MetaClass#VoodooI2CLogger::MetaClass" />
+  </class>
+  <class name="VoodooI2CMultitouchEngine" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine">
+    <class name="MetaClass" ref="VoodooI2CMultitouchEngine::MetaClass#VoodooI2CMultitouchEngine::MetaClass" />
+  </class>
+  <struct name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
+  <class name="VoodooI2CMultitouchHIDEventDriver" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver">
+    <class name="MetaClass" ref="VoodooI2CMultitouchHIDEventDriver::MetaClass#VoodooI2CMultitouchHIDEventDriver::MetaClass" />
+  </class>
+  <class name="VoodooI2CMultitouchInterface" ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface">
+    <class name="MetaClass" ref="VoodooI2CMultitouchInterface::MetaClass#VoodooI2CMultitouchInterface::MetaClass" />
+  </class>
+  <class name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController">
+    <brief> Implements a PCI Intel LPSS Designware I2C Controller</brief>
+    <class name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />
+  </class>
+  <struct name="VoodooI2CPrecisionTouchpadFeatureReport" ref="VoodooI2CPrecisionTouchpadFeatureReport#VoodooI2CPrecisionTouchpadFeatureReport" />
+  <class name="VoodooI2CPrecisionTouchpadHIDEventDriver" ref="VoodooI2CPrecisionTouchpadHIDEventDriver#VoodooI2CPrecisionTouchpadHIDEventDriver">
+    <class name="MetaClass" ref="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass#VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass" />
+  </class>
+  <class name="VoodooI2CServices" ref="VoodooI2CServices#VoodooI2CServices">
+    <class name="MetaClass" ref="VoodooI2CServices::MetaClass#VoodooI2CServices::MetaClass" />
+  </class>
+  <enum anonymous="yes" id="(anonymous::1)" name="(anonymous::1)">
+    <enumvalue id="IRQ_TYPE_NONE" name="IRQ_TYPE_NONE" value="0" />
+    <enumvalue id="IRQ_TYPE_EDGE_RISING" name="IRQ_TYPE_EDGE_RISING" value="1" />
+    <enumvalue id="IRQ_TYPE_EDGE_FALLING" name="IRQ_TYPE_EDGE_FALLING" value="2" />
+    <enumvalue id="IRQ_TYPE_EDGE_BOTH" name="IRQ_TYPE_EDGE_BOTH" value="3" />
+    <enumvalue id="IRQ_TYPE_LEVEL_HIGH" name="IRQ_TYPE_LEVEL_HIGH" value="4" />
+    <enumvalue id="IRQ_TYPE_LEVEL_LOW" name="IRQ_TYPE_LEVEL_LOW" value="8" />
+    <enumvalue id="IRQ_TYPE_LEVEL_MASK" name="IRQ_TYPE_LEVEL_MASK" value="12" />
+    <enumvalue id="IRQ_TYPE_SENSE_MASK" name="IRQ_TYPE_SENSE_MASK" value="15" />
+    <enumvalue id="IRQ_TYPE_DEFAULT" name="IRQ_TYPE_DEFAULT" value="15" />
+    <enumvalue id="IRQ_TYPE_PROBE" name="IRQ_TYPE_PROBE" value="16" />
+    <enumvalue id="IRQ_LEVEL" name="IRQ_LEVEL" value="256" />
+    <enumvalue id="IRQ_PER_CPU" name="IRQ_PER_CPU" value="512" />
+    <enumvalue id="IRQ_NOPROBE" name="IRQ_NOPROBE" value="1024" />
+    <enumvalue id="IRQ_NOREQUEST" name="IRQ_NOREQUEST" value="2048" />
+    <enumvalue id="IRQ_NOAUTOEN" name="IRQ_NOAUTOEN" value="4096" />
+    <enumvalue id="IRQ_NO_BALANCING" name="IRQ_NO_BALANCING" value="8192" />
+    <enumvalue id="IRQ_MOVE_PCNTXT" name="IRQ_MOVE_PCNTXT" value="16384" />
+    <enumvalue id="IRQ_NESTED_THREAD" name="IRQ_NESTED_THREAD" value="32768" />
+    <enumvalue id="IRQ_NOTHREAD" name="IRQ_NOTHREAD" value="65536" />
+    <enumvalue id="IRQ_PER_CPU_DEVID" name="IRQ_PER_CPU_DEVID" value="131072" />
+    <enumvalue id="IRQ_IS_POLLED" name="IRQ_IS_POLLED" value="262144" />
+    <enumvalue id="IRQ_DISABLE_UNLAZY" name="IRQ_DISABLE_UNLAZY" value="524288" />
+  </enum>
+  <enum anonymous="yes" id="(anonymous::2)" name="(anonymous::2)">
+    <enumvalue id="kDigitiserTransducerFinger" name="kDigitiserTransducerFinger" value="0" />
+    <enumvalue id="kDigitiserTransducerStylus" name="kDigitiserTransducerStylus" value="1" />
+    <enumvalue id="kDigitiserTransducerPuck" name="kDigitiserTransducerPuck" value="2" />
+  </enum>
+  <enum anonymous="yes" id="VoodooI2CState" name="VoodooI2CState">
+    <enumvalue id="kVoodooI2CStateOff" name="kVoodooI2CStateOff" value="0" />
+    <enumvalue id="kVoodooI2CStateOn" name="kVoodooI2CStateOn" value="1" />
+  </enum>
+  <union anonymous="yes" id="(anonymous::3)" name="(anonymous::3)">
     <struct name="cmd" ref="cmd#cmd" />
     <field id="data" name="data">
       <type class="array" size="4">
@@ -17,8 +125,25 @@
       <type name="cmd" ref="cmd#cmd" />
     </field>
   </union>
-  <typedef id="VoodooI2CHIDDeviceCommand" name="VoodooI2CHIDDeviceCommand">
-    <type name="VoodooI2CHIDDeviceCommand" ref="index#(anonymous::1)" />
+  <typedef id="DigitiserTransducerButtonState" name="DigitiserTransducerButtonState">
+    <type name="TimeTrackedValue" ref="TimeTrackedValue#TimeTrackedValue" />
   </typedef>
+  <typedef id="DigitiserTransducuerType" name="DigitiserTransducuerType">
+    <type name="DigitiserTransducuerType" ref="index#(anonymous::2)" />
+  </typedef>
+  <typedef id="MultitouchReturn" name="MultitouchReturn">
+    <type name="UInt32" />
+  </typedef>
+  <typedef id="VoodooI2CHIDDeviceCommand" name="VoodooI2CHIDDeviceCommand">
+    <type name="VoodooI2CHIDDeviceCommand" ref="index#(anonymous::3)" />
+  </typedef>
+  <function id="getMatchedName" name="getMatchedName">
+    <return>
+      <type builtin="yes" name="char" qualifier=" const *" />
+    </return>
+    <argument id="getMatchedName::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </function>
   <report name="Documentation generator" ref="report" />
 </index>
