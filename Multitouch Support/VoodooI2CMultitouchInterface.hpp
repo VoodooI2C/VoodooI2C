@@ -29,7 +29,7 @@ class VoodooI2CMultitouchInterface : public IOService {
 
     void handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
     bool open(IOService* client);
-    SInt8 orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b);
+    static SInt8 orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b);
     bool start(IOService* provider);
     void stop(IOService* provider);
 

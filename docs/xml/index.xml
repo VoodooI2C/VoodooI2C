@@ -65,6 +65,7 @@
   </class>
   <struct name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
   <class name="VoodooI2CMultitouchHIDEventDriver" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver">
+    <brief> Implements an HID Event Driver for HID devices that expose a digitiser usage page.</brief>
     <class name="MetaClass" ref="VoodooI2CMultitouchHIDEventDriver::MetaClass#VoodooI2CMultitouchHIDEventDriver::MetaClass" />
   </class>
   <class name="VoodooI2CMultitouchInterface" ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface">
@@ -76,6 +77,7 @@
   </class>
   <struct name="VoodooI2CPrecisionTouchpadFeatureReport" ref="VoodooI2CPrecisionTouchpadFeatureReport#VoodooI2CPrecisionTouchpadFeatureReport" />
   <class name="VoodooI2CPrecisionTouchpadHIDEventDriver" ref="VoodooI2CPrecisionTouchpadHIDEventDriver#VoodooI2CPrecisionTouchpadHIDEventDriver">
+    <brief> Implements an HID Event Driver for Precision Touchpad devices as specified by Microsoft's protocol in the following document: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/precision-touchpad-devices</brief>
     <class name="MetaClass" ref="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass#VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass" />
   </class>
   <class name="VoodooI2CServices" ref="VoodooI2CServices#VoodooI2CServices">

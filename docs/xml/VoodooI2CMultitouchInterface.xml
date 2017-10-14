@@ -47,7 +47,7 @@
       <type name="IOService" qualifier="*" />
     </argument>
   </method>
-  <method abstract="yes" id="VoodooI2CMultitouchInterface::orderEngines" name="orderEngines">
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::orderEngines" name="orderEngines" static="yes">
     <return>
       <type name="SInt8" />
     </return>
