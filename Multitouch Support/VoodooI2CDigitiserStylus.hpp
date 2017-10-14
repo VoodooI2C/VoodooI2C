@@ -15,6 +15,8 @@
 
 #include "VoodooI2CDigitiserTransducer.hpp"
 
+/* Represents a stylus-type transducer */
+
 class VoodooI2CDigitiserStylus : public VoodooI2CDigitiserTransducer {
   OSDeclareDefaultStructors(VoodooI2CDigitiserStylus);
 

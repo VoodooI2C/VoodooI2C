@@ -53,7 +53,7 @@
     <class name="MetaClass" ref="VoodooI2CDigitiserTransducer::MetaClass#VoodooI2CDigitiserTransducer::MetaClass" />
   </class>
   <class name="VoodooI2CHIDDevice" ref="VoodooI2CHIDDevice#VoodooI2CHIDDevice">
-    <brief> Implements an I2C-HID device as specified by Microsoft's protocol in the following document: https://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=2&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwig7InH--3WAhUVOsAKHTyeCIsQFggwMAE&amp;url=http%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F7%2Fd%2Fd%2F7dd44bb7-2a7a-4505-ac1c-7227d3d96d5b%2Fhid-over-i2c-protocol-spec-v1-0.docx&amp;usg=AOvVaw32joJ2ViKHgpCbccKBdj2A</brief>
+    <brief> Implements an I2C-HID device as specified by Microsoft's protocol in the following document: http://download.microsoft.com/download/7/D/D/7DD44BB7-2A7A-4505-AC1C-7227D3D96D5B/hid-over-i2c-protocol-spec-v1-0.docx</brief>
     <class name="MetaClass" ref="VoodooI2CHIDDevice::MetaClass#VoodooI2CHIDDevice::MetaClass" />
   </class>
   <struct name="VoodooI2CHIDDeviceHIDDescriptor" ref="VoodooI2CHIDDeviceHIDDescriptor#VoodooI2CHIDDeviceHIDDescriptor" />
@@ -81,6 +81,7 @@
     <class name="MetaClass" ref="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass#VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass" />
   </class>
   <class name="VoodooI2CServices" ref="VoodooI2CServices#VoodooI2CServices">
+    <brief>Provides various services to all VoodooI2C related classes.</brief>
     <class name="MetaClass" ref="VoodooI2CServices::MetaClass#VoodooI2CServices::MetaClass" />
   </class>
   <enum anonymous="yes" id="(anonymous::1)" name="(anonymous::1)">

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <class id="VoodooI2CHIDDevice" interface="true" name="VoodooI2CHIDDevice" xmlns="http://jessevdk.github.com/cldoc/1.0">
-  <brief> Implements an I2C-HID device as specified by Microsoft's protocol in the following document: https://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=2&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwig7InH--3WAhUVOsAKHTyeCIsQFggwMAE&amp;url=http%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F7%2Fd%2Fd%2F7dd44bb7-2a7a-4505-ac1c-7227d3d96d5b%2Fhid-over-i2c-protocol-spec-v1-0.docx&amp;usg=AOvVaw32joJ2ViKHgpCbccKBdj2A</brief>
+  <brief> Implements an I2C-HID device as specified by Microsoft's protocol in the following document: http://download.microsoft.com/download/7/D/D/7DD44BB7-2A7A-4505-AC1C-7227D3D96D5B/hid-over-i2c-protocol-spec-v1-0.docx</brief>
   <doc>The members of this class are responsible for issuing I2C-HID commands via the device API as well as interacting with OS X's HID stack.
 </doc>
   <base access="public">
