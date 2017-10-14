@@ -190,7 +190,7 @@ class VoodooI2CDeviceNub : public IOService {
      * @values The buffer that the returned data is to be written into
      * @length The length of the message
      *
-     * This function is the gated version of <VoodooI2CDeviceNub::readI2C>.
+     * This function is the gated version of <readI2C>.
      *
      * @return *kIOReturnSuccess* upon a successful read, *kIOReturnBusy* if the bus is busy, *kIOReturnTimeout* if the controller driver waits too long for the controller to assert its interrupt line, *kIOReturnError* otherwise
      */
@@ -209,7 +209,7 @@ class VoodooI2CDeviceNub : public IOService {
      * @values A buffer containing the message to be written
      * @length The length of the message
      *
-     * This function is the gated version of <VoodooI2CDeviceNub::writeI2C>.
+     * This function is the gated version of <writeI2C>.
      *
      * @return *kIOReturnSuccess* upon a successful read, *kIOReturnBusy* if the bus is busy, *kIOReturnTimeout* if the controller driver waits too long for the controller to assert its interrupt line, *kIOReturnError* otherwise
      */
@@ -222,7 +222,7 @@ class VoodooI2CDeviceNub : public IOService {
      * @read_buffer The buffer that the returned data is to be written into
      * @read_length The length of the read message
      *
-     * This function is the gated version of <VoodooI2CDeviceNub::writeReadI2C>.
+     * This function is the gated version of <writeReadI2C>.
      *
      * @return *kIOReturnSuccess* upon a successful read, *kIOReturnBusy* if the bus is busy, *kIOReturnTimeout* if the controller driver waits too long for the controller to assert its interrupt line, *kIOReturnError* otherwise
      */

@@ -454,6 +454,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns\nrm -rf ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns/VoodooGPIO.kext\nmv ${BUILT_PRODUCTS_DIR}/VoodooGPIO.kext ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns\n\nrm -rf ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns/VoodooI2CServices.kext\nmv ${BUILT_PRODUCTS_DIR}/VoodooI2CServices.kext ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns";
+			showEnvVarsInLog = 0;
 		};
 		AC2603BF1F2F508700CF238F /* Linting */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -467,7 +468,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int ./${TARGET_NAME}/*";
+			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int ./";
 			showEnvVarsInLog = 0;
 		};
 		AC4EEE2D1F3B2F1D00D0A6E0 /* Generate Documentation */ = {
@@ -482,7 +483,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find .*/VoodooI2C .*/Dependencies .*/Multitouch\\ Support -name \"*.hpp\" -echo exec {} \\;| xargs cldoc generate -I. -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge Documentation --basedir .";
+			shellScript = "find .*/VoodooI2C .*/Dependencies .*/Multitouch\\ Support .*/VoodooI2C\\ Satellites -name \"*.hpp\" -echo exec {} \\;| xargs cldoc generate -I. -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge Documentation --basedir .";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
