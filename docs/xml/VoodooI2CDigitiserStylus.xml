@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <class id="VoodooI2CDigitiserStylus" interface="true" name="VoodooI2CDigitiserStylus" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief>Represents a stylus-type transducer</brief>
   <base access="public">
     <type name="VoodooI2CDigitiserTransducer" ref="VoodooI2CDigitiserTransducer#VoodooI2CDigitiserTransducer" />
+    <brief>Represents a transducer of a physical digitiser device</brief>
   </base>
   <variable id="VoodooI2CDigitiserStylus::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CDigitiserStylus::MetaClass#VoodooI2CDigitiserStylus::MetaClass" />

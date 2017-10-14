@@ -2,6 +2,7 @@
 <class id="VoodooI2CCSGestureEngine" interface="true" name="VoodooI2CCSGestureEngine" xmlns="http://jessevdk.github.com/cldoc/1.0">
   <base access="private">
     <type name="VoodooI2CMultitouchEngine" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine" />
+    <brief>Base class that all mutltitouch engines should inherit from</brief>
   </base>
   <variable id="VoodooI2CCSGestureEngine::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CCSGestureEngine::MetaClass#VoodooI2CCSGestureEngine::MetaClass" />

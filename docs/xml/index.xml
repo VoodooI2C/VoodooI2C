@@ -12,7 +12,9 @@
   <struct name="gpio_int_info" ref="gpio_int_info#gpio_int_info" />
   <struct name="gpio_io_info" ref="gpio_io_info#gpio_io_info" />
   <struct name="i2c_info" ref="i2c_info#i2c_info" />
-  <class name="TimeTrackedValue" ref="TimeTrackedValue#TimeTrackedValue" />
+  <class name="TimeTrackedValue" ref="TimeTrackedValue#TimeTrackedValue">
+    <brief>Tracks a &amp;lt;UInt16&amp;gt; value with the current and last value being accessible with their respective timestamps</brief>
+  </class>
   <struct name="ValueWithTime" ref="ValueWithTime#ValueWithTime" />
   <class name="VoodooCSGestureHIPointingWrapper" ref="VoodooCSGestureHIPointingWrapper#VoodooCSGestureHIPointingWrapper">
     <class name="MetaClass" ref="VoodooCSGestureHIPointingWrapper::MetaClass#VoodooCSGestureHIPointingWrapper::MetaClass" />
@@ -47,9 +49,11 @@
     <class name="MetaClass" ref="VoodooI2CDeviceNub::MetaClass#VoodooI2CDeviceNub::MetaClass" />
   </class>
   <class name="VoodooI2CDigitiserStylus" ref="VoodooI2CDigitiserStylus#VoodooI2CDigitiserStylus">
+    <brief>Represents a stylus-type transducer</brief>
     <class name="MetaClass" ref="VoodooI2CDigitiserStylus::MetaClass#VoodooI2CDigitiserStylus::MetaClass" />
   </class>
   <class name="VoodooI2CDigitiserTransducer" ref="VoodooI2CDigitiserTransducer#VoodooI2CDigitiserTransducer">
+    <brief>Represents a transducer of a physical digitiser device</brief>
     <class name="MetaClass" ref="VoodooI2CDigitiserTransducer::MetaClass#VoodooI2CDigitiserTransducer::MetaClass" />
   </class>
   <class name="VoodooI2CHIDDevice" ref="VoodooI2CHIDDevice#VoodooI2CHIDDevice">
@@ -61,6 +65,7 @@
     <class name="MetaClass" ref="VoodooI2CLogger::MetaClass#VoodooI2CLogger::MetaClass" />
   </class>
   <class name="VoodooI2CMultitouchEngine" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine">
+    <brief>Base class that all mutltitouch engines should inherit from</brief>
     <class name="MetaClass" ref="VoodooI2CMultitouchEngine::MetaClass#VoodooI2CMultitouchEngine::MetaClass" />
   </class>
   <struct name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
@@ -69,6 +74,8 @@
     <class name="MetaClass" ref="VoodooI2CMultitouchHIDEventDriver::MetaClass#VoodooI2CMultitouchHIDEventDriver::MetaClass" />
   </class>
   <class name="VoodooI2CMultitouchInterface" ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface">
+    <brief> Acts as a middleman between multitouch capable device drivers such as &amp;lt;VoodooI2CHIDMultitouchEventDriver&amp;gt; and a <ref ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine">VoodooI2CMultitouchEngine</ref>
+    </brief>
     <class name="MetaClass" ref="VoodooI2CMultitouchInterface::MetaClass#VoodooI2CMultitouchInterface::MetaClass" />
   </class>
   <class name="VoodooI2CPCIController" ref="VoodooI2CPCIController#VoodooI2CPCIController">

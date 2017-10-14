@@ -19,10 +19,10 @@ return values.
     </type>
     <type documented="0" name="typedef" undocumented="5">
       <undocumented id="DigitiserTransducerButtonState" name="DigitiserTransducerButtonState">
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="43" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />
       </undocumented>
       <undocumented id="DigitiserTransducuerType" name="DigitiserTransducuerType">
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="45" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
       </undocumented>
       <undocumented id="MultitouchReturn" name="MultitouchReturn">
         <location column="1" file="../Multitouch Support/MultitouchHelpers.hpp" line="20" />
@@ -36,20 +36,20 @@ return values.
     </type>
     <type documented="0" name="struct" undocumented="18">
       <undocumented id="DigitiserTransducerAziAltiOrentation" name="DigitiserTransducerAziAltiOrentation">
-        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="62" />
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="62" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="71" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="71" />
       </undocumented>
       <undocumented id="DigitiserTransducerCoordinates" name="DigitiserTransducerCoordinates">
-        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="51" />
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="51" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="60" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="60" />
       </undocumented>
       <undocumented id="DigitiserTransducerDimensions" name="DigitiserTransducerDimensions">
-        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="57" />
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="57" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="66" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="66" />
       </undocumented>
       <undocumented id="DigitiserTransducerTiltOrientation" name="DigitiserTransducerTiltOrientation">
-        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="68" />
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="68" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="77" />
+        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="77" />
       </undocumented>
       <undocumented id="ValueWithTime" name="ValueWithTime">
         <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="18" />
@@ -113,8 +113,8 @@ return values.
         <location column="1" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="12" />
       </undocumented>
       <undocumented id="(anonymous::2)" name="(anonymous::2)">
-        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="45" />
-        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="45" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
+        <location column="9" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
       </undocumented>
       <undocumented id="VoodooI2CState" name="VoodooI2CState">
         <location column="1" file="../Dependencies/helpers.hpp" line="22" />
@@ -122,13 +122,10 @@ return values.
     </type>
     <type documented="0" name="conversionfunction" undocumented="1">
       <undocumented id="TimeTrackedValue::operator bool" name="operator bool">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="28" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="30" />
       </undocumented>
     </type>
-    <type documented="10" name="class" undocumented="26">
-      <undocumented id="TimeTrackedValue" name="TimeTrackedValue">
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="23" />
-      </undocumented>
+    <type documented="15" name="class" undocumented="21">
       <undocumented id="VoodooCSGestureHIPointingWrapper" name="VoodooCSGestureHIPointingWrapper">
         <location column="1" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="16" />
       </undocumented>
@@ -160,17 +157,11 @@ return values.
       <undocumented id="VoodooI2CDeviceNub::MetaClass" name="MetaClass">
         <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
       </undocumented>
-      <undocumented id="VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="18" />
-      </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
-        <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -181,23 +172,14 @@ return values.
       <undocumented id="VoodooI2CLogger::MetaClass" name="MetaClass">
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
       </undocumented>
-      <undocumented id="VoodooI2CMultitouchEngine" name="VoodooI2CMultitouchEngine">
-        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="20" />
-        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="19" />
-      </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchHIDEventDriver::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
       </undocumented>
-      <undocumented id="VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
-        <location column="1" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="30" />
-        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="18" />
-        <location column="1" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="21" />
-      </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CPCIController::MetaClass" name="MetaClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
@@ -211,50 +193,50 @@ return values.
     </type>
     <type documented="0" name="field" undocumented="189">
       <undocumented id="DigitiserTransducerAziAltiOrentation::altitude" name="altitude">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="64" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="64" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
       </undocumented>
       <undocumented id="DigitiserTransducerAziAltiOrentation::azimuth" name="azimuth">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="63" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="63" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="72" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="72" />
       </undocumented>
       <undocumented id="DigitiserTransducerAziAltiOrentation::twist" name="twist">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="65" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="65" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
       </undocumented>
       <undocumented id="DigitiserTransducerCoordinates::x" name="x">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="61" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="61" />
       </undocumented>
       <undocumented id="DigitiserTransducerCoordinates::y" name="y">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="53" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="53" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="62" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="62" />
       </undocumented>
       <undocumented id="DigitiserTransducerCoordinates::z" name="z">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="54" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="63" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="63" />
       </undocumented>
       <undocumented id="DigitiserTransducerDimensions::height" name="height">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="59" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="59" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="68" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="68" />
       </undocumented>
       <undocumented id="DigitiserTransducerDimensions::width" name="width">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="58" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="58" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="67" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="67" />
       </undocumented>
       <undocumented id="DigitiserTransducerTiltOrientation::x_tilt" name="x_tilt">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="69" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="69" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="78" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="78" />
       </undocumented>
       <undocumented id="DigitiserTransducerTiltOrientation::y_tilt" name="y_tilt">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="70" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="70" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="79" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="79" />
       </undocumented>
       <undocumented id="TimeTrackedValue::current" name="current">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="25" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="27" />
       </undocumented>
       <undocumented id="TimeTrackedValue::last" name="last">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="26" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="28" />
       </undocumented>
       <undocumented id="ValueWithTime::timestamp" name="timestamp">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="20" />
@@ -530,79 +512,79 @@ return values.
         <location column="5" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="175" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::barrel_pressure" name="barrel_pressure">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="24" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserStylus::barrel_switch" name="barrel_switch">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="23" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserStylus::battery_strength" name="battery_strength">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="22" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserStylus::eraser" name="eraser">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="25" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserStylus::invert" name="invert">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="26" />
       </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::barrel_switch" name="barrel_switch">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="25" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::battery_strength" name="battery_strength">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="24" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::eraser" name="eraser">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserStylus::invert" name="invert">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="28" />
+      </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::azi_alti_orientation" name="azi_alti_orientation">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="96" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::collection" name="collection">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="101" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="112" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::coordinates" name="coordinates">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="79" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="90" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::dimensions" name="dimensions">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="82" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="93" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::elements" name="elements">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="102" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="113" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::event_mask" name="event_mask">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="104" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="115" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::id" name="id">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="94" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::in_range" name="in_range">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="97" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::is_valid" name="is_valid">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="98" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::last_coordinates" name="last_coordinates">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="80" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::last_dimensions" name="last_dimensions">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="83" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::logical_max_x" name="logical_max_x">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="91" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::logical_max_y" name="logical_max_y">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="92" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::physical_button" name="physical_button">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="77" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::secondary_id" name="secondary_id">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="95" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::tilt_orientation" name="tilt_orientation">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="86" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::timestamp" name="timestamp">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="105" />
       </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::tip_pressure" name="tip_pressure">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="89" />
+      <undocumented id="VoodooI2CDigitiserTransducer::in_range" name="in_range">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="108" />
       </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::tip_switch" name="tip_switch">
+      <undocumented id="VoodooI2CDigitiserTransducer::is_valid" name="is_valid">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="109" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::last_coordinates" name="last_coordinates">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="91" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::last_dimensions" name="last_dimensions">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="94" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::logical_max_x" name="logical_max_x">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="102" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::logical_max_y" name="logical_max_y">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="103" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::physical_button" name="physical_button">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="88" />
       </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::type" name="type">
+      <undocumented id="VoodooI2CDigitiserTransducer::secondary_id" name="secondary_id">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="106" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::tilt_orientation" name="tilt_orientation">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="97" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::timestamp" name="timestamp">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="116" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::tip_pressure" name="tip_pressure">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="100" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::tip_switch" name="tip_switch">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="99" />
+      </undocumented>
+      <undocumented id="VoodooI2CDigitiserTransducer::type" name="type">
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="110" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::acpi_device" name="acpi_device">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="220" />
@@ -700,7 +682,7 @@ return values.
         <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::interface" name="interface">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="30" />
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="62" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEvent::contact_count" name="contact_count">
         <location column="5" file="../Multitouch Support/MultitouchHelpers.hpp" line="16" />
@@ -741,19 +723,19 @@ return values.
         <location column="9" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="51" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::engines" name="engines">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="38" />
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="78" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::logical_max_x" name="logical_max_x">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="25" />
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="31" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::logical_max_y" name="logical_max_y">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="26" />
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="32" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::physical_max_x" name="physical_max_x">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="27" />
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="33" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::physical_max_y" name="physical_max_y">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
+        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="34" />
       </undocumented>
       <undocumented id="VoodooI2CPrecisionTouchpadFeatureReport::reserved" name="reserved">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CPrecisionTouchpadHIDEventDriver.hpp" line="27" />
@@ -915,22 +897,22 @@ return values.
         <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::MetaClass::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::MetaClass::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -951,13 +933,13 @@ return values.
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::MetaClass::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::VoodooI2CMultitouchEngine" name="VoodooI2CMultitouchEngine">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::VoodooI2CMultitouchEngine" name="VoodooI2CMultitouchEngine">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchHIDEventDriver::MetaClass::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
@@ -969,13 +951,13 @@ return values.
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::MetaClass::MetaClass" name="MetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CPCIController::MetaClass::MetaClass" name="MetaClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
@@ -1070,22 +1052,22 @@ return values.
         <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::gMetaClass" name="gMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::metaClass" name="metaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::superClass" name="superClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::gMetaClass" name="gMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::metaClass" name="metaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::superClass" name="superClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::gMetaClass" name="gMetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -1109,13 +1091,13 @@ return values.
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::gMetaClass" name="gMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::metaClass" name="metaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::superClass" name="superClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchHIDEventDriver::gMetaClass" name="gMetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
@@ -1127,13 +1109,13 @@ return values.
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::gMetaClass" name="gMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::metaClass" name="metaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::superClass" name="superClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CPCIController::gMetaClass" name="gMetaClass">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
@@ -1189,10 +1171,10 @@ return values.
         <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::~VoodooI2CDigitiserStylus" name="~VoodooI2CDigitiserStylus">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::~VoodooI2CDigitiserTransducer" name="~VoodooI2CDigitiserTransducer">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::~VoodooI2CHIDDevice" name="~VoodooI2CHIDDevice">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -1201,13 +1183,13 @@ return values.
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::~VoodooI2CMultitouchEngine" name="~VoodooI2CMultitouchEngine">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchHIDEventDriver::~VoodooI2CMultitouchHIDEventDriver" name="~VoodooI2CMultitouchHIDEventDriver">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::~VoodooI2CMultitouchInterface" name="~VoodooI2CMultitouchInterface">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CPCIController::~VoodooI2CPCIController" name="~VoodooI2CPCIController">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
@@ -1219,13 +1201,7 @@ return values.
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
       </undocumented>
     </type>
-    <type documented="118" name="method" undocumented="84">
-      <undocumented id="TimeTrackedValue::update" name="update">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="32" />
-      </undocumented>
-      <undocumented id="TimeTrackedValue::value" name="value">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="38" />
-      </undocumented>
+    <type documented="130" name="method" undocumented="72">
       <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::alloc" name="alloc">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1374,25 +1350,22 @@ return values.
         <location column="3" file="VoodooI2C/VoodooI2CDevice/VoodooI2CDeviceNub.hpp" line="29" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::MetaClass::alloc" name="alloc">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserStylus::getMetaClass" name="getMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="19" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserStylus.hpp" line="21" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::MetaClass::alloc" name="alloc">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::free" name="free">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="107" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="118" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::getMetaClass" name="getMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="74" />
+        <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::serialize" name="serialize">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="108" />
-      </undocumented>
-      <undocumented id="VoodooI2CDigitiserTransducer::transducer" name="transducer">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="109" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="119" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass::alloc" name="alloc">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -1410,22 +1383,10 @@ return values.
         <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CLogger.hpp" line="24" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::MetaClass::alloc" name="alloc">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchEngine::getMetaClass" name="getMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="21" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchEngine::getScore" name="getScore">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="24" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchEngine::handleInterruptReport" name="handleInterruptReport">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="25" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchEngine::start" name="start">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="26" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchEngine::stop" name="stop">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="27" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="23" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchHIDEventDriver::MetaClass::alloc" name="alloc">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
@@ -1434,25 +1395,10 @@ return values.
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp" line="45" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::MetaClass::alloc" name="alloc">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CMultitouchInterface::getMetaClass" name="getMetaClass">
-        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="22" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchInterface::handleInterruptReport" name="handleInterruptReport">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="30" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchInterface::open" name="open">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="31" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchInterface::orderEngines" name="orderEngines">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="32" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchInterface::start" name="start">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="33" />
-      </undocumented>
-      <undocumented id="VoodooI2CMultitouchInterface::stop" name="stop">
-        <location column="5" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="34" />
+        <location column="3" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="28" />
       </undocumented>
       <undocumented id="VoodooI2CPCIController::MetaClass::alloc" name="alloc">
         <location column="5" file="VoodooI2C/VoodooI2CController/VoodooI2CPCIController.hpp" line="25" />
@@ -1541,16 +1487,16 @@ return values.
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp" line="20" />
       </undocumented>
       <undocumented id="kDigitiserTransducerFinger" name="kDigitiserTransducerFinger">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="46" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="46" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="55" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="55" />
       </undocumented>
       <undocumented id="kDigitiserTransducerPuck" name="kDigitiserTransducerPuck">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="48" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="48" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="57" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="57" />
       </undocumented>
       <undocumented id="kDigitiserTransducerStylus" name="kDigitiserTransducerStylus">
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="47" />
-        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="47" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="56" />
+        <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="56" />
       </undocumented>
       <undocumented id="kVoodooI2CStateOff" name="kVoodooI2CStateOff">
         <location column="5" file="../Dependencies/helpers.hpp" line="23" />
@@ -1610,6 +1556,10 @@ return values.
       <undocumented name="abovethreshold" />
       <undocumented name="iToUse" />
     </function>
+    <function id="TimeTrackedValue::value" name="value">
+      <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="47" />
+      <undocumented-return />
+    </function>
     <function id="VoodooI2CHIDDevice::interruptOccured" name="interruptOccured">
       <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="240" />
       <undocumented name="owner" />
@@ -1647,6 +1597,23 @@ return values.
         <ref name="VoodooGPIO" />
       </doctype>
     </method>
+    <class id="VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
+      <location column="1" file="../Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp" line="30" />
+      <location column="1" file="../Multitouch Support/VoodooI2CMultitouchEngine.hpp" line="18" />
+      <location column="1" file="../Multitouch Support/VoodooI2CMultitouchInterface.hpp" line="27" />
+      <doctype name="doc">
+        <ref name="VoodooI2CMultitouchEngines" />
+      </doctype>
+      <doctype name="brief">
+        <ref name="VoodooI2CHIDMultitouchEventDriver" />
+      </doctype>
+    </class>
+    <class id="TimeTrackedValue" name="TimeTrackedValue">
+      <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="25" />
+      <doctype name="brief">
+        <ref name="UInt16" />
+      </doctype>
+    </class>
     <method id="VoodooI2CHIDDevice::handleStart" name="handleStart">
       <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="116" />
       <doctype name="doc">

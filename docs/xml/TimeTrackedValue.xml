@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <class id="TimeTrackedValue" name="TimeTrackedValue" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief>Tracks a &amp;lt;UInt16&amp;gt; value with the current and last value being accessible with their respective timestamps</brief>
   <field id="TimeTrackedValue::current" name="current">
     <type name="ValueWithTime" ref="ValueWithTime#ValueWithTime" />
   </field>
@@ -12,17 +13,21 @@
     </return>
   </conversionfunction>
   <method id="TimeTrackedValue::update" name="update">
+    <brief> Updates a timetracked value</brief>
     <return>
       <type builtin="yes" name="void" />
     </return>
     <argument id="TimeTrackedValue::update::value" name="value">
+      <doc>The new value to be set</doc>
       <type name="UInt16" />
     </argument>
     <argument id="TimeTrackedValue::update::timestamp" name="timestamp">
+      <doc>The timestamp of the new value</doc>
       <type name="AbsoluteTime" />
     </argument>
   </method>
   <method id="TimeTrackedValue::value" name="value">
+    <brief>Returns the current value</brief>
     <return>
       <type name="UInt16" />
     </return>
