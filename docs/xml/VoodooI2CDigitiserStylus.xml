@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CDigitiserStylus" interface="true" name="VoodooI2CDigitiserStylus" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="VoodooI2CDigitiserTransducer" />
+  </base>
+  <variable id="VoodooI2CDigitiserStylus::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CDigitiserStylus::MetaClass#VoodooI2CDigitiserStylus::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CDigitiserStylus::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CDigitiserStylus::MetaClass#VoodooI2CDigitiserStylus::MetaClass" />
+  <field id="VoodooI2CDigitiserStylus::battery_strength" name="battery_strength">
+    <type name="UInt16" />
+  </field>
+  <field id="VoodooI2CDigitiserStylus::barrel_switch" name="barrel_switch">
+    <type name="DigitiserTransducerButtonState" />
+  </field>
+  <field id="VoodooI2CDigitiserStylus::barrel_pressure" name="barrel_pressure">
+    <type name="TimeTrackedValue" />
+  </field>
+  <field id="VoodooI2CDigitiserStylus::eraser" name="eraser">
+    <type name="DigitiserTransducerButtonState" />
+  </field>
+  <field id="VoodooI2CDigitiserStylus::invert" name="invert">
+    <type builtin="yes" name="bool" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus" />
+  <method abstract="yes" id="VoodooI2CDigitiserStylus::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus" name="VoodooI2CDigitiserStylus">
+    <argument id="VoodooI2CDigitiserStylus::VoodooI2CDigitiserStylus::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CDigitiserStylus::~VoodooI2CDigitiserStylus" name="~VoodooI2CDigitiserStylus" virtual="yes" />
+  <variable access="private" id="VoodooI2CDigitiserStylus::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+</class>

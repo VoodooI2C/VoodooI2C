@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CCSGestureEngine" interface="true" name="VoodooI2CCSGestureEngine" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="private">
+    <type name="VoodooI2CMultitouchEngine" />
+  </base>
+  <variable id="VoodooI2CCSGestureEngine::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CCSGestureEngine::MetaClass#VoodooI2CCSGestureEngine::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CCSGestureEngine::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CCSGestureEngine::MetaClass#VoodooI2CCSGestureEngine::MetaClass" />
+  <field id="VoodooI2CCSGestureEngine::softc" name="softc">
+    <type name="csgesture_softc" />
+  </field>
+  <field id="VoodooI2CCSGestureEngine::vendorID" name="vendorID">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CCSGestureEngine::productID" name="productID">
+    <type builtin="yes" name="int" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CCSGestureEngine::VoodooI2CCSGestureEngine" name="VoodooI2CCSGestureEngine" />
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::ClearTapDrag" name="ClearTapDrag">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::ClearTapDrag::sc" name="sc">
+      <type name="csgesture_softc" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ClearTapDrag::i" name="i">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::destroy_wrapper" name="destroy_wrapper">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::handleInterruptReport" name="handleInterruptReport" virtual="yes">
+    <return>
+      <type name="MultitouchReturn" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::handleInterruptReport::event" name="event">
+      <type name="VoodooI2CMultitouchEvent" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::handleInterruptReport::timestamp" name="timestamp">
+      <type name="AbsoluteTime" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::initialize_wrapper" name="initialize_wrapper">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::initialize_wrapper::service" name="service">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::prepareToSleep" name="prepareToSleep">
+    <brief>os specific functions</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::ProcessGesture" name="ProcessGesture">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::ProcessGesture::sc" name="sc">
+      <type name="csgesture_softc" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::ProcessMove" name="ProcessMove">
+    <brief>public csgesture functions</brief>
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::ProcessMove::sc" name="sc">
+      <type name="csgesture_softc" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ProcessMove::abovethreshold" name="abovethreshold">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ProcessMove::iToUse" name="iToUse">
+      <type class="array" size="3">
+        <type builtin="yes" name="int" />
+      </type>
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::ProcessScroll" name="ProcessScroll">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::ProcessScroll::sc" name="sc">
+      <type name="csgesture_softc" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ProcessScroll::abovethreshold" name="abovethreshold">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ProcessScroll::iToUse" name="iToUse">
+      <type class="array" size="3">
+        <type builtin="yes" name="int" />
+      </type>
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe" name="ProcessThreeFingerSwipe">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe::sc" name="sc">
+      <type name="csgesture_softc" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe::abovethreshold" name="abovethreshold">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe::iToUse" name="iToUse">
+      <type class="array" size="3">
+        <type builtin="yes" name="int" />
+      </type>
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::reportDescriptorLength" name="reportDescriptorLength">
+    <return>
+      <type builtin="yes" name="int" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::start::service" name="service">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::TapToClickOrDrag" name="TapToClickOrDrag">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::TapToClickOrDrag::sc" name="sc">
+      <type name="csgesture_softc" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::TapToClickOrDrag::button" name="button">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::wakeFromSleep" name="wakeFromSleep">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::write_report_descriptor_to_buffer" name="write_report_descriptor_to_buffer">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::write_report_descriptor_to_buffer::buffer" name="buffer">
+      <type name="IOMemoryDescriptor" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CCSGestureEngine::write_report_to_buffer" name="write_report_to_buffer">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::write_report_to_buffer::buffer" name="buffer">
+      <type name="IOMemoryDescriptor" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CCSGestureEngine::VoodooI2CCSGestureEngine" name="VoodooI2CCSGestureEngine">
+    <argument id="VoodooI2CCSGestureEngine::VoodooI2CCSGestureEngine::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CCSGestureEngine::~VoodooI2CCSGestureEngine" name="~VoodooI2CCSGestureEngine" virtual="yes" />
+  <variable access="private" id="VoodooI2CCSGestureEngine::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <struct access="private" anonymous="yes" id="VoodooI2CCSGestureEngine::(anonymous::1)" name="(anonymous::1)">
+    <field id="VoodooI2CCSGestureEngine::x" name="x">
+      <type name="UInt8" />
+    </field>
+    <field id="VoodooI2CCSGestureEngine::y" name="y">
+      <type name="UInt8" />
+    </field>
+    <field id="VoodooI2CCSGestureEngine::buttonMask" name="buttonMask">
+      <type name="UInt8" />
+    </field>
+  </struct>
+  <field access="private" id="VoodooI2CCSGestureEngine::_wrapper" name="_wrapper">
+    <type name="VoodooCSGestureHIDWrapper" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CCSGestureEngine::_pointingWrapper" name="_pointingWrapper">
+    <type name="VoodooCSGestureHIPointingWrapper" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CCSGestureEngine::_scrollHandler" name="_scrollHandler">
+    <type name="CSGestureScroll" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CCSGestureEngine::lastmouse" name="lastmouse">
+    <type name="struct (anonymous struct at /Volumes/OS X Data/Programming/opensource/VoodooI2C/Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp:39:5)" ref="VoodooI2CCSGestureEngine#VoodooI2CCSGestureEngine::(anonymous::1)" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CCSGestureEngine::distancesq" name="distancesq">
+    <return>
+      <type builtin="yes" name="int" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::distancesq::delta_x" name="delta_x">
+      <type builtin="yes" name="int" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::distancesq::delta_y" name="delta_y">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CCSGestureEngine::update_keyboard" name="update_keyboard">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::update_keyboard::shiftKeys" name="shiftKeys">
+      <type name="uint8_t" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::update_keyboard::keyCodes" name="keyCodes">
+      <type name="uint8_t" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CCSGestureEngine::update_relative_mouse" name="update_relative_mouse">
+    <brief>os callbacks</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CCSGestureEngine::update_relative_mouse::button" name="button">
+      <type builtin="yes" name="char" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::update_relative_mouse::x" name="x">
+      <type builtin="yes" name="char" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::update_relative_mouse::y" name="y">
+      <type builtin="yes" name="char" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::update_relative_mouse::wheelPosition" name="wheelPosition">
+      <type builtin="yes" name="char" />
+    </argument>
+    <argument id="VoodooI2CCSGestureEngine::update_relative_mouse::wheelHPosition" name="wheelHPosition">
+      <type builtin="yes" name="char" />
+    </argument>
+  </method>
+</class>

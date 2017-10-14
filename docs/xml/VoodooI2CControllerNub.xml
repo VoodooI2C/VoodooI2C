@@ -93,8 +93,7 @@ otherwise</doc>
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::getInterruptType" name="getInterruptType" virtual="yes">
-    <brief> Passes to <ref ref="VoodooI2CController#VoodooI2CController::readRegister">VoodooI2CController::readRegister</ref>
-    </brief>
+    <brief> Passes to &amp;lt;VoodooI2CController::readRegister&amp;gt;</brief>
     <return>
       <doc>The value of the register</doc>
       <type name="IOReturn" />
@@ -174,8 +173,7 @@ its driver. This includes instantiating &amp;lt;work\_loop&amp;gt;, &amp;lt;inte
     </argument>
   </method>
   <method abstract="yes" id="VoodooI2CControllerNub::writeRegister" name="writeRegister">
-    <brief> Passes to <ref ref="VoodooI2CController#VoodooI2CController::writeRegister">VoodooI2CController::writeRegister</ref>
-    </brief>
+    <brief> Passes to &amp;lt;VoodooI2CController::writeRegister&amp;gt;</brief>
     <return>
       <doc>The value of the register</doc>
       <type builtin="yes" name="void" />

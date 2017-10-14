@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CMultitouchInterface" interface="true" name="VoodooI2CMultitouchInterface" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CMultitouchInterface::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CMultitouchInterface::MetaClass#VoodooI2CMultitouchInterface::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CMultitouchInterface::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CMultitouchInterface::MetaClass#VoodooI2CMultitouchInterface::MetaClass" />
+  <field id="VoodooI2CMultitouchInterface::logical_max_x" name="logical_max_x">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CMultitouchInterface::logical_max_y" name="logical_max_y">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CMultitouchInterface::physical_max_x" name="physical_max_x">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CMultitouchInterface::physical_max_y" name="physical_max_y">
+    <type name="UInt32" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface" />
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::handleInterruptReport" name="handleInterruptReport">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::handleInterruptReport::event" name="event">
+      <type name="VoodooI2CMultitouchEvent" />
+    </argument>
+    <argument id="VoodooI2CMultitouchInterface::handleInterruptReport::timestamp" name="timestamp">
+      <type name="AbsoluteTime" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::open" name="open">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::open::client" name="client">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::orderEngines" name="orderEngines">
+    <return>
+      <type name="SInt8" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::orderEngines::a" name="a">
+      <type name="VoodooI2CMultitouchEngine" qualifier="*" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine" />
+    </argument>
+    <argument id="VoodooI2CMultitouchInterface::orderEngines::b" name="b">
+      <type name="VoodooI2CMultitouchEngine" qualifier="*" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::stop" name="stop" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::stop::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
+    <argument id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CMultitouchInterface::~VoodooI2CMultitouchInterface" name="~VoodooI2CMultitouchInterface" virtual="yes" />
+  <variable access="private" id="VoodooI2CMultitouchInterface::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CMultitouchInterface::engines" name="engines">
+    <type name="OSOrderedSet" qualifier="*" />
+  </field>
+</class>

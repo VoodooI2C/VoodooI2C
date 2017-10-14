@@ -4,8 +4,7 @@
   <doc>The members of this class are responsible for low-level interfacing with the physical PCI hardware.
 </doc>
   <base access="public">
-    <type name="VoodooI2CController" ref="VoodooI2CController#VoodooI2CController" />
-    <brief> Implements an Intel LPSS Designware I2C Controller</brief>
+    <type name="VoodooI2CController" />
   </base>
   <variable id="VoodooI2CPCIController::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />
@@ -15,11 +14,10 @@
   </variable>
   <class name="MetaClass" ref="VoodooI2CPCIController::MetaClass#VoodooI2CPCIController::MetaClass" />
   <constructor abstract="yes" id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController" />
-  <method abstract="yes" id="VoodooI2CPCIController::getMetaClass" name="getMetaClass" override="yes" virtual="yes">
+  <method abstract="yes" id="VoodooI2CPCIController::getMetaClass" name="getMetaClass" virtual="yes">
     <return>
       <type name="OSMetaClass" qualifier=" const *" />
     </return>
-    <override name="VoodooI2CController::getMetaClass" ref="VoodooI2CController#VoodooI2CController::getMetaClass" />
   </method>
   <constructor abstract="yes" access="protected" id="VoodooI2CPCIController::VoodooI2CPCIController" name="VoodooI2CPCIController">
     <argument id="VoodooI2CPCIController::VoodooI2CPCIController::" name="">
@@ -42,7 +40,7 @@ enforcing PCI power state D0. It then enables the PCI bus master and the memory 
   <method abstract="yes" access="private" id="VoodooI2CPCIController::getACPIDevice" name="getACPIDevice">
     <brief> Finds the ACPI device associated to the PCI provider</brief>
     <doc>Despite a controller being PCI enumerated, some PCs will sill provide bus configuration values (used in
-<ref ref="VoodooI2CControllerDriver#VoodooI2CControllerDriver::getBusConfig">VoodooI2CControllerDriver::getBusConfig</ref>) in the ACPI tables in an ACPI device associated to the controller.
+&amp;lt;VoodooI2CControllerDriver::getBusConfig&amp;gt;) in the ACPI tables in an ACPI device associated to the controller.
 This function traverses the IORegistry plane to seek out such an ACPI device.
 
 </doc>
@@ -51,26 +49,17 @@ This function traverses the IORegistry plane to seek out such an ACPI device.
       <type name="IOReturn" />
     </return>
   </method>
-  <method abstract="yes" access="private" id="VoodooI2CPCIController::setPowerState" name="setPowerState" override="yes" virtual="yes">
-    <brief> Sets the physical power state of the controller</brief>
-    <doc>This function is called by the operating system's power management services
-to instruct the controller to enter a certain power state.
-
-</doc>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::setPowerState" name="setPowerState" virtual="yes">
+    <brief>@inherit</brief>
     <return>
-      <doc>*kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise</doc>
       <type name="IOReturn" />
     </return>
     <argument id="VoodooI2CPCIController::setPowerState::whichState" name="whichState">
-      <doc>The power state the device is expected to enter represented by either
- *kIOPMPowerOn* or *kIOPMPowerOff*</doc>
       <type builtin="yes" name="unsigned long" />
     </argument>
     <argument id="VoodooI2CPCIController::setPowerState::whatDevice" name="whatDevice">
-      <doc>The power management policy maker</doc>
       <type name="IOService" qualifier="*" />
     </argument>
-    <override name="VoodooI2CController::setPowerState" ref="VoodooI2CController#VoodooI2CController::setPowerState" />
   </method>
   <method abstract="yes" access="private" id="VoodooI2CPCIController::skylakeLPSSResetHack" name="skylakeLPSSResetHack">
     <brief> Skylake LPSS Reset Hack</brief>
@@ -81,36 +70,22 @@ what provider type (ACPI vs PCI) the controller has.
       <type builtin="yes" name="void" />
     </return>
   </method>
-  <method abstract="yes" access="private" id="VoodooI2CPCIController::start" name="start" override="yes" virtual="yes">
-    <brief> Starts the physical controller</brief>
-    <doc>This function is called after <ref ref="VoodooI2CController#VoodooI2CController::probe">VoodooI2CController::probe</ref> and is responsible for allocating the resources
-needed by the physical controller. This includes initialising system power management
-and calling <ref ref="VoodooI2CController#VoodooI2CController::publishNub">VoodooI2CController::publishNub</ref>.
-
-</doc>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::start" name="start" virtual="yes">
+    <brief>@inherit</brief>
     <return>
-      <doc>*true* on successful start, *false* otherwise</doc>
       <type builtin="yes" name="bool" />
     </return>
     <argument id="VoodooI2CPCIController::start::provider" name="provider">
-      <doc>The provider which we have matched against</doc>
       <type name="IOService" qualifier="*" />
     </argument>
-    <override name="VoodooI2CController::start" ref="VoodooI2CController#VoodooI2CController::start" />
   </method>
-  <method abstract="yes" access="private" id="VoodooI2CPCIController::stop" name="stop" override="yes" virtual="yes">
-    <brief> Stops the physical controller</brief>
-    <doc>This function is called before <ref ref="VoodooI2CController#VoodooI2CController::free">VoodooI2CController::free</ref> and is responsible for deallocating the resources
-that were allocated in <ref ref="VoodooI2CPCIController#VoodooI2CPCIController::start">VoodooI2CPCIController::start</ref> and <ref ref="VoodooI2CController#VoodooI2CController::start">VoodooI2CController::start</ref>. This includes stopping system power management and
-stopping the associated controller nub.
-</doc>
+  <method abstract="yes" access="private" id="VoodooI2CPCIController::stop" name="stop" virtual="yes">
+    <brief>@inherit</brief>
     <return>
       <type builtin="yes" name="void" />
     </return>
     <argument id="VoodooI2CPCIController::stop::provider" name="provider">
-      <doc>The provider which we have matched against</doc>
       <type name="IOService" qualifier="*" />
     </argument>
-    <override name="VoodooI2CController::stop" ref="VoodooI2CController#VoodooI2CController::stop" />
   </method>
 </class>

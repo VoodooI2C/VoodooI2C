@@ -9,6 +9,9 @@
 #ifndef MultitouchHelpers_hpp
 #define MultitouchHelpers_hpp
 
+#include <IOKit/IOLib.h>
+#include <IOKit/IOService.h>
+
 typedef struct {
     UInt8 contact_count;
     OSArray* transducers;
