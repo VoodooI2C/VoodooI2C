@@ -9,7 +9,7 @@
 #ifndef VoodooI2CCSGestureEngine_hpp
 #define VoodooI2CCSGestureEngine_hpp
 
-#include <libkern/libkern/OSBase.h>
+#include <libkern/OSBase.h>
 
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>

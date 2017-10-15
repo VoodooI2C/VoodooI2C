@@ -51,7 +51,7 @@ bool VoodooI2CMultitouchInterface::start(IOService* provider) {
         return false;
     }
 
-    engines = OSOrderedSet::withCapacity(1, OSMemberFunctionCast(OSOrderedSet::OSOrderFunction, this, &VoodooI2CMultitouchInterface::orderEngines));
+    engines = OSOrderedSet::withCapacity(1, (OSOrderedSet::OSOrderFunction)VoodooI2CMultitouchInterface::orderEngines);
 
     setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
 

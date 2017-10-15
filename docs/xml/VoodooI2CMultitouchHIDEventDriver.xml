@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CMultitouchHIDEventDriver" interface="true" name="VoodooI2CMultitouchHIDEventDriver" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Implements an HID Event Driver for HID devices that expose a digitiser usage page.</brief>
+  <doc>The members of this class are responsible for parsing, processing and interpreting digitiser-related HID objects.
+</doc>
+  <base access="public">
+    <type name="IOHIDEventService" />
+  </base>
+  <subclass access="public" name="VoodooI2CPrecisionTouchpadHIDEventDriver" ref="VoodooI2CPrecisionTouchpadHIDEventDriver#VoodooI2CPrecisionTouchpadHIDEventDriver">
+    <brief> Implements an HID Event Driver for Precision Touchpad devices as specified by Microsoft's protocol in the following document: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/precision-touchpad-devices</brief>
+  </subclass>
+  <variable id="VoodooI2CMultitouchHIDEventDriver::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CMultitouchHIDEventDriver::MetaClass#VoodooI2CMultitouchHIDEventDriver::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CMultitouchHIDEventDriver::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <struct anonymous="yes" id="VoodooI2CMultitouchHIDEventDriver::(anonymous::1)" name="(anonymous::1)">
+    <field id="VoodooI2CMultitouchHIDEventDriver::transducers" name="transducers">
+      <type name="OSArray" qualifier="*" />
+    </field>
+    <field id="VoodooI2CMultitouchHIDEventDriver::native" name="native">
+      <type builtin="yes" name="bool" />
+    </field>
+  </struct>
+  <class name="MetaClass" ref="VoodooI2CMultitouchHIDEventDriver::MetaClass#VoodooI2CMultitouchHIDEventDriver::MetaClass" />
+  <field id="VoodooI2CMultitouchHIDEventDriver::input_mode_element" name="input_mode_element">
+    <type name="IOHIDElement" qualifier="*" />
+  </field>
+  <field id="VoodooI2CMultitouchHIDEventDriver::contact_count_element" name="contact_count_element">
+    <type name="IOHIDElement" qualifier="*" />
+  </field>
+  <field id="VoodooI2CMultitouchHIDEventDriver::digitiser" name="digitiser">
+    <type name="struct (anonymous struct at /Volumes/OS X Data/Programming/opensource/VoodooI2C/VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp:50:5)" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::(anonymous::1)" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::VoodooI2CMultitouchHIDEventDriver" name="VoodooI2CMultitouchHIDEventDriver" />
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::calibrateJustifiedPreferredStateElement" name="calibrateJustifiedPreferredStateElement">
+    <brief> Calibrates an HID element</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::calibrateJustifiedPreferredStateElement::element" name="element">
+      <doc>The element to be calibrated</doc>
+      <type name="IOHIDElement" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::calibrateJustifiedPreferredStateElement::removalPercentage" name="removalPercentage">
+      <doc>The percentage by which the element is calibrated</doc>
+      <type name="SInt32" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::didTerminate" name="didTerminate" virtual="yes">
+    <brief> Notification that a provider has been terminated, sent after recursing up the stack, in leaf-to-root order.</brief>
+    <return>
+      <doc>*true*</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::didTerminate::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::didTerminate::options" name="options">
+      <doc>The terminated provider of this object.</doc>
+      <type name="IOOptionBits" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::didTerminate::defer" name="defer">
+      <doc>If there is pending I/O that requires this object to persist, and the provider is not opened by this object set defer to true and call the IOService::didTerminate() implementation when the I/O completes. Otherwise, leave defer set to its default value of false.</doc>
+      <type builtin="yes" name="bool" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerReport" name="handleDigitizerReport">
+    <brief> Called during the interrupt routine to interate over transducers</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerReport::timestamp" name="timestamp">
+      <doc>The timestamp of the interrupt report</doc>
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerReport::report_id" name="report_id">
+      <doc>The report ID of the interrupt report</doc>
+      <type name="UInt32" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerTransducerReport" name="handleDigitizerTransducerReport">
+    <brief> Called during the interrupt routine to set transducer values</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerTransducerReport::transducer" name="transducer">
+      <doc>The transducer to be updated</doc>
+      <type name="VoodooI2CDigitiserTransducer" qualifier="*" ref="VoodooI2CDigitiserTransducer#VoodooI2CDigitiserTransducer" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerTransducerReport::timestamp" name="timestamp">
+      <doc>The timestamp of the interrupt report</doc>
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleDigitizerTransducerReport::report_id" name="report_id">
+      <doc>The report ID of the interrupt report</doc>
+      <type name="UInt32" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport" name="handleInterruptReport" virtual="yes">
+    <brief> Called during the interrupt routine to handle an interrupt report</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport::timestamp" name="timestamp">
+      <doc>The timestamp of the interrupt report</doc>
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport::report" name="report">
+      <doc>A buffer containing the report data</doc>
+      <type name="IOMemoryDescriptor" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport::report_type" name="report_type">
+      <doc>The type of HID report</doc>
+      <type name="IOHIDReportType" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport::report_id" name="report_id">
+      <doc>The report ID of the interrupt report</doc>
+      <type name="UInt32" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::handleStart" name="handleStart" virtual="yes">
+    <brief> Called during the start routine to set up the HID Event Driver</brief>
+    <doc>This function is reponsible for opening a client connection with the &amp;lt;IOHIDInterface&amp;gt; provider and for publishing
+a multitouch interface into the IOService plane.
+
+</doc>
+    <return>
+      <doc>*true* on successful start, *false* otherwise</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleStart::provider" name="provider">
+      <doc>The &amp;lt;IOHIDInterface&amp;gt; object which we have matched against.</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::handleStop" name="handleStop" virtual="yes">
+    <brief> Called during the stop routine to terminate the HID Event Driver</brief>
+    <doc>This function is reponsible for releasing the resources allocated in <ref ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::start">VoodooI2CMultitouchHIDEventDriver::start</ref>
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::handleStop::provider" name="provider">
+      <doc>The &amp;lt;IOHIDInterface&amp;gt; object which we have matched against.</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerElement" name="parseDigitizerElement">
+    <brief> Parses a digitiser usage page element</brief>
+    <doc>This function is reponsible for examining the child elements of a digitser elements to determine the
+capabilities of the digitiser.
+
+</doc>
+    <return>
+      <doc>*kIOReturnSuccess* on successful parse, *kIOReturnNotFound* if the digitizer element is not supported</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerElement::element" name="element">
+      <doc>The element to parse</doc>
+      <type name="IOHIDElement" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerTransducerElement" name="parseDigitizerTransducerElement">
+    <brief> Parses a digitiser transducer element</brief>
+    <doc>This function is reponsible for examining the transducers of a digitiser to determine the capabilities of the transducer.
+
+</doc>
+    <return>
+      <doc>*kIOReturnSuccess* on successful parse, *kIOReturnDeviceError*, *kIOReturnError* or *kIOReturnNoDevice* if the transducer element is not supported</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerTransducerElement::element" name="element">
+      <doc>The element to parse</doc>
+      <type name="IOHIDElement" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::parseDigitizerTransducerElement::parent" name="parent">
+      <doc>The parent digitiser</doc>
+      <type name="IOHIDElement" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::parseElements" name="parseElements">
+    <brief> Parses all matched elements</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on successful parse, *kIOReturnNotFound* if the matched elements are not supported, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::processDigitizerElements" name="processDigitizerElements">
+    <brief> Postprocessing of digitizer elements</brief>
+    <doc>This function is mostly copied from Apple's own HID Event Driver code. It is responsible for cleaning up malformed report descriptors as well as setting some miscellaneous properties.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::publishMultitouchInterface" name="publishMultitouchInterface">
+    <brief> Publishes a <ref ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface">VoodooI2CMultitouchInterface</ref> into the IOService plane</brief>
+    <return>
+      <doc>*kIOReturnSuccess* on successful publish, *kIOReturnError* otherwise.</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::setButtonState" name="setButtonState" static="yes">
+    <brief> Sets a button state to the given value</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::setButtonState::state" name="state">
+      <doc>The button state to be set</doc>
+      <type name="DigitiserTransducerButtonState" qualifier="*" ref="index#DigitiserTransducerButtonState" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::setButtonState::bit" name="bit">
+      <doc>The bit in which to write the value</doc>
+      <type name="UInt32" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::setButtonState::value" name="value">
+      <doc>The value to be written</doc>
+      <type name="UInt32" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::setButtonState::timestamp" name="timestamp">
+      <doc>The timestamp pertaining to the value</doc>
+      <type name="AbsoluteTime" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::setDigitizerProperties" name="setDigitizerProperties">
+    <brief> Publishes some miscellaneous properties to the IOService plane</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::setPowerState" name="setPowerState" virtual="yes">
+    <brief> Called by the OS in order to notify the driver that the device should change power state</brief>
+    <doc>This function exists to be overriden by inherited classes should they need it.
+
+</doc>
+    <return>
+      <doc>*kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::setPowerState::whichState" name="whichState">
+      <doc>The power state the device is expected to enter represented by either
+ *kIOPMPowerOn* or *kIOPMPowerOff*</doc>
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::setPowerState::whatDevice" name="whatDevice">
+      <doc>The power management policy maker</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::start" name="start" virtual="yes">
+    <brief> Implemented to set a certain property</brief>
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchHIDEventDriver::start::provider" name="provider">
+      <doc>The &amp;lt;IOHIDInterface&amp;gt; object which we have matched against.</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <field access="protected" id="VoodooI2CMultitouchHIDEventDriver::awake" name="awake">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field access="protected" id="VoodooI2CMultitouchHIDEventDriver::hid_interface" name="hid_interface">
+    <type name="IOHIDInterface" qualifier="*" />
+  </field>
+  <constructor abstract="yes" access="protected" id="VoodooI2CMultitouchHIDEventDriver::VoodooI2CMultitouchHIDEventDriver" name="VoodooI2CMultitouchHIDEventDriver">
+    <argument id="VoodooI2CMultitouchHIDEventDriver::VoodooI2CMultitouchHIDEventDriver::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CMultitouchHIDEventDriver::~VoodooI2CMultitouchHIDEventDriver" name="~VoodooI2CMultitouchHIDEventDriver" virtual="yes" />
+  <variable access="private" id="VoodooI2CMultitouchHIDEventDriver::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CMultitouchHIDEventDriver::absolute_axis_removal_percentage" name="absolute_axis_removal_percentage">
+    <type name="SInt32" />
+  </field>
+  <field access="private" id="VoodooI2CMultitouchHIDEventDriver::multitouch_interface" name="multitouch_interface">
+    <type name="VoodooI2CMultitouchInterface" qualifier="*" ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface" />
+  </field>
+  <field access="private" id="VoodooI2CMultitouchHIDEventDriver::supported_elements" name="supported_elements">
+    <type name="OSArray" qualifier="*" />
+  </field>
+</class>
