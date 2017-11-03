@@ -81,17 +81,6 @@
 			<key>IOProviderClass</key>
 			<string>VoodooI2CMultitouchInterface</string>
 		</dict>
-		<key>UPDD Multitouch Engine</key>
-		<dict>
-			<key>IOClass</key>
-			<string>VoodooI2CUPDDEngine</string>
-			<key>CFBundleIdentifier</key>
-			<string>com.alexandred.VoodooI2C</string>
-			<key>IOMatchCategory</key>
-			<string>VoodooI2CUPDDEngine</string>
-			<key>IOProviderClass</key>
-			<string>VoodooI2CMultitouchInterface</string>
-		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
