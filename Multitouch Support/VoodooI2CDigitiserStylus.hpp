@@ -26,6 +26,8 @@ class VoodooI2CDigitiserStylus : public VoodooI2CDigitiserTransducer {
     TimeTrackedValue barrel_pressure;
     DigitiserTransducerButtonState eraser;
     bool invert;
+    
+    VoodooI2CDigitiserStylus* stylus(DigitiserTransducuerType transducer_type, IOHIDElement* digitizer_collection);
 
  protected:
  private:

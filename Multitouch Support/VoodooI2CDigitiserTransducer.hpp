@@ -20,8 +20,6 @@ struct ValueWithTime {
     AbsoluteTime timestamp = 0;
 };
 
-/* Tracks a <UInt16> value with the current and last value being accessible with their respective timestamps */
-
 class TimeTrackedValue {
 public:
     ValueWithTime current;
@@ -31,18 +29,11 @@ public:
         return (bool)current.value;
     }
 
-    /* Updates a timetracked value
-     * @value The new value to be set
-     * @timestamp The timestamp of the new value
-     */
-
     void update(UInt16 value, AbsoluteTime timestamp) {
         last = current;
         current.value = value;
         current.timestamp = timestamp;
     }
-
-    /* Returns the current value */
     
     UInt16 value() {
         return current.value;
@@ -79,8 +70,6 @@ typedef struct {
     TimeTrackedValue y_tilt;
 } DigitiserTransducerTiltOrientation;
 
-/* Represents a transducer of a physical digitiser device */
-
 class VoodooI2CDigitiserTransducer : public OSObject {
   OSDeclareDefaultStructors(VoodooI2CDigitiserTransducer);
 
@@ -101,6 +90,8 @@ class VoodooI2CDigitiserTransducer : public OSObject {
     
     SInt16 logical_max_x;
     SInt16 logical_max_y;
+    SInt16 logical_max_z;
+    SInt16 pressure_physical_max;
 
     UInt16 id;
     UInt16 secondary_id;
@@ -117,14 +108,6 @@ class VoodooI2CDigitiserTransducer : public OSObject {
 
     void           free();
     bool serialize(OSSerialize* serializer);
-
-    /* Instantiates a new transducer
-     * @transducer_type The type of transducer to be created
-     * @digitizer_collection The HID element associated to this transducer. Set to *NULL* if not in an HID context
-     *
-     * @return A pointer to an instance of <VoodooI2CDigitiserTransducer>
-     */
-
     static VoodooI2CDigitiserTransducer* transducer(DigitiserTransducuerType transducer_type, IOHIDElement* digitizer_collection);
  protected:
  private:
