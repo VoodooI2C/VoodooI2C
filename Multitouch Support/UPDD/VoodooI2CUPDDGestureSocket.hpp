@@ -14,7 +14,7 @@
 #include <sys/sysctl.h>
 #include <IOKit/IOLib.h>
 #include <libkern/OSMalloc.h>
-#include "updd_data.h"
+#include "VoodooI2CUPDDData.h"
 
 #define GESTURE_CTL_NAME "com.alexandred.VoodooI2C.GestureSocket"
     
@@ -28,19 +28,21 @@
         struct updd_data gesture;
     };
 
-// Control structure
+ /* Socket control structure variables
+  */
 static struct kern_ctl_reg control_register;
 static kern_ctl_ref control_reference = NULL; // reference to control structure
 static OSMallocTag updd_malloc_tag = NULL; // malloc tag
 static lck_grp_t* updd_lock_group = NULL; // lock group
 static lck_mtx_t* updd_lock = NULL; // concruency management
 static kern_ctl_ref current_connection = NULL; // refernce to the currently connected client
-static u_int32_t current_unit = -1; // unit number for the currently connected client
+static UInt32 current_unit = -1; // unit number for the currently connected client
 
-//  Socket functions
+ /*Socket functions
+  */
 kern_return_t destroyGestureSocket();
 kern_return_t initialiseGestureSocket();
 void sendQuit();
-bool sendInput(struct updd_data* ud);
+bool sendInput(struct updd_data* finger_data);
 
 #endif /* VoodooI2CUPDDGestureSocket_hpp */

@@ -19,7 +19,7 @@ errno_t controlConnect(kern_ctl_ref ctlref, struct sockaddr_ctl* sac, void** uni
     return KERN_SUCCESS;
 }
 
-errno_t controlDisconnect(kern_ctl_ref ctlref, u_int32_t unit, void* unitinfo) {
+errno_t controlDisconnect(kern_ctl_ref ctlref, UInt32 unit, void* unitinfo) {
     lck_mtx_lock(updd_lock);
     
     if(unit != current_unit) {
@@ -119,8 +119,8 @@ kern_return_t initialiseGestureSocket() {
     return KERN_SUCCESS;
 }
 
-bool sendInput(struct updd_data* ud) {
-    if(!ud) return false;
+bool sendInput(struct updd_data* finger_data) {
+    if(!finger_data) return false;
     
     lck_mtx_lock(updd_lock);
     
@@ -132,7 +132,7 @@ bool sendInput(struct updd_data* ud) {
     
     struct gesture_socket_cmd gesture_cmd;
     gesture_cmd.type = GESTURE_DATA;
-    memcpy(&gesture_cmd.gesture, ud, sizeof(struct updd_data));
+    memcpy(&gesture_cmd.gesture, finger_data, sizeof(struct updd_data));
     
     errno_t result = ctl_enqueuedata(current_connection, current_unit, &gesture_cmd, sizeof(struct gesture_socket_cmd), 0);
     
