@@ -149,8 +149,8 @@ void VoodooI2CCSGestureEngine::timedProcessGesture() {
     this->timer_event_source->setTimeoutMS(5);
 }
 
-bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
-    int frequmult = 10 / sc->frequency;
+bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[4]) {
+   int frequmult = 10 / sc->frequency;
     
     if (abovethreshold == 1 || sc->panningActive) {
         int i = iToUse[0];
@@ -195,7 +195,7 @@ bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethresho
     return false;
 }
 
-bool VoodooI2CCSGestureEngine::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
+bool VoodooI2CCSGestureEngine::ProcessScroll(csgesture_softc *sc, int abovethreshold, int iToUse[4]) {
     int frequmult = 10 / sc->frequency;
     
     sc->scrollx = 0;
@@ -330,8 +330,8 @@ bool VoodooI2CCSGestureEngine::ProcessScroll(csgesture_softc *sc, int abovethres
     return false;
 }
 
-bool VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
-    if (abovethreshold == 3 || abovethreshold == 4) {
+bool VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[4]) {
+    if (abovethreshold == 3) {
         if (_scrollHandler){
             _scrollHandler->softc = sc;
             _scrollHandler->stopScroll();
@@ -392,6 +392,91 @@ bool VoodooI2CCSGestureEngine::ProcessThreeFingerSwipe(csgesture_softc *sc, int 
             }
         }
         else if (sc->multitaskinggesturetick > 25) {
+            sc->multitaskingx = 0;
+            sc->multitaskingy = 0;
+            sc->multitaskinggesturetick = 0;
+            sc->multitaskingdone = false;
+        }
+        return true;
+    }
+    else {
+        sc->multitaskingx = 0;
+        sc->multitaskingy = 0;
+        sc->multitaskinggesturetick = 0;
+        sc->multitaskingdone = false;
+        return false;
+    }
+}
+
+bool VoodooI2CCSGestureEngine::ProcessFourFingerSwipe(csgesture_softc *sc, int abovethreshold, int iToUse[4]) {
+    if (abovethreshold == 4) {
+        _scrollHandler->softc = sc;
+        _scrollHandler->stopScroll();
+        
+        int i1 = iToUse[0];
+        int delta_x1 = sc->x[i1] - sc->lastx[i1];
+        int delta_y1 = sc->y[i1] - sc->lasty[i1];
+        
+        int i2 = iToUse[1];
+        int delta_x2 = sc->x[i2] - sc->lastx[i2];
+        int delta_y2 = sc->y[i2] - sc->lasty[i2];
+        
+        int i3 = iToUse[2];
+        int delta_x3 = sc->x[i3] - sc->lastx[i3];
+        int delta_y3 = sc->y[i3] - sc->lasty[i3];
+        
+        int i4 = iToUse[3];
+        int delta_x4 = sc->x[i4] - sc->lastx[i4];
+        int delta_y4 = sc->y[i4] - sc->lasty[i4];
+        
+        int avgx = (delta_x1 + delta_x2 + delta_x3 + delta_x4) / 4;
+        int avgy = (delta_y1 + delta_y2 + delta_y3 + delta_y4) / 4;
+        
+        sc->multitaskingx += avgx;
+        sc->multitaskingy += avgy;
+        sc->multitaskinggesturetick++;
+        
+        if (sc->multitaskinggesturetick > 30 && !sc->multitaskingdone) {
+            if ((abs(delta_y1) + abs(delta_y2) + abs(delta_y3) + abs(delta_y4)) > (abs(delta_x1) + abs(delta_x2) + abs(delta_x3) + abs(delta_x4))) {
+                if (abs(sc->multitaskingy) > 50) {
+                    uint8_t shiftKeys = KBD_LCONTROL_BIT;
+                    uint8_t keyCodes[KBD_KEY_CODES] = { 0, 0, 0, 0, 0, 0 };
+                    if (sc->multitaskingy < 0){
+                        shiftKeys = KBD_LCONTROL_BIT;
+                        keyCodes[0] = 0x44;
+                    }else{
+                        shiftKeys = KBD_LGUI_BIT;
+                        keyCodes[0] = 0x1A;}
+                    update_keyboard(shiftKeys, keyCodes);
+                    shiftKeys = 0;
+                    keyCodes[0] = 0x0;
+                    update_keyboard(shiftKeys, keyCodes);
+                    sc->multitaskingx = 0;
+                    sc->multitaskingy = 0;
+                    sc->multitaskingdone = true;
+                }
+            }
+            else {
+                if (abs(sc->multitaskingx) > 50) {
+                    uint8_t shiftKeys = KBD_LCONTROL_BIT;
+                    uint8_t keyCodes[KBD_KEY_CODES] = { 0, 0, 0, 0, 0, 0 };
+                    if (sc->multitaskingx > 0){
+                        shiftKeys = 0;
+                        keyCodes[0] = 0x44;
+                    } else {
+                        shiftKeys = KBD_LGUI_BIT;
+                        keyCodes[0] = 0x14;}
+                    update_keyboard(shiftKeys, keyCodes);
+                    shiftKeys = 0;
+                    keyCodes[0] = 0x0;
+                    update_keyboard(shiftKeys, keyCodes);
+                    sc->multitaskingx = 0;
+                    sc->multitaskingy = 0;
+                    sc->multitaskingdone = true;
+                }
+            }
+        }
+        else if (sc->multitaskinggesturetick > 70) {
             sc->multitaskingx = 0;
             sc->multitaskingy = 0;
             sc->multitaskinggesturetick = 0;
@@ -525,6 +610,8 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
     bool handled = false;
     bool handledByScroll = false;
     
+    if (!handled)
+        handled = ProcessFourFingerSwipe(sc, abovethreshold, iToUse);
     if (!handled)
         handled = ProcessThreeFingerSwipe(sc, abovethreshold, iToUse);
     if (!handled && !sc->buttondown && !sc->mouseDownDueToTap)
