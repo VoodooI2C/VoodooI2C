@@ -2,6 +2,7 @@
 // © 2016, CoolStar. All Rights Reserved.
 
 #include "csgesture.h"
+#include "GestureSocket.h"
 
 #define REPORTID_FEATURE        0x02
 #define REPORTID_RELATIVE_MOUSE 0x04
@@ -431,6 +432,11 @@ void CSGesture::ClearTapDrag(csgesture_softc *sc, int i) {
 }
 
 void CSGesture::ProcessGesture(csgesture_softc *sc) {
+    kern_return_t initialise_status = initialise_gesture_socket();
+    if(initialise_status == KERN_SUCCESS) {
+        IOLog("GestureSocket: Initialised the gesture socket!\n");
+    }
+    
     int frequmult = 10 / sc->frequency;
 #pragma mark reset inputs
     sc->dx = 0;
@@ -466,6 +472,16 @@ void CSGesture::ProcessGesture(csgesture_softc *sc) {
             a++;
         }
     }
+    
+    bool dataSent = false;
+    if(nfingers != 1 && !sc->buttondown) {
+        dataSent = send_input(sc);
+    }
+    
+    if(dataSent) {
+        return;
+    }
+    
     
 #pragma mark process different gestures
     bool handled = false;
