@@ -6,7 +6,7 @@
 
 struct csgesture_settings { //note not all settings were brought over from Windows as we are using Apple's settings panel
     //tap settings
-    bool tapToClickEnabled = true;
+    bool tapToClickEnabled;
     bool multiFingerTap;
     bool tapDragEnabled;
 };

@@ -135,6 +135,9 @@ private:
     void initialize_wrapper(void);
     void destroy_wrapper(void);
     
+    uint64_t timecheck;
+    
+    
 protected:
     VoodooI2C* _controller;
     
