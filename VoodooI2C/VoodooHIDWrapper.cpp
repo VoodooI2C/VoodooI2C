@@ -47,13 +47,35 @@ IOReturn VoodooHIDWrapper::newReportDescriptor(IOMemoryDescriptor **descriptor) 
 }
 
 IOReturn VoodooHIDWrapper::setReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
-    IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+    /*
+    VoodooI2CHIDDevice* provider = OSDynamicCast(VoodooI2CHIDDevice, GetOwner(this));
+    
+    //if (provider->write_feature(options & 0xFF, report_data, report->getLength())) {
+    //    return kIOReturnSuccess;
+    //}
     return kIOReturnUnsupported;
+     */
+    
+    UInt8* report_data = (UInt8*)IOMalloc(report->getLength());
+    report->readBytes(0, report_data, report->getLength());
+    
+    IOLog("Multitouch library is requesting setReport:: reportID: 0x%x, report: %d, reportType: %d\n", options & 0xFF, *report_data, reportType);
+    return kIOReturnSuccess;
 }
 
 IOReturn VoodooHIDWrapper::getReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
-    IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
+    /*
+    VoodooI2CHIDDevice* provider = OSDynamicCast(VoodooI2CHIDDevice, GetOwner(this));
+
+    if (provider->get_report(report, reportType, options & 0xFF)) {
+        return kIOReturnSuccess;
+    }
+     
+    //IOLog("VoodooI2C: %s, line %d\n", __FILE__, __LINE__);
     return kIOReturnUnsupported;
+     */
+    IOLog("Multitouch library is requesting getReport:: reportID: 0x%x, reportType: %d\n", options & 0xFF, reportType);
+    return kIOReturnSuccess;
 }
 
 IOReturn VoodooHIDWrapper::handleReport(
