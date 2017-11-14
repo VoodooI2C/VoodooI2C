@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <index xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <category name="Introduction" ref="Introduction#Introduction">
+    <brief># What is VoodooI2C?</brief>
+  </category>
   <variable id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
     <type class="array" size="2">
       <type name="IOPMPowerState" />
@@ -90,6 +93,9 @@
   <class name="VoodooI2CServices" ref="VoodooI2CServices#VoodooI2CServices">
     <brief>Provides various services to all VoodooI2C related classes.</brief>
     <class name="MetaClass" ref="VoodooI2CServices::MetaClass#VoodooI2CServices::MetaClass" />
+  </class>
+  <class name="VoodooI2CTouchscreenHIDEventDriver" ref="VoodooI2CTouchscreenHIDEventDriver#VoodooI2CTouchscreenHIDEventDriver">
+    <class name="MetaClass" ref="VoodooI2CTouchscreenHIDEventDriver::MetaClass#VoodooI2CTouchscreenHIDEventDriver::MetaClass" />
   </class>
   <enum anonymous="yes" id="(anonymous::1)" name="(anonymous::1)">
     <enumvalue id="IRQ_TYPE_NONE" name="IRQ_TYPE_NONE" value="0" />

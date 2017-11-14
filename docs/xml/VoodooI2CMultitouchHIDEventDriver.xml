@@ -9,6 +9,7 @@
   <subclass access="public" name="VoodooI2CPrecisionTouchpadHIDEventDriver" ref="VoodooI2CPrecisionTouchpadHIDEventDriver#VoodooI2CPrecisionTouchpadHIDEventDriver">
     <brief> Implements an HID Event Driver for Precision Touchpad devices as specified by Microsoft's protocol in the following document: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/precision-touchpad-devices</brief>
   </subclass>
+  <subclass access="public" name="VoodooI2CTouchscreenHIDEventDriver" ref="VoodooI2CTouchscreenHIDEventDriver#VoodooI2CTouchscreenHIDEventDriver" />
   <variable id="VoodooI2CMultitouchHIDEventDriver::gMetaClass" name="gMetaClass">
     <type name="MetaClass" ref="VoodooI2CMultitouchHIDEventDriver::MetaClass#VoodooI2CMultitouchHIDEventDriver::MetaClass" />
   </variable>

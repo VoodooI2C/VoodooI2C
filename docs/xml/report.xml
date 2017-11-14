@@ -17,6 +17,7 @@ return values.
         <location column="1" file="../Dependencies/helpers.hpp" line="20" />
       </undocumented>
     </type>
+    <type documented="1" name="category" undocumented="0" />
     <type documented="0" name="typedef" undocumented="5">
       <undocumented id="DigitiserTransducerButtonState" name="DigitiserTransducerButtonState">
         <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />
@@ -125,7 +126,7 @@ return values.
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="30" />
       </undocumented>
     </type>
-    <type documented="15" name="class" undocumented="21">
+    <type documented="15" name="class" undocumented="23">
       <undocumented id="VoodooCSGestureHIPointingWrapper" name="VoodooCSGestureHIPointingWrapper">
         <location column="1" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="16" />
       </undocumented>
@@ -190,8 +191,14 @@ return values.
       <undocumented id="VoodooI2CServices::MetaClass" name="MetaClass">
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
       </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver" name="VoodooI2CTouchscreenHIDEventDriver">
+        <location column="1" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="22" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::MetaClass" name="MetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
     </type>
-    <type documented="0" name="field" undocumented="189">
+    <type documented="0" name="field" undocumented="202">
       <undocumented id="DigitiserTransducerAziAltiOrentation::altitude" name="altitude">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
@@ -754,6 +761,45 @@ return values.
       <undocumented id="VoodooI2CServices::terminate_matcher" name="terminate_matcher">
         <location column="5" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="43" />
       </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::buttons" name="buttons">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="33" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::clicktick" name="clicktick">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="32" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::compare_input_counter" name="compare_input_counter">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="43" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::compare_input_x" name="compare_input_x">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="41" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::compare_input_y" name="compare_input_y">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="42" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::hover" name="hover">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="34" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::last_x" name="last_x">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="35" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::last_x_bounds" name="last_x_bounds">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="37" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::last_y" name="last_y">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="36" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::last_y_bounds" name="last_y_bounds">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="38" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::rightclick" name="rightclick">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="40" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::timerSource" name="timerSource">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="30" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::workLoop" name="workLoop">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="29" />
+      </undocumented>
       <undocumented id="c" name="c">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="25" />
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="25" />
@@ -829,7 +875,7 @@ return values.
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="15" />
       </undocumented>
     </type>
-    <type documented="0" name="constructor" undocumented="52">
+    <type documented="0" name="constructor" undocumented="55">
       <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::MetaClass" name="MetaClass">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -986,8 +1032,17 @@ return values.
       <undocumented id="VoodooI2CServices::VoodooI2CServices" name="VoodooI2CServices">
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
       </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::VoodooI2CTouchscreenHIDEventDriver" name="VoodooI2CTouchscreenHIDEventDriver">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::VoodooI2CTouchscreenHIDEventDriver" name="VoodooI2CTouchscreenHIDEventDriver">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
     </type>
-    <type documented="0" name="variable" undocumented="53">
+    <type documented="0" name="variable" undocumented="56">
       <undocumented id="VoodooCSGestureHIPointingWrapper::gMetaClass" name="gMetaClass">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1147,8 +1202,17 @@ return values.
       <undocumented id="VoodooI2CServices::superClass" name="superClass">
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
       </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::gMetaClass" name="gMetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::metaClass" name="metaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::superClass" name="superClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
     </type>
-    <type documented="0" name="destructor" undocumented="17">
+    <type documented="0" name="destructor" undocumented="18">
       <undocumented id="VoodooCSGestureHIPointingWrapper::~VoodooCSGestureHIPointingWrapper" name="~VoodooCSGestureHIPointingWrapper">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1200,8 +1264,11 @@ return values.
       <undocumented id="VoodooI2CServices::~VoodooI2CServices" name="~VoodooI2CServices">
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
       </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::~VoodooI2CTouchscreenHIDEventDriver" name="~VoodooI2CTouchscreenHIDEventDriver">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
     </type>
-    <type documented="130" name="method" undocumented="72">
+    <type documented="130" name="method" undocumented="79">
       <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::alloc" name="alloc">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1417,6 +1484,27 @@ return values.
       </undocumented>
       <undocumented id="VoodooI2CServices::getMetaClass" name="getMetaClass">
         <location column="3" file="../Dependencies/VoodooI2CServices/VoodooI2CServices/VoodooI2CServices.hpp" line="20" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::MetaClass::alloc" name="alloc">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::checkFingerTouch" name="checkFingerTouch">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="46" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::checkStylus" name="checkStylus">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="45" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::fingerLift" name="fingerLift">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="47" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::getMetaClass" name="getMetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::handleInterruptReport" name="handleInterruptReport">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="27" />
+      </undocumented>
+      <undocumented id="VoodooI2CTouchscreenHIDEventDriver::handleStart" name="handleStart">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="28" />
       </undocumented>
     </type>
     <type documented="0" name="enumvalue" undocumented="27">

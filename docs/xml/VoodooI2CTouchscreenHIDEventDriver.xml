@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CTouchscreenHIDEventDriver" interface="true" name="VoodooI2CTouchscreenHIDEventDriver" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="VoodooI2CMultitouchHIDEventDriver" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver" />
+    <brief> Implements an HID Event Driver for HID devices that expose a digitiser usage page.</brief>
+  </base>
+  <variable id="VoodooI2CTouchscreenHIDEventDriver::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CTouchscreenHIDEventDriver::MetaClass#VoodooI2CTouchscreenHIDEventDriver::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CTouchscreenHIDEventDriver::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CTouchscreenHIDEventDriver::MetaClass#VoodooI2CTouchscreenHIDEventDriver::MetaClass" />
+  <field id="VoodooI2CTouchscreenHIDEventDriver::workLoop" name="workLoop">
+    <type name="IOWorkLoop" qualifier="*" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::timerSource" name="timerSource">
+    <type name="IOTimerEventSource" qualifier="*" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::clicktick" name="clicktick">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::buttons" name="buttons">
+    <type name="UInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::hover" name="hover">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::last_x" name="last_x">
+    <type name="SInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::last_y" name="last_y">
+    <type name="SInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::last_x_bounds" name="last_x_bounds">
+    <type name="SInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::last_y_bounds" name="last_y_bounds">
+    <type name="SInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::rightclick" name="rightclick">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::compare_input_x" name="compare_input_x">
+    <type name="UInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::compare_input_y" name="compare_input_y">
+    <type name="UInt16" />
+  </field>
+  <field id="VoodooI2CTouchscreenHIDEventDriver::compare_input_counter" name="compare_input_counter">
+    <type builtin="yes" name="int" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::VoodooI2CTouchscreenHIDEventDriver" name="VoodooI2CTouchscreenHIDEventDriver" />
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::checkFingerTouch" name="checkFingerTouch">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::checkFingerTouch::timestamp" name="timestamp">
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::checkFingerTouch::event" name="event">
+      <type name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::checkStylus" name="checkStylus">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::checkStylus::timestamp" name="timestamp">
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::checkStylus::event" name="event">
+      <type name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::fingerLift" name="fingerLift">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::getMetaClass" name="getMetaClass" override="yes" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+    <override name="VoodooI2CMultitouchHIDEventDriver::getMetaClass" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::getMetaClass" />
+  </method>
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::handleInterruptReport" name="handleInterruptReport" override="yes" virtual="yes">
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::handleInterruptReport::timestamp" name="timestamp">
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::handleInterruptReport::report" name="report">
+      <type name="IOMemoryDescriptor" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::handleInterruptReport::report_type" name="report_type">
+      <type name="IOHIDReportType" />
+    </argument>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::handleInterruptReport::report_id" name="report_id">
+      <type name="UInt32" />
+    </argument>
+    <override name="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::handleInterruptReport" />
+  </method>
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::handleStart" name="handleStart" override="yes" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::handleStart::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CMultitouchHIDEventDriver::handleStart" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::handleStart" />
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CTouchscreenHIDEventDriver::VoodooI2CTouchscreenHIDEventDriver" name="VoodooI2CTouchscreenHIDEventDriver">
+    <argument id="VoodooI2CTouchscreenHIDEventDriver::VoodooI2CTouchscreenHIDEventDriver::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CTouchscreenHIDEventDriver::~VoodooI2CTouchscreenHIDEventDriver" name="~VoodooI2CTouchscreenHIDEventDriver" virtual="yes" />
+  <variable access="private" id="VoodooI2CTouchscreenHIDEventDriver::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+</class>

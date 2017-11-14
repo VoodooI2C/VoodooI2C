@@ -1,8 +1,7 @@
-#<cldoc:Introduction>
-
-# What is VoodooI2C?
-
-VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices. The project is split into two main components: the **core** extension and various other **satellite** extensions.
+<?xml version='1.0' encoding='utf-8'?>
+<category id="Introduction" name="Introduction" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief># What is VoodooI2C?</brief>
+  <doc>VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices. The project is split into two main components: the **core** extension and various other **satellite** extensions.
 
 ### The Core
 
@@ -51,4 +50,5 @@ We are looking for competent C++, OS X kernel, Linux kernel, I2C, HID etc develo
 
 # Donations
 
-Donations can be made via Bitcoin to the following wallet: https://live.blockcypher.com/btc/address/1EUxSExh8XCveWxVDVQqnez2o95AnG8Qhr/ .
+Donations can be made via Bitcoin to the following wallet: https://live.blockcypher.com/btc/address/1EUxSExh8XCveWxVDVQqnez2o95AnG8Qhr/ .</doc>
+</category>
