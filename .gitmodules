@@ -6,4 +6,4 @@
 	url = https://github.com/alexandred/VoodooI2CHID.git
 [submodule "VoodooI2C Satellites/VoodooI2CELAN"]
 	path = VoodooI2C Satellites/VoodooI2CELAN
-	url = git@github.com:kprinssu/VoodooI2CELAN.git
+	url = https://github.com/kprinssu/VoodooI2CELAN.git
