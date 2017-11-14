@@ -154,7 +154,7 @@ IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop() {
 }
 
 IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
-    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
+    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
 }
 
 IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {
@@ -242,7 +242,7 @@ IOReturn VoodooI2CDeviceNub::unregisterInterrupt(int source) {
 }
 
 IOReturn VoodooI2CDeviceNub::writeI2C(UInt8 *values, UInt16 length) {
-    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::writeI2CGated), values, &length);
+    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::writeI2CGated), values, &length);
 }
 
 IOReturn VoodooI2CDeviceNub::writeI2CGated(UInt8* values, UInt16* length) {
@@ -262,7 +262,7 @@ IOReturn VoodooI2CDeviceNub::writeI2CGated(UInt8* values, UInt16* length) {
 }
 
 IOReturn VoodooI2CDeviceNub::writeReadI2C(UInt8 *write_buffer, UInt16 write_length, UInt8 *read_buffer, UInt16 read_length) {
-    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::writeReadI2CGated), write_buffer, &write_length, read_buffer, &read_length);
+    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::writeReadI2CGated), write_buffer, &write_length, read_buffer, &read_length);
 }
 IOReturn VoodooI2CDeviceNub::writeReadI2CGated(UInt8* write_buffer, UInt16* write_length, UInt8* read_buffer, UInt16* read_length) {
     UInt16 read_flags = I2C_M_RD;
