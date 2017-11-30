@@ -50,8 +50,12 @@ public:
     
     /* Compiles the available finger data and sends it to the user client socket.  If the socket isn't available (ie - the user
      * software isn't running, data_sent will be false and MultitouchReturnContinue is returned to hand the event to the next
-     * available multitouch engine.  If the user client is availabe, MultitouchReturnBreak is returned to prevent other 
+     * available multitouch engine.  If the user client is availabe, MultitouchReturnBreak is returned to prevent other
      * multitouch engines from interferring.
+     *
+     * @event The current event
+     *
+     * @timestamp The timestamp of the current event being processed
      */
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
