@@ -5,6 +5,9 @@
 //  Created by blankmac on 10/31/17.
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
+//  Socket code based on kAuthOrama in Apple's Xcode samples and
+//  total-finder located here -https://github.com/binaryage/totalfinder-kext/blob/master/echelon.c
+//
 
 #ifndef VoodooI2CUPDDGestureSocket_hpp
 #define VoodooI2CUPDDGestureSocket_hpp
