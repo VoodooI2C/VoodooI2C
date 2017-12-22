@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<struct id="VoodooI2CPrecisionTouchpadFeatureReport" name="VoodooI2CPrecisionTouchpadFeatureReport" typedef="yes" xmlns="http://jessevdk.github.com/cldoc/1.0">
-  <field id="VoodooI2CPrecisionTouchpadFeatureReport::value" name="value">
-    <type name="UInt8" />
-  </field>
-  <field id="VoodooI2CPrecisionTouchpadFeatureReport::reserved" name="reserved">
-    <type name="UInt8" />
-  </field>
-</struct>

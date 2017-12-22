@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<struct id="DigitiserTransducerDimensions" name="DigitiserTransducerDimensions" typedef="yes" xmlns="http://jessevdk.github.com/cldoc/1.0">
-  <field id="DigitiserTransducerDimensions::width" name="width">
-    <type name="TimeTrackedValue" ref="TimeTrackedValue#TimeTrackedValue" />
-  </field>
-  <field id="DigitiserTransducerDimensions::height" name="height">
-    <type name="TimeTrackedValue" ref="TimeTrackedValue#TimeTrackedValue" />
-  </field>
-</struct>
