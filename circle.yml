@@ -1,6 +1,7 @@
 dependencies:
   pre:
-    - sudo pip install git+https://github.com/alexandred/cldoc.git
+    - ssh -o StrictHostKeyChecking=no -l $user $host
+    - sudo -H pip install git+https://github.com/alexandred/cldoc.git
     - git submodule init && git submodule update
     - brew update
     - brew tap tcnksm/ghr
