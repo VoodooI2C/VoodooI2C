@@ -39,14 +39,6 @@ Please check the [compatibility page](https://github.com/alexandred/VoodooI2C/wi
 
 Please visit the [documentation site](https://alexandred.github.io/VoodooI2C-Rewrite) for further information how to install and troubleshoot VoodooI2C. 
 
-## Helping out and testing
-
-We are always looking for people with computers that have I2C controllers to help ensure these drivers will work for them.
-
-The first step to setting up debugging is to open up IORegExplorer (v2.1) and search for controller ID relevant to your platform (see the **Current Status** section above). If you find something, great! Contact us on our [Gitter page](http://gitter.im/alexandred/VoodooI2C) and we'll see what kind of support your device will have.
-
-If not (and you still suspect that you have I2C devices), you may need to patch your DSDT to ensure that OS X can properly enumerate the devices. You can see the wiki for instructions on how to do this.
-
 ## License
 
 This program is protected by the GPL license. Please refer to the `LICENSE.txt` file for more information
