@@ -1,7 +1,3 @@
-#<cldoc:Introduction>
-
-&#8291;
-
 ## What is VoodooI2C?
 
 VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices. The project is split into two main components: the **core** extension and various other **satellite** extensions.
