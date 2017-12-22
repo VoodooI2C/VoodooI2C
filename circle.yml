@@ -1,6 +1,7 @@
 dependencies:
   pre:
-    - sudo -H pip install git+https://github.com/alexandred/cldoc.git
+    - pip install git+https://github.com/alexandred/cldoc.git --user
+    - sudo bash -c 'echo "~/Library/Python/2.7/bin" >> /etc/paths'
     - git submodule init && git submodule update
     - brew update
     - brew tap tcnksm/ghr
