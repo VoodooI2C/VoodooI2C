@@ -1,3 +1,5 @@
+![release](https://img.shields.io/github/release/alexandred/VoodooI2C.svg) ![circleci](https://circleci.com/gh/alexandred/VoodooI2C.svg?style=shield&circle-token=:circle-token) [![Gitter chat](https://badges.gitter.im/alexandred/VoodooI2c.png)](https://gitter.im/alexandred/VoodooI2C)
+
 ## What is VoodooI2C?
 
 VoodooI2C is a project consisting of macOS kernel extensions that add support for I2C bus devices. The project is split into two main components: the **core** extension and various other **satellite** extensions.
@@ -27,7 +29,7 @@ Note that there is sometimes an overlap between device classes. For example, som
 
 ## Releases
 
-The latest version is **v1.0.4** and can be downloaded on the [release page](https://github.com/alexandred/VoodooI2C/releases).
+The latest version is ![release](https://img.shields.io/github/release/alexandred/VoodooI2C.svg) and can be downloaded on the [release page](https://github.com/alexandred/VoodooI2C/releases).
 
 ## Compatibility
 
