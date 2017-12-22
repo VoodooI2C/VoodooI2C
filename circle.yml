@@ -16,7 +16,8 @@ test:
     - set -o pipefail &&
       xcodebuild
         -workspace "VoodooI2C.xcworkspace"
-        -scheme "VoodooI2C" 
+        -scheme "VoodooI2C"
+        -derivedDataPath build 
         clean build
 
 
@@ -24,4 +25,4 @@ deployment:
   release:
     branch: master
     commands:
-      - export VOODOOI2C_VERSION="$(cat version.txt)" && cd Build/Products/Release && zip -r "VoodooI2C ($VOODOOI2C_VERSION).zip" *.kext && zip -r "VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" *.dSYM && ghr --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION  "VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" "VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" 
+      - export VOODOOI2C_VERSION="$(cat version.txt)" && cd build/Build/Products/Release && zip -r "VoodooI2C ($VOODOOI2C_VERSION).zip" *.kext && zip -r "VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" *.dSYM && ghr --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION  "VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" "VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" 

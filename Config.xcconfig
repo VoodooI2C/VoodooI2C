@@ -1,0 +1,16 @@
+//
+//  Config.xcconfig
+//  
+//
+//  Created by Alexandre on 22/12/2017.
+//
+//
+
+// Intermediate build files go here
+PROJECT_TEMP_DIR = build/$(PROJECT_NAME).build
+
+// Build-related files for the active build configuration go here
+CONFIGURATION_BUILD_DIR = build/$CONFIGURATION
+
+// The final product executables and other build products go here
+BUILT_PRODUCTS_DIR = build/$CONFIGURATION
