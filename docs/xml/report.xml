@@ -17,7 +17,7 @@ return values.
         <location column="1" file="../Dependencies/helpers.hpp" line="20" />
       </undocumented>
     </type>
-    <type documented="1" name="category" undocumented="0" />
+    <type documented="5" name="category" undocumented="0" />
     <type documented="0" name="typedef" undocumented="5">
       <undocumented id="DigitiserTransducerButtonState" name="DigitiserTransducerButtonState">
         <location column="1" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="52" />

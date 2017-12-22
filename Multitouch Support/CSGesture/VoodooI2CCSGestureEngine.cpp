@@ -132,11 +132,16 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
                 softc.y[i] = -1;
                 softc.p[i] = -1;
             }
+        } else {
+            softc.x[i] = -1;
+            softc.y[i] = -1;
+            softc.p[i] = -1;
         }
 
         if (i == 0 && (CMP_ABSOLUTETIME(&timestamp, &transducer->physical_button.current.timestamp) == 0)) {
             softc.buttondown = transducer->physical_button & 0x1;
         }
+
     }
 
     ProcessGesture(&softc);

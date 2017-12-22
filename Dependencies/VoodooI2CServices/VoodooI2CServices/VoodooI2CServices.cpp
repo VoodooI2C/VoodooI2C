@@ -8,8 +8,6 @@
 
 #include "VoodooI2CServices.hpp"
 
-const IORegistryPlane* VoodooI2CServices::gVoodooI2CPlane = NULL;
-
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CServices, IOService);
 

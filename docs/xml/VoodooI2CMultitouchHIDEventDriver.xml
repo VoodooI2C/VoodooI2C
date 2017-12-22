@@ -32,7 +32,7 @@
     <type name="IOHIDElement" qualifier="*" />
   </field>
   <field id="VoodooI2CMultitouchHIDEventDriver::digitiser" name="digitiser">
-    <type name="struct (anonymous struct at /Volumes/OS X Data/Programming/opensource/VoodooI2C/VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp:50:5)" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::(anonymous::1)" />
+    <type name="struct (anonymous struct at /Volumes/Data/Programming/opensource/VoodooI2C/VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CMultitouchHIDEventDriver.hpp:50:5)" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::(anonymous::1)" />
   </field>
   <constructor abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::VoodooI2CMultitouchHIDEventDriver" name="VoodooI2CMultitouchHIDEventDriver" />
   <method abstract="yes" id="VoodooI2CMultitouchHIDEventDriver::calibrateJustifiedPreferredStateElement" name="calibrateJustifiedPreferredStateElement">

@@ -1,7 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <index xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <category name="GPIO Pinning" ref="GPIO Pinning#GPIO Pinning">
+    <brief>&amp;#8291;</brief>
+  </category>
+  <category name="Installation" ref="Installation#Installation">
+    <brief>&amp;#8291;</brief>
+  </category>
   <category name="Introduction" ref="Introduction#Introduction">
-    <brief># What is VoodooI2C?</brief>
+    <brief>&amp;#8291;</brief>
+  </category>
+  <category name="Satellite Kexts" ref="Satellite Kexts#Satellite Kexts">
+    <brief>&amp;#8291;</brief>
+  </category>
+  <category name="Troubleshooting" ref="Troubleshooting#Troubleshooting">
+    <brief>&amp;#8291;</brief>
   </category>
   <variable id="VoodooI2CIOPMPowerStates" name="VoodooI2CIOPMPowerStates">
     <type class="array" size="2">

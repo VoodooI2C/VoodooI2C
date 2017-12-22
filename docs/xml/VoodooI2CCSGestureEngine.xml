@@ -211,7 +211,7 @@
     <type name="CSGestureScroll" qualifier="*" />
   </field>
   <field access="private" id="VoodooI2CCSGestureEngine::lastmouse" name="lastmouse">
-    <type name="struct (anonymous struct at /Volumes/OS X Data/Programming/opensource/VoodooI2C/Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp:39:5)" ref="VoodooI2CCSGestureEngine#VoodooI2CCSGestureEngine::(anonymous::1)" />
+    <type name="struct (anonymous struct at /Volumes/Data/Programming/opensource/VoodooI2C/Multitouch Support/CSGesture/VoodooI2CCSGestureEngine.hpp:39:5)" ref="VoodooI2CCSGestureEngine#VoodooI2CCSGestureEngine::(anonymous::1)" />
   </field>
   <method abstract="yes" access="private" id="VoodooI2CCSGestureEngine::distancesq" name="distancesq">
     <return>
