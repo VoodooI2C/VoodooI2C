@@ -1,4 +1,4 @@
-![release](https://img.shields.io/github/release/alexandred/VoodooI2C.svg) ![circleci](https://circleci.com/gh/alexandred/VoodooI2C.svg?style=shield&circle-token=:circle-token) [![Gitter chat](https://badges.gitter.im/alexandred/VoodooI2c.png)](https://gitter.im/alexandred/VoodooI2C)
+![release](https://img.shields.io/github/release/alexandred/VoodooI2C.svg) ![circleci](https://circleci.com/gh/alexandred/VoodooI2C.svg?style=shield&circle-token=:circle-token) [![Gitter chat](https://img.shields.io/gitter/room/nwjs/nw.js.svg?colorB=ed1965)](https://gitter.im/alexandred/VoodooI2C)
 
 ## What is VoodooI2C?
 
