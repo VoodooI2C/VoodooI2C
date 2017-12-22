@@ -6,12 +6,13 @@ dependencies:
 
 machine:
   xcode:
-    version: "8.0"
+    version: "7.3"
 
 test:
   override:
     - set -o pipefail &&
       xcodebuild
+        -verbose 
         -workspace "VoodooI2C.xcworkspace"
         -scheme "VoodooI2C" 
         clean build
