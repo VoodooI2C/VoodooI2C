@@ -1,18 +1,19 @@
 dependencies:
   pre:
+    - brew update
     - brew tap tcnksm/ghr
     - brew install ghr
 
 machine:
   xcode:
-    version: "7.3"
+    version: "8.0"
 
 test:
   override:
     - set -o pipefail &&
       xcodebuild
-        -project "VoodooI2C.xcodeproj"
-        -target "VoodooI2C" 
+        -workspace "VoodooI2C.xcworkspace"
+        -scheme "VoodooI2C" 
         clean build
 
 

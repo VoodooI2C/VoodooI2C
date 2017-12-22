@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CELANTouchpadDriver" interface="true" name="VoodooI2CELANTouchpadDriver" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief>Main class that handles all communication between macOS, VoodooI2C, and a I2C based ELAN touchpad</brief>
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CELANTouchpadDriver::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CELANTouchpadDriver::MetaClass#VoodooI2CELANTouchpadDriver::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CELANTouchpadDriver::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CELANTouchpadDriver::MetaClass#VoodooI2CELANTouchpadDriver::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CELANTouchpadDriver::VoodooI2CELANTouchpadDriver" name="VoodooI2CELANTouchpadDriver" />
+  <method abstract="yes" id="VoodooI2CELANTouchpadDriver::free" name="free" virtual="yes">
+    <brief> Frees any allocated resources, called implicitly by the kernel</brief>
+    <doc>as the last stage of the driver being unloaded
+
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CELANTouchpadDriver::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CELANTouchpadDriver::init" name="init" virtual="yes">
+    <brief> Initialises the VoodooI2CELANTouchpadDriver object/instance (intended as IOKit driver ctor)</brief>
+    <return>
+      <doc>true if properly initialised</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::init::properties" name="properties">
+      <type name="OSDictionary" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CELANTouchpadDriver::probe" name="probe" virtual="yes">
+    <brief> Checks if an ELAN device exists on the current system</brief>
+    <return>
+      <doc>returns an instance of the current VoodooI2CELANTouchpadDriver if there is a matched ELAN device, NULL otherwise</doc>
+      <type name="VoodooI2CELANTouchpadDriver" qualifier="*" ref="VoodooI2CELANTouchpadDriver#VoodooI2CELANTouchpadDriver" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::probe::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::probe::score" name="score">
+      <type name="SInt32" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CELANTouchpadDriver::start" name="start" virtual="yes">
+    <brief> Starts the driver and initialises the ELAN device</brief>
+    <return>
+      <doc>returns true if the driver has started</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CELANTouchpadDriver::stop" name="stop" virtual="yes">
+    <brief> Stops the driver and frees any allocated resource</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::stop::device" name="device">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <field access="protected" id="VoodooI2CELANTouchpadDriver::api" name="api">
+    <type name="VoodooI2CDeviceNub" qualifier="*" ref="VoodooI2CDeviceNub#VoodooI2CDeviceNub" />
+  </field>
+  <field access="protected" id="VoodooI2CELANTouchpadDriver::acpi_device" name="acpi_device">
+    <type name="IOACPIPlatformDevice" qualifier="*" />
+  </field>
+  <constructor abstract="yes" access="protected" id="VoodooI2CELANTouchpadDriver::VoodooI2CELANTouchpadDriver" name="VoodooI2CELANTouchpadDriver">
+    <argument id="VoodooI2CELANTouchpadDriver::VoodooI2CELANTouchpadDriver::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CELANTouchpadDriver::~VoodooI2CELANTouchpadDriver" name="~VoodooI2CELANTouchpadDriver" virtual="yes" />
+  <method abstract="yes" access="protected" id="VoodooI2CELANTouchpadDriver::setPowerState" name="setPowerState" virtual="yes">
+    <return>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::setPowerState::longpowerStateOrdinal" name="longpowerStateOrdinal">
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::setPowerState::whatDevice" name="whatDevice">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <variable access="private" id="VoodooI2CELANTouchpadDriver::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::awake" name="awake">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::read_in_progress" name="read_in_progress">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::ready_for_input" name="ready_for_input">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::device_name" name="device_name">
+    <type class="array" size="10">
+      <type builtin="yes" name="char" />
+    </type>
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::elan_name" name="elan_name">
+    <type class="array" size="5">
+      <type builtin="yes" name="char" />
+    </type>
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::max_hw_resx" name="max_hw_resx">
+    <type builtin="yes" name="int" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::max_hw_resy" name="max_hw_resy">
+    <type builtin="yes" name="int" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::max_report_x" name="max_report_x">
+    <type builtin="yes" name="int" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::max_report_y" name="max_report_y">
+    <type builtin="yes" name="int" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::product_id" name="product_id">
+    <type builtin="yes" name="int" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::command_gate" name="command_gate">
+    <type name="IOCommandGate" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::interrupt_source" name="interrupt_source">
+    <type name="IOInterruptEventSource" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::mt_interface" name="mt_interface">
+    <type name="VoodooI2CMultitouchInterface" qualifier="*" ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::transducers" name="transducers">
+    <type name="OSArray" qualifier="*" />
+  </field>
+  <field access="private" id="VoodooI2CELANTouchpadDriver::workLoop" name="workLoop">
+    <type name="IOWorkLoop" qualifier="*" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::check_ASUS_firmware" name="check_ASUS_firmware">
+    <brief> Handles any interrupts that the ELAN device generates</brief>
+    <return>
+      <doc>returns true if this ELAN device is ASUS manufactured</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::check_ASUS_firmware::productId" name="productId">
+      <doc>product ID of the ELAN device</doc>
+      <type name="UInt8" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::check_ASUS_firmware::ic_type" name="ic_type">
+      <doc>IC type (provided by the device)</doc>
+      <type name="UInt8" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::handle_input_threaded" name="handle_input_threaded">
+    <brief> Handles input in a threaded manner, then</brief>
+    <doc>calls parse_ELAN_report via the command gate for synchronisation
+
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::init_device" name="init_device">
+    <brief> Sends the appropriate ELAN protocol packets to</brief>
+    <doc>initialise the device into multitouch mode
+
+</doc>
+    <return>
+      <doc>true if the device was initialised properly</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::interrupt_occurred" name="interrupt_occurred">
+    <brief> Handles any interrupts that the ELAN device generates</brief>
+    <doc>by spawning a thread that is out of the inerrupt context
+
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::interrupt_occurred::owner" name="owner">
+      <type name="OSObject" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::interrupt_occurred::src" name="src">
+      <type name="IOInterruptEventSource" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::interrupt_occurred::intCount" name="intCount">
+      <type builtin="yes" name="int" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::parse_ELAN_report" name="parse_ELAN_report">
+    <brief> Reads the ELAN report (touch data) in the I2C bus and generates a VoodooI2C multitouch event</brief>
+    <return>
+      <doc>returns a IOReturn status of the reads (usually a representation of I2C bus)</doc>
+      <type name="IOReturn" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::publish_multitouch_interface" name="publish_multitouch_interface">
+    <brief> Initialises the VoodooI2C multitouch classes</brief>
+    <return>
+      <doc>true if the VoodooI2C multitouch classes were properly initialised</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::read_ELAN_cmd" name="read_ELAN_cmd">
+    <brief> Reads a ELAN command from the I2C bus</brief>
+    <return>
+      <doc>returns a IOReturn status of the reads (usually a representation of I2C bus)</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::read_ELAN_cmd::reg" name="reg">
+      <doc>which register to read the data from</doc>
+      <type name="UInt16" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::read_ELAN_cmd::val" name="val">
+      <doc>a buffer which is large enough to hold the ELAN command data</doc>
+      <type name="UInt8" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::read_raw_16bit_data" name="read_raw_16bit_data">
+    <brief> Reads raw data from the I2C bus</brief>
+    <return>
+      <doc>returns a IOReturn status of the reads (usually a representation of I2C bus)</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::read_raw_16bit_data::reg" name="reg">
+      <doc>which 16bit register to read the data from</doc>
+      <type name="UInt16" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::read_raw_16bit_data::len" name="len">
+      <doc>the length of the @val buffer</doc>
+      <type name="size_t" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::read_raw_16bit_data::values" name="values">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::read_raw_data" name="read_raw_data">
+    <brief> Reads raw data from the I2C bus</brief>
+    <return>
+      <doc>returns a IOReturn status of the reads (usually a representation of I2C bus)</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::read_raw_data::reg" name="reg">
+      <doc>which 8bit register to read the data from</doc>
+      <type name="UInt8" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::read_raw_data::len" name="len">
+      <doc>the length of the @val buffer</doc>
+      <type name="size_t" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::read_raw_data::values" name="values">
+      <type name="UInt8" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::release_resources" name="release_resources">
+    <brief> Releases any allocated resources (called by stop)</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::reset_device" name="reset_device">
+    <brief> Releases any allocated resources</brief>
+    <return>
+      <doc>true if the ELAN device was reset succesfully</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::set_sleep_status" name="set_sleep_status">
+    <brief> Enables or disables the ELAN device for sleep</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::set_sleep_status::enable" name="enable">
+      <type builtin="yes" name="bool" />
+    </argument>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::unpublish_multitouch_interface" name="unpublish_multitouch_interface">
+    <brief> Releases any allocated VoodooI2C multitouch device</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+  <method abstract="yes" access="private" id="VoodooI2CELANTouchpadDriver::write_ELAN_cmd" name="write_ELAN_cmd">
+    <brief> Writes a ELAN command formatted I2C message</brief>
+    <return>
+      <doc>returns a IOReturn status of the reads (usually a representation of I2C bus)</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CELANTouchpadDriver::write_ELAN_cmd::reg" name="reg">
+      <doc>which register to write the data to</doc>
+      <type name="UInt16" />
+    </argument>
+    <argument id="VoodooI2CELANTouchpadDriver::write_ELAN_cmd::cmd" name="cmd">
+      <doc>the command which we want to write</doc>
+      <type name="UInt16" />
+    </argument>
+  </method>
+</class>

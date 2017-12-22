@@ -126,7 +126,7 @@ return values.
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="30" />
       </undocumented>
     </type>
-    <type documented="15" name="class" undocumented="23">
+    <type documented="16" name="class" undocumented="24">
       <undocumented id="VoodooCSGestureHIPointingWrapper" name="VoodooCSGestureHIPointingWrapper">
         <location column="1" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="16" />
       </undocumented>
@@ -164,6 +164,9 @@ return values.
       <undocumented id="VoodooI2CDigitiserTransducer::MetaClass" name="MetaClass">
         <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::MetaClass" name="MetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
@@ -198,7 +201,7 @@ return values.
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
       </undocumented>
     </type>
-    <type documented="0" name="field" undocumented="202">
+    <type documented="0" name="field" undocumented="219">
       <undocumented id="DigitiserTransducerAziAltiOrentation::altitude" name="altitude">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="73" />
@@ -593,6 +596,57 @@ return values.
       <undocumented id="VoodooI2CDigitiserTransducer::type" name="type">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="110" />
       </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::acpi_device" name="acpi_device">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="29" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::api" name="api">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="28" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::awake" name="awake">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="61" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::command_gate" name="command_gate">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="75" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::device_name" name="device_name">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="65" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::elan_name" name="elan_name">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="66" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::interrupt_source" name="interrupt_source">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="76" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::max_hw_resx" name="max_hw_resx">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="68" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::max_hw_resy" name="max_hw_resy">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="69" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::max_report_x" name="max_report_x">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="70" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::max_report_y" name="max_report_y">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="71" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::mt_interface" name="mt_interface">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="77" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::product_id" name="product_id">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="73" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::read_in_progress" name="read_in_progress">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="62" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::ready_for_input" name="ready_for_input">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="63" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::transducers" name="transducers">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="78" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::workLoop" name="workLoop">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="79" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::acpi_device" name="acpi_device">
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="220" />
       </undocumented>
@@ -875,7 +929,7 @@ return values.
         <location column="5" file="../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp" line="15" />
       </undocumented>
     </type>
-    <type documented="0" name="constructor" undocumented="55">
+    <type documented="0" name="constructor" undocumented="58">
       <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::MetaClass" name="MetaClass">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -960,6 +1014,15 @@ return values.
       <undocumented id="VoodooI2CDigitiserTransducer::VoodooI2CDigitiserTransducer" name="VoodooI2CDigitiserTransducer">
         <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
       </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::MetaClass::MetaClass" name="MetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::VoodooI2CELANTouchpadDriver" name="VoodooI2CELANTouchpadDriver">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::VoodooI2CELANTouchpadDriver" name="VoodooI2CELANTouchpadDriver">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass::MetaClass" name="MetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
       </undocumented>
@@ -1042,7 +1105,7 @@ return values.
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
       </undocumented>
     </type>
-    <type documented="0" name="variable" undocumented="56">
+    <type documented="0" name="variable" undocumented="59">
       <undocumented id="VoodooCSGestureHIPointingWrapper::gMetaClass" name="gMetaClass">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1123,6 +1186,15 @@ return values.
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::superClass" name="superClass">
         <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::gMetaClass" name="gMetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::metaClass" name="metaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::superClass" name="superClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::gMetaClass" name="gMetaClass">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -1212,7 +1284,7 @@ return values.
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
       </undocumented>
     </type>
-    <type documented="0" name="destructor" undocumented="18">
+    <type documented="0" name="destructor" undocumented="19">
       <undocumented id="VoodooCSGestureHIPointingWrapper::~VoodooCSGestureHIPointingWrapper" name="~VoodooCSGestureHIPointingWrapper">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1239,6 +1311,9 @@ return values.
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::~VoodooI2CDigitiserTransducer" name="~VoodooI2CDigitiserTransducer">
         <location column="3" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="85" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::~VoodooI2CELANTouchpadDriver" name="~VoodooI2CELANTouchpadDriver">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::~VoodooI2CHIDDevice" name="~VoodooI2CHIDDevice">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -1268,7 +1343,7 @@ return values.
         <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CTouchscreenHIDEventDriver.hpp" line="23" />
       </undocumented>
     </type>
-    <type documented="130" name="method" undocumented="79">
+    <type documented="149" name="method" undocumented="82">
       <undocumented id="VoodooCSGestureHIPointingWrapper::MetaClass::alloc" name="alloc">
         <location column="5" file="../Multitouch Support/CSGesture/VoodooCSGestureHIPointingWrapper.hpp" line="18" />
       </undocumented>
@@ -1433,6 +1508,15 @@ return values.
       </undocumented>
       <undocumented id="VoodooI2CDigitiserTransducer::serialize" name="serialize">
         <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="119" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::MetaClass::alloc" name="alloc">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::getMetaClass" name="getMetaClass">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="26" />
+      </undocumented>
+      <undocumented id="VoodooI2CELANTouchpadDriver::setPowerState" name="setPowerState">
+        <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="58" />
       </undocumented>
       <undocumented id="VoodooI2CHIDDevice::MetaClass::alloc" name="alloc">
         <location column="3" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="58" />
@@ -1647,6 +1731,43 @@ return values.
     <function id="TimeTrackedValue::value" name="value">
       <location column="5" file="../Multitouch Support/VoodooI2CDigitiserTransducer.hpp" line="47" />
       <undocumented-return />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::init" name="init">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="36" />
+      <undocumented name="properties" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::probe" name="probe">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="46" />
+      <undocumented name="score" />
+      <undocumented name="provider" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::start" name="start">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="51" />
+      <undocumented name="provider" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::stop" name="stop">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="55" />
+      <undocumented name="device" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::interrupt_occurred" name="interrupt_occurred">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="103" />
+      <undocumented name="owner" />
+      <undocumented name="src" />
+      <undocumented name="intCount" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::read_raw_16bit_data" name="read_raw_16bit_data">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="128" />
+      <undocumented name="values" />
+      <misspelled name="vaue" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::read_raw_data" name="read_raw_data">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="136" />
+      <undocumented name="values" />
+      <misspelled name="vaue" />
+    </function>
+    <function id="VoodooI2CELANTouchpadDriver::set_sleep_status" name="set_sleep_status">
+      <location column="5" file="../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN/VoodooI2CELANTouchpadDriver.hpp" line="149" />
+      <undocumented name="enable" />
     </function>
     <function id="VoodooI2CHIDDevice::interruptOccured" name="interruptOccured">
       <location column="5" file="../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID/VoodooI2CHIDDevice.hpp" line="240" />

@@ -71,6 +71,10 @@
     <brief>Represents a transducer of a physical digitiser device</brief>
     <class name="MetaClass" ref="VoodooI2CDigitiserTransducer::MetaClass#VoodooI2CDigitiserTransducer::MetaClass" />
   </class>
+  <class name="VoodooI2CELANTouchpadDriver" ref="VoodooI2CELANTouchpadDriver#VoodooI2CELANTouchpadDriver">
+    <brief>Main class that handles all communication between macOS, VoodooI2C, and a I2C based ELAN touchpad</brief>
+    <class name="MetaClass" ref="VoodooI2CELANTouchpadDriver::MetaClass#VoodooI2CELANTouchpadDriver::MetaClass" />
+  </class>
   <class name="VoodooI2CHIDDevice" ref="VoodooI2CHIDDevice#VoodooI2CHIDDevice">
     <brief> Implements an I2C-HID device as specified by Microsoft's protocol in the following document: http://download.microsoft.com/download/7/D/D/7DD44BB7-2A7A-4505-AC1C-7227D3D96D5B/hid-over-i2c-protocol-spec-v1-0.docx</brief>
     <class name="MetaClass" ref="VoodooI2CHIDDevice::MetaClass#VoodooI2CHIDDevice::MetaClass" />
