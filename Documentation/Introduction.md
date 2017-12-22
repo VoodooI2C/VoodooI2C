@@ -31,7 +31,7 @@ Note that there is sometimes an overlap between device classes. For example, som
 
 ## Releases
 
-The latest version is **v2.0.0** and can be downloaded on the [release page](https://github.com/alexandred/VoodooI2C/releases).
+The latest version is **v1.0.4** and can be downloaded on the [release page](https://github.com/alexandred/VoodooI2C/releases).
 
 ## Compatibility
 
