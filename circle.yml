@@ -4,13 +4,12 @@ dependencies:
     - echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
     - git submodule init && git submodule update
     - brew update
-    - brew install llvm --with-clang --with-python --with-lld
     - brew tap tcnksm/ghr
     - brew install ghr
 
 machine:
   xcode:
-    version: "7.3"
+    version: "8.0"
 
 test:
   override:
