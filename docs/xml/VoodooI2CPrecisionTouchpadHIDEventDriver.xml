@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CPrecisionTouchpadHIDEventDriver" interface="true" name="VoodooI2CPrecisionTouchpadHIDEventDriver" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Implements an HID Event Driver for Precision Touchpad devices as specified by Microsoft's protocol in the following document: https://docs.microsoft.com/en-us/windows-hardware/design/component-guidelines/precision-touchpad-devices</brief>
+  <doc>The members of this class are responsible for instructing a Precision Touchpad device to enter Touchpad mode.
+</doc>
+  <base access="public">
+    <type name="VoodooI2CMultitouchHIDEventDriver" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver" />
+    <brief> Implements an HID Event Driver for HID devices that expose a digitiser usage page.</brief>
+  </base>
+  <variable id="VoodooI2CPrecisionTouchpadHIDEventDriver::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass#VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CPrecisionTouchpadHIDEventDriver::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass#VoodooI2CPrecisionTouchpadHIDEventDriver::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CPrecisionTouchpadHIDEventDriver::VoodooI2CPrecisionTouchpadHIDEventDriver" name="VoodooI2CPrecisionTouchpadHIDEventDriver" />
+  <method abstract="yes" id="VoodooI2CPrecisionTouchpadHIDEventDriver::getMetaClass" name="getMetaClass" override="yes" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+    <override name="VoodooI2CMultitouchHIDEventDriver::getMetaClass" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::getMetaClass" />
+  </method>
+  <method abstract="yes" id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleInterruptReport" name="handleInterruptReport" override="yes" virtual="yes">
+    <brief> Called during the interrupt routine to handle an interrupt report</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleInterruptReport::timestamp" name="timestamp">
+      <doc>The timestamp of the interrupt report</doc>
+      <type name="AbsoluteTime" />
+    </argument>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleInterruptReport::report" name="report">
+      <doc>A buffer containing the report data</doc>
+      <type name="IOMemoryDescriptor" qualifier="*" />
+    </argument>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleInterruptReport::report_type" name="report_type">
+      <doc>The type of HID report</doc>
+      <type name="IOHIDReportType" />
+    </argument>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleInterruptReport::report_id" name="report_id">
+      <doc>The report ID of the interrupt report</doc>
+      <type name="UInt32" />
+    </argument>
+    <override name="VoodooI2CMultitouchHIDEventDriver::handleInterruptReport" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::handleInterruptReport" />
+  </method>
+  <method abstract="yes" id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleStart" name="handleStart" override="yes" virtual="yes">
+    <brief> Called during the start routine to set up the HID Event Driver</brief>
+    <doc>This function is reponsible for opening a client connection with the &amp;lt;IOHIDInterface&amp;gt; provider and for publishing
+a multitouch interface into the IOService plane.
+
+</doc>
+    <return>
+      <doc>*true* on successful start, *false* otherwise</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::handleStart::provider" name="provider">
+      <doc>The &amp;lt;IOHIDInterface&amp;gt; object which we have matched against.</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CMultitouchHIDEventDriver::handleStart" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::handleStart" />
+  </method>
+  <method abstract="yes" id="VoodooI2CPrecisionTouchpadHIDEventDriver::setPowerState" name="setPowerState" override="yes" virtual="yes">
+    <brief> Called by the OS in order to notify the driver that the device should change power state</brief>
+    <doc>This function exists to be overriden by inherited classes should they need it.
+
+</doc>
+    <return>
+      <doc>*kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise</doc>
+      <type name="IOReturn" />
+    </return>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::setPowerState::whichState" name="whichState">
+      <doc>The power state the device is expected to enter represented by either
+ *kIOPMPowerOn* or *kIOPMPowerOff*</doc>
+      <type builtin="yes" name="unsigned long" />
+    </argument>
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::setPowerState::whatDevice" name="whatDevice">
+      <doc>The power management policy maker</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+    <override name="VoodooI2CMultitouchHIDEventDriver::setPowerState" ref="VoodooI2CMultitouchHIDEventDriver#VoodooI2CMultitouchHIDEventDriver::setPowerState" />
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CPrecisionTouchpadHIDEventDriver::VoodooI2CPrecisionTouchpadHIDEventDriver" name="VoodooI2CPrecisionTouchpadHIDEventDriver">
+    <argument id="VoodooI2CPrecisionTouchpadHIDEventDriver::VoodooI2CPrecisionTouchpadHIDEventDriver::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CPrecisionTouchpadHIDEventDriver::~VoodooI2CPrecisionTouchpadHIDEventDriver" name="~VoodooI2CPrecisionTouchpadHIDEventDriver" virtual="yes" />
+  <variable access="private" id="VoodooI2CPrecisionTouchpadHIDEventDriver::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CPrecisionTouchpadHIDEventDriver::ready" name="ready">
+    <type builtin="yes" name="bool" />
+  </field>
+  <method abstract="yes" access="private" id="VoodooI2CPrecisionTouchpadHIDEventDriver::enterPrecisionTouchpadMode" name="enterPrecisionTouchpadMode">
+    <brief>Sends a report to the device to instruct it to enter Touchpad mode</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+  </method>
+</class>

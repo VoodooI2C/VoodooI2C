@@ -1,0 +1,295 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AC2049841F8AE9DA00BEC53C /* VoodooI2CLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC2049821F8AE9DA00BEC53C /* VoodooI2CLogger.cpp */; };
+		AC2049851F8AE9DA00BEC53C /* VoodooI2CLogger.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC2049831F8AE9DA00BEC53C /* VoodooI2CLogger.hpp */; };
+		AC2DC73B1F7F0E7A0071CDCA /* VoodooI2CServices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC2DC7391F7F0E7A0071CDCA /* VoodooI2CServices.cpp */; };
+		AC2DC73C1F7F0E7A0071CDCA /* VoodooI2CServices.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC2DC73A1F7F0E7A0071CDCA /* VoodooI2CServices.hpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AC2049821F8AE9DA00BEC53C /* VoodooI2CLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CLogger.cpp; sourceTree = "<group>"; };
+		AC2049831F8AE9DA00BEC53C /* VoodooI2CLogger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CLogger.hpp; sourceTree = "<group>"; };
+		AC2DC71C1F7F0D450071CDCA /* VoodooI2CServices.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoodooI2CServices.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC2DC7231F7F0D450071CDCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC2DC7391F7F0E7A0071CDCA /* VoodooI2CServices.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VoodooI2CServices.cpp; sourceTree = "<group>"; };
+		AC2DC73A1F7F0E7A0071CDCA /* VoodooI2CServices.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VoodooI2CServices.hpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AC2DC7181F7F0D450071CDCA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AC2DC7121F7F0D450071CDCA = {
+			isa = PBXGroup;
+			children = (
+				AC2DC71E1F7F0D450071CDCA /* VoodooI2CServices */,
+				AC2DC71D1F7F0D450071CDCA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AC2DC71D1F7F0D450071CDCA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC2DC71C1F7F0D450071CDCA /* VoodooI2CServices.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC2DC71E1F7F0D450071CDCA /* VoodooI2CServices */ = {
+			isa = PBXGroup;
+			children = (
+				AC2DC7231F7F0D450071CDCA /* Info.plist */,
+				AC2DC7391F7F0E7A0071CDCA /* VoodooI2CServices.cpp */,
+				AC2DC73A1F7F0E7A0071CDCA /* VoodooI2CServices.hpp */,
+				AC2049821F8AE9DA00BEC53C /* VoodooI2CLogger.cpp */,
+				AC2049831F8AE9DA00BEC53C /* VoodooI2CLogger.hpp */,
+			);
+			path = VoodooI2CServices;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		AC2DC7191F7F0D450071CDCA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC2DC73C1F7F0E7A0071CDCA /* VoodooI2CServices.hpp in Headers */,
+				AC2049851F8AE9DA00BEC53C /* VoodooI2CLogger.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		AC2DC71B1F7F0D450071CDCA /* VoodooI2CServices */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC2DC7261F7F0D450071CDCA /* Build configuration list for PBXNativeTarget "VoodooI2CServices" */;
+			buildPhases = (
+				AC2DC7171F7F0D450071CDCA /* Sources */,
+				AC2DC7181F7F0D450071CDCA /* Frameworks */,
+				AC2DC7191F7F0D450071CDCA /* Headers */,
+				AC2DC71A1F7F0D450071CDCA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VoodooI2CServices;
+			productName = VoodooI2CServices;
+			productReference = AC2DC71C1F7F0D450071CDCA /* VoodooI2CServices.kext */;
+			productType = "com.apple.product-type.kernel-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AC2DC7131F7F0D450071CDCA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "Alexandre Daoud";
+				TargetAttributes = {
+					AC2DC71B1F7F0D450071CDCA = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AC2DC7161F7F0D450071CDCA /* Build configuration list for PBXProject "VoodooI2CServices" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AC2DC7121F7F0D450071CDCA;
+			productRefGroup = AC2DC71D1F7F0D450071CDCA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AC2DC71B1F7F0D450071CDCA /* VoodooI2CServices */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AC2DC71A1F7F0D450071CDCA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AC2DC7171F7F0D450071CDCA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC2049841F8AE9DA00BEC53C /* VoodooI2CLogger.cpp in Sources */,
+				AC2DC73B1F7F0E7A0071CDCA /* VoodooI2CServices.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AC2DC7241F7F0D450071CDCA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		AC2DC7251F7F0D450071CDCA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		AC2DC7271F7F0D450071CDCA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				INFOPLIST_FILE = VoodooI2CServices/Info.plist;
+				MODULE_NAME = com.alexandred.VoodooI2CServices;
+				MODULE_VERSION = 1.0.0d1;
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CServices;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Debug;
+		};
+		AC2DC7281F7F0D450071CDCA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1.0.0d1;
+				INFOPLIST_FILE = VoodooI2CServices/Info.plist;
+				MODULE_NAME = com.alexandred.VoodooI2CServices;
+				MODULE_VERSION = 1.0.0d1;
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
+				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2CServices;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = kext;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AC2DC7161F7F0D450071CDCA /* Build configuration list for PBXProject "VoodooI2CServices" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC2DC7241F7F0D450071CDCA /* Debug */,
+				AC2DC7251F7F0D450071CDCA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AC2DC7261F7F0D450071CDCA /* Build configuration list for PBXNativeTarget "VoodooI2CServices" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC2DC7271F7F0D450071CDCA /* Debug */,
+				AC2DC7281F7F0D450071CDCA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AC2DC7131F7F0D450071CDCA /* Project object */;
+}

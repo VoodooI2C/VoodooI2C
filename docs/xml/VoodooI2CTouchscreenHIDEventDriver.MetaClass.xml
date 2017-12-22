@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CTouchscreenHIDEventDriver::MetaClass" interface="true" name="MetaClass" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="OSMetaClass" />
+  </base>
+  <constructor abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::MetaClass::MetaClass" name="MetaClass" />
+  <method abstract="yes" id="VoodooI2CTouchscreenHIDEventDriver::MetaClass::alloc" name="alloc" virtual="yes">
+    <return>
+      <type name="OSObject" qualifier="*" />
+    </return>
+  </method>
+</class>

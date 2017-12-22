@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<struct id="VoodooI2CControllerBusDevice" name="VoodooI2CControllerBusDevice" typedef="yes" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <field id="VoodooI2CControllerBusDevice::abort_source" name="abort_source">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::acpi_config" name="acpi_config">
+    <type name="VoodooI2CControllerBusConfig" qualifier="*" ref="VoodooI2CControllerBusConfig#VoodooI2CControllerBusConfig" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::awake" name="awake">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::bus_config" name="bus_config">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::command_error" name="command_error">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::command_complete" name="command_complete">
+    <type builtin="yes" name="bool" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::functionality" name="functionality">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::messages" name="messages">
+    <type name="VoodooI2CControllerBusMessage" qualifier="*" ref="VoodooI2CControllerBusMessage#VoodooI2CControllerBusMessage" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::message_error" name="message_error">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::message_number" name="message_number">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::message_read_index" name="message_read_index">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::message_write_index" name="message_write_index">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::name" name="name">
+    <type builtin="yes" name="char" qualifier=" const *" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::receive_buffer_length" name="receive_buffer_length">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::receive_buffer" name="receive_buffer">
+    <type name="UInt8" qualifier="*" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::receive_fifo_depth" name="receive_fifo_depth">
+    <type name="UInt" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::receive_outstanding" name="receive_outstanding">
+    <type builtin="yes" name="int" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::status" name="status">
+    <type name="UInt" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::transaction_buffer_length" name="transaction_buffer_length">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::transaction_buffer" name="transaction_buffer">
+    <type name="UInt8" qualifier="*" />
+  </field>
+  <field id="VoodooI2CControllerBusDevice::transaction_fifo_depth" name="transaction_fifo_depth">
+    <type name="UInt" />
+  </field>
+</struct>

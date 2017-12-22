@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CMultitouchInterface" interface="true" name="VoodooI2CMultitouchInterface" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <brief> Acts as a middleman between multitouch capable device drivers such as &amp;lt;VoodooI2CHIDMultitouchEventDriver&amp;gt; and a <ref ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine">VoodooI2CMultitouchEngine</ref>
+  </brief>
+  <doc>This class is designed to allow multiple &amp;lt;VoodooI2CMultitouchEngines&amp;gt; (or inherited classes thereof) to attach and receive interrupt reports.
+This allows for situations in which different multitouch engines handle different gestures.
+</doc>
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CMultitouchInterface::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CMultitouchInterface::MetaClass#VoodooI2CMultitouchInterface::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CMultitouchInterface::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CMultitouchInterface::MetaClass#VoodooI2CMultitouchInterface::MetaClass" />
+  <field id="VoodooI2CMultitouchInterface::logical_max_x" name="logical_max_x">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CMultitouchInterface::logical_max_y" name="logical_max_y">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CMultitouchInterface::physical_max_x" name="physical_max_x">
+    <type name="UInt32" />
+  </field>
+  <field id="VoodooI2CMultitouchInterface::physical_max_y" name="physical_max_y">
+    <type name="UInt32" />
+  </field>
+  <constructor abstract="yes" id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface" />
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::handleInterruptReport" name="handleInterruptReport">
+    <brief> Forwards a multitouch event to the attached multitouch engines</brief>
+    <doc>Multitouch engines with a higher &lt;VoodooI2CMultitouchEngine::getScore` are given higher priority.
+</doc>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::handleInterruptReport::event" name="event">
+      <doc>The event to forward</doc>
+      <type name="VoodooI2CMultitouchEvent" ref="VoodooI2CMultitouchEvent#VoodooI2CMultitouchEvent" />
+    </argument>
+    <argument id="VoodooI2CMultitouchInterface::handleInterruptReport::timestamp" name="timestamp">
+      <doc>The timestamp of the event</doc>
+      <type name="AbsoluteTime" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::open" name="open">
+    <brief> Called by <ref ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine">VoodooI2CMultitouchEngine</ref> to open a client connection</brief>
+    <return>
+      <doc>*true* upon successful opening, *false* otherwise</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::open::client" name="client">
+      <doc>An instance of <ref ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine">VoodooI2CMultitouchEngine</ref> that wishes to be a client</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::orderEngines" name="orderEngines" static="yes">
+    <brief> Orders engines according to <ref ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine::getScore">VoodooI2CMultitouchEngine::getScore</ref>
+    </brief>
+    <return>
+      <doc>1 if <ref ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface::orderEngines::a">a</ref> is to have higher priority than <ref ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface::orderEngines::b">b</ref>, -1 if <ref ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface::orderEngines::b">b</ref> is to have higher priority than <ref ref="VoodooI2CMultitouchInterface#VoodooI2CMultitouchInterface::orderEngines::a">a</ref>, 0 if they have the same priority</doc>
+      <type name="SInt8" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::orderEngines::a" name="a">
+      <doc>The first engine in the comparison</doc>
+      <type name="VoodooI2CMultitouchEngine" qualifier="*" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine" />
+    </argument>
+    <argument id="VoodooI2CMultitouchInterface::orderEngines::b" name="b">
+      <doc>The second engine in the comparison</doc>
+      <type name="VoodooI2CMultitouchEngine" qualifier="*" ref="VoodooI2CMultitouchEngine#VoodooI2CMultitouchEngine" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::start" name="start" virtual="yes">
+    <brief> Sets up the multitouch interface</brief>
+    <return>
+      <doc>*true* on successful start, *false* otherwise</doc>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::start::provider" name="provider">
+      <doc>The driver which has created us</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <method abstract="yes" id="VoodooI2CMultitouchInterface::stop" name="stop" virtual="yes">
+    <brief> Stops up the multitouch interface</brief>
+    <return>
+      <type builtin="yes" name="void" />
+    </return>
+    <argument id="VoodooI2CMultitouchInterface::stop::provider" name="provider">
+      <doc>The driver which has created us</doc>
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface" name="VoodooI2CMultitouchInterface">
+    <argument id="VoodooI2CMultitouchInterface::VoodooI2CMultitouchInterface::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CMultitouchInterface::~VoodooI2CMultitouchInterface" name="~VoodooI2CMultitouchInterface" virtual="yes" />
+  <variable access="private" id="VoodooI2CMultitouchInterface::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CMultitouchInterface::engines" name="engines">
+    <type name="OSOrderedSet" qualifier="*" />
+  </field>
+</class>

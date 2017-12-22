@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<class id="VoodooI2CLogger" interface="true" name="VoodooI2CLogger" xmlns="http://jessevdk.github.com/cldoc/1.0">
+  <base access="public">
+    <type name="IOService" />
+  </base>
+  <variable id="VoodooI2CLogger::gMetaClass" name="gMetaClass">
+    <type name="MetaClass" ref="VoodooI2CLogger::MetaClass#VoodooI2CLogger::MetaClass" />
+  </variable>
+  <variable id="VoodooI2CLogger::metaClass" name="metaClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <class name="MetaClass" ref="VoodooI2CLogger::MetaClass#VoodooI2CLogger::MetaClass" />
+  <constructor abstract="yes" id="VoodooI2CLogger::VoodooI2CLogger" name="VoodooI2CLogger" />
+  <method abstract="yes" id="VoodooI2CLogger::getMetaClass" name="getMetaClass" virtual="yes">
+    <return>
+      <type name="OSMetaClass" qualifier=" const *" />
+    </return>
+  </method>
+  <method abstract="yes" id="VoodooI2CLogger::start" name="start" virtual="yes">
+    <return>
+      <type builtin="yes" name="bool" />
+    </return>
+    <argument id="VoodooI2CLogger::start::provider" name="provider">
+      <type name="IOService" qualifier="*" />
+    </argument>
+  </method>
+  <constructor abstract="yes" access="protected" id="VoodooI2CLogger::VoodooI2CLogger" name="VoodooI2CLogger">
+    <argument id="VoodooI2CLogger::VoodooI2CLogger::" name="">
+      <type name="OSMetaClass" qualifier=" const *" />
+    </argument>
+  </constructor>
+  <destructor abstract="yes" access="protected" id="VoodooI2CLogger::~VoodooI2CLogger" name="~VoodooI2CLogger" virtual="yes" />
+  <variable access="private" id="VoodooI2CLogger::superClass" name="superClass">
+    <type name="OSMetaClass" qualifier=" const const *" />
+  </variable>
+  <field access="private" id="VoodooI2CLogger::logging_level" name="logging_level">
+    <type name="UInt8" />
+  </field>
+</class>
