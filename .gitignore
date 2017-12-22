@@ -24,3 +24,6 @@ xcuserdata/
 
 .DS_Store
 VoodooI2C\ Satellites/*
+docs/index.html
+docs/search.json
+docs/xml/*
