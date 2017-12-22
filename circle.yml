@@ -1,6 +1,6 @@
 dependencies:
   pre:
-    - git clone https://github.com/alexandred/cldoc && python cldoc/setup.py install
+    - pip install git+https://github.com/alexandred/cldoc.git
     - git submodule init && git submodule update
     - brew update
     - brew tap tcnksm/ghr
