@@ -1,5 +1,6 @@
 dependencies:
   pre:
+    - git submodule init && gitsubmodule update
     - brew update
     - brew tap tcnksm/ghr
     - brew install ghr
