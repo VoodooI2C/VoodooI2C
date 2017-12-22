@@ -1,7 +1,7 @@
 dependencies:
   pre:
     - pip install git+https://github.com/alexandred/cldoc.git --user
-    - sudo bash -c 'echo "~/Library/Python/2.7/bin" >> /etc/paths'
+    - echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> $BASH_ENV
     - git submodule init && git submodule update
     - brew update
     - brew tap tcnksm/ghr
