@@ -25,4 +25,4 @@ deployment:
   release:
     branch: master
     commands:
-      - export VOODOOI2C_VERSION="$(cat version.txt)" && cd build/Build/Products/Release && mkdir Archives && zip -r Archives/"VoodooI2C ($VOODOOI2C_VERSION).zip" *.kext && zip -r Archives/"VoodooI2C Debug Symbols ($VOODOOI2C_VERSION).zip" *.dSYM && ghr --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION Archives/
+      - export VOODOOI2C_VERSION="$(cat version.txt)" && cd build/Build/Products/Release && mkdir Archives && zip -r Archives/"VoodooI2C-($VOODOOI2C_VERSION).zip" *.kext && zip -r Archives/"VoodooI2C-Debug-Symbols-($VOODOOI2C_VERSION).zip" *.dSYM && ghr --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION Archives/
