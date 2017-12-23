@@ -25,6 +25,35 @@ This is the easiest of steps. Open IORegExplorer and search for your ACPI ID (if
 
 If you do not have `IOInterruptSpecifiers` listed as above then you are good to go and can skip straight to the section `Installing the kext`. If you do then expand it to reveal some numbers. Write down the first two numbers in the `Value` column as `0xXX` (in the example above, `0x33`), this is your device's **hexadecimal APIC pin number**. If your hexadecimal APIC pin number is less than or equal to `0x2F` then you are good to go and can skip straight to the section `Installing the kext`. If you do not know how to compare hexadecimal numbers, just convert both numbers to decimal using any freely available online tool and compare the resulting numbers.
 
+You will also need to make sure that your I2C Serial Bus `Name` is correctly labelled. In the device, you should be able to find a `Name` called `SBFB`. If you cannot find it, you may find something that looks like this instead:
+
+```
+    Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
+                {
+                    Name (SBFI, ResourceTemplate ()
+                    {
+                        I2cSerialBusV2 (0x0015, ControllerInitiated, 0x00061A80,
+                            AddressingMode7Bit, "\\_SB.PCI0.I2C1",
+                            0x00, ResourceConsumer, , Exclusive,
+                            )
+                        Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive, ,, )
+                        {
+                            0x0000006D,
+                        }
+                    })
+                    Return (SBFI)
+                }
+```
+
+In this case, rename `SBFI` to `SBFB` and remove the following from it:
+
+```
+       Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive, ,, )
+    {
+        0x0000006D,
+    } 
+```
+
 If your hexadecimal pin number is greater than `0x2F` then proceed to the next step.
 
 ##### Step 2a: Ensuring your device is GPIO-pinned
