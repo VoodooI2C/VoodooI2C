@@ -58,9 +58,9 @@ Follow these instructions in order to add the VoodooI2C patch repository to Maci
 
 Regardless of whether or not your machine shipped with Windows, it is likely that you will require a Windows patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `Windows`. Choose the patch corresponding to the version of Windows that shipped with your machine. If you are not sure which version of Windows your machine shipped with, check the product key sticker which is usually located on the bottom of your machine. If your machine did not ship with Windows then you will have to test each patch until you find one that works - it is recommended that you start with Windows 7 and work your way up.
 
-### Controller Patches (Skylake systems)
+### Controller Patches (Skylake systems only)
 
-If your machine is Skylake then it is possible that you need a controller patch. Applying it can't hurt if you don't need it so let's apply that patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there is a patch labelled `I2C Controllers [SKL+]`. Apply this patch.
+If your machine is Skylake then it is possible that you need a controller patch. Applying it can't hurt if you don't need it so let's apply that patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there is a patch labelled `I2C Controllers [SKL]`. Apply this patch.
 
 ### GPIO Patches (Skylake+ systems)
 
