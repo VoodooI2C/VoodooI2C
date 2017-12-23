@@ -120,7 +120,7 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             continue;
 
         if (transducer->is_valid) {
-            if (transducer->tip_switch && (CMP_ABSOLUTETIME(&timestamp, &transducer->coordinates.x.current.timestamp)==0)) {
+            if (transducer->tip_switch) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
                 if (transducer->tip_pressure.value())
@@ -132,10 +132,6 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
                 softc.y[i] = -1;
                 softc.p[i] = -1;
             }
-        } else {
-            softc.x[i] = -1;
-            softc.y[i] = -1;
-            softc.p[i] = -1;
         }
 
         if (i == 0 && (CMP_ABSOLUTETIME(&timestamp, &transducer->physical_button.current.timestamp) == 0)) {
@@ -144,9 +140,13 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
 
     }
 
-    ProcessGesture(&softc);
-
     return MultitouchReturnContinue;
+}
+
+void VoodooI2CCSGestureEngine::timedProcessGesture() {
+    ProcessGesture(&softc);
+    
+    this->timer_event_source->setTimeoutMS(5);
 }
 
 bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[3]) {
@@ -672,16 +672,45 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
 void VoodooI2CCSGestureEngine::prepareToSleep(){
     if (_scrollHandler)
         _scrollHandler->prepareToSleep();
+
+    if (this->timer_event_source){
+        this->timer_event_source->cancelTimeout();
+        this->timer_event_source->release();
+        this->timer_event_source = NULL;
+    }
 }
 
 void VoodooI2CCSGestureEngine::wakeFromSleep(){
     if (_scrollHandler)
         _scrollHandler->wakeFromSleep();
+
+    if (!this->timer_event_source){
+        this->timer_event_source = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCSGestureEngine::timedProcessGesture));
+        this->work_loop->addEventSource(this->timer_event_source);
+        this->timer_event_source->setTimeoutMS(10);
+    }
 }
 
 bool VoodooI2CCSGestureEngine::start(IOService *service) {
     if (!super::start(service))
         return false;
+
+    this->work_loop = getWorkLoop();
+    if (!this->work_loop){
+        IOLog("%s::Unable to get workloop\n", getName());
+        stop(service);
+        return false;
+    }
+    
+    this->work_loop->retain();
+    
+    this->timer_event_source = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCSGestureEngine::timedProcessGesture));
+    if (!this->timer_event_source) {
+        IOLog("%s::Unable to get timer source\n", getName());
+        stop(service);
+        return false;
+    }
+    this->work_loop->addEventSource(this->timer_event_source);
 
     _wrapper = NULL;
     _pointingWrapper = NULL;
@@ -755,6 +784,8 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
         softc.y[i] = -1;
         softc.p[i] = -1;
     }
+    
+    this->timer_event_source->setTimeoutMS(10);
 
     return true;
 }
@@ -780,6 +811,13 @@ void VoodooI2CCSGestureEngine::stop(IOService* provider) {
         _pointingWrapper->release();
         _pointingWrapper = NULL;
     }
+
+    if (this->timer_event_source){
+        this->timer_event_source->cancelTimeout();
+        this->timer_event_source->release();
+        this->timer_event_source = NULL;
+    }
+
 }
 
 void VoodooI2CCSGestureEngine::update_relative_mouse(char button, char x, char y, char wheelPosition, char wheelHPosition){

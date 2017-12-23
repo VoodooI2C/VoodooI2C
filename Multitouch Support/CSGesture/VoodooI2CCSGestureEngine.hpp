@@ -14,6 +14,7 @@
 #include <IOKit/IOLib.h>
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
+#include <IOKit/IOTimerEventSource.h>
 
 #include "../VoodooI2CMultitouchEngine.hpp"
 #include "../MultitouchHelpers.hpp"
@@ -42,6 +43,9 @@ private:
         UInt8 buttonMask;
     } lastmouse;
     
+    IOWorkLoop* work_loop;
+    IOTimerEventSource* timer_event_source;
+    
     int distancesq(int delta_x, int delta_y);
     
     //os callbacks
@@ -59,6 +63,7 @@ public:
     void TapToClickOrDrag(csgesture_softc *sc, int button);
     void ClearTapDrag(csgesture_softc *sc, int i);
     void ProcessGesture(csgesture_softc *sc);
+    void timedProcessGesture();
     
     //os specific functions
     void prepareToSleep();
