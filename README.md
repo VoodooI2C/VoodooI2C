@@ -37,7 +37,7 @@ Please check the [compatibility page](https://github.com/alexandred/VoodooI2C/wi
 
 ## Documentation and Troubleshooting
 
-Please visit the [documentation site](https://alexandred.github.io/VoodooI2C-Rewrite) for further information how to install and troubleshoot VoodooI2C. 
+Please visit the [documentation site](https://voodooi2c.github.io/) for further information how to install and troubleshoot VoodooI2C. 
 
 ## License
 
