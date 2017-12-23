@@ -11,3 +11,7 @@ To tell whether or not a device is supported by VoodooI2CHID, you must know its 
 ## [VoodooI2CElan](https://github.com/kprinssu/VoodooI2CELan)
 
 VoodooI2CElan implements support for the propriety Elan protocol found on many Elan trackpads and touchscreens. Your Elan device may have better support with this kext than with VoodooI2CHID.
+
+## VoodooI2CUPDDEngine
+
+VoodooI2CUPDDEngine acts as a middleman between VoodoI2C and the Touch Base UPDD drivers. For more information, read the instructions in the [VoodooI2CUPDDEngine Repo](https://github.com/blankmac/VoodooI2CUPDDEngine).
