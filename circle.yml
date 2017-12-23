@@ -7,8 +7,6 @@ dependencies:
     - brew update
     - brew tap tcnksm/ghr
     - brew install ghr
-    - cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs && curl -O -L https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.11.sdk.tar.xz && tar -xJf MacOSX10.11.sdk.tar.xz
-    - 
 
 machine:
   xcode:
