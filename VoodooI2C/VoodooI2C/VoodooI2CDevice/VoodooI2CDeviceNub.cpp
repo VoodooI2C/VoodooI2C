@@ -40,6 +40,11 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
 
     if (has_gpio_interrupts) {
         gpio_controller = getGPIOController();
+        
+        if (!gpio_controller) {
+            IOLog("%s::%s Could not find GPIO controller, exiting", controller_name, child->getName());
+            return false;
+        }
     }
 
     setName(child->getName());
