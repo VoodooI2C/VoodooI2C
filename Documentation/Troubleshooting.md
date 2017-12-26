@@ -6,7 +6,7 @@
 
 Support is always avaialble in the [Gitter chat room](https://gitter.im/alexandred/VoodooI2C). Please use this chat room strictly for the discussion of VoodooI2C. Any other discussion (including other hackintosh discussion) may result in a ban.
 
-**Note that if you do not foollow the instructions below then we will not help you. If it turns out that you did not properly follow the installation guide then we will also not provide any support.**
+**Note that if you do not follow the instructions below then we will not help you. If it turns out that you did not properly follow the installation guide then we will also not provide any support.**
 
 Please provide all requested IORegs using IORegExplorer v2.1 which can be obtained [here](https://www.tonymacx86.com/threads/guide-how-to-make-a-copy-of-ioreg.58368/).
 
