@@ -6,9 +6,9 @@
 
 VoodooI2C is for **advanced** tinkerers. In particular, you should know how to perform the following. If you do not know even one of the following then please do not proceed with this guide and please do not request help on the Gitter channel:
 
-	1. How to install a kext
-	2. How to patch your DSDT
-	3. How to edit your Clover configuration file
+    1. How to install a kext
+    2. How to patch your DSDT
+    3. How to edit your Clover configuration file
 
 Furthermore, the development team of VoodooI2C accepts no responsibility for any damage to your system that arises because of misuse of this kext or installation guide. VoodooI2C is safe to use when installed correctly but, as always with hackintoshes, proceed at your own risk.
 
@@ -17,19 +17,21 @@ Furthermore, the development team of VoodooI2C accepts no responsibility for any
 VoodooI2C is designed to run on the vast majority of modern systems. However, there are some minimum system requirements:
 
 1. Your machine should have an Intel CPU (usually i3/i5/i7) with at least the `Haswell` microarchitecture. It is easy to determine your system's microarchitecture given that you know your CPU's model number. The model number is usually 4 digits long and sometimes has some letters that come after it. For example, 'Intel® Core™ i7-**4**600U'. The bold number here determines your system's microarchitecture and the list below provides a classification:
-	1. 4 - Haswell
-	2. 5 - Broadwell
-	3. 6 - Skylake
-	4. 7 - Kabylake
-If the number is not **at least** 4 then your system is not suitable for VoodooI2C.kext.
+    1. 4 - Haswell
+    2. 5 - Broadwell
+    3. 6 - Skylake
+    4. 7 - Kaby Lake
+    5. 8 - Kaby Lake R
+
+    If the number is not **at least** 4 then your system is not suitable for VoodooI2C.kext.
 
 2. If your machine shipped with Windows then the minimum required version of Windows is Windows 7. If your machine shipped with a previous version of Windows then it is unlikely that your machine will be supported by VoodooI2C. If your machine did not ship with Windows (for example, it may have shipped with Linux or with no preinstalled OS) then you may skip this requirement.
 
 3. Your machine should have at least one supported I2C controller. The following are the device IDs of the supported controllers:
 
-	1. 'INT33C2' and 'INT33C3' - Haswell era
-	2. 'INT3432' and 'INT3433' - Broadwell era
-	3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,a160' and 'pci8086,a161' - Skylake/Kabylake era
+    1. 'INT33C2' and 'INT33C3' - Haswell era
+    2. 'INT3432' and 'INT3433' - Broadwell era
+    3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,a160' and 'pci8086,a161' - Skylake/Kaby Lake era
 
 4. Your machine should have at least one supported I2C device. For the vast majority of users, this will be an I2C-HID device. Examples of I2C-HID devices include Precision touchpads, touchscreens and sensor hubs.
 
@@ -56,7 +58,7 @@ Follow these instructions in order to add the VoodooI2C patch repository to Maci
 
 ### Windows Patches
 
-Regardless of whether or not your machine shipped with Windows, it is likely that you will require a Windows patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `Windows`. Choose the patch corresponding to the version of Windows that shipped with your machine. If you are not sure which version of Windows your machine shipped with, check the product key sticker which is usually located on the bottom of your machine. If your machine did not ship with Windows then you will have to test each patch until you find one that works - it is recommended that you start with Windows 7 and work your way up.
+Regardless of whether or not your machine shipped with Windows, it is likely that you will require a Windows patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `Windows`. Choose the patch corresponding to the version of Windows that shipped with your machine. If you are not sure which version of Windows your machine shipped with, check the product key sticker which is usually located on the bottom of your machine. If your machine did not ship with Windows then you will have to test each patch until you find one that works - it is recommended that you start with Windows 10 and work your way down.
 
 ### Controller Patches (Skylake systems only)
 
@@ -64,7 +66,7 @@ If your machine is Skylake then it is possible that you need a controller patch.
 
 ### GPIO Patches (Skylake+ systems)
 
-If your machine is Skylake or above, you will likely need a GPIO patches as well. 
+If your machine is Skylake or above, you will likely need GPIO patches as well.
 
 #### Controller Enabling
 
