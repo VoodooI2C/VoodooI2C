@@ -20,8 +20,8 @@ VoodooI2C is designed to run on the vast majority of modern systems. However, th
 	1. 4 - Haswell
 	2. 5 - Broadwell
 	3. 6 - Skylake
-        4. 7 - Kaby Lake
-        5. 8 - Kaby Lake R
+	4. 7 - Kaby Lake
+	5. 8 - Kaby Lake R
 If the number is not **at least** 4 then your system is not suitable for VoodooI2C.kext.
 
 2. If your machine shipped with Windows then the minimum required version of Windows is Windows 7. If your machine shipped with a previous version of Windows then it is unlikely that your machine will be supported by VoodooI2C. If your machine did not ship with Windows (for example, it may have shipped with Linux or with no preinstalled OS) then you may skip this requirement.
@@ -29,8 +29,8 @@ If the number is not **at least** 4 then your system is not suitable for VoodooI
 3. Your machine should have at least one supported I2C controller. The following are the device IDs of the supported controllers:
 
 	1. 'INT33C2' and 'INT33C3' - Haswell era
-        2. 'INT3432' and 'INT3433' - Broadwell era
-        3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,a160' and 'pci8086,a161' - Skylake/Kaby Lake era
+	2. 'INT3432' and 'INT3433' - Broadwell era
+	3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,a160' and 'pci8086,a161' - Skylake/Kaby Lake era
 
 4. Your machine should have at least one supported I2C device. For the vast majority of users, this will be an I2C-HID device. Examples of I2C-HID devices include Precision touchpads, touchscreens and sensor hubs.
 
