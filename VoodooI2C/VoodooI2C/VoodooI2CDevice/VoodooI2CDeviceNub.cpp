@@ -45,6 +45,10 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
             IOLog("%s::%s Could not find GPIO controller, exiting", controller_name, child->getName());
             return false;
         }
+
+        // Give the GPIO controller some time to load
+
+        IOSleep(500);
     }
 
     setName(child->getName());
