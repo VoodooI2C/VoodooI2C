@@ -2,174 +2,163 @@
 
 &#8291;
 
-This patch is tricky and may require you to manually adjust some values **Note: you must apply this process to each I2C device you wish to use**. If you manage to successfully patch your device's DSDT entry then consider submitting a patch to the [VoodooI2C Patch Repository](https://github.com/alexandred/VoodooI2C-Patches).
+#### Introduction
 
-You will first need to identify the ACPI ID of your I2C device. The following are common ACPI IDs according to device type. Note that many of these IDs may appear in your DSDT. *This does not mean that they have anything to do with your system, you need to identify which one is your device*. Here X is usually a number.
+The VoodooI2C kexts require decompiling, editing and compiling the DSDT. This guide assumes that you have experience in that. See for instance this [introduction](https://www.tonymacx86.com/threads/guide-patching-laptop-dsdt-ssdts.152573/ for).
 
-	1. Touchpads - TPDX, ELAN, SYNA, CYPR
-	2. Touchscreen - TPLX, ELAN, ETPD, SYNA, ATML
-	3. Sensor Hubs - SHUB
+Many patches can be applied using patchfiles downloaded by MaciASL.app from the internet repositories, such as the I2C patches from the VoodooI2C repository. However, no pre-cooked patches are as yet available for patching the _CRS Method of the touch device. Manual editing of the DSDT.dsl file is required. This guide covers that.
 
-You can determine your device's ACPI ID in Windows by right clicking its entry in the Device Manager and visiting the properties tab as depicted in the following screenshot:
+If you are able to create a patchfile for use with MaciASL.app, please consider submitting this to the [VoodooI2C Patch Repository](https://github.com/alexandred/VoodooI2C-Patches). See this brief [overview](https://sourceforge.net/p/maciasl/wiki/Patching%20Syntax%20Grammar) of the patch definition format.
+
+Please note that the manual patch must be applied for each I2C device that you wish to use.
+
+This guide requires the following: 
+
+- Pen and a piece of paper to note things down
+- Being able to boot into Windows
+- Being able to boot into Mac OS X (use a USB-connected mouse)
+- IOregistryExplorer.app v2.1 (Do not use any other version!)
+- MaciASL.app to decompile and compile the DSDT
+- Converting between decimal and hexadecimal numbers
+
+#### Step 1. Determine your ACPI ID and Candidate GPIO PIN numbers
+
+Boot into Windows and open 'Control Panel' -> 'Device Manager'.
 
 ![acpi](images/i2c_device_acpi_id.png "ACPI ID")
 
+In the device tree on the left expand 'Human Interface Devices' and click on 'I2C HID Device'.  The properties window will open. Select the 'Details' tab, and under 'Property' select 'BIOS device name'. Make a note of the Value that is displayed (something similar to '\_SB.PCI0.I2C0.TPL0' or '\_SB.PCI0.I2C1.ETPD'). This is your ACPI ID. Specifically note the last 4 characters. Examples of this are(where x stands for a digit):
 
-In this example, the ACPI ID is `TPL0`. Now go through each of the following cases to see if they apply to you
+1. Touchpads - TPDx, ELAN, SYNA, CYPR, ETPD
+2. Touchscreen - TPLx, ELAN, ETPD, SYNA, ATML
+3. Sensor Hubs - SHUB
 
-##### Step 1: Determining your interrupt pinning situation
-
-This is the easiest of steps. Open IORegExplorer and search for your ACPI ID (if it does not show up then you likely did not apply the previous Windows patch!) You should get something similar to this:
+Now reboot into Mac OS X and run IORegistryExplorer.app. Use the search box on the top right and enter those last four characters of your ACPI ID. The window on the left should now show the touch device, and on the right there's an overview of properties and values, as in the image below:
 
 ![pin_situation](images/ioreg_pin_situation.png "Pin Situation")
 
-If you do not have `IOInterruptSpecifiers` listed as above then you are good to go and can skip straight to the section `Installing the kext`. If you do then expand it to reveal some numbers. Write down the first two numbers in the `Value` column as `0xXX` (in the example above, `0x33`), this is your device's **hexadecimal APIC pin number**. If your hexadecimal APIC pin number is less than or equal to `0x2F` then you are good to go and can skip straight to the section `Installing the kext`. If you do not know how to compare hexadecimal numbers, just convert both numbers to decimal using any freely available online tool and compare the resulting numbers.
+Check if the property 'IOInterruptSpecifiers' is present. 
 
-You will also need to make sure that your I2C Serial Bus `Name` is correctly labelled. In the device, you should be able to find a `Name` called `SBFB`. If you cannot find it, you may find something that looks like this instead:
+- If IOInterruptSpecifiers is not present then you have completed this guide and you can continue with installing the kexts
 
-```
-    Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
-                {
-                    Name (SBFI, ResourceTemplate ()
-                    {
-                        I2cSerialBusV2 (0x0015, ControllerInitiated, 0x00061A80,
-                            AddressingMode7Bit, "\\_SB.PCI0.I2C1",
-                            0x00, ResourceConsumer, , Exclusive,
-                            )
-                        Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive, ,, )
-                        {
-                            0x0000006D,
-                        }
-                    })
-                    Return (SBFI)
-                }
-```
+- If IOInterruptSpecifiers is present, then expand this property and note the first two hexadecimal digits of the value shown. This is your APIC Pin number in hexadecimal notation. Note this down as 0xyy, where yy is replaced by these first two digits.
 
-In this case, rename `SBFI` to `SBFB` and remove the following from it:
+If your APIC Pin Number is less than or equal to 0x2f, then you have completed this guide and you can proceed with the installation of the kexts.
 
-```
-       Interrupt (ResourceConsumer, Level, ActiveLow, Exclusive, ,, )
-    {
-        0x0000006D,
-    } 
-```
+If your APIC Pin Number is outside the range 05x-0x77, then VoodooI2C is not the correct driver for your touchpad. You are advised to seek support in the relevant forums or usergroups.
 
-If your hexadecimal pin number is greater than `0x2F` then proceed to the next step.
+If your APIC Pin Number is between 0x5c and 0x77, then calculate the corresponding GPIO Pin Number as follows (you can use Calculator.app for hexadecimal conversions and calculations):
 
-##### Step 2a: Ensuring your device is GPIO-pinned
+- Start with your hexadecimal APIC Pin Number
+- Go to this [list](https://github.com/coreboot/coreboot/blob/master/src/soc/intel/skylake/include/soc/gpio_defs.h#L43)
+- Search for your APIC Pin Number in the right column. This may appear more than once.
+- For each occurence of your APIC Pin Number, note the GP IRQ string on its left. Make a note of each string that corresponds to your APIC Pin Number. In most cases there will be only one corresponding string, but there can be more.
 
-You have arrived at this step because Apple's drivers do not support APIC pins greater than `0x2F` (and it would be very difficult to make them support them). In this case, we thus make use of a kext called [VoodooGPIO](https://github.com/coolstar/VoodooGPIO) which comes bundled with all copies of VoodooI2C. VoodooGPIO allows us to get around this limitation of macOS by using GPIO interrupts instead which most new machines support.
+The string or strings you have written down can be in either of two formats:
 
-We must first determine whether or not your device is properly configured to support GPIO pins. Search for your device ACPI ID in your DSDT until you reach its device entry. Look for a `Name` that looks like this:
+- the format "GPP_YX_IRQ". In this format Y stands for a letter that represents the Group and X stands for a decimal number representing the Pad Number. Now calculate the decimal GPIO Pin Number for this format as follows:
 
+    - If the Group equals "A", then the GPIO Pin Number equals the Pad Number
+    - If the Group equals "B", then the GPIO Pin Number equals the Pad Number + 24
+    - If the Group equals "C", then the GPIO Pin Number equals the Pad Number + 48
+    - If the Group equals "D", then the GPIO Pin Number equals the Pad Number + 72
+    - If the Group equals "E", then the GPIO Pin Number equals the Pad Number + 96
+    - If the Group equals "F", then the GPIO Pin Number equals the Pad Number + 120
+    - If the Group equals "G", then the GPIO Pin Number equals the Pad Number + 144
 
-```
-    Name (SBFG, ResourceTemplate ()
-    {
-        GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
-            "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
-            )
-            {   // Pin list
-                0x0000
-            }
-    })
-```
+- the format is "GPDX_IRQ", where X stands for a number. In that case the decimal GPIO Pin Number is X + 144 + 8
 
-This `Name` may appear in the root level of your device entry or it could possibly appear in the `_CRS` method. In the first case we shall say that your device is **root pinned**. In the second case, we shall say that your device is **CRS pinned**. If, furthermore, the numbers that appear under pin list are non-zero then we shall furthermore append **well-** to the previous names as follows: **well-root pinned** and **well-CRS pinned**. We shall just say **well-pinned** to mean either of these latter cases. If you cannot find such a `Name` then we shall say that your device is **unpinned**.
+Now convert each of the GPIO Pin Numbers to their hexadecimal values (for instance using Calculator.app). These are your hexadecimal Candidate GPIO Pin numbers. Write these down.
 
-The purpose of these names is merely for ease of communication in this documentation - there are many possible cases out in the wild and we aim to cover them all in this guide.
+At the end of this step you have your ACPI ID and one or more hexadecimal Candidate GPIO numbers.
 
-If your device is unpinned, proceed to Step 2b. If your device is pinned but not well-pinned, proceed to Step 2c. If your device is well-pinned then proceed to Step 2e. 
+#### Step 2. Patching the DSDT
 
-##### Step 2b: Adding in the missing Resource Template
+Before you patch your decompiled DSDT.dsl, make a copy of it so you can start over again when needed.
 
-If your device is unpinned, insert the following into the root of your device's entry:
+##### Step 2.a The SBFG Name definition
+
+This section requires some familiarity with the structure and the syntax of dsl files. Syntax errors will result in a failure to compile the DSDT.
+
+Extract your DSTD to .dsl format and open it for manual editing. Find the section that contains the definitions for your touchpad by looking for "Device (YYYY)", where 'YYYY' must be replaced by the last four characters of your ACPI ID (for instance resulting in  "Device (ETPD)" or something similar).
+
+Check that this occurence is enclosed in a Scope definition which corresponds to the first parts of your ACPI ID to make sure that you have the right Device. Any changes that you will make using this guide are restricted to this Device section.
+
+Within this Device section, find a Name declaration for "SBFG", which should look like similar to:
 
 ```
     Name (SBFG, ResourceTemplate ()
     {
-        GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
-            "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
-            )
-            {   // Pin list
-                0x0000
-            }
+	GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
+	    "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
+	    )
+	    {   // Pin list
+		0x0000
+	    }
     })
 ```
 
-You may now consider your device to be root pinned (but not well-root pinned) and can proceed to Step 2d.
+If this does not exist directly under the Device definition, then check if it appears inside the definition of the _CRS method for the Device.
 
-##### Step 2c: Ensuring your device is well-pinned
+If there is no Name definition for SBFG (within the Device definition or its _CRS Method definition), then add the definition that is given above to the Device definition, just before the _CRS Method definition.
 
-Even if the number appearing in the above `Name` is `0x0`, it is still possible that your device is well-pinned. It is fairly easy to determine whether or not it is indeed well-pinned. Find the `_CRS` method of your device. If you can find a line that looks like this:
+At this stage you have located or created the SBFG Name definition. This contains a Pin List value, on the line below the comment "// Pin list".
 
+If the Pin list in the SBFG ResourceTemplate definition has a value other than zero (0x0000 or 0x00), then do not make any changes here (the value is probably your Candidate GPIO Pin Number, but that is not guaranteed) and proceed to step 2.b.
 
-```
-	Return (ConcatenateResTemplate (SBFB, SBFG))
-```
+If the Pin list in the SBFG ResourceTemplate has a value of zero (0x0000 or 0x00) then replace that value with your hexadecimal Candidate GPIO Pin Number. If you have more than one Candidate GPIO Pin number, then select one of them and continue this guide and the kext installation. If that does not result in a working touch device, then change this value to another candiate GPIO Pin Number and try again with another of your Candidate Pin numbers.
 
-Then your device is well-pinned. **Warning: this is not the same as the following:**
+At the end of this step you have located or created the SBFG Name definition and the Pin list in that definition has a value that is not zero.
 
-```
-	Return (ConcatenateResTemplate (SBFB, SBFI))
-```
+##### Step 2.b The SBFB Name definition
 
-**you need `SBFG` and not `SBFI`**.
+Check if there is an SBFB Name definition within the Device section that you are working on. This may be directly under the Device section or inside of the _CRS method.
 
-If you have now determined that your device is well-pinned, proceed to Step 3. If your device is definitely not well-pinned then proceed to Step 2d.
+If there is no such Name definition, check if there is a Name definition for SBFI (directly under the Device or in its _CRS Method). Look for: "Name (SBFI, ResourceTemplate ()"
 
-##### Step 2d: Manually pinning your device
-
-We now come to the difficult task of manually assigning a GPIO pin to your device. This is potentially a tricky task as there is sometimes some trial and error involved. Nonetheless, it is feasible and we shall outline the steps that you need to take.
-
-Consult the list found at [this link](https://github.com/coreboot/coreboot/blob/master/src/soc/intel/skylake/include/soc/gpio_defs.h#L43). Look up your device's hexadecimal APIC pin number in the right hand column. The corresponding label on the left hand side is of the form `GPP_XYY_IRQ` where X is a letter and YY is a number (the last group is `GPD_YY_IRQ`, pretend it is a continuation of `GPP_GYY_IRQ` e.g `GPD_00_IRQ = GPP_G8_IRQ`). X is your device's **group letter** and YY is your device's **pad number**. Your device's **group number** is given in the following table:
-
-- Group A - 0
-- Group B - 1
-- Group C - 2
-- Group D - 3
-- Group E - 4
-- Group F - 5
-- Group G - 6
-
-Your device's **decimal GPIO pin** is then given by the formula
-
-![pin_situation](images/gpio_pin_formula.png "Pin Situation")
-
-Convert this to a hexadecimal number. If your hexadecimal APIC pin is between `0x5c` and `0x77` inclusive then this is your **hexadecimal GPIO pin**. If your hexadecimal APIC pin does not fall in this range then you will notice that it appears twice in the list mentioned above. You will need to repeat the lookup process for both occurences of your hexadecimal APIC pin to obtain two possible hexadecimal GPIO pins. You will then need to test both of them to see which one works.
-
-Once you have a (candidate) hexadecimal GPIO pin, you can add it into the `SBFG` name under the `\\ Pin List` comment as follows (for example, if your hexadecimal GPIO pin is 0x17):
+If there is no SBFB Name definition, then see if there is an SBFI Name definition. If this is present, then change the SBFI to SBFB and remove the Interrupt section if that appears within the SBFI. The result should look similar to the example below (note that the arguments in your I2cSerialBusV2 call may have different values. That is ok, do not change those values):
 
 ```
-    Name (SBFG, ResourceTemplate ()
-    {
-        GpioInt (Level, ActiveLow, ExclusiveAndWake, PullDefault, 0x0000,
-            "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer, ,
-            )
-            {   // Pin list
-                0x17
-            }
-    })
+	Name (SBFB, ResourceTemplate ()
+	{
+		I2cSerialBusV2 (0x00yy, ControllerInitiated, 0x000yyyy,
+				AddressingMode7Bit, "\\_SB.PCI0.I2C1",
+				0x00, ResourceConsumer, , Exclusive,
+				)
+	})
 ```
 
-Your device is now well-pinned and you may proceed to Step 2e.
+At the end of this step you have ensured that there is an SBFB definition in the Device section or in the _CRS Method definition.
 
-##### Step 2e: Ensuring your DSDT notifies the system that your device is GPIO pinned
+##### Step 2.c The _CRS Method definition
 
-If your device is well-root pinned then replace the `_CRS` method with the following:
-
-```
-    Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-    {
-
-        Return (ConcatenateResTemplate (SBFB, SBFG))
-    }
-```
-
-If your device is well-CRS pinned then make sure that there are no other `Return` statements in your `_CRS` method apart from the following at the end:
+Now go to the _CRS Method in the Device section that you're working in, and remove all Return statements, including any surrounding If statements for those Return statements. Then, at the end of _CRS Method section, add the following Return statement:
 
 ```
     Return (ConcatenateResTemplate (SBFB, SBFG))
 ```
 
-This completes the GPIO pinning process for your device.
+Your _CRS Method definitions then should similar to:
+
+```
+	Method (_CRS, 0, Serialized)    // _CRS: Current Resource Settings
+	{
+		// The _CRS method can also contain Name definitions (in any order):
+		// A Name (SBFB, ResourceTemplate()) definition, unless that already 
+		// appears directly under the Device
+		// A Name (SBFG, ResourceTemplate()) definition, unless that already
+		// appears directly under the Device
+
+		Return (ConcatenateResTemplate (SBFB, SBFG))
+	}
+```
+
+At the end of this step you have ensured that the _CRS Method returns the concatenation of the ResourceTemplates SBFB and SBFG.
+
+#### Step 3. Install the DSDT and reboot
+
+Save the DSDT.dsl and compile it to DSDT.aml using MaciASL.app. Mount the EFI partition and place DSDT.aml in EFI/CLOVER/ACPI/patched. 
+
+Now reboot into Mac OS X and run IORegistryExplorer.app. Use the search box on the top right and enter the last four characters of your ACPI ID. The window on the left should now show the device, and on the right there's an overview of properties and values. Check that the property IOInterruptSpecifiers is no longer present. If it is present, go back over this guide and check your changes, or if have two or more Candidate GPIO Pin Numbers, then try again with a different Pin Number.
+
+If the property IOInterruptSpecifiers does not appear, then you have completed this guide and you can continue with the installation of the kexts.
