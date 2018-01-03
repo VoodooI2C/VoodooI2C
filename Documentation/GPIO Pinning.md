@@ -4,7 +4,7 @@
 
 #### Introduction
 
-The VoodooI2C kexts require decompiling, editing and compiling the DSDT. This guide assumes that you have experience in that. See for instance this [introduction](https://www.tonymacx86.com/threads/guide-patching-laptop-dsdt-ssdts.152573/ for).
+The VoodooI2C kexts require decompiling, editing and compiling the DSDT. This guide assumes that you have experience in that. See for instance this [introduction](https://www.tonymacx86.com/threads/guide-patching-laptop-dsdt-ssdts.152573/).
 
 Many patches can be applied using patchfiles downloaded by MaciASL.app from the internet repositories, such as the I2C patches from the VoodooI2C repository. However, no pre-cooked patches are as yet available for patching the _CRS Method of the touch device. Manual editing of the DSDT.dsl file is required. This guide covers that.
 
@@ -37,7 +37,9 @@ Now reboot into Mac OS X and run IORegistryExplorer.app. Use the search box on t
 
 ![pin_situation](images/ioreg_pin_situation.png "Pin Situation")
 
-Check if the property 'IOInterruptSpecifiers' is present. 
+If no device is found, then you probably have to apply a 'Windows' patch (see the Installation guide). You need to fix that before you can continue with this guide.
+
+If the device is present, then check if the property 'IOInterruptSpecifiers' is present. 
 
 - If IOInterruptSpecifiers is not present then you have completed this guide and you can continue with installing the kexts
 
@@ -45,7 +47,7 @@ Check if the property 'IOInterruptSpecifiers' is present.
 
 If your APIC Pin Number is less than or equal to 0x2f, then you have completed this guide and you can proceed with the installation of the kexts.
 
-If your APIC Pin Number is outside the range 05x-0x77, then VoodooI2C is not the correct driver for your touchpad. You are advised to seek support in the relevant forums or usergroups.
+If your APIC Pin Number is outside the range 0x5c-0x77, then VoodooI2C is not the correct driver for your touchpad. You are advised to seek support in the relevant forums or usergroups.
 
 If your APIC Pin Number is between 0x5c and 0x77, then calculate the corresponding GPIO Pin Number as follows (you can use Calculator.app for hexadecimal conversions and calculations):
 
@@ -56,6 +58,8 @@ If your APIC Pin Number is between 0x5c and 0x77, then calculate the correspondi
 
 The string or strings you have written down can be in either of two formats:
 
+- the format is "GPDX_IRQ", where X stands for a number. In that case the decimal GPIO Pin Number is X + 144 + 8
+
 - the format "GPP_YX_IRQ". In this format Y stands for a letter that represents the Group and X stands for a decimal number representing the Pad Number. Now calculate the decimal GPIO Pin Number for this format as follows:
 
     - If the Group equals "A", then the GPIO Pin Number equals the Pad Number
@@ -65,8 +69,6 @@ The string or strings you have written down can be in either of two formats:
     - If the Group equals "E", then the GPIO Pin Number equals the Pad Number + 96
     - If the Group equals "F", then the GPIO Pin Number equals the Pad Number + 120
     - If the Group equals "G", then the GPIO Pin Number equals the Pad Number + 144
-
-- the format is "GPDX_IRQ", where X stands for a number. In that case the decimal GPIO Pin Number is X + 144 + 8
 
 Now convert each of the GPIO Pin Numbers to their hexadecimal values (for instance using Calculator.app). These are your hexadecimal Candidate GPIO Pin numbers. Write these down.
 
@@ -106,7 +108,7 @@ At this stage you have located or created the SBFG Name definition. This contain
 
 If the Pin list in the SBFG ResourceTemplate definition has a value other than zero (0x0000 or 0x00), then do not make any changes here (the value is probably your Candidate GPIO Pin Number, but that is not guaranteed) and proceed to step 2.b.
 
-If the Pin list in the SBFG ResourceTemplate has a value of zero (0x0000 or 0x00) then replace that value with your hexadecimal Candidate GPIO Pin Number. If you have more than one Candidate GPIO Pin number, then select one of them and continue this guide and the kext installation. If that does not result in a working touch device, then change this value to another candiate GPIO Pin Number and try again with another of your Candidate Pin numbers.
+If the Pin list in the SBFG ResourceTemplate has a value of zero (0x0000 or 0x00) then replace that value with your hexadecimal Candidate GPIO Pin Number. If you have more than one Candidate GPIO Pin number, then select one of them and continue this guide and the kext installation. If that does not result in a working touch device, then change this value to another candiate GPIO Pin Number and try again.
 
 At the end of this step you have located or created the SBFG Name definition and the Pin list in that definition has a value that is not zero.
 
@@ -116,7 +118,7 @@ Check if there is an SBFB Name definition within the Device section that you are
 
 If there is no such Name definition, check if there is a Name definition for SBFI (directly under the Device or in its _CRS Method). Look for: "Name (SBFI, ResourceTemplate ()"
 
-If there is no SBFB Name definition, then see if there is an SBFI Name definition. If this is present, then change the SBFI to SBFB and remove the Interrupt section if that appears within the SBFI. The result should look similar to the example below (note that the arguments in your I2cSerialBusV2 call may have different values. That is ok, do not change those values):
+If the SBFI Name is present, then change the identifier SBFI to SBFB and remove the Interrupt section if that appears within the SBFI. The result should look similar to the example below (note that the arguments in your I2cSerialBusV2 call may have different values. That is ok, do not change those values):
 
 ```
 	Name (SBFB, ResourceTemplate ()
@@ -138,7 +140,7 @@ Now go to the _CRS Method in the Device section that you're working in, and remo
     Return (ConcatenateResTemplate (SBFB, SBFG))
 ```
 
-Your _CRS Method definitions then should similar to:
+Your _CRS Method definitions then should be similar to:
 
 ```
 	Method (_CRS, 0, Serialized)    // _CRS: Current Resource Settings
