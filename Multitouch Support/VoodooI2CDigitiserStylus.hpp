@@ -27,7 +27,7 @@ class VoodooI2CDigitiserStylus : public VoodooI2CDigitiserTransducer {
     DigitiserTransducerButtonState eraser;
     bool invert;
     
-    VoodooI2CDigitiserStylus* stylus(DigitiserTransducuerType transducer_type, IOHIDElement* digitizer_collection);
+    static VoodooI2CDigitiserStylus* stylus(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection);
 
  protected:
  private:
