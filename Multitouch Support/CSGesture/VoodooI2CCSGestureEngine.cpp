@@ -123,6 +123,12 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             if (transducer->tip_switch) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
+                
+                if ((softc.phyx / softc.resx) > 0)
+                    softc.x[i] /= (softc.phyx / softc.resx);
+                if ((softc.phyy / softc.resy) > 0)
+                    softc.y[i] /= (softc.phyy / softc.resy);
+                
                 if (transducer->tip_pressure.value())
                     softc.p[i] = transducer->tip_pressure.value();
                 else
@@ -855,15 +861,6 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     
     softc.resx = max_x;
     softc.resy = max_y;
-    
-    /*sc->resx *= 2;
-     sc->resx /= 7;
-     
-     sc->resy *= 2;
-     sc->resy /= 7;*/
-    
-    softc.resx = max_x * 10 / hw_res_x;
-    softc.resy = max_y * 10 / hw_res_y;
     
     softc.phyx = interface->physical_max_x;
     softc.phyy = interface->physical_max_y;
