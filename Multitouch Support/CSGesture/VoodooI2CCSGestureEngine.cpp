@@ -617,7 +617,8 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 iToUse[a] = i;
                 a++;
             } else {
-                iToUse[0] = i;
+                if (sc->y[iToUse[0]] >= sc->y[i])
+                    iToUse[0] = i;
             }
         } else {
             abovethreshold++;
