@@ -611,6 +611,14 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 iToUse[a] = i;
                 a++;
             }
+        } else if (a == 1 && nfingers == 2) {
+            if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= 2) {
+                abovethreshold++;
+                iToUse[a] = i;
+                a++;
+            } else {
+                iToUse[0] = i;
+            }
         } else {
             abovethreshold++;
             iToUse[a] = i;
