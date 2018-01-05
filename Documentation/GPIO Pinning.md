@@ -25,7 +25,7 @@ This is the easiest of steps. Open IORegExplorer and search for your ACPI ID (if
 
 If you do not have `IOInterruptSpecifiers` listed as above then you are good to go and can skip straight to the section `Installing the kext`. If you do then expand it to reveal some numbers. Write down the first two numbers in the `Value` column as `0xXX` (in the example above, `0x33`), this is your device's **hexadecimal APIC pin number**. If your hexadecimal APIC pin number is less than or equal to `0x2F` then you are good to go and can skip straight to the section `Installing the kext`. If you do not know how to compare hexadecimal numbers, just convert both numbers to decimal using any freely available online tool and compare the resulting numbers.
 
-You will also need to make sure that your I2C Serial Bus `Name` is correctly labelled. In the device, you should be able to find a `Name` called `SBFB`. If you cannot find it, you may find something that looks like this instead:
+You will also need to make sure that your I2C Serial Bus `Name` is correctly labelled. Search for your device ACPI ID in your DSDT until you reach its device entry, you should be able to find a `Name` called `SBFB`. If you cannot find it, you may find something that looks like this instead:
 
 ```
     Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
@@ -120,23 +120,13 @@ If you have now determined that your device is well-pinned, proceed to Step 3. I
 
 ##### Step 2d: Manually pinning your device
 
-We now come to the difficult task of manually assigning a GPIO pin to your device. This is potentially a tricky task as there is sometimes some trial and error involved. Nonetheless, it is feasible and we shall outline the steps that you need to take.
+We now come to the task of manually assigning a GPIO pin to your device. This is potentially a tricky task as there is sometimes some trial and error involved.
 
-Consult the list found at [this link](https://github.com/coreboot/coreboot/blob/master/src/soc/intel/skylake/include/soc/gpio_defs.h#L43). Look up your device's hexadecimal APIC pin number in the right hand column. The corresponding label on the left hand side is of the form `GPP_XYY_IRQ` where X is a letter and YY is a number (the last group is `GPD_YY_IRQ`, pretend it is a continuation of `GPP_GYY_IRQ` e.g `GPD_00_IRQ = GPP_G8_IRQ`). X is your device's **group letter** and YY is your device's **pad number**. Your device's **group number** is given in the following table:
+Consult the list found at [this link](https://github.com/coreboot/coreboot/blob/master/src/soc/intel/skylake/include/soc/gpio_defs.h#L43). Look up your device's hexadecimal APIC pin number in the right hand column. The corresponding label on the left hand side is of the form `GPP_XYY_IRQ` - take a note of this label. Now consult the second list found at [this link](https://github.com/coreboot/coreboot/blob/master/src/soc/intel/skylake/include/soc/gpio_soc_defs.h#L37). Look up the label you took a note of in the list (note that 'IRQ' is no longer in the label name, this doesn't matter). The corresponding number on the right is your **decimal GPIO pin number**.
 
-- Group A - 0
-- Group B - 1
-- Group C - 2
-- Group D - 3
-- Group E - 4
-- Group F - 5
-- Group G - 6
+Convert this to a hexadecimal number. If your hexadecimal APIC pin is between `0x5c` and `0x77` inclusive then this is your **hexadecimal GPIO pin**. If your hexadecimal APIC pin does not fall in this range then you will notice that it appears twice in the first list mentioned above. You will need to repeat the lookup process for both occurences of your hexadecimal APIC pin to obtain two possible hexadecimal GPIO pins. You will then need to test both of them to see which one works.
 
-Your device's **decimal GPIO pin** is then given by the formula
-
-![pin_situation](images/gpio_pin_formula.png "Pin Situation")
-
-Convert this to a hexadecimal number. If your hexadecimal APIC pin is between `0x5c` and `0x77` inclusive then this is your **hexadecimal GPIO pin**. If your hexadecimal APIC pin does not fall in this range then you will notice that it appears twice in the list mentioned above. You will need to repeat the lookup process for both occurences of your hexadecimal APIC pin to obtain two possible hexadecimal GPIO pins. You will then need to test both of them to see which one works.
+Note that (in very rare cases), the corresponding GPIO hexadecimal pin will not work. In this case, you can try some of the common values such as `0x17`, `0x1B`, `0x34` and `0x55`.
 
 Once you have a (candidate) hexadecimal GPIO pin, you can add it into the `SBFG` name under the `\\ Pin List` comment as follows (for example, if your hexadecimal GPIO pin is 0x17):
 
@@ -156,17 +146,7 @@ Your device is now well-pinned and you may proceed to Step 2e.
 
 ##### Step 2e: Ensuring your DSDT notifies the system that your device is GPIO pinned
 
-If your device is well-root pinned then replace the `_CRS` method with the following:
-
-```
-    Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-    {
-
-        Return (ConcatenateResTemplate (SBFB, SBFG))
-    }
-```
-
-If your device is well-CRS pinned then make sure that there are no other `Return` statements in your `_CRS` method apart from the following at the end:
+Finally, make sure that there are no other `Return` statements in your `_CRS` method apart from the following at the end:
 
 ```
     Return (ConcatenateResTemplate (SBFB, SBFG))
