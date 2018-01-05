@@ -15,3 +15,7 @@ VoodooI2C currently uses CSGesture (developed by [@coolstar](https://github.com/
 		- Up - Command + F11
 
 All three and four finger gestures (except the CMD+W/Q) ones can be configured in the Keyboard Shortcuts PrefPane and the Mission Control PrefPane.
+
+## Enabling Tap to Drag on 10.12+
+
+Some trackpad settings have been moved on 10.12+, this is the case for tap tp drag. Navigate to the Accessibility PrefPane. On the left, select 'Mouse & Trackpad' and then 'Trackpad Option'. Here you must select 'Enable Drag' and set "With drag blocking".
