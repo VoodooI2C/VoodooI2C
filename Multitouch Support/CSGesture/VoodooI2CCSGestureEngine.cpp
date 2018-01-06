@@ -611,7 +611,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 iToUse[a] = i;
                 a++;
             }
-        } else if (a == 1 && nfingers == 2) {
+        } else if (a == 1 && !sc->settings.display_integrated && nfingers == 2) {
             if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= 2) {
                 abovethreshold++;
                 iToUse[a] = i;
@@ -877,6 +877,11 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     softc.frequency = 5;
     
     softc.infoSetup = true;
+    
+    OSBoolean* display_integrated = OSDynamicCast(OSBoolean, interface->getProperty(kIOHIDDisplayIntegratedKey));
+    
+    if (display_integrated)
+        softc.settings.display_integrated = display_integrated->getValue();
     
     for (int i = 0;i < MAX_FINGERS; i++) {
         softc.x[i] = -1;
