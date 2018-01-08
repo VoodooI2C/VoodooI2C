@@ -114,12 +114,12 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
         softc.p[i] = -1;
     }
 
-    for (i=0; i < event.contact_count; i++) {
+    for (i=0; i < event.transducers->getCount(); i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, event.transducers->getObject(i));
         if (!transducer)
             continue;
 
-        if (transducer->is_valid) {
+        if (transducer->is_valid && (CMP_ABSOLUTETIME(&timestamp, &transducer->coordinates.x.current.timestamp)==0)) {
             if (transducer->tip_switch) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
@@ -146,18 +146,19 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
 
     }
 
+    ProcessGesture(&softc);
+
     return MultitouchReturnContinue;
 }
 
 void VoodooI2CCSGestureEngine::timedProcessGesture() {
-    ProcessGesture(&softc);
+    // ProcessGesture(&softc);
     
     this->timer_event_source->setTimeoutMS(5);
 }
 
 bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[4]) {
    int frequmult = 10 / sc->frequency;
-    
     if (abovethreshold == 1 || sc->panningActive) {
         int i = iToUse[0];
         if (!sc->panningActive && sc->tick[i] < (5 * frequmult))
@@ -605,6 +606,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
             continue;
         avgx[i] = sc->flextotalx[i] / sc->tick[i];
         avgy[i] = sc->flextotaly[i] / sc->tick[i];
+
         if (nfingers > 2) {
             if (distancesq(avgx[i], avgy[i]) > 2) {
                 abovethreshold++;
@@ -620,7 +622,13 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 if (sc->y[iToUse[0]] >= sc->y[i])
                     iToUse[0] = i;
             }
-        } else {
+        } else if (sc->settings.display_integrated && nfingers == 2) {
+            if (distancesq(avgx[i], avgy[i]) > 2) {
+                abovethreshold++;
+                iToUse[a] = i;
+                a++;
+            }
+        }else {
             abovethreshold++;
             iToUse[a] = i;
             a++;
