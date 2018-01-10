@@ -108,13 +108,13 @@ int VoodooI2CCSGestureEngine::distancesq(int delta_x, int delta_y){
 MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     int i;
     
-    for (int i = 0;i < event.transducers->getCount(); i++) {
+    for (int i = 0;i < MAX_FINGERS; i++) {
         softc.x[i] = -1;
         softc.y[i] = -1;
         softc.p[i] = -1;
     }
 
-    for (i=0; i < event.transducers->getCount(); i++) {
+    for (i=0; i < MAX_FINGERS; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, event.transducers->getObject(i));
         if (!transducer)
             continue;
@@ -129,10 +129,11 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
                 if ((softc.resy / softc.phyy) > 0)
                     softc.y[i] /= (softc.resy / softc.phyy);
                 
-                if (transducer->tip_pressure.value())
+                if (transducer->tip_pressure.value()) {
                     softc.p[i] = transducer->tip_pressure.value();
-                else
+                } else {
                     softc.p[i] = 10;
+                }
             } else {
                 softc.x[i] = -1;
                 softc.y[i] = -1;
@@ -146,13 +147,11 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
 
     }
 
-    ProcessGesture(&softc);
-
     return MultitouchReturnContinue;
 }
 
 void VoodooI2CCSGestureEngine::timedProcessGesture() {
-    // ProcessGesture(&softc);
+    ProcessGesture(&softc);
     
     this->timer_event_source->setTimeoutMS(5);
 }
