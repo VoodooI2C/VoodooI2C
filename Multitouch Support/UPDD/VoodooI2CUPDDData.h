@@ -7,8 +7,8 @@
 
 struct updd_data {
     //  finger data
-    int current_x[5];
-    int current_y[5];
+    int current_x[11];
+    int current_y[11];
     
     //  device data
     int logical_x;

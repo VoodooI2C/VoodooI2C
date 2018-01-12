@@ -29,24 +29,29 @@ UInt8 VoodooI2CUPDDEngine::getScore() {
 
 MultitouchReturn VoodooI2CUPDDEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     int i;
+    int i_offset = 0;
     
     for (int i = 0;i < event.transducers->getCount(); i++) {
         finger_data.current_x[i] = -1;
         finger_data.current_y[i] = -1;
     }
     
-    for (i=0; i < event.contact_count; i++) {
+    for (i=0; i < event.contact_count+1; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, event.transducers->getObject(i));
+        if (transducer->type==kDigitiserTransducerStylus) {
+            i_offset = 1;
+            continue;
+        }
         if (!transducer)
             continue;
         finger_data.logical_x = transducer->logical_max_x;
         finger_data.logical_y = transducer->logical_max_y;
         
         if (transducer->tip_switch) {
-            finger_data.current_x[i] = transducer->coordinates.x.value();
-            finger_data.current_y[i] = transducer->coordinates.y.value();
-            
+            finger_data.current_x[i-i_offset] = transducer->coordinates.x.value();
+            finger_data.current_y[i-i_offset] = transducer->coordinates.y.value();
         }
+        
     }
 
     data_sent = sendInput(&finger_data);
