@@ -626,7 +626,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 iToUse[a] = i;
                 a++;
             }
-        } else {
+        } else if (distancesq(avgx[i], avgy[i]) > 2) {
             abovethreshold++;
             iToUse[a] = i;
             a++;
