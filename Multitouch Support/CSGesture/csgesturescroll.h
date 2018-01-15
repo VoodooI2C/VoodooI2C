@@ -25,7 +25,7 @@ private:
     
     bool isTouchActive = false;
     
-    int momentumscrollsamplesmin = 3;
+    int momentumscrollsamplesmin = 1;
     
     int momentumscrollcurrentx = 0;
     int momentumscrollmultiplierx = 98;

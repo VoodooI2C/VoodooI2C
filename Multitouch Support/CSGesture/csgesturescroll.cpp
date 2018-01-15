@@ -89,7 +89,7 @@ void CSGestureScroll::stopScroll(){
     dy_history.reset();
     isTouchActive = false;
     
-    disableScrollingDelayLaunch();
+    // disableScrollingDelayLaunch();
 }
 
 void CSGestureScroll::scrollTimer(){
@@ -133,9 +133,7 @@ void CSGestureScroll::scrollTimer(){
         }
     }
     
-    if (momentumscrollcurrentx == 0 && momentumscrollcurrenty == 0)
-        disableScrollingDelayLaunch();
-    else {
+    if (momentumscrollcurrentx != 0 || momentumscrollcurrenty != 0) {
         cancelDelayScroll = true;
         softc->scrollInertiaActive = true;
     }

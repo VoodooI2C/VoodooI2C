@@ -93,7 +93,7 @@ typedef struct __attribute__((__packed__)) _CSGESTURE_KEYBOARD_REPORT
     // Right Control, Right Shift, Right Alt, Right GUI
     BYTE      ShiftKeyFlags;
     
-    BYTE      Reserved;
+        BYTE      Reserved;
     
     // See http://www.usb.org/developers/devclass_docs/Hut1_11.pdf
     // for a list of key codes
@@ -206,7 +206,7 @@ bool VoodooI2CCSGestureEngine::ProcessScroll(csgesture_softc *sc, int abovethres
     
     sc->scrollx = 0;
     sc->scrolly = 0;
-    
+        
     if (abovethreshold == 2 || sc->scrollingActive) {
         int i1 = iToUse[0];
         int i2 = iToUse[1];
