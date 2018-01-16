@@ -531,7 +531,7 @@ void VoodooI2CCSGestureEngine::TapToClickOrDrag(csgesture_softc *sc, int button)
     if (_scrollHandler){
         if (_scrollHandler->isScrolling()){
             _scrollHandler->stopScroll();
-            // return;
+            return;
         }
     }
     
