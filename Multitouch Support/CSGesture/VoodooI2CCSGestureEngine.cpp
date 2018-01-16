@@ -608,7 +608,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
         avgx[i] = sc->flextotalx[i] / sc->tick[i];
         avgy[i] = sc->flextotaly[i] / sc->tick[i];
         
-        if (!nfingers || nfingers > 2 || (sc->settings.display_integrated && nfingers == 2) || (a == 0 && nfingers == 2)) {
+        if (!nfingers || nfingers > 2 || (sc->settings.display_integrated && nfingers == 2)) {
             if (distancesq(avgx[i], avgy[i]) > 2) {
                 abovethreshold++;
                 iToUse[a] = i;
@@ -623,7 +623,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 if (sc->y[iToUse[0]] >= sc->y[i])
                     iToUse[0] = i;
             }
-        } else if (nfingers == 1) {
+        } else if (nfingers == 1 || (a == 0 && nfingers == 2)) {
             abovethreshold++;
             iToUse[a] = i;
             a++;
