@@ -673,6 +673,9 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
             sc->mousedown = true;
             sc->tickssinceclick = 0;
             
+            if (nfingers == 1 && ((int)(10*sc->x[iToUse[0]]/sc->resx) > 5) && ((int)(10*sc->y[iToUse[0]]/sc->resy) > 8))
+                sc->mousebutton = 2;
+            
             switch (sc->mousebutton) {
                 case 1:
                     buttonmask = MOUSE_BUTTON_1;

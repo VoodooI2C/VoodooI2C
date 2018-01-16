@@ -43,6 +43,8 @@ bool VoodooCSGestureHIPointingWrapper::init(){
 bool VoodooCSGestureHIPointingWrapper::start(IOService *provider){
     if (!super::start(provider))
         return false;
+
+    int enabledProperty = 1;
     
     if (version_major>=16) {
         
@@ -54,12 +56,11 @@ bool VoodooCSGestureHIPointingWrapper::start(IOService *provider){
         setProperty("ApplePreferenceCapability", true);
         setProperty("TrackpadEmbedded", true);
         setProperty("TrackpadThreeFingerDrag", false);
-        
+    } else {
+        setProperty("TrackpadCornerSecondaryClick", enabledProperty,
+                    sizeof(enabledProperty) * 8);
     }
-    
-    
-    
-    int enabledProperty = 1;
+
     setProperty("Clicking", enabledProperty,
                 sizeof(enabledProperty) * 8);
     setProperty("TrackpadScroll", enabledProperty,
@@ -159,6 +160,18 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
             horizontalScroll = hscrollNum->unsigned32BitValue() & 0x1;
         }
     }
+    
+    OSBoolean* right_click = OSDynamicCast(OSBoolean, dict->getObject("TrackpadCornerSecondaryClick"));
+    if (right_click){
+        gesturerec->softc.settings.literal_right_click = right_click->isTrue();
+    } else {
+        
+        OSNumber *right_click_num = OSDynamicCast(OSNumber, dict->getObject("TrackpadCornerSecondaryClick"));
+        if(right_click_num) {
+            gesturerec->softc.settings.literal_right_click = right_click_num->unsigned32BitValue() & 0x1;
+        }
+    }
+
     
     gesturerec->softc.settings.multiFingerTap = true;
     

@@ -10,6 +10,7 @@ struct csgesture_settings { //note not all settings were brought over from Windo
     bool multiFingerTap;
     bool tapDragEnabled;
     bool display_integrated = false;
+    bool literal_right_click = false;
 };
 
 struct csgesture_softc {
