@@ -518,19 +518,20 @@ void VoodooI2CCSGestureEngine::TapToClickOrDrag(csgesture_softc *sc, int button)
         sc->tickssinceclick = 0;
         return;
     }
-    
     for (int i = 0; i < MAX_FINGERS; i++){
         if (sc->truetick[i] < 10 && sc->truetick[i] > 0)
             button++;
     }
-    
+
+
     if (button == 0)
         return;
+    
     
     if (_scrollHandler){
         if (_scrollHandler->isScrolling()){
             _scrollHandler->stopScroll();
-            return;
+            // return;
         }
     }
     
@@ -549,6 +550,7 @@ void VoodooI2CCSGestureEngine::TapToClickOrDrag(csgesture_softc *sc, int button)
                 buttonmask = MOUSE_BUTTON_3;
             break;
     }
+
     if (buttonmask != 0 && sc->tickssinceclick > (10 * freqmult) && sc->ticksincelastrelease == 0) {
         sc->idForMouseDown = -1;
         sc->mouseDownDueToTap = true;
@@ -605,12 +607,14 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
             continue;
         avgx[i] = sc->flextotalx[i] / sc->tick[i];
         avgy[i] = sc->flextotaly[i] / sc->tick[i];
+        
         if (nfingers > 2) {
             if (distancesq(avgx[i], avgy[i]) > 2) {
                 abovethreshold++;
                 iToUse[a] = i;
                 a++;
             }
+        
         } else if (a == 1 && !sc->settings.display_integrated && nfingers == 2) {
             if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= 2) {
                 abovethreshold++;
@@ -626,11 +630,18 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 iToUse[a] = i;
                 a++;
             }
+        } else if (!nfingers) {
+            if (distancesq(avgx[i], avgy[i]) > 2) {
+                abovethreshold++;
+                iToUse[a] = i;
+                a++;
+            }
         } else {
             abovethreshold++;
             iToUse[a] = i;
             a++;
         }
+    
     }
     
 #pragma mark process different gestures
