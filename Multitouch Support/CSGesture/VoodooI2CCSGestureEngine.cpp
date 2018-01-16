@@ -608,13 +608,12 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
         avgx[i] = sc->flextotalx[i] / sc->tick[i];
         avgy[i] = sc->flextotaly[i] / sc->tick[i];
         
-        if (nfingers > 2) {
+        if (!nfingers || nfingers > 2 || (sc->settings.display_integrated && nfingers == 2) || (a == 0 && nfingers == 2)) {
             if (distancesq(avgx[i], avgy[i]) > 2) {
                 abovethreshold++;
                 iToUse[a] = i;
                 a++;
             }
-        
         } else if (a == 1 && !sc->settings.display_integrated && nfingers == 2) {
             if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= 2) {
                 abovethreshold++;
@@ -624,19 +623,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 if (sc->y[iToUse[0]] >= sc->y[i])
                     iToUse[0] = i;
             }
-        } else if (sc->settings.display_integrated && nfingers == 2) {
-            if (distancesq(avgx[i], avgy[i]) > 2) {
-                abovethreshold++;
-                iToUse[a] = i;
-                a++;
-            }
-        } else if (!nfingers) {
-            if (distancesq(avgx[i], avgy[i]) > 2) {
-                abovethreshold++;
-                iToUse[a] = i;
-                a++;
-            }
-        } else {
+        } else if (nfingers == 1) {
             abovethreshold++;
             iToUse[a] = i;
             a++;
@@ -822,7 +809,7 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     
     this->work_loop = getWorkLoop();
     if (!this->work_loop){
-        IOLog("%s::Unable to get workloop\n", getName());
+        ("%s::Unable to get workloop\n", getName());
         stop(service);
         return false;
     }
