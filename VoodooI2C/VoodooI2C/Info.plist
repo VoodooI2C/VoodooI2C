@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.0</string>
+	<string>2.0.1</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.0</string>
+	<string>2.0.1</string>
 	<key>OSBundleCompatibleVersion</key>
 	<string>2.0.0</string>
 	<key>IOKitPersonalities</key>
@@ -97,11 +97,11 @@
 		<key>com.apple.iokit.IOPCIFamily</key>
 		<string>2.9</string>
 		<key>com.apple.kpi.iokit</key>
-		<string>15.6</string>
+		<string>14</string>
 		<key>com.apple.kpi.libkern</key>
-		<string>15.6</string>
+		<string>14</string>
 		<key>com.apple.kpi.mach</key>
-		<string>15.6</string>
+		<string>14</string>
 		<key>com.apple.kpi.bsd</key>
 		<string>8.0</string>
 	</dict>
