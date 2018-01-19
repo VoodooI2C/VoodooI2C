@@ -123,11 +123,9 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             if (transducer->tip_switch) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
-                
-                if ((softc.resx / softc.phyx) > 0)
-                    softc.x[i] /= (softc.resx / softc.phyx);
-                if ((softc.resy / softc.phyy) > 0)
-                    softc.y[i] /= (softc.resy / softc.phyy);
+            
+                softc.x[i] /= softc.factor_x;
+                softc.y[i] /= softc.factor_y;
                 
                 if (transducer->tip_pressure.value())
                     softc.p[i] = transducer->tip_pressure.value();
@@ -615,7 +613,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
                 a++;
             }
         } else if (a == 1 && !sc->settings.display_integrated && nfingers == 2) {
-            if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= 2) {
+            if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= (2 / sc->factor_y)) {
                 abovethreshold++;
                 iToUse[a] = i;
                 a++;
@@ -673,7 +671,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
             sc->mousedown = true;
             sc->tickssinceclick = 0;
             
-            if (nfingers == 1 && ((int)(10*sc->x[iToUse[0]]/sc->resx) > 5) && ((int)(10*sc->y[iToUse[0]]/sc->resy) > 7))
+            if (nfingers == 1 && ((int)(10*sc->x[iToUse[0]]/sc->resx) > (5 / sc->factor_x)) && ((int)(10*sc->y[iToUse[0]]/sc->resy) > (7 / sc->factor_y)))
                 sc->mousebutton = 2;
             
             switch (sc->mousebutton) {
@@ -880,6 +878,14 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     
     softc.phyx = interface->physical_max_x;
     softc.phyy = interface->physical_max_y;
+    
+    softc.factor_x = softc.resx / softc.phyx;
+    if (!softc.factor_x)
+        softc.factor_x = 1;
+    
+    softc.factor_y = softc.resy / softc.phyy;
+    if (!softc.factor_y)
+        softc.factor_y = 1;
     
     softc.frequency = 5;
     

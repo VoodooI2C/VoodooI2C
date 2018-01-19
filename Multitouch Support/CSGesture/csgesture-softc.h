@@ -34,6 +34,9 @@ struct csgesture_softc {
     int phyx;
     int phyy;
     
+    int factor_x;
+    int factor_y;
+    
     //system output
     int dx;
     int dy;
