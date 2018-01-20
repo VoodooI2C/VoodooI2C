@@ -20,8 +20,8 @@ Please provide all requested IORegs using IORegExplorer v2.1 which can be obtain
 If after following the installation guide you get no or buggy input you will need to prepare an archive containing the following:
 
 1. A copy of your IOReg with VoodooI2C installed.
-2. A copy of your patched DSDT.
-3. A copy of the `system.log` output from the `Console` application.
+2. A copy of your original and patched DSDT.
+3. If you are on 10.11, a copy of your `system.log` from the Console app. If you are on 10.12+, a copy of the log as outlined on the <Common Errors> page.
 4. A text file containing the following information:
 	- Your OS version
 	- The version of VoodooI2C and each individual satellite kext installed
