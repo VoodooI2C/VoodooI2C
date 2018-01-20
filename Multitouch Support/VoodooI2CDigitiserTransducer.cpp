@@ -34,7 +34,7 @@ bool VoodooI2CDigitiserTransducer::serialize(OSSerialize* serializer) {
     return result;
 }
 
-VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(DigitiserTransducuerType transducer_type, IOHIDElement* digitizer_collection) {
+VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection) {
     VoodooI2CDigitiserTransducer* transducer = NULL;
     
     transducer = new VoodooI2CDigitiserTransducer;

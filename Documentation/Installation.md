@@ -79,6 +79,6 @@ Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few
 
 Once your machine has been prepared for VoodooI2C, you will now be able to install the kexts. Vist the [release page](https://github.com/alexandred/VoodooI2C/releases) and download the latest release. You will usually need to install two kexts: a core kext and a satellite kext. Sometimes it is the case that you will need to install more than one statellite. You should consult the <Satellite Kexts> page to determine which satellite kexts your device needs.
 
-Install the core kext `VoodooI2C.kext` and your chosen satellite kexts using your favourite kext installation method to your favourite kext installation destination. Restart your computer and enjoy your system!
+Install the core kext `VoodooI2C.kext` and your chosen satellite kexts to the Clover's kext injection directory. Restart your computer and enjoy your system!
 
 Should you run into any problems when trying to install or use VoodooI2C, please visit the <Troubleshooting> page.

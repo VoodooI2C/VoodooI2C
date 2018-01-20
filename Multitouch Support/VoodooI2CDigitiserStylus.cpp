@@ -11,7 +11,7 @@
 #define super VoodooI2CDigitiserTransducer
 OSDefineMetaClassAndStructors(VoodooI2CDigitiserStylus, VoodooI2CDigitiserTransducer);
 
-VoodooI2CDigitiserStylus* VoodooI2CDigitiserStylus::stylus(DigitiserTransducuerType transducer_type, IOHIDElement* digitizer_collection) {
+VoodooI2CDigitiserStylus* VoodooI2CDigitiserStylus::stylus(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection) {
     VoodooI2CDigitiserStylus* transducer = NULL;
     
     transducer = new VoodooI2CDigitiserStylus;

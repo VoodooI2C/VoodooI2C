@@ -10,3 +10,6 @@
 [submodule "VoodooI2C Satellites/VoodooI2CUPDDEngine"]
 	path = VoodooI2C Satellites/VoodooI2CUPDDEngine
 	url = https://github.com/blankmac/VoodooI2CUPDDEngine.git
+[submodule "VoodooI2C Satellites/VoodooI2CSynaptics"]
+	path = VoodooI2C Satellites/VoodooI2CSynaptics
+	url = https://github.com/alexandred/VoodooI2CSynaptics.git

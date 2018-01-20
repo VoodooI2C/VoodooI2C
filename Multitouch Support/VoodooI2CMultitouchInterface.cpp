@@ -55,8 +55,6 @@ bool VoodooI2CMultitouchInterface::start(IOService* provider) {
 
     setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
 
-    registerService();
-
     return true;
 }
 

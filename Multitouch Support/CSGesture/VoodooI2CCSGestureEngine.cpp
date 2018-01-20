@@ -93,7 +93,7 @@ typedef struct __attribute__((__packed__)) _CSGESTURE_KEYBOARD_REPORT
     // Right Control, Right Shift, Right Alt, Right GUI
     BYTE      ShiftKeyFlags;
     
-    BYTE      Reserved;
+        BYTE      Reserved;
     
     // See http://www.usb.org/developers/devclass_docs/Hut1_11.pdf
     // for a list of key codes
@@ -113,16 +113,20 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
         softc.y[i] = -1;
         softc.p[i] = -1;
     }
-
-    for (i=0; i < event.contact_count; i++) {
+    
+    for (i=0; i < event.transducers->getCount(); i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, event.transducers->getObject(i));
         if (!transducer)
             continue;
-
+        
         if (transducer->is_valid) {
             if (transducer->tip_switch) {
                 softc.x[i] = transducer->coordinates.x.value();
                 softc.y[i] = transducer->coordinates.y.value();
+            
+                softc.x[i] /= softc.factor_x;
+                softc.y[i] /= softc.factor_y;
+                
                 if (transducer->tip_pressure.value())
                     softc.p[i] = transducer->tip_pressure.value();
                 else
@@ -133,13 +137,13 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
                 softc.p[i] = -1;
             }
         }
-
+        
         if (i == 0 && (CMP_ABSOLUTETIME(&timestamp, &transducer->physical_button.current.timestamp) == 0)) {
             softc.buttondown = transducer->physical_button & 0x1;
         }
-
+        
     }
-
+    
     return MultitouchReturnContinue;
 }
 
@@ -150,7 +154,7 @@ void VoodooI2CCSGestureEngine::timedProcessGesture() {
 }
 
 bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethreshold, int iToUse[4]) {
-   int frequmult = 10 / sc->frequency;
+    int frequmult = 10 / sc->frequency;
     
     if (abovethreshold == 1 || sc->panningActive) {
         int i = iToUse[0];
@@ -200,7 +204,7 @@ bool VoodooI2CCSGestureEngine::ProcessScroll(csgesture_softc *sc, int abovethres
     
     sc->scrollx = 0;
     sc->scrolly = 0;
-    
+        
     if (abovethreshold == 2 || sc->scrollingActive) {
         int i1 = iToUse[0];
         int i2 = iToUse[1];
@@ -512,14 +516,15 @@ void VoodooI2CCSGestureEngine::TapToClickOrDrag(csgesture_softc *sc, int button)
         sc->tickssinceclick = 0;
         return;
     }
-    
     for (int i = 0; i < MAX_FINGERS; i++){
         if (sc->truetick[i] < 10 && sc->truetick[i] > 0)
             button++;
     }
-    
+
+
     if (button == 0)
         return;
+    
     
     if (_scrollHandler){
         if (_scrollHandler->isScrolling()){
@@ -543,6 +548,7 @@ void VoodooI2CCSGestureEngine::TapToClickOrDrag(csgesture_softc *sc, int button)
                 buttonmask = MOUSE_BUTTON_3;
             break;
     }
+
     if (buttonmask != 0 && sc->tickssinceclick > (10 * freqmult) && sc->ticksincelastrelease == 0) {
         sc->idForMouseDown = -1;
         sc->mouseDownDueToTap = true;
@@ -599,17 +605,28 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
             continue;
         avgx[i] = sc->flextotalx[i] / sc->tick[i];
         avgy[i] = sc->flextotaly[i] / sc->tick[i];
-        if (nfingers > 2) {
+        
+        if (!nfingers || nfingers > 2 || (sc->settings.display_integrated && nfingers == 2)) {
             if (distancesq(avgx[i], avgy[i]) > 2) {
                 abovethreshold++;
                 iToUse[a] = i;
                 a++;
             }
-        } else {
+        } else if (a == 1 && !sc->settings.display_integrated && nfingers == 2) {
+            if ((int)(10*abs(sc->y[iToUse[0]] - sc->y[i])/sc->resy) <= (2 / sc->factor_y)) {
+                abovethreshold++;
+                iToUse[a] = i;
+                a++;
+            } else {
+                if (sc->y[iToUse[0]] >= sc->y[i])
+                    iToUse[0] = i;
+            }
+        } else if (nfingers == 1 || (a == 0 && nfingers == 2)) {
             abovethreshold++;
             iToUse[a] = i;
             a++;
         }
+    
     }
     
 #pragma mark process different gestures
@@ -653,6 +670,9 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
             
             sc->mousedown = true;
             sc->tickssinceclick = 0;
+            
+            if (nfingers == 1 && ((int)(10*sc->x[iToUse[0]]/sc->resx) > (5 / sc->factor_x)) && ((int)(10*sc->y[iToUse[0]]/sc->resy) > (7 / sc->factor_y)))
+                sc->mousebutton = 2;
             
             switch (sc->mousebutton) {
                 case 1:
@@ -765,7 +785,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
 void VoodooI2CCSGestureEngine::prepareToSleep(){
     if (_scrollHandler)
         _scrollHandler->prepareToSleep();
-
+    
     if (this->timer_event_source){
         this->timer_event_source->cancelTimeout();
         this->timer_event_source->release();
@@ -776,7 +796,7 @@ void VoodooI2CCSGestureEngine::prepareToSleep(){
 void VoodooI2CCSGestureEngine::wakeFromSleep(){
     if (_scrollHandler)
         _scrollHandler->wakeFromSleep();
-
+    
     if (!this->timer_event_source){
         this->timer_event_source = IOTimerEventSource::timerEventSource(this, OSMemberFunctionCast(IOTimerEventSource::Action, this, &VoodooI2CCSGestureEngine::timedProcessGesture));
         this->work_loop->addEventSource(this->timer_event_source);
@@ -787,10 +807,10 @@ void VoodooI2CCSGestureEngine::wakeFromSleep(){
 bool VoodooI2CCSGestureEngine::start(IOService *service) {
     if (!super::start(service))
         return false;
-
+    
     this->work_loop = getWorkLoop();
     if (!this->work_loop){
-        IOLog("%s::Unable to get workloop\n", getName());
+        ("%s::Unable to get workloop\n", getName());
         stop(service);
         return false;
     }
@@ -804,7 +824,7 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
         return false;
     }
     this->work_loop->addEventSource(this->timer_event_source);
-
+    
     _wrapper = NULL;
     _pointingWrapper = NULL;
     _scrollHandler = NULL;
@@ -843,7 +863,7 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
         _scrollHandler->attach(service);
         _scrollHandler->start(service);
     }
-
+    
     uint16_t max_x = interface->logical_max_x;
     uint16_t max_y = interface->logical_max_y;
     
@@ -856,21 +876,25 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     softc.resx = max_x;
     softc.resy = max_y;
     
-    /*sc->resx *= 2;
-     sc->resx /= 7;
-     
-     sc->resy *= 2;
-     sc->resy /= 7;*/
-    
-    softc.resx = max_x * 10 / hw_res_x;
-    softc.resy = max_y * 10 / hw_res_y;
-    
     softc.phyx = interface->physical_max_x;
     softc.phyy = interface->physical_max_y;
+    
+    softc.factor_x = softc.resx / softc.phyx;
+    if (!softc.factor_x)
+        softc.factor_x = 1;
+    
+    softc.factor_y = softc.resy / softc.phyy;
+    if (!softc.factor_y)
+        softc.factor_y = 1;
     
     softc.frequency = 5;
     
     softc.infoSetup = true;
+    
+    OSBoolean* display_integrated = OSDynamicCast(OSBoolean, interface->getProperty(kIOHIDDisplayIntegratedKey));
+    
+    if (display_integrated)
+        softc.settings.display_integrated = display_integrated->getValue();
     
     for (int i = 0;i < MAX_FINGERS; i++) {
         softc.x[i] = -1;
@@ -879,7 +903,7 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     }
     
     this->timer_event_source->setTimeoutMS(10);
-
+    
     return true;
 }
 
@@ -904,13 +928,13 @@ void VoodooI2CCSGestureEngine::stop(IOService* provider) {
         _pointingWrapper->release();
         _pointingWrapper = NULL;
     }
-
+    
     if (this->timer_event_source){
         this->timer_event_source->cancelTimeout();
         this->timer_event_source->release();
         this->timer_event_source = NULL;
     }
-
+    
 }
 
 void VoodooI2CCSGestureEngine::update_relative_mouse(char button, char x, char y, char wheelPosition, char wheelHPosition){

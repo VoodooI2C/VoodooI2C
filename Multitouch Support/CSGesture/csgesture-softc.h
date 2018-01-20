@@ -9,6 +9,8 @@ struct csgesture_settings { //note not all settings were brought over from Windo
     bool tapToClickEnabled = true;
     bool multiFingerTap;
     bool tapDragEnabled;
+    bool display_integrated = false;
+    bool literal_right_click = false;
 };
 
 struct csgesture_softc {
@@ -31,6 +33,9 @@ struct csgesture_softc {
     int resy;
     int phyx;
     int phyy;
+    
+    int factor_x;
+    int factor_y;
     
     //system output
     int dx;

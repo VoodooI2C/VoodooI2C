@@ -55,7 +55,7 @@ typedef enum {
     kDigitiserTransducerFinger,
     kDigitiserTransducerStylus,
     kDigitiserTransducerPuck
-} DigitiserTransducuerType;
+} DigitiserTransducerType;
 
 typedef struct {
     TimeTrackedValue x;
@@ -109,7 +109,7 @@ class VoodooI2CDigitiserTransducer : public OSObject {
 
     bool in_range = false;
     bool is_valid = false;
-    DigitiserTransducuerType type;
+    DigitiserTransducerType type;
 
     IOHIDElement*  collection;
     OSArray*       elements;
@@ -127,7 +127,7 @@ class VoodooI2CDigitiserTransducer : public OSObject {
      * @return A pointer to an instance of <VoodooI2CDigitiserTransducer>
      */
 
-    static VoodooI2CDigitiserTransducer* transducer(DigitiserTransducuerType transducer_type, IOHIDElement* digitizer_collection);
+    static VoodooI2CDigitiserTransducer* transducer(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection);
  protected:
  private:
 };
