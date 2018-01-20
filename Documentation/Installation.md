@@ -20,7 +20,8 @@ VoodooI2C is designed to run on the vast majority of modern systems. However, th
 	1. 4 - Haswell
 	2. 5 - Broadwell
 	3. 6 - Skylake
-	4. 7 - Kabylake
+	4. 7 - Kaby Lake
+	5. 8 - Kaby Lake R
 If the number is not **at least** 4 then your system is not suitable for VoodooI2C.kext.
 
 2. If your machine shipped with Windows then the minimum required version of Windows is Windows 7. If your machine shipped with a previous version of Windows then it is unlikely that your machine will be supported by VoodooI2C. If your machine did not ship with Windows (for example, it may have shipped with Linux or with no preinstalled OS) then you may skip this requirement.
@@ -29,7 +30,7 @@ If the number is not **at least** 4 then your system is not suitable for VoodooI
 
 	1. 'INT33C2' and 'INT33C3' - Haswell era
 	2. 'INT3432' and 'INT3433' - Broadwell era
-	3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,a160' and 'pci8086,a161' - Skylake/Kabylake era
+	3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,a160' and 'pci8086,a161' - Skylake/Kaby Lake era
 
 4. Your machine should have at least one supported I2C device. For the vast majority of users, this will be an I2C-HID device. Examples of I2C-HID devices include Precision touchpads, touchscreens and sensor hubs.
 
@@ -56,7 +57,7 @@ Follow these instructions in order to add the VoodooI2C patch repository to Maci
 
 ### Windows Patches
 
-Regardless of whether or not your machine shipped with Windows, it is likely that you will require a Windows patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `Windows`. Choose the patch corresponding to the version of Windows that shipped with your machine. If you are not sure which version of Windows your machine shipped with, check the product key sticker which is usually located on the bottom of your machine. If your machine did not ship with Windows then you will have to test each patch until you find one that works - it is recommended that you start with Windows 7 and work your way up.
+Regardless of whether or not your machine shipped with Windows, it is likely that you will require a Windows patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `Windows`. Choose the patch corresponding to the version of Windows that shipped with your machine. If you are not sure which version of Windows your machine shipped with, check the product key sticker which is usually located on the bottom of your machine. If your machine did not ship with Windows then you will have to test each patch until you find one that works - it is recommended that you start with Windows 10 and work your way down.
 
 ### Controller Patches (Skylake systems only)
 
@@ -64,7 +65,7 @@ If your machine is Skylake then it is possible that you need a controller patch.
 
 ### GPIO Patches (Skylake+ systems)
 
-If your machine is Skylake or above, you will likely need a GPIO patches as well. 
+If your machine is Skylake or above, you will likely need GPIO patches as well.
 
 #### Controller Enabling
 
