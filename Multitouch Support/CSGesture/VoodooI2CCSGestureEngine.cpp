@@ -810,7 +810,7 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     
     this->work_loop = getWorkLoop();
     if (!this->work_loop){
-        ("%s::Unable to get workloop\n", getName());
+        IOLog("%s::Unable to get workloop\n", getName());
         stop(service);
         return false;
     }

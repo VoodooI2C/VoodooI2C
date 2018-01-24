@@ -11,12 +11,6 @@
 #define super OSObject
 OSDefineMetaClassAndStructors(VoodooI2CDigitiserTransducer, OSObject);
 
-void VoodooI2CDigitiserTransducer::free() {
-    OSSafeReleaseNULL(collection);
-    OSSafeReleaseNULL(elements);
-    super::free();
-}
-
 bool VoodooI2CDigitiserTransducer::serialize(OSSerialize* serializer) {
     OSDictionary* temp_dictionary = OSDictionary::withCapacity(2);
 
@@ -24,7 +18,6 @@ bool VoodooI2CDigitiserTransducer::serialize(OSSerialize* serializer) {
 
     if (temp_dictionary) {
         temp_dictionary->setObject(kIOHIDElementParentCollectionKey, collection);
-        temp_dictionary->setObject(kIOHIDElementKey, elements);
         temp_dictionary->serialize(serializer);
         temp_dictionary->release();
 
@@ -50,20 +43,6 @@ VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(Digitiser
     transducer->type        = transducer_type;
     transducer->collection  = digitizer_collection;
     transducer->in_range    = false;
-    
-    if (transducer->collection)
-        transducer->collection->retain();
-    
-    transducer->elements = OSArray::withCapacity(4);
-
-    if (!transducer->elements) {
-        if (transducer->collection)
-            OSSafeReleaseNULL(transducer->collection);
-        transducer = NULL;
-        goto exit;
-    } else {
-        transducer->elements->retain();
-    }
 
 exit:
     return transducer;

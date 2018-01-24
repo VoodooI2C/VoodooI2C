@@ -28,20 +28,6 @@ VoodooI2CDigitiserStylus* VoodooI2CDigitiserStylus::stylus(DigitiserTransducerTy
     transducer->collection  = digitizer_collection;
     transducer->in_range    = false;
     
-    if (transducer->collection)
-        transducer->collection->retain();
-    
-    transducer->elements = OSArray::withCapacity(4);
-    
-    if (!transducer->elements) {
-        if (transducer->collection)
-            OSSafeReleaseNULL(transducer->collection);
-        transducer = NULL;
-        goto exit;
-    } else {
-        transducer->elements->retain();
-    }
-    
 exit:
     return transducer;
 }
