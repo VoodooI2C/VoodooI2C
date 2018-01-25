@@ -113,6 +113,12 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
         softc.y[i] = -1;
         softc.p[i] = -1;
     }
+
+    UInt8 transform = 0;
+    OSNumber* number = OSDynamicCast(OSNumber, interface->getProperty(kIOFBTransformKey));
+    
+    if (number)
+        transform = number->unsigned8BitValue();
     
     for (i=0; i < event.transducers->getCount(); i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, event.transducers->getObject(i));
@@ -126,6 +132,19 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
             
                 softc.x[i] /= softc.factor_x;
                 softc.y[i] /= softc.factor_y;
+                
+                if (transform) {
+                    if (transform & kIOFBSwapAxes) {
+                        int old_x = softc.x[i];
+                        softc.x[i] = softc.y[i];
+                        softc.y[i] = old_x;
+                    }
+
+                    if (transform & kIOFBInvertX)
+                    softc.x[i] = (interface->logical_max_x / softc.factor_x) - softc.x[i];
+                    if (transform & kIOFBInvertY)
+                        softc.y[i] = (interface->logical_max_y / softc.factor_y) - softc.x[i];
+                }
                 
                 if (transducer->tip_pressure.value())
                     softc.p[i] = transducer->tip_pressure.value();
@@ -141,6 +160,7 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
         if (i == 0 && (CMP_ABSOLUTETIME(&timestamp, &transducer->physical_button.current.timestamp) == 0)) {
             softc.buttondown = transducer->physical_button & 0x1;
         }
+        
         
     }
     

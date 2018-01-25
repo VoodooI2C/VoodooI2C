@@ -16,6 +16,22 @@
 #include "MultitouchHelpers.hpp"
 #include "VoodooI2CDigitiserStylus.hpp"
 
+#define kIOFBTransformKey               "IOFBTransform"
+
+enum {
+    // transforms
+    kIOFBRotateFlags                    = 0x0000000f,
+    
+    kIOFBSwapAxes                       = 0x00000001,
+    kIOFBInvertX                        = 0x00000002,
+    kIOFBInvertY                        = 0x00000004,
+    
+    kIOFBRotate0                        = 0x00000000,
+    kIOFBRotate90                       = kIOFBSwapAxes | kIOFBInvertX,
+    kIOFBRotate180                      = kIOFBInvertX  | kIOFBInvertY,
+    kIOFBRotate270                      = kIOFBSwapAxes | kIOFBInvertY
+};
+
 class VoodooI2CMultitouchEngine;
 
 /* Acts as a middleman between multitouch capable device drivers such as <VoodooI2CHIDMultitouchEventDriver> and a <VoodooI2CMultitouchEngine>
