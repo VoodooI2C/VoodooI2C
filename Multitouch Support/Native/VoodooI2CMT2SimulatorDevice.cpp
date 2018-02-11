@@ -7,6 +7,7 @@
 //
 
 #include "VoodooI2CMT2SimulatorDevice.hpp"
+#include "VoodooI2CNativeEngine.hpp"
 
 #define super IOHIDDevice
 OSDefineMetaClassAndStructors(VoodooI2CMT2SimulatorDevice, IOHIDDevice);
@@ -41,7 +42,8 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
     input_report->multitouch_report_id = 0x31; //Magic
 
     // timestamp
-    AbsoluteTime relative_timestamp = SUB_ABSOLUTETIME(timestamp, start_timestamp);
+    AbsoluteTime relative_timestamp = timestamp;
+    SUB_ABSOLUTETIME(relative_timestamp, start_timestamp);
     
     UInt64 milli_timestamp;
     
@@ -53,11 +55,15 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
     timestamp_buff[2] = (milli_timestamp >> 0xd) & 0xFF;
     timestamp_buff[1] = (milli_timestamp >> 0x5) & 0xFF;
     timestamp_buff[0] = (milli_timestamp << 0x3) | 0x4;
+    
+    input_report->timestamp_buffer[0] = timestamp_buff[0];
+    input_report->timestamp_buffer[1] = timestamp_buff[1];
+    input_report->timestamp_buffer[2] = timestamp_buff[2];
 
     
     // finger data
     
-    for (int i = 0; multitouch_event.contact_count; i++) {
+    for (int i = 0; i < multitouch_event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(i));
 
         new_touch_state[i] = touch_state[i];
@@ -68,13 +74,13 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
 
         MAGIC_TRACKPAD_INPUT_REPORT_FINGER finger_data;
         
-        UInt16 x_min = -3678;
-        UInt16 y_min = -2479;
+        SInt16 x_min = -3678;
+        SInt16 y_min = -2479;
         
-        IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / transducer->logical_max_x) * 7612;
-        IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / transducer->logical_max_y) * 5065;
+        IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * 5065;
 
-        IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / transducer->logical_max_x) * 7612;
+        IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * 7612;
         
         new_touch_state[i]++;
         touch_state[i] = new_touch_state[i];
@@ -118,19 +124,19 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
             finger_data.Size = 0x20;
         }
         
-        scaled_x -= x_min;
-        scaled_y -= y_min;
+        SInt16 adjusted_x = scaled_x - x_min;
+        SInt16 adjusted_y = scaled_y - y_min;
         
-        finger_data.AbsX = scaled_x & 0xff;
+        finger_data.AbsX = adjusted_x & 0xff;
         
-        finger_data.AbsXY |= (scaled_x >> 8) & 0x0f;
-        if ((scaled_x >> 15) & 0x01)
+        finger_data.AbsXY |= (adjusted_x >> 8) & 0x0f;
+        if ((adjusted_x >> 15) & 0x01)
             finger_data.AbsXY |= 0x10;
         
-        finger_data.AbsXY |= (scaled_y << 5) & 0xe0;
-        finger_data.AbsY[0] = (scaled_y >> 3) & 0xff;
-        finger_data.AbsY[1] = (scaled_y >> 11) & 0x01;
-        if ((scaled_y >> 15) & 0x01)
+        finger_data.AbsXY |= (adjusted_y << 5) & 0xe0;
+        finger_data.AbsY[0] = (adjusted_y >> 3) & 0xff;
+        finger_data.AbsY[1] = (adjusted_y >> 11) & 0x01;
+        if ((adjusted_y >> 15) & 0x01)
             finger_data.AbsY[1] |= 0x02;
         
         finger_data.AbsY[1] |= newunknown;
@@ -157,7 +163,9 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
     IOBufferMemoryDescriptor* buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
     buffer_report->writeBytes(0, input_report, sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
 
-    handleReport(buffer_report);
+    IOReturn ret = handleReport(buffer_report, kIOHIDReportTypeInput);
+    
+    IOLog("report handled with ret: 0x%x\n", ret);
     
     IOFree(input_report, sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
 }
@@ -172,19 +180,26 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
-
+    
     IOLog("MT2 requested setReport with report_id: %d\n", options & 0xFF);
     
     UInt32 report_id = options & 0xFF;
     
     if (report_id == 0x1) {
-        IOBufferMemoryDescriptor* new_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, report->getLength());
+        char* raw_buffer = (char*)IOMalloc(report->getLength());
+        
+        report->prepare();
 
-        UInt32 value;
-        report->readBytes(1, &value, 1);
+        report->readBytes(0, raw_buffer, report->getLength());
+        
+        report->complete();
         
         new_get_report_buffer = OSData::withCapacity(1);
         
+        UInt8 value = raw_buffer[1];
+        
+        IOLog("Got here with value: 0x%x\n", value);
+    
         if (value == 0xDB) {
             unsigned char buffer[] = {0x1, 0xDB, 0x00, 0x49, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
@@ -211,7 +226,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         }
 
         if (value == 0xD9) {
-            unsigned char buffer[] = {0x1, 0xA1, 0x00, 0x10, 0x00};
+            unsigned char buffer[] = {0x1, 0xD9, 0x00, 0x10, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
@@ -224,6 +239,8 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
             unsigned char buffer[] = {0x1, 0xC8, 0x00, 0x01, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
+        
+        IOFree(raw_buffer, report->getLength());
     }
 
     return kIOReturnSuccess;
@@ -241,6 +258,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     if (report_id == 0x1) {
+        IOLog("We are going to send this: 0x%llx\n", (UInt64)new_get_report_buffer->getBytesNoCopy());
         get_buffer = new_get_report_buffer;
     }
     

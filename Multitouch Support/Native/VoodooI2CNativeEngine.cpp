@@ -44,7 +44,7 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     if (!super::start(provider))
         return false;
     
-    VoodooI2CMT2SimulatorDevice* simulator = OSTypeAlloc(VoodooI2CMT2SimulatorDevice);
+    simulator = OSTypeAlloc(VoodooI2CMT2SimulatorDevice);
     
     if (!simulator->init(NULL) ||
         !simulator->attach(this) ||

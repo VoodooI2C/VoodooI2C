@@ -19,6 +19,7 @@
 
 #include "MultitouchHelpers.hpp"
 #include "VoodooI2CDigitiserTransducer.hpp"
+#include "VoodooI2CMultitouchInterface.hpp"
 
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     UInt8 AbsX;
@@ -43,6 +44,8 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
     
     MAGIC_TRACKPAD_INPUT_REPORT_FINGER FINGERS[12]; //May support more fingers
 };
+
+class VoodooI2CNativeEngine;
 
 class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
   OSDeclareDefaultStructors(VoodooI2CMT2SimulatorDevice);
@@ -80,6 +83,7 @@ class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
     bool start(IOService* provider);
  protected:
  private:
+    VoodooI2CNativeEngine* engine;
     AbsoluteTime start_timestamp;
     OSData* new_get_report_buffer;
     UInt16 stashed_unknown[15];
