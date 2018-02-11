@@ -83,6 +83,7 @@ class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
     bool start(IOService* provider);
  protected:
  private:
+    bool ready_for_reports = false;
     VoodooI2CNativeEngine* engine;
     AbsoluteTime start_timestamp;
     OSData* new_get_report_buffer;

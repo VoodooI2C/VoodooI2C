@@ -21,6 +21,9 @@ UInt16 abs(SInt16 x){
 }
 
 void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp) {
+    if (!ready_for_reports)
+        return;
+
     MAGIC_TRACKPAD_INPUT_REPORT* input_report = (MAGIC_TRACKPAD_INPUT_REPORT*)IOMalloc(sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
     input_report->ReportID = 0x02;
     
@@ -43,23 +46,17 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
 
     // timestamp
     AbsoluteTime relative_timestamp = timestamp;
-    SUB_ABSOLUTETIME(relative_timestamp, start_timestamp);
+    SUB_ABSOLUTETIME(&relative_timestamp, &start_timestamp);
     
     UInt64 milli_timestamp;
     
     absolutetime_to_nanoseconds(relative_timestamp, &milli_timestamp);
     
     milli_timestamp /= 1000000;
-
-    UInt8 timestamp_buff[3];
-    timestamp_buff[2] = (milli_timestamp >> 0xd) & 0xFF;
-    timestamp_buff[1] = (milli_timestamp >> 0x5) & 0xFF;
-    timestamp_buff[0] = (milli_timestamp << 0x3) | 0x4;
     
-    input_report->timestamp_buffer[0] = timestamp_buff[0];
-    input_report->timestamp_buffer[1] = timestamp_buff[1];
-    input_report->timestamp_buffer[2] = timestamp_buff[2];
-
+    input_report->timestamp_buffer[0] = (milli_timestamp << 0x3) | 0x4;
+    input_report->timestamp_buffer[1] = (milli_timestamp >> 0x5) & 0xFF;
+    input_report->timestamp_buffer[2] = (milli_timestamp >> 0xd) & 0xFF;
     
     // finger data
     
@@ -175,6 +172,13 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
         return false;
     
     clock_get_uptime(&start_timestamp);
+    
+    engine = OSDynamicCast(VoodooI2CNativeEngine, provider);
+    
+    if (!engine)
+        return false;
+    
+    ready_for_reports = true;
 
     return true;
 }
