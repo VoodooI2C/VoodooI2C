@@ -70,14 +70,14 @@
 			<key>IOProviderClass</key>
 			<string>VoodooI2CControllerNub</string>
 		</dict>
-		<key>CSGesture Multitouch Engine</key>
+		<key>Native Multitouch Engine</key>
 		<dict>
 			<key>IOClass</key>
-			<string>VoodooI2CCSGestureEngine</string>
+			<string>VoodooI2CNativeEngine</string>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
 			<key>IOMatchCategory</key>
-			<string>VoodooI2CCSGestureEngine</string>
+			<string>VoodooI2CNativeEngine</string>
 			<key>IOProviderClass</key>
 			<string>VoodooI2CMultitouchInterface</string>
 		</dict>
