@@ -81,7 +81,7 @@ class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
  protected:
  private:
     AbsoluteTime start_timestamp;
-    IOBufferMemoryDescriptor* new_get_report;
+    OSData* new_get_report_buffer;
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];

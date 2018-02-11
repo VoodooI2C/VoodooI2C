@@ -172,7 +172,8 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
-    IOLog("MT2 requested setReport\n");
+
+    IOLog("MT2 requested setReport with report_id: %d\n", options & 0xFF);
     
     UInt32 report_id = options & 0xFF;
     
@@ -182,113 +183,113 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         UInt32 value;
         report->readBytes(1, &value, 1);
         
+        new_get_report_buffer = OSData::withCapacity(1);
+        
         if (value == 0xDB) {
             unsigned char buffer[] = {0x1, 0xDB, 0x00, 0x49, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
         
         if (value == 0xD1) {
             unsigned char buffer[] = {0x1, 0xD1, 0x00, 0x01, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
         if (value == 0xD3) {
             unsigned char buffer[] = {0x1, 0xD3, 0x00, 0x0C, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
         if (value == 0xD0) {
             unsigned char buffer[] = {0x1, 0xD0, 0x00, 0x0F, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
         if (value == 0xA1) {
             unsigned char buffer[] = {0x1, 0xA1, 0x00, 0x06, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
         if (value == 0xD9) {
             unsigned char buffer[] = {0x1, 0xA1, 0x00, 0x10, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
         if (value == 0x7F) {
             unsigned char buffer[] = {0x1, 0x7F, 0x00, 0x04, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
 
         if (value == 0xC8) {
             unsigned char buffer[] = {0x1, 0xC8, 0x00, 0x01, 0x00};
-            new_report->writeBytes(0, buffer, sizeof(buffer));
+            new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
-        new_get_report = new_report;
     }
 
     return kIOReturnSuccess;
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
-    IOLog("MT2 requested getReport! \n");
+    IOLog("MT2 requested getReport! report_id: %d\n", options & 0xFF);
     UInt32 report_id = options & 0xFF;
     
-    IOBufferMemoryDescriptor* get_buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, 1);
+    OSData* get_buffer = OSData::withCapacity(1);
 
     if (report_id == 0x0) {
         unsigned char buffer[] = {0x0, 0x01};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0x1) {
-        get_buffer->writeBytes(0, new_get_report, sizeof(new_get_report));
+        get_buffer = new_get_report_buffer;
     }
     
     if (report_id == 0xD1) {
         unsigned char buffer[] = {0xD1, 0x81};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD3) {
         unsigned char buffer[] = {0xD3, 0x01, 0x16, 0x1E, 0x03, 0x95, 0x00, 0x14, 0x1E, 0x62, 0x05, 0x00, 0x00};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
 
     if (report_id == 0xD0) {
         unsigned char buffer[] = {0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
 
     if (report_id == 0xA1) {
         unsigned char buffer[] = {0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD9) {
         unsigned char buffer[] = {0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
 
     if (report_id == 0x7F) {
         unsigned char buffer[] = {0x7F, 0x00, 0x00, 0x00, 0x00};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xC8) {
         unsigned char buffer[] = {0xC8, 0x08};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0x2) {
         unsigned char buffer[] = {0x02, 0x01};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xDB) {
         unsigned char buffer[] = {0xDB, 0x01, 0x02, 0x00, 0xD1, 0x81, 0x0D, 0x00, 0xD3, 0x01, 0x16, 0x1E, 0x03, 0x95, 0x00, 0x14, 0x1E, 0x62, 0x05, 0x00, 0x00, 0x10, 0x00, 0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00, 0x07, 0x00, 0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01, 0x11, 0x00, 0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26, 0x05, 0x00, 0x7F, 0x00, 0x00, 0x00, 0x00};
-        get_buffer->writeBytes(0, buffer, sizeof(buffer));
+        get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
-    report = get_buffer;
+    report->writeBytes(0, get_buffer->getBytesNoCopy(), get_buffer->getLength());
 
     return kIOReturnSuccess;
 }
