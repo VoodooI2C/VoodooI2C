@@ -3,7 +3,7 @@
 //  VoodooI2C
 //
 //  Created by Alexandre on 10/02/2018.
-//  Copyright © 2018 Alexandre Daoud. All rights reserved.
+//  Copyright © 2018 Alexandre Daoud and Kishor Prins. All rights reserved.
 //
 
 #include "VoodooI2CNativeEngine.hpp"
