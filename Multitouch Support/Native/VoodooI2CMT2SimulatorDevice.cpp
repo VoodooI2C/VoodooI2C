@@ -23,7 +23,9 @@ UInt16 abs(SInt16 x){
 void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp) {
     if (!ready_for_reports)
         return;
-
+    
+    IOLog("Voodoo got input\n");
+    
     MAGIC_TRACKPAD_INPUT_REPORT* input_report = (MAGIC_TRACKPAD_INPUT_REPORT*)IOMalloc(sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
     input_report->ReportID = 0x02;
     
@@ -31,7 +33,7 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
     
     if (!transducer)
         return;
-
+    
     // physical button
     input_report->Button = transducer->physical_button.value();
     
@@ -40,10 +42,10 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
         input_report->TouchActive = 0x3;
     else
         input_report->TouchActive = 0x2;
-
+    
     // multitouch report id
     input_report->multitouch_report_id = 0x31; //Magic
-
+    
     // timestamp
     AbsoluteTime relative_timestamp = timestamp;
     SUB_ABSOLUTETIME(&relative_timestamp, &start_timestamp);
@@ -59,31 +61,49 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
     input_report->timestamp_buffer[2] = (milli_timestamp >> 0xd) & 0xFF;
     
     // finger data
+
+    char unkownbits_check[255];
+    for(int j = 0; j < 255; j++) {
+        unkownbits_check[j] = 0;
+    }
+    
+    int valid_count = 0;
     
     for (int i = 0; i < multitouch_event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(i));
-
+        
         new_touch_state[i] = touch_state[i];
         touch_state[i] = 0;
         
-        if (!transducer)
+        if (!transducer || !transducer->is_valid)
             continue;
 
+        if (!transducer->tip_switch.value()) {
+            new_touch_state[i] = 0;
+            touch_state[i] = 0;
+        }
+        
+        valid_count += 1;
+        
         MAGIC_TRACKPAD_INPUT_REPORT_FINGER finger_data;
         
-        SInt16 x_min = -3678;
-        SInt16 y_min = -2479;
+        SInt16 x_min = 3678;
+        SInt16 y_min = 2479;
         
         IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * 7612;
         IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * 5065;
-
+        
+        IOLog("hdump for VoodooI2C (%d, %d): %d %d | %d %d\n", engine->interface->logical_max_x, engine->interface->logical_max_y, transducer->coordinates.x.value(), transducer->coordinates.y.value(), scaled_x, scaled_y);
+        // IOLog("Voodoo native: %d %d\n", transducer->coordinates.x.value(), transducer->coordinates.x.last.value);
         IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * 7612;
+        uint8_t scaled_old_x_truncated = scaled_old_x;
         
         new_touch_state[i]++;
         touch_state[i] = new_touch_state[i];
         
         int newunknown = stashed_unknown[i];
-        if (abs(scaled_x - scaled_old_x) > 50){
+        // IOLog("Voodoo abs: abs(%d - %d)=%d\n", scaled_x, scaled_old_x, abs(scaled_x - scaled_old_x));
+        if (abs(scaled_x - scaled_old_x_truncated) > 50){
             if (scaled_x <= 23){
                 newunknown = 0x44;
             } else if (scaled_x <= 27){
@@ -108,6 +128,14 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
                 newunknown = 0x44;
             }
         }
+
+        bool check = false;
+        while(unkownbits_check[newunknown] == 1) {
+            check = true;
+            newunknown -= 4;
+        }
+        
+        unkownbits_check[newunknown] = 1;
         
         if (new_touch_state[i] == 1) {
             newunknown = 0x20;
@@ -121,19 +149,26 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
             finger_data.Size = 0x20;
         }
         
+        stashed_unknown[i] = newunknown;
+        
         SInt16 adjusted_x = scaled_x - x_min;
         SInt16 adjusted_y = scaled_y - y_min;
+        adjusted_y = adjusted_y * -1;
         
-        finger_data.AbsX = adjusted_x & 0xff;
+        uint16_t rawx = *(uint16_t *)&adjusted_x;
+        uint16_t rawy = *(uint16_t *)&adjusted_y;
         
-        finger_data.AbsXY |= (adjusted_x >> 8) & 0x0f;
-        if ((adjusted_x >> 15) & 0x01)
+        finger_data.AbsX = rawx & 0xff;
+        
+        finger_data.AbsXY = 0;
+        finger_data.AbsXY |= (rawx >> 8) & 0x0f;
+        if ((rawx >> 15) & 0x01)
             finger_data.AbsXY |= 0x10;
         
-        finger_data.AbsXY |= (adjusted_y << 5) & 0xe0;
-        finger_data.AbsY[0] = (adjusted_y >> 3) & 0xff;
-        finger_data.AbsY[1] = (adjusted_y >> 11) & 0x01;
-        if ((adjusted_y >> 15) & 0x01)
+        finger_data.AbsXY |= (rawy << 5) & 0xe0;
+        finger_data.AbsY[0] = (rawy >> 3) & 0xff;
+        finger_data.AbsY[1] = (rawy >> 11) & 0x01;
+        if ((rawy >> 15) & 0x01)
             finger_data.AbsY[1] |= 0x02;
         
         finger_data.AbsY[1] |= newunknown;
@@ -150,19 +185,19 @@ void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multi
             finger_data.Pressure = 120;
         else
             finger_data.Pressure = 10;
-
+        
         finger_data.Orientation_Origin = (128 & 0xF0) | ((transducer->secondary_id + 1) & 0xF);
-
+        
         input_report->FINGERS[i] = finger_data;
     }
-
     
-    IOBufferMemoryDescriptor* buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
-    buffer_report->writeBytes(0, input_report, sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
-
+    int total_report_len = (9 * valid_count) + 12;
+    IOBufferMemoryDescriptor* buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
+    buffer_report->writeBytes(0, input_report, total_report_len);
+    
     IOReturn ret = handleReport(buffer_report, kIOHIDReportTypeInput);
     
-    IOLog("report handled with ret: 0x%x\n", ret);
+    // IOLog("report handled with ret: 0x%x\n", ret);
     
     IOFree(input_report, sizeof(MAGIC_TRACKPAD_INPUT_REPORT));
 }
@@ -179,7 +214,7 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
         return false;
     
     ready_for_reports = true;
-
+    
     return true;
 }
 
@@ -193,7 +228,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         char* raw_buffer = (char*)IOMalloc(report->getLength());
         
         report->prepare();
-
+        
         report->readBytes(0, raw_buffer, report->getLength());
         
         report->complete();
@@ -203,7 +238,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         UInt8 value = raw_buffer[1];
         
         IOLog("Got here with value: 0x%x\n", value);
-    
+        
         if (value == 0xDB) {
             unsigned char buffer[] = {0x1, 0xDB, 0x00, 0x49, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
@@ -213,32 +248,32 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
             unsigned char buffer[] = {0x1, 0xD1, 0x00, 0x01, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
+        
         if (value == 0xD3) {
             unsigned char buffer[] = {0x1, 0xD3, 0x00, 0x0C, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
+        
         if (value == 0xD0) {
             unsigned char buffer[] = {0x1, 0xD0, 0x00, 0x0F, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
+        
         if (value == 0xA1) {
             unsigned char buffer[] = {0x1, 0xA1, 0x00, 0x06, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
+        
         if (value == 0xD9) {
             unsigned char buffer[] = {0x1, 0xD9, 0x00, 0x10, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
+        
         if (value == 0x7F) {
             unsigned char buffer[] = {0x1, 0x7F, 0x00, 0x04, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
         }
-
+        
         if (value == 0xC8) {
             unsigned char buffer[] = {0x1, 0xC8, 0x00, 0x01, 0x00};
             new_get_report_buffer->appendBytes(buffer, sizeof(buffer));
@@ -246,7 +281,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         
         IOFree(raw_buffer, report->getLength());
     }
-
+    
     return kIOReturnSuccess;
 }
 
@@ -255,7 +290,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     UInt32 report_id = options & 0xFF;
     
     OSData* get_buffer = OSData::withCapacity(1);
-
+    
     if (report_id == 0x0) {
         unsigned char buffer[] = {0x0, 0x01};
         get_buffer->appendBytes(buffer, sizeof(buffer));
@@ -275,22 +310,23 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
         unsigned char buffer[] = {0xD3, 0x01, 0x16, 0x1E, 0x03, 0x95, 0x00, 0x14, 0x1E, 0x62, 0x05, 0x00, 0x00};
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
-
+    
     if (report_id == 0xD0) {
         unsigned char buffer[] = {0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00};
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
-
+    
     if (report_id == 0xA1) {
         unsigned char buffer[] = {0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01};
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD9) {
+        //0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26
         unsigned char buffer[] = {0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26};
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
-
+    
     if (report_id == 0x7F) {
         unsigned char buffer[] = {0x7F, 0x00, 0x00, 0x00, 0x00};
         get_buffer->appendBytes(buffer, sizeof(buffer));
@@ -312,7 +348,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     report->writeBytes(0, get_buffer->getBytesNoCopy(), get_buffer->getLength());
-
+    
     return kIOReturnSuccess;
 }
 
@@ -351,7 +387,7 @@ OSString* VoodooI2CMT2SimulatorDevice::newProductString() const {
 }
 
 OSString* VoodooI2CMT2SimulatorDevice::newSerialNumberString() const {
-    return OSString::withCString("CC2709400FBG61CAF");
+    return OSString::withCString("Voodoo Magic Trackpad Simulator");
 }
 
 OSString* VoodooI2CMT2SimulatorDevice::newTransportString() const {

@@ -48,25 +48,25 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
 class VoodooI2CNativeEngine;
 
 class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
-  OSDeclareDefaultStructors(VoodooI2CMT2SimulatorDevice);
-
- public:
+    OSDeclareDefaultStructors(VoodooI2CMT2SimulatorDevice);
+    
+public:
     void constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp);
     IOReturn setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
     
     IOReturn getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
     virtual IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
     virtual OSNumber* newVendorIDNumber() const override;
-
+    
     
     virtual OSNumber* newProductIDNumber() const override;
-
+    
     
     virtual OSNumber* newVersionNumber() const override;
-
+    
     
     virtual OSString* newTransportString() const override;
-
+    
     
     virtual OSString* newManufacturerString() const override;
     
@@ -75,14 +75,16 @@ class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
     virtual OSNumber* newPrimaryUsagePageNumber() const override;
     
     virtual OSString* newProductString() const override;
-
+    
     virtual OSString* newSerialNumberString() const override;
     
     virtual OSNumber* newLocationIDNumber() const override;
     
     bool start(IOService* provider);
- protected:
- private:
+    
+    //IOWorkLoop* getWorkLoop();
+protected:
+private:
     bool ready_for_reports = false;
     VoodooI2CNativeEngine* engine;
     AbsoluteTime start_timestamp;
@@ -90,6 +92,10 @@ class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];
+    IOWorkLoop* workLoop;
+    IOCommandGate* command_gate;
+    
+    // void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
 };
 
 
