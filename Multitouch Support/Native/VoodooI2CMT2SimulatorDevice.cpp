@@ -9,6 +9,9 @@
 #include "VoodooI2CMT2SimulatorDevice.hpp"
 #include "VoodooI2CNativeEngine.hpp"
 
+#include <IOKit/IOWorkLoop.h>
+#include <IOKit/IOCommandGate.h>
+
 #define super IOHIDDevice
 OSDefineMetaClassAndStructors(VoodooI2CMT2SimulatorDevice, IOHIDDevice);
 
@@ -21,6 +24,13 @@ UInt16 abs(SInt16 x){
 }
 
 void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp) {
+    if (!ready_for_reports)
+        return;
+
+    command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CMT2SimulatorDevice::constructReportGated), &multitouch_event, &timestamp);
+}
+
+void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp) {
     if (!ready_for_reports)
         return;
     
@@ -196,6 +206,23 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     
     if (!engine)
         return false;
+
+    workLoop = this->getWorkLoop();
+    if (!workLoop) {
+        IOLog("%s Could not get a IOWorkLoop instance\n", getName());
+        return false;
+    }
+    
+    workLoop->retain();
+    
+    command_gate = IOCommandGate::commandGate(this);
+    if (!command_gate || (workLoop->addEventSource(command_gate) != kIOReturnSuccess)) {
+        IOLog("%s Could not open command gate\n", getName());
+        workLoop->release();
+        workLoop = NULL;
+        
+        return false;
+    }
     
     ready_for_reports = true;
     

@@ -95,7 +95,7 @@ private:
     IOWorkLoop* workLoop;
     IOCommandGate* command_gate;
     
-    // void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
+    void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
 };
 
 
