@@ -26,14 +26,14 @@ UInt16 abs(SInt16 x){
 void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp) {
     if (!ready_for_reports)
         return;
-    
+
     command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CMT2SimulatorDevice::constructReportGated), &multitouch_event, &timestamp);
 }
 
 void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp) {
     if (!ready_for_reports)
         return;
-    
+
     MAGIC_TRACKPAD_INPUT_REPORT input_report;
     input_report.ReportID = 0x02;
     input_report.Unused[0] = 0;
@@ -95,7 +95,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         }
         
         valid_count += 1;
-        
+
         MAGIC_TRACKPAD_INPUT_REPORT_FINGER& finger_data = input_report.FINGERS[has_stylus ? (i-1) : i];
         
         SInt16 x_min = 3678;
@@ -137,7 +137,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
                 newunknown = 0x44;
             }
         }
-        
+
         if(first_unknownbit == -1) {
             first_unknownbit = newunknown;
         }
@@ -195,7 +195,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             finger_data.Touch_Major = 0;
             finger_data.Touch_Minor = 0;
         }
-        
+
         if (transducer->tip_pressure.value() || (i == 0 && input_report.Button))
             finger_data.Pressure = 120;
         else if (!transducer->tip_switch.value())
@@ -223,6 +223,23 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     
     if (!engine)
         return false;
+
+    workLoop = this->getWorkLoop();
+    if (!workLoop) {
+        IOLog("%s Could not get a IOWorkLoop instance\n", getName());
+        return false;
+    }
+    
+    workLoop->retain();
+    
+    command_gate = IOCommandGate::commandGate(this);
+    if (!command_gate || (workLoop->addEventSource(command_gate) != kIOReturnSuccess)) {
+        IOLog("%s Could not open command gate\n", getName());
+        workLoop->release();
+        workLoop = NULL;
+        
+        return false;
+    }
     
     workLoop = this->getWorkLoop();
     if (!workLoop) {
