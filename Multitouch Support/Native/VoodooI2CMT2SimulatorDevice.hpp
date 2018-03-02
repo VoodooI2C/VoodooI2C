@@ -3,7 +3,7 @@
 //  VoodooI2C
 //
 //  Created by Alexandre on 10/02/2018.
-//  Copyright © 2018 Alexandre Daoud. All rights reserved.
+//  Copyright © 2018 Alexandre Daoud and Kishor Prins. All rights reserved.
 //
 
 #ifndef VoodooI2CMT2SimulatorDevice_hpp
@@ -92,10 +92,11 @@ private:
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];
+    int last_finger_count;
     IOWorkLoop* workLoop;
     IOCommandGate* command_gate;
     
-    // void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
+    void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
 };
 
 
