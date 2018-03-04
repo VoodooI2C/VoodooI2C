@@ -35,9 +35,9 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
     UInt8 ReportID;
     UInt8 Button;
-    UInt16 Unused[2];
+    UInt8 Unused[5];
     
-    UInt16 TouchActive;
+    UInt8 TouchActive;
     
     UInt8 multitouch_report_id;
     UInt8 timestamp_buffer[3];

@@ -38,6 +38,9 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     input_report.ReportID = 0x02;
     input_report.Unused[0] = 0;
     input_report.Unused[1] = 0;
+    input_report.Unused[2] = 0;
+    input_report.Unused[3] = 0;
+    input_report.Unused[4] = 0;
     
     VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(0));
     
@@ -48,10 +51,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     input_report.Button = transducer->physical_button.value();
     
     // touch active
-    if (multitouch_event.contact_count)
-        input_report.TouchActive = 0x3;
-    else
-        input_report.TouchActive = 0x2;
     
     // multitouch report id
     input_report.multitouch_report_id = 0x31; //Magic
@@ -72,8 +71,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     
     // finger data
     int first_unknownbit = -1;
-    int valid_count = 0;
-    bool has_stylus = false;
+    bool input_active = false;
     
     for (int i = 0; i < multitouch_event.contact_count + 1; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(i));
@@ -85,18 +83,17 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             continue;
 
         if (transducer->type == kDigitiserTransducerStylus) {
-            has_stylus = true;
             continue;
         }
         
         if (!transducer->tip_switch.value()) {
             new_touch_state[i] = 0;
             touch_state[i] = 0;
+        } else {
+            input_active = true;
         }
-        
-        valid_count += 1;
 
-        MAGIC_TRACKPAD_INPUT_REPORT_FINGER& finger_data = input_report.FINGERS[has_stylus ? (i-1) : i];
+        MAGIC_TRACKPAD_INPUT_REPORT_FINGER& finger_data = input_report.FINGERS[i];
         
         SInt16 x_min = 3678;
         SInt16 y_min = 2479;
@@ -160,7 +157,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         }
 
         if (!transducer->tip_switch.value()) {
-            newunknown = 0x0;
+            newunknown = 0xF4;
             finger_data.Size = 0x0;
         }
         
@@ -201,16 +198,27 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         else if (!transducer->tip_switch.value())
             finger_data.Pressure = 0;
         else
-            finger_data.Pressure = 10;
+            finger_data.Pressure = 30;
         
         finger_data.Orientation_Origin = (128 & 0xF0) | ((transducer->secondary_id + 1) & 0xF);
     }
+
+    if (input_active)
+        input_report.TouchActive = 0x3;
+    else
+        input_report.TouchActive = 0x2;
     
-    int total_report_len = (9 * valid_count) + 12;
+    int total_report_len = (9 * multitouch_event.contact_count) + 12;
     IOBufferMemoryDescriptor* buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
     buffer_report->writeBytes(0, &input_report, total_report_len);
     
     handleReport(buffer_report, kIOHIDReportTypeInput);
+    
+    if (!input_active) {
+        buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, 12);
+        buffer_report->writeBytes(0, &input_report, 12);
+        handleReport(buffer_report, kIOHIDReportTypeInput);
+    }
 }
 
 bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
