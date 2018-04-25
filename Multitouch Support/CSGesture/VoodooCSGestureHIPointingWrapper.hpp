@@ -38,7 +38,7 @@ public:
     virtual IOReturn setParamProperties(OSDictionary *dict) override;
     
     void updateRelativeMouse(int dx, int dy, int buttons);
-    void updateAbsoluteMouse(int x, int y, int buttons);
+    void updateAbsoluteMouse(SInt16 x, SInt16 y, int buttons);
     void updateScroll(short dy, short dx, short dz);
 };
 

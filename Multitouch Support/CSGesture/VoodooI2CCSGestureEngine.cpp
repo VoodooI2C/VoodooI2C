@@ -969,7 +969,7 @@ void VoodooI2CCSGestureEngine::update_relative_mouse(char button, char x, char y
         _pointingWrapper->updateRelativeMouse(x, y, button);
 }
 
-void VoodooI2CCSGestureEngine::update_absolute_mouse(char button, char x, char y){
+void VoodooI2CCSGestureEngine::update_absolute_mouse(char button, SInt16 x, SInt16 y){
     if (_pointingWrapper)
         _pointingWrapper->updateAbsoluteMouse(x, y, button);
 }

@@ -51,7 +51,7 @@ private:
     //os callbacks
     void update_relative_mouse(char button,
                                char x, char y, char wheelPosition, char wheelHPosition);
-    void update_absolute_mouse(char button, char x, char y);
+    void update_absolute_mouse(char button, SInt16 x, SInt16 y);
     void update_keyboard(uint8_t shiftKeys, uint8_t *keyCodes);
 public:
     csgesture_softc softc;
