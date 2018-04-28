@@ -98,10 +98,10 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         SInt16 x_min = 3678;
         SInt16 y_min = 2479;
         
-        IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * 7612;
-        IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * 5065;
+        IOFixed scaled_x = (((transducer->coordinates.x.value() / factor_x) * 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_y = (((transducer->coordinates.y.value() / factor_y) * 1.0f) / engine->interface->logical_max_y) * 5065;
         
-        IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value / factor_x )* 1.0f) / engine->interface->logical_max_x) * 7612;
         uint8_t scaled_old_x_truncated = scaled_old_x;
         
         new_touch_state[i]++;
@@ -154,13 +154,33 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             
             // if(finger_data.Size >= 100)
                // finger_data.Size = 100;
+        } else {
+            finger_data.Size = 0x30;
         }
+
+        if (transducer->tip_switch.value()) {
+        finger_data.Touch_Major = 128;
+        finger_data.Touch_Minor = 128;
+        }// else {
+        //    finger_data.Touch_Major = 0;
+        //    finger_data.Touch_Minor = 0;
+        //}
+
+        if (transducer->tip_pressure.value() || (i == 0 && input_report.Button))
+            finger_data.Pressure = 120;
+        //else if (!transducer->tip_switch.value())
+        //    finger_data.Pressure = 0;
+        else
+            finger_data.Pressure = 30;
 
         if (!transducer->tip_switch.value()) {
             newunknown = 0xF4;
-            finger_data.Size = 0x0;
+            finger_data.Size = 0x10;
+            finger_data.Pressure = 0x10;
+            finger_data.Touch_Minor = 64;
+            finger_data.Touch_Major = 64;
         }
-        
+
         stashed_unknown[i] = newunknown;
         
         SInt16 adjusted_x = scaled_x - x_min;
@@ -185,21 +205,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         
         finger_data.AbsY[1] |= newunknown;
         
-        if (transducer->tip_switch.value()) {
-            finger_data.Touch_Major = 128;
-            finger_data.Touch_Minor = 128;
-        } else {
-            finger_data.Touch_Major = 0;
-            finger_data.Touch_Minor = 0;
-        }
-
-        if (transducer->tip_pressure.value() || (i == 0 && input_report.Button))
-            finger_data.Pressure = 120;
-        else if (!transducer->tip_switch.value())
-            finger_data.Pressure = 0;
-        else
-            finger_data.Pressure = 30;
-        
         finger_data.Orientation_Origin = (128 & 0xF0) | ((transducer->secondary_id + 1) & 0xF);
     }
 
@@ -213,11 +218,76 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     buffer_report->writeBytes(0, &input_report, total_report_len);
     
     handleReport(buffer_report, kIOHIDReportTypeInput);
+
+    for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
+        IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
+    }
+    
+    IOLog("\n");
     
     if (!input_active) {
+        input_report.FINGERS[0].Size = 0x0;
+        input_report.FINGERS[0].Pressure = 0x0;
+        input_report.FINGERS[0].Touch_Major = 0x0;
+        input_report.FINGERS[0].Touch_Minor = 0x0;
+
+        milli_timestamp += 10;
+        
+        input_report.timestamp_buffer[0] = (milli_timestamp << 0x3) | 0x4;
+        input_report.timestamp_buffer[1] = (milli_timestamp >> 0x5) & 0xFF;
+        input_report.timestamp_buffer[2] = (milli_timestamp >> 0xd) & 0xFF;
+        
+        buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
+        buffer_report->writeBytes(0, &input_report, total_report_len);
+        
+        for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
+            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
+        }
+        
+        IOLog("\n");
+        
+        input_report.FINGERS[0].AbsY[1] &= ~0xF4;
+        input_report.FINGERS[0].AbsY[1] |= 0x14;
+        
+        buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
+        buffer_report->writeBytes(0, &input_report, total_report_len);
+
+        for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
+            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
+        }
+        
+        IOLog("\n");
+
+        milli_timestamp += 10;
+        
+        input_report.timestamp_buffer[0] = (milli_timestamp << 0x3) | 0x4;
+        input_report.timestamp_buffer[1] = (milli_timestamp >> 0x5) & 0xFF;
+        input_report.timestamp_buffer[2] = (milli_timestamp >> 0xd) & 0xFF;
+
+        buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
+        buffer_report->writeBytes(0, &input_report, total_report_len);
+
+        for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
+            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
+        }
+        
+        IOLog("\n");
+
+        milli_timestamp += 10;
+        
+        input_report.timestamp_buffer[0] = (milli_timestamp << 0x3) | 0x4;
+        input_report.timestamp_buffer[1] = (milli_timestamp >> 0x5) & 0xFF;
+        input_report.timestamp_buffer[2] = (milli_timestamp >> 0xd) & 0xFF;
+
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, 12);
         buffer_report->writeBytes(0, &input_report, 12);
         handleReport(buffer_report, kIOHIDReportTypeInput);
+
+        for (int i = 0; i < 12; i++) {
+            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
+        }
+        
+        IOLog("\n");
     }
 }
 
@@ -265,7 +335,16 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
         
         return false;
     }
-    
+
+    factor_x = engine->interface->logical_max_x / engine->interface->physical_max_x;
+    factor_y = engine->interface->logical_max_y / engine->interface->physical_max_y;
+
+    if (!factor_x)
+        factor_x = 1;
+
+    if (!factor_y)
+        factor_y = 1;
+
     ready_for_reports = true;
     
     return true;
