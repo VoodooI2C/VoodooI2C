@@ -99,9 +99,9 @@ class VoodooI2CDigitiserTransducer : public OSObject {
     DigitiserTransducerButtonState tip_switch;
     TimeTrackedValue tip_pressure;
     
-    SInt16 logical_max_x;
-    SInt16 logical_max_y;
-    SInt16 logical_max_z;
+    UInt16 logical_max_x;
+    UInt16 logical_max_y;
+    UInt16 logical_max_z;
     SInt16 pressure_physical_max;
 
     UInt16 id;
