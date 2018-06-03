@@ -121,11 +121,7 @@ void VoodooCSGestureHIDEventServiceWrapper::updateScroll(short dy, short dx, sho
     if (!horizontalScroll)
         dx = 0;
     
-    IOFixed deltaAxis1 = dy << 12;
-    IOFixed deltaAxis2 = dx << 12;
-    IOFixed deltaAxis3 = dz << 12;
-    
-    dispatchScrollWheelEventWithFixed(now_abs, deltaAxis1, deltaAxis2, deltaAxis3);
+    dispatchScrollWheelEvent(now_abs, dy, dx, dz);
 }
 
 IOReturn VoodooCSGestureHIDEventServiceWrapper::setSystemProperties(OSDictionary *dict)
