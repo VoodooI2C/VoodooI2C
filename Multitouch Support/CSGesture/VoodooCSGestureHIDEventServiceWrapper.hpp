@@ -9,6 +9,12 @@
 #ifndef VoodooCSGestureHIDEventServiceWrapper_h
 #define VoodooCSGestureHIDEventServiceWrapper_h
 
+// hack to prevent IOHIDEventDriver from loading when
+// we include IOHIDEventService
+
+#define _IOKIT_HID_IOHIDEVENTDRIVER_H
+
+#include <IOKit/hid/IOHIDEvent.h>
 #include <IOKit/hidevent/IOHIDEventService.h>
 
 class VoodooI2CCSGestureEngine;
