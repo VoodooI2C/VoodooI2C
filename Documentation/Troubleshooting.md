@@ -23,11 +23,13 @@ If after following the installation guide you get no or buggy input you will nee
 2. A copy of your original and patched DSDT.
 3. If you are on 10.11, a copy of your `system.log` from the Console app. If you are on 10.12+, a copy of the log as outlined on the <Common Errors> page.
 4. A text file containing the following information:
+	- Your machine model
+	- Your CPU model
 	- Your OS version
 	- The version of VoodooI2C and each individual satellite kext installed
 	- In the case of buggy input/bug report, a description of what is wrong
 
-You must then upload this archive to the Gitter chat and wait for a response.
+You must then upload this archive to the Gitter chat or an appropriate support forum and wait for a response.
 
 ## Kernel panic
 
