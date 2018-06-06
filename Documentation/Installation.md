@@ -55,7 +55,7 @@ Follow these instructions in order to add the VoodooI2C patch repository to Maci
 3. In the name column write `VoodooI2C` and put `http://raw.github.com/alexandred/VoodooI2C-Patches/master` as the URL.
 4. Close the preferences window.
 
-## Polling vs Interrupts
+### Polling vs Interrupts
 
 Due to incompatibilities with Apple's core kexts, it is often necessary to manually edit your DSDT to enable GPIO interrupts. This is only the case for systems that are Skylake or newer (Haswell and Broadwell can safely skip down to the patches below). The process of GPIO patching is fairly involved and because of this, certain satellite kexts (currently only VoodooI2CHID) support running in two different modes:
 
