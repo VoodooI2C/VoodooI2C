@@ -15,3 +15,4 @@ You can adjust the time after `--start` to make the log shorter (you could set i
  - **Could not find GPIO controller** - The GPIO controller enable patch has not been applied.
  - **Pin cannot be used as IRQ** - The GPIO pin for your device in the DSDT is likely wrong.
  - **Could not get interrupt event source** - Could not find either APIC or GPIO interrupts in your device's DSDT entry.
+ - **Unknown Synopsys component type: 0xffffffff** - The I2C controller patch has not been applied.
