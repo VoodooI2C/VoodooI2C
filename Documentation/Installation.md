@@ -55,23 +55,36 @@ Follow these instructions in order to add the VoodooI2C patch repository to Maci
 3. In the name column write `VoodooI2C` and put `http://raw.github.com/alexandred/VoodooI2C-Patches/master` as the URL.
 4. Close the preferences window.
 
+## Polling vs Interrupts
+
+Due to incompatibilities with Apple's core kexts, it is often necessary to manually edit your DSDT to enable GPIO interrupts. This is only the case for systems that are Skylake or newer (Haswell and Broadwell can safely skip down to the patches below). The process of GPIO patching is fairly involved and because of this, certain satellite kexts (currently only VoodooI2CHID) support running in two different modes:
+
+1. Polling
+2. Interrupts (either APIC or GPIO)
+
+The exact definitions of polling and interrupts are outside the scope of this guide. However you can consider polling as software-driven and interrupts as hardware-driven. Naturally, polling uses more system resources (such as CPU and RAM) so the optimal mode that VoodooI2C should run in is interrupt mode. The type of interrupts you need (i.e APIC vs GPIO) is determined later on in the GPIO pinning guide below.
+
+You can think of polling mode as the "safe boot" mode of VoodooI2C. As such it is a suitable mode for use during the installation of macOS. Polling mode is also suitable for people who have Skylake or newer machines with buggy GPIO implementation (such as various ASUS laptops). If you wish to run VoodooI2C in polling mode, you do not need to apply any of the GPIO patches below but you must visit the <Polling Mode> page for further instructions.
+
+However, it is highly recommended that once your system is up and running, you should apply all the GPIO patches (except Haswell and Broadwell users) to ensure optimal performance. If you find that you cannot get your trackpad to work in interrupts mode or that interrupts mode leads to high CPU usage then it is likely you have a system with a buggy implementation of GPIO. In this case you will have to switch back to polling mode. In any case, you should still go through the troubleshooting process as outlined on the <Troubleshooting> page to make sure that you have not made a mistake.
+
 ### Windows Patches
 
 Regardless of whether or not your machine shipped with Windows, it is likely that you will require a Windows patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `Windows`. Choose the patch corresponding to the version of Windows that shipped with your machine. If you are not sure which version of Windows your machine shipped with, check the product key sticker which is usually located on the bottom of your machine. If your machine did not ship with Windows then you will have to test each patch until you find one that works - it is recommended that you start with Windows 10 and work your way down.
 
-### Controller Patches (Skylake systems only)
+### I2C Controller Patches (Skylake systems only)
 
-If your machine is Skylake then it is possible that you need a controller patch. Applying it can't hurt if you don't need it so let's apply that patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there is a patch labelled `I2C Controllers [SKL]`. Apply this patch.
+If your machine is Skylake then it is possible that you need an I2C controller patch. Applying it can't hurt if you don't need it so let's apply that patch. Under the `VoodooI2C` section in the MaciASL patches dialog box, there is a patch labelled `I2C Controllers [SKL]`. Apply this patch.
 
-### GPIO Patches (Skylake+ systems)
+### GPIO Patches (Skylake or newer systems)
 
 If your machine is Skylake or above, you will likely need GPIO patches as well.
 
-#### Controller Enabling
+#### GPIO Controller Enabling (Interrupt mode only)
 
 Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `GPIO`. You will need to apply the one labelled `GPIO Controller Enable`.
 
-#### Pin Enabling (Apply for each I2C device)
+#### Pin Enabling (Interrupt mode only) (Apply for each I2C device)
 
 Under the `VoodooI2C` section in the MaciASL patches dialog box, there are a few patches labelled `GPIO`. If you can find a patch pertaining to your machine and I2C device then you may apply it. Else you will need to follow the <GPIO Pinning> guide for each I2C device you wish to use.
 
