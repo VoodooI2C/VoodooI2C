@@ -15,38 +15,28 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.1</string>
+	<string>2.0.2</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.1</string>
-	<key>OSBundleCompatibleVersion</key>
-	<string>2.0.0</string>
+	<string>2.0.2</string>
 	<key>IOKitPersonalities</key>
 	<dict>
-		<key>VoodooI2CPCIController</key>
+		<key>CSGesture Multitouch Engine</key>
 		<dict>
-			<key>IOClass</key>
-			<string>VoodooI2CPCIController</string>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
-			<key>IONameMatch</key>
-			<array>
-				<string>pci8086,9d60</string>
-				<string>pci8086,9d61</string>
-				<string>pci8086,a160</string>
-				<string>pci8086,a161</string>
-				<string>pci8086,a162</string>
-			</array>
-			<key>IOProbeScore</key>
-			<integer>9999</integer>
+			<key>IOClass</key>
+			<string>VoodooI2CCSGestureEngine</string>
+			<key>IOMatchCategory</key>
+			<string>VoodooI2CCSGestureEngine</string>
 			<key>IOProviderClass</key>
-			<string>IOService</string>
+			<string>VoodooI2CMultitouchInterface</string>
 		</dict>
 		<key>VoodooI2CACPIController</key>
 		<dict>
-			<key>IOClass</key>
-			<string>VoodooI2CACPIController</string>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CACPIController</string>
 			<key>IONameMatch</key>
 			<array>
 				<string>INT33C2</string>
@@ -61,49 +51,59 @@
 		</dict>
 		<key>VoodooI2CControllerDriver</key>
 		<dict>
-			<key>IOClass</key>
-			<string>VoodooI2CControllerDriver</string>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CControllerDriver</string>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
 			<key>IOProviderClass</key>
 			<string>VoodooI2CControllerNub</string>
 		</dict>
-		<key>CSGesture Multitouch Engine</key>
+		<key>VoodooI2CPCIController</key>
 		<dict>
-			<key>IOClass</key>
-			<string>VoodooI2CCSGestureEngine</string>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
-			<key>IOMatchCategory</key>
-			<string>VoodooI2CCSGestureEngine</string>
+			<key>IOClass</key>
+			<string>VoodooI2CPCIController</string>
+			<key>IONameMatch</key>
+			<array>
+				<string>pci8086,9d60</string>
+				<string>pci8086,9d61</string>
+				<string>pci8086,a160</string>
+				<string>pci8086,a161</string>
+				<string>pci8086,a162</string>
+			</array>
+			<key>IOProbeScore</key>
+			<integer>9999</integer>
 			<key>IOProviderClass</key>
-			<string>VoodooI2CMultitouchInterface</string>
+			<string>IOService</string>
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
+	<key>OSBundleCompatibleVersion</key>
+	<string>2.0.0</string>
 	<key>OSBundleLibraries</key>
 	<dict>
 		<key>com.alexandred.VoodooI2CServices</key>
 		<string>1.0</string>
-		<key>org.coolstar.VoodooGPIO</key>
-		<string>1.1</string>
 		<key>com.apple.iokit.IOACPIFamily</key>
 		<string>1.4</string>
 		<key>com.apple.iokit.IOHIDFamily</key>
 		<string>2.0</string>
 		<key>com.apple.iokit.IOPCIFamily</key>
 		<string>2.9</string>
+		<key>com.apple.kpi.bsd</key>
+		<string>8.0</string>
 		<key>com.apple.kpi.iokit</key>
 		<string>14</string>
 		<key>com.apple.kpi.libkern</key>
 		<string>14</string>
 		<key>com.apple.kpi.mach</key>
 		<string>14</string>
-		<key>com.apple.kpi.bsd</key>
-		<string>8.0</string>
+		<key>org.coolstar.VoodooGPIO</key>
+		<string>1.1</string>
 	</dict>
 </dict>
 </plist>
