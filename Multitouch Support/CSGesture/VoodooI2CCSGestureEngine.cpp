@@ -216,11 +216,7 @@ bool VoodooI2CCSGestureEngine::ProcessMove(csgesture_softc *sc, int abovethresho
             sc->dx = 0;
             sc->dy = 0;
             
-            UInt8 buttonMask = sc->buttonmask;
-            if (sc->x[i] != -1 && sc->y[i] != -1)
-                buttonMask |= MOUSE_BUTTON_1;
-            
-            update_absolute_mouse(buttonMask, sc->x[i], sc->y[i]);
+            update_absolute_mouse(sc->buttonmask, sc->x[i], sc->y[i]);
         }
         
         sc->panningActive = true;
@@ -808,8 +804,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
         TapToClickOrDrag(sc, releasedfingers);
     
 #pragma mark send to system
-    if (!sc->settings.display_integrated || sc->dx != 0 || sc->dy != 0 || sc->scrollx != 0 || sc->scrolly != 0)
-        update_relative_mouse(sc->buttonmask, sc->dx, sc->dy, sc->scrolly, sc->scrollx);
+    update_relative_mouse(sc->buttonmask, sc->dx, sc->dy, sc->scrolly, sc->scrollx);
 }
 
 #pragma mark OS Specific functions
@@ -873,7 +868,7 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
         return false;
     }
     
-    _pointingWrapper = new VoodooCSGestureHIDEventServiceWrapper;
+    _pointingWrapper = new VoodooCSGestureHIPointingWrapper;
     if (_pointingWrapper->init()){
         _pointingWrapper->gesturerec = this;
         _pointingWrapper->attach(service);

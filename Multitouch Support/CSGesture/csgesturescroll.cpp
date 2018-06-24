@@ -3,7 +3,7 @@
 
 #include "csgesturescroll.h"
 #include <stdint.h>
-#include "VoodooCSGestureHIDEventServiceWrapper.hpp"
+#include "VoodooCSGestureHIPointingWrapper.hpp"
 #include <IOKit/IOTimerEventSource.h>
 
 OSDefineMetaClassAndStructors(CSGestureScroll, IOService);

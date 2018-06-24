@@ -1,5 +1,5 @@
 //
-//  VoodooCSGestureHIDEventServiceWrapper.cpp
+//  VoodooCSGestureHIPointingWrapper.cpp
 //  VoodooI2C
 //
 //  Created by CoolStar on 9/6/16.
@@ -8,21 +8,39 @@
 
 #include <IOKit/IOLib.h>
 #include <IOKit/hidsystem/IOHIDParameter.h>
-#include "VoodooCSGestureHIDEventServiceWrapper.hpp"
+#include "VoodooCSGestureHIPointingWrapper.hpp"
 #include "VoodooI2CCSGestureEngine.hpp"
 #include <libkern/version.h>
 
 
-OSDefineMetaClassAndStructors(VoodooCSGestureHIDEventServiceWrapper, IOHIDEventService);
+OSDefineMetaClassAndStructors(VoodooCSGestureHIPointingWrapper, IOHIPointing);
 
-bool VoodooCSGestureHIDEventServiceWrapper::init(){
+UInt32 VoodooCSGestureHIPointingWrapper::deviceType()
+{
+    return NX_EVS_DEVICE_TYPE_MOUSE;
+}
+
+UInt32 VoodooCSGestureHIPointingWrapper::interfaceID()
+{
+    return NX_EVS_DEVICE_INTERFACE_BUS_ACE;
+}
+
+IOItemCount VoodooCSGestureHIPointingWrapper::buttonCount(){
+    return 2;
+};
+
+IOFixed VoodooCSGestureHIPointingWrapper::resolution(){
+    return (300) << 16;
+};
+
+bool VoodooCSGestureHIPointingWrapper::init(){
     if (!super::init())
         return false;
     
     return true;
 }
 
-bool VoodooCSGestureHIDEventServiceWrapper::start(IOService *provider){
+bool VoodooCSGestureHIPointingWrapper::start(IOService *provider){
     if (!super::start(provider))
         return false;
 
@@ -77,21 +95,21 @@ bool VoodooCSGestureHIDEventServiceWrapper::start(IOService *provider){
     return true;
 }
 
-void VoodooCSGestureHIDEventServiceWrapper::stop(IOService *provider){
+void VoodooCSGestureHIPointingWrapper::stop(IOService *provider){
     super::stop(provider);
 }
 
-void VoodooCSGestureHIDEventServiceWrapper::updateRelativeMouse(int dx, int dy, int buttons){
+void VoodooCSGestureHIPointingWrapper::updateRelativeMouse(int dx, int dy, int buttons){
     // 0x1 = left button
     // 0x2 = right button
     // 0x4 = middle button
     
     uint64_t now_abs;
     clock_get_uptime(&now_abs);
-    dispatchRelativePointerEvent(now_abs, dx, dy, buttons);
+    dispatchRelativePointerEvent(dx, dy, buttons, now_abs);
 }
 
-void VoodooCSGestureHIDEventServiceWrapper::updateAbsoluteMouse(SInt16 x, SInt16 y, int buttons){
+void VoodooCSGestureHIPointingWrapper::updateAbsoluteMouse(SInt16 x, SInt16 y, int buttons){
     // 0x1 = left button
     // 0x2 = right button
     // 0x4 = middle button
@@ -99,36 +117,30 @@ void VoodooCSGestureHIDEventServiceWrapper::updateAbsoluteMouse(SInt16 x, SInt16
     uint64_t now_abs;
     clock_get_uptime(&now_abs);
     
-    IOLog("%s::Absolute input (%d x %d) max: (%d x %d)\n", getName(), x, y, gesturerec->softc.resx, gesturerec->softc.resy);
+    IOGPoint loc;
+    loc.x = x;
+    loc.y = y;
     
-    if (x != -1 && y != -1){
-        last_x = x;
-        last_y = y;
-    } else {
-        x = last_x;
-        y = last_y;
-    }
+    IOGBounds bounds;
+    bounds.minx = 0;
+    bounds.maxx = gesturerec->softc.resx;
+    bounds.minx = 0;
+    bounds.maxy = gesturerec->softc.resy;
     
-    IOFixed xFixed = ((x * 1.0f)/gesturerec->softc.resx) * 65535;
-    IOFixed yFixed = ((y * 1.0f)/gesturerec->softc.resy) * 65535;
+    //IOLog("%s::Absolute input (%d x %d) max: (%d x %d)\n", getName(), x, y, gesturerec->softc.resx, gesturerec->softc.resy);
     
-    dispatchDigitizerEvent(now_abs, 1, IOHIDEventService::kDigitizerTransducerTypeFinger, 1, buttons, xFixed, yFixed);
+    dispatchAbsolutePointerEvent(&loc, &bounds, buttons, false, 0, 0, 0, 90, now_abs);
 }
 
-void VoodooCSGestureHIDEventServiceWrapper::updateScroll(short dy, short dx, short dz){
+void VoodooCSGestureHIPointingWrapper::updateScroll(short dy, short dx, short dz){
     uint64_t now_abs;
     clock_get_uptime(&now_abs);
     if (!horizontalScroll)
         dx = 0;
-    
-    IOFixed deltaAxis1 = dy << 12;
-    IOFixed deltaAxis2 = dx << 12;
-    IOFixed deltaAxis3 = dz << 12;
-    
-    dispatchScrollWheelEventWithFixed(now_abs, deltaAxis1, deltaAxis2, deltaAxis3);
+    dispatchScrollWheelEvent(dy, dx, dz, now_abs);
 }
 
-IOReturn VoodooCSGestureHIDEventServiceWrapper::setSystemProperties(OSDictionary *dict)
+IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict)
 {
     
     /*Known Keys:
@@ -186,5 +198,5 @@ IOReturn VoodooCSGestureHIDEventServiceWrapper::setSystemProperties(OSDictionary
     
     gesturerec->softc.settings.multiFingerTap = true;
     
-    return super::setSystemProperties(dict);
+    return super::setParamProperties(dict);
 }
