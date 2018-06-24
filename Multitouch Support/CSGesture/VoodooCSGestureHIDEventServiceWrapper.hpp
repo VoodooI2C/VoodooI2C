@@ -15,7 +15,7 @@
 #define _IOKIT_HID_IOHIDEVENTDRIVER_H
 
 #include <IOKit/hid/IOHIDEvent.h>
-#include <IOKit/hid/IOHIDEventService.h>
+#include <IOKit/hidevent/IOHIDEventService.h>
 
 class VoodooI2CCSGestureEngine;
 
