@@ -45,6 +45,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		121132292129565400E4D720 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7B30D6871F910BAB00190488;
+			remoteInfo = VoodooI2CFTE;
+		};
+		1211322B2129671C00E4D720 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B30D6861F910BAB00190488;
+			remoteInfo = VoodooI2CFTE;
+		};
 		7B30D69B1F91141300190488 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7B30D6971F91141300190488 /* VoodooI2CELAN.xcodeproj */;
@@ -118,6 +132,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CFTE.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CFTE/VoodooI2CFTE.xcodeproj"; sourceTree = "<group>"; };
 		7B30D6971F91141300190488 /* VoodooI2CELAN.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CELAN.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN.xcodeproj"; sourceTree = "<group>"; };
 		AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPIController.cpp; path = VoodooI2CController/VoodooI2CACPIController.cpp; sourceTree = "<group>"; };
 		AC015C461F32345500516383 /* VoodooI2CACPIController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CACPIController.hpp; path = VoodooI2CController/VoodooI2CACPIController.hpp; sourceTree = "<group>"; };
@@ -175,6 +190,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		121132262129565400E4D720 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1211322A2129565400E4D720 /* VoodooI2CFTE.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		7B30D6981F91141300190488 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,6 +209,7 @@
 		AC0387531F54182100ECEDF9 /* VoodooI2C Satellites */ = {
 			isa = PBXGroup;
 			children = (
+				121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */,
 				ACBE3FF01FEDF4FA0027F52E /* VoodooI2CUPDDEngine.xcodeproj */,
 				AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */,
 				7B30D6971F91141300190488 /* VoodooI2CELAN.xcodeproj */,
@@ -400,6 +424,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1211322C2129671C00E4D720 /* PBXTargetDependency */,
 				AC2DC7381F7F0E670071CDCA /* PBXTargetDependency */,
 				7B30D69E1F91166900190488 /* PBXTargetDependency */,
 				ACBE3FEE1FEDF49B0027F52E /* PBXTargetDependency */,
@@ -446,6 +471,10 @@
 					ProjectRef = 7B30D6971F91141300190488 /* VoodooI2CELAN.xcodeproj */;
 				},
 				{
+					ProductGroup = 121132262129565400E4D720 /* Products */;
+					ProjectRef = 121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */;
+				},
+				{
 					ProductGroup = AC0387551F5422FB00ECEDF9 /* Products */;
 					ProjectRef = AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */;
 				},
@@ -466,6 +495,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1211322A2129565400E4D720 /* VoodooI2CFTE.kext */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VoodooI2CFTE.kext;
+			remoteRef = 121132292129565400E4D720 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		7B30D69C1F91141300190488 /* VoodooI2CELAN.kext */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -603,6 +639,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1211322C2129671C00E4D720 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VoodooI2CFTE;
+			targetProxy = 1211322B2129671C00E4D720 /* PBXContainerItemProxy */;
+		};
 		7B30D69E1F91166900190488 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = VoodooI2CELAN;
