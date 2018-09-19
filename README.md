@@ -24,6 +24,7 @@ The following device classes are fully supported:
 
 1. I2C-HID devices
 2. ELAN devices
+3. FTE devices
 
 Note that there is sometimes an overlap between device classes. For example, some ELAN devices may also be I2C-HID devices.
 
