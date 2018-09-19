@@ -17,3 +17,8 @@ Be aware that some Elan devices (such as the ELAN1200) use a newer protocol whic
 ## VoodooI2CUPDDEngine
 
 VoodooI2CUPDDEngine acts as a middleman between VoodoI2C and the Touch Base UPDD drivers. For more information, read the instructions in the [VoodooI2CUPDDEngine Repo](https://github.com/blankmac/VoodooI2CUPDDEngine).
+
+## [VoodooI2CFTE](https://github.com/prizraksarvar/VoodooI2CFTE)
+
+VoodooI2CFTE implements support for the propriety FTE protocol found on FTE1001 trackpad. Your FTE device may have better support with this kext than with VoodooI2CHID.
+
