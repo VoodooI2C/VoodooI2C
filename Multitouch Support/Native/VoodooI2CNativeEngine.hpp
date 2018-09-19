@@ -13,7 +13,7 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 
-#include "VoodooI2CMultitouchEngine.hpp"
+#include "../VoodooI2CMultitouchEngine.hpp"
 #include "VoodooI2CMT2SimulatorDevice.hpp"
 
 class VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {

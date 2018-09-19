@@ -18,9 +18,9 @@
 #include <kern/clock.h>
 
 #include "../../Dependencies/helpers.hpp"
-#include "MultitouchHelpers.hpp"
-#include "VoodooI2CDigitiserTransducer.hpp"
-#include "VoodooI2CMultitouchInterface.hpp"
+#include "../MultitouchHelpers.hpp"
+#include "../VoodooI2CDigitiserTransducer.hpp"
+#include "../VoodooI2CMultitouchInterface.hpp"
 
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     UInt8 AbsX;
