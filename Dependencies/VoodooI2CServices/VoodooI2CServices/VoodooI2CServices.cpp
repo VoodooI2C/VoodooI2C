@@ -14,7 +14,6 @@ const IORegistryPlane* VoodooI2CServices::gVoodooI2CPlane = NULL;
 OSDefineMetaClassAndStructors(VoodooI2CServices, IOService);
 
 bool VoodooI2CServices::attachDevice(void* target, void* ref_con, IOService* new_service, IONotifier* notifier) {
-    IOLog("class: %s\n", new_service->getMetaClass()->getClassName());
     OSBoolean* bool_obj = OSDynamicCast(OSBoolean, new_service->getProperty("isI2CController"));
     if (bool_obj && bool_obj->isTrue()) {
         new_service->attachToParent(getRegistryRoot(), gVoodooI2CPlane);

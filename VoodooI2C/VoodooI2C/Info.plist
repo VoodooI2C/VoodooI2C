@@ -60,6 +60,7 @@
 			<key>IOProviderClass</key>
 			<string>VoodooI2CControllerNub</string>
 		</dict>
+<<<<<<< HEAD
 		<key>VoodooI2CPCIController</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
@@ -76,6 +77,16 @@
 			</array>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
+=======
+		<key>Native Multitouch Engine</key>
+		<dict>
+			<key>IOClass</key>
+			<string>VoodooI2CNativeEngine</string>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOMatchCategory</key>
+			<string>VoodooI2CNativeEngine</string>
+>>>>>>> native
 			<key>IOProviderClass</key>
 			<string>IOService</string>
 		</dict>
