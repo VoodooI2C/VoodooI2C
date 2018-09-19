@@ -17,6 +17,7 @@
 
 #include <kern/clock.h>
 
+#include "../../Dependencies/helpers.hpp"
 #include "MultitouchHelpers.hpp"
 #include "VoodooI2CDigitiserTransducer.hpp"
 #include "VoodooI2CMultitouchInterface.hpp"
@@ -80,9 +81,13 @@ public:
     
     virtual OSNumber* newLocationIDNumber() const override;
     
-    bool start(IOService* provider);
+    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
     
-    //IOWorkLoop* getWorkLoop();
+    bool start(IOService* provider);
+
+    void stop(IOService* provider);
+    
+    void releaseResources();
 protected:
 private:
     bool ready_for_reports = false;
@@ -93,7 +98,7 @@ private:
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];
     int last_finger_count;
-    IOWorkLoop* workLoop;
+    IOWorkLoop* work_loop;
     IOCommandGate* command_gate;
 
     int factor_x;

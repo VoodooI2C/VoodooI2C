@@ -102,10 +102,10 @@ public:
     TimeTrackedValue touch_major;
     TimeTrackedValue touch_minor;
     
-    SInt16 logical_max_x;
-    SInt16 logical_max_y;
-    SInt16 logical_max_z;
-    SInt16 pressure_physical_max;
+    SInt32 logical_max_x;
+    SInt32 logical_max_y;
+    SInt32 logical_max_z;
+    SInt32 pressure_physical_max;
     
     UInt16 id;
     UInt16 secondary_id;

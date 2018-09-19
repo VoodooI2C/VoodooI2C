@@ -17,12 +17,6 @@ OSDefineMetaClassAndStructors(VoodooI2CMT2SimulatorDevice, IOHIDDevice);
 
 unsigned char report_descriptor[] = {0x05, 0x01, 0x09, 0x02, 0xa1, 0x01, 0x09, 0x01, 0xa1, 0x00, 0x05, 0x09, 0x19, 0x01, 0x29, 0x03, 0x15, 0x00, 0x25, 0x01, 0x85, 0x02, 0x95, 0x03, 0x75, 0x01, 0x81, 0x02, 0x95, 0x01, 0x75, 0x05, 0x81, 0x01, 0x05, 0x01, 0x09, 0x30, 0x09, 0x31, 0x15, 0x81, 0x25, 0x7f, 0x75, 0x08, 0x95, 0x02, 0x81, 0x06, 0x95, 0x04, 0x75, 0x08, 0x81, 0x01, 0xc0, 0xc0, 0x05, 0x0d, 0x09, 0x05, 0xa1, 0x01, 0x06, 0x00, 0xff, 0x09, 0x0c, 0x15, 0x00, 0x26, 0xff, 0x00, 0x75, 0x08, 0x95, 0x10, 0x85, 0x3f, 0x81, 0x22, 0xc0, 0x06, 0x00, 0xff, 0x09, 0x0c, 0xa1, 0x01, 0x06, 0x00, 0xff, 0x09, 0x0c, 0x15, 0x00, 0x26, 0xff, 0x00, 0x85, 0x44, 0x75, 0x08, 0x96, 0x6b, 0x05, 0x81, 0x00, 0xc0};
 
-UInt16 abs(SInt16 x){
-    if (x < 0)
-        return x * -1;
-    return x;
-}
-
 void VoodooI2CMT2SimulatorDevice::constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp) {
     if (!ready_for_reports)
         return;
@@ -143,35 +137,34 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         if (new_touch_state[i] == 1) {
             newunknown = 0x20;
             finger_data.Size = 0x0;
+            finger_data.Pressure = 0x0;
+            finger_data.Touch_Minor = 0x0;
+            finger_data.Touch_Major = 0x0;
         } else if (new_touch_state[i] == 2) {
             newunknown = 0x70;
             finger_data.Size = 0x8;
+            finger_data.Pressure = 10;
+            finger_data.Touch_Minor = 32;
+            finger_data.Touch_Major = 32;
         } else if (new_touch_state[i] == 3) {
             finger_data.Size = 0x10;
+            finger_data.Pressure = 20;
+            finger_data.Touch_Minor = 64;
+            finger_data.Touch_Major = 64;
         } else if (new_touch_state[i] == 4) {
             finger_data.Size = 0x20;
-            // finger_data.Size = 0x20 + (5 * touch_state[i]);
-            
-            // if(finger_data.Size >= 100)
-               // finger_data.Size = 100;
+            finger_data.Pressure = 30;
+            finger_data.Touch_Minor = 96;
+            finger_data.Touch_Major = 96;
         } else {
             finger_data.Size = 0x30;
+            finger_data.Pressure = 30;
+            finger_data.Touch_Minor = 128;
+            finger_data.Touch_Major = 128;
         }
-
-        if (transducer->tip_switch.value()) {
-        finger_data.Touch_Major = 128;
-        finger_data.Touch_Minor = 128;
-        }// else {
-        //    finger_data.Touch_Major = 0;
-        //    finger_data.Touch_Minor = 0;
-        //}
 
         if (transducer->tip_pressure.value() || (i == 0 && input_report.Button))
             finger_data.Pressure = 120;
-        //else if (!transducer->tip_switch.value())
-        //    finger_data.Pressure = 0;
-        else
-            finger_data.Pressure = 30;
 
         if (!transducer->tip_switch.value()) {
             newunknown = 0xF4;
@@ -218,12 +211,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     buffer_report->writeBytes(0, &input_report, total_report_len);
     
     handleReport(buffer_report, kIOHIDReportTypeInput);
-
-    for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
-        IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
-    }
-    
-    IOLog("\n");
     
     if (!input_active) {
         input_report.FINGERS[0].Size = 0x0;
@@ -240,23 +227,11 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
         buffer_report->writeBytes(0, &input_report, total_report_len);
         
-        for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
-            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
-        }
-        
-        IOLog("\n");
-        
         input_report.FINGERS[0].AbsY[1] &= ~0xF4;
         input_report.FINGERS[0].AbsY[1] |= 0x14;
         
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
         buffer_report->writeBytes(0, &input_report, total_report_len);
-
-        for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
-            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
-        }
-        
-        IOLog("\n");
 
         milli_timestamp += 10;
         
@@ -266,12 +241,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
 
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
         buffer_report->writeBytes(0, &input_report, total_report_len);
-
-        for (int i = 0; i < (9 * multitouch_event.contact_count) + 12; i++) {
-            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
-        }
-        
-        IOLog("\n");
 
         milli_timestamp += 10;
         
@@ -283,11 +252,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         buffer_report->writeBytes(0, &input_report, 12);
         handleReport(buffer_report, kIOHIDReportTypeInput);
 
-        for (int i = 0; i < 12; i++) {
-            IOLog("%02x ", ((char*)&input_report)[i] & 0xFF);
-        }
-        
-        IOLog("\n");
     }
 }
 
@@ -302,39 +266,25 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     if (!engine)
         return false;
 
-    workLoop = this->getWorkLoop();
-    if (!workLoop) {
+    work_loop = this->getWorkLoop();
+    if (!work_loop) {
         IOLog("%s Could not get a IOWorkLoop instance\n", getName());
+        releaseResources();
         return false;
     }
     
-    workLoop->retain();
+    work_loop->retain();
     
     command_gate = IOCommandGate::commandGate(this);
-    if (!command_gate || (workLoop->addEventSource(command_gate) != kIOReturnSuccess)) {
+    if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
         IOLog("%s Could not open command gate\n", getName());
-        workLoop->release();
-        workLoop = NULL;
-        
+        releaseResources();
         return false;
     }
-    
-    workLoop = this->getWorkLoop();
-    if (!workLoop) {
-        IOLog("%s Could not get a IOWorkLoop instance\n", getName());
-        return false;
-    }
-    
-    workLoop->retain();
-    
-    command_gate = IOCommandGate::commandGate(this);
-    if (!command_gate || (workLoop->addEventSource(command_gate) != kIOReturnSuccess)) {
-        IOLog("%s Could not open command gate\n", getName());
-        workLoop->release();
-        workLoop = NULL;
-        
-        return false;
-    }
+
+    PMinit();
+    engine->parent->joinPMtree(this);
+    registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
     factor_x = engine->interface->logical_max_x / engine->interface->physical_max_x;
     factor_y = engine->interface->logical_max_y / engine->interface->physical_max_y;
@@ -350,9 +300,37 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     return true;
 }
 
-IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
+void VoodooI2CMT2SimulatorDevice::stop(IOService* provider) {
+    releaseResources();
     
-    IOLog("MT2 requested setReport with report_id: %d\n", options & 0xFF);
+    PMstop();
+    
+    super::stop(provider);
+}
+
+IOReturn VoodooI2CMT2SimulatorDevice::setPowerState(unsigned long whichState, IOService* whatDevice) {
+    if (whatDevice != this)
+        return kIOReturnInvalid;
+    if (whichState == 0){
+        // ready_for_reports = false;
+    } else {
+        // ready_for_reports = true;
+    }
+    return kIOPMAckImplied;
+}
+
+void VoodooI2CMT2SimulatorDevice::releaseResources() {
+    if (command_gate) {
+        work_loop->removeEventSource(command_gate);
+        command_gate->release();
+        command_gate = NULL;
+    }
+    
+    if (work_loop)
+        OSSafeReleaseNULL(work_loop);
+}
+
+IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
     
     UInt32 report_id = options & 0xFF;
     
@@ -368,8 +346,6 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         new_get_report_buffer = OSData::withCapacity(1);
         
         UInt8 value = raw_buffer[1];
-        
-        IOLog("Got here with value: 0x%x\n", value);
         
         if (value == 0xDB) {
             unsigned char buffer[] = {0x1, 0xDB, 0x00, 0x49, 0x00};
@@ -418,7 +394,6 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
-    IOLog("MT2 requested getReport! report_id: %d\n", options & 0xFF);
     UInt32 report_id = options & 0xFF;
     
     OSData* get_buffer = OSData::withCapacity(1);
@@ -429,7 +404,6 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     if (report_id == 0x1) {
-        IOLog("We are going to send this: 0x%llx\n", (UInt64)new_get_report_buffer->getBytesNoCopy());
         get_buffer = new_get_report_buffer;
     }
     
@@ -454,7 +428,6 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     if (report_id == 0xD9) {
-        //0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26
         unsigned char buffer[] = {0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26};
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
@@ -488,7 +461,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::newReportDescriptor(IOMemoryDescriptor** d
     IOBufferMemoryDescriptor* report_descriptor_buffer = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, sizeof(report_descriptor));
     
     if (!report_descriptor_buffer) {
-        IOLog("%s Could not allocated buffer for report descriptor\n", getName());
+        IOLog("%s Could not allocate buffer for report descriptor\n", getName());
         return kIOReturnNoResources;
     }
     
@@ -519,11 +492,11 @@ OSString* VoodooI2CMT2SimulatorDevice::newProductString() const {
 }
 
 OSString* VoodooI2CMT2SimulatorDevice::newSerialNumberString() const {
-    return OSString::withCString("Voodoo Magic Trackpad Simulator");
+    return OSString::withCString("VoodooI2C Magic Trackpad 2 Simulator");
 }
 
 OSString* VoodooI2CMT2SimulatorDevice::newTransportString() const {
-    return OSString::withCString("USB");
+    return OSString::withCString("I2C");
 }
 
 OSNumber* VoodooI2CMT2SimulatorDevice::newVendorIDNumber() const {
