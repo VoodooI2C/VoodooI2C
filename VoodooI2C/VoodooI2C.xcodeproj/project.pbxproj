@@ -112,13 +112,6 @@
 			remoteGlobalIDString = ACD148A21FF17DE00008EA7B;
 			remoteInfo = VoodooI2CSynaptics;
 		};
-		AC94C83E2119E64600D26081 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AC94C8382119E50400D26081 /* VoodooI2CSynaptics.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = ACD148A11FF17DE00008EA7B;
-			remoteInfo = VoodooI2CSynaptics;
-		};
 		ACBE3FED1FEDF49B0027F52E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
@@ -712,11 +705,6 @@
 			name = VoodooI2CServices;
 			targetProxy = AC2DC7371F7F0E670071CDCA /* PBXContainerItemProxy */;
 		};
-		AC94C83F2119E64600D26081 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = VoodooI2CSynaptics;
-			targetProxy = AC94C83E2119E64600D26081 /* PBXContainerItemProxy */;
-		};
 		ACBE3FEE1FEDF49B0027F52E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = VoodooGPIO;
@@ -829,12 +817,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2.1;
+				CURRENT_PROJECT_VERSION = 2.1.1;
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULE_NAME = com.alexandred.VoodooI2C;
-				MODULE_VERSION = 2.1;
+				MODULE_VERSION = 2.1.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -850,12 +838,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2.1;
+				CURRENT_PROJECT_VERSION = 2.1.1;
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULE_NAME = com.alexandred.VoodooI2C;
-				MODULE_VERSION = 2.1;
+				MODULE_VERSION = 2.1.1;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;

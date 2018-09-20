@@ -95,7 +95,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         IOFixed scaled_x = (((transducer->coordinates.x.value() / factor_x) * 1.0f) / engine->interface->logical_max_x) * 7612;
         IOFixed scaled_y = (((transducer->coordinates.y.value() / factor_y) * 1.0f) / engine->interface->logical_max_y) * 5065;
         
-        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value / factor_x )* 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value / factor_x)* 1.0f) / engine->interface->logical_max_x) * 7612;
         uint8_t scaled_old_x_truncated = scaled_old_x;
         
         new_touch_state[i]++;
