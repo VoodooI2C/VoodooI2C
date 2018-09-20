@@ -23,6 +23,8 @@ class VoodooI2CMultitouchEngine : public IOService {
   OSDeclareDefaultStructors(VoodooI2CMultitouchEngine);
 
  public:
+    VoodooI2CMultitouchInterface* interface;
+
     /* Intended to be overwritten by an inherited class to set the engine's priority
      *
      * @return The engine's score
@@ -59,7 +61,6 @@ class VoodooI2CMultitouchEngine : public IOService {
     virtual void stop(IOService* provider);
 
  protected:
-    VoodooI2CMultitouchInterface* interface;
  private:
 };
 

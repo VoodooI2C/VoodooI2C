@@ -17,6 +17,8 @@
 
 #define BIT(nr) (1UL << (nr))
 
+UInt16 abs(SInt16 x);
+
 const char* getMatchedName(IOService* provider);
 
 enum VoodooI2CState {

@@ -13,3 +13,9 @@ const char* getMatchedName(IOService* provider) {
     data = OSDynamicCast(OSData, provider->getProperty("name"));
     return (const char *)(data->getBytesNoCopy());
 }
+
+UInt16 abs(SInt16 x){
+    if (x < 0)
+        return x * -1;
+    return x;
+}

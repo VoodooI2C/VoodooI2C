@@ -20,5 +20,5 @@ VoodooI2CUPDDEngine acts as a middleman between VoodoI2C and the Touch Base UPDD
 
 ## [VoodooI2CFTE](https://github.com/prizraksarvar/VoodooI2CFTE)
 
-VoodooI2CFTE implements support for the propriety FTE protocol found on FTE1001 trackpad. Your FTE device may have better support with this kext than with VoodooI2CHID.
+VoodooI2CFTE implements support for the propriety FTE protocol found on the FTE1001 trackpad. Your FTE device may have better support with this kext than with VoodooI2CHID.
 
