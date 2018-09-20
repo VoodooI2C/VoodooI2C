@@ -484,7 +484,7 @@ OSNumber* VoodooI2CMT2SimulatorDevice::newPrimaryUsagePageNumber() const {
 }
 
 OSNumber* VoodooI2CMT2SimulatorDevice::newProductIDNumber() const {
-    return OSNumber::withNumber(0x265, 32);
+    return OSNumber::withNumber(0x274, 32);
 }
 
 OSString* VoodooI2CMT2SimulatorDevice::newProductString() const {
