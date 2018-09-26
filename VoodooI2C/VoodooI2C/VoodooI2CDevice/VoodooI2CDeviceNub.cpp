@@ -142,19 +142,18 @@ exit:
 VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
     VoodooGPIO* gpio_controller = NULL;
 
-    OSDictionary *match = serviceMatching("VoodooGPIO");
-    OSIterator *iterator = getMatchingServices(match);
-    if (iterator) {
-        gpio_controller = OSDynamicCast(VoodooGPIO, iterator->getNextObject());
+    // Wait for GPIO controller, up to 1 second
+    OSDictionary* name_match = OSDictionary::withCapacity(1);
+    name_match = IOService::serviceMatching("VoodooGPIO");
 
-        if (gpio_controller != NULL) {
-            IOLog("%s::Got GPIO Controller! %s\n", getName(), gpio_controller->getName());
-        }
+    IOService* matched = waitForMatchingService(name_match, 1000000000);
+    gpio_controller = OSDynamicCast(VoodooGPIO, matched);
 
-        gpio_controller->retain();
-
-        iterator->release();
+    if (gpio_controller != NULL) {
+        IOLog("%s::Got GPIO Controller! %s\n", getName(), gpio_controller->getName());
     }
+    name_match->release();
+    OSSafeReleaseNULL(matched);
 
     return gpio_controller;
 }
@@ -204,6 +203,7 @@ IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {
             .length = *length,
         },
     };
+
     return controller->transferI2C(msgs, 1);
 }
 

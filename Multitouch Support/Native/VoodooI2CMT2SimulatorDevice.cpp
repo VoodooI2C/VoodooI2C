@@ -28,7 +28,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     if (!ready_for_reports)
         return;
 
-    MAGIC_TRACKPAD_INPUT_REPORT input_report;
     input_report.ReportID = 0x02;
     input_report.Unused[0] = 0;
     input_report.Unused[1] = 0;
@@ -42,7 +41,10 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         return;
     
     // physical button
-    input_report.Button = transducer->physical_button.value();
+    pointing_wrapper->updateRelativeMouse(0,0,transducer->physical_button.value() & 0x1);
+
+    if (transducer->physical_button.value())
+        input_report.Button = transducer->physical_button.value();
     
     // touch active
     
@@ -134,7 +136,12 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         }
         newunknown = first_unknownbit - (4 * i);
         
-        if (new_touch_state[i] == 1) {
+        if (new_touch_state[i] > 4) {
+            finger_data.Size = 0x30;
+            finger_data.Pressure = 30;
+            finger_data.Touch_Minor = 128;
+            finger_data.Touch_Major = 128;
+        } else if (new_touch_state[i] == 1) {
             newunknown = 0x20;
             finger_data.Size = 0x0;
             finger_data.Pressure = 0x0;
@@ -156,15 +163,14 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             finger_data.Pressure = 30;
             finger_data.Touch_Minor = 96;
             finger_data.Touch_Major = 96;
-        } else {
-            finger_data.Size = 0x30;
-            finger_data.Pressure = 30;
-            finger_data.Touch_Minor = 128;
-            finger_data.Touch_Major = 128;
         }
-
-        if (transducer->tip_pressure.value() || (i == 0 && input_report.Button))
-            finger_data.Pressure = 120;
+        
+        
+        if (transducer->tip_pressure.value() || (i == 0 && input_report.Button)) {
+            finger_data.Pressure = 160;
+            input_report.Button = 0x80;
+        }
+        
 
         if (!transducer->tip_switch.value()) {
             newunknown = 0xF4;
@@ -253,6 +259,8 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         handleReport(buffer_report, kIOHIDReportTypeInput);
 
     }
+    
+    input_report = {};
 }
 
 bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
@@ -294,6 +302,17 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 
     if (!factor_y)
         factor_y = 1;
+    
+
+    pointing_wrapper = new VoodooI2CMT2PointingWrapper;
+    if (pointing_wrapper->init()){
+        pointing_wrapper->attach(this);
+        pointing_wrapper->start(this);
+    } else {
+        pointing_wrapper->release();
+        pointing_wrapper = NULL;
+        return false;
+    }
 
     ready_for_reports = true;
     
@@ -301,6 +320,11 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 }
 
 void VoodooI2CMT2SimulatorDevice::stop(IOService* provider) {
+    if (!pointing_wrapper){
+        pointing_wrapper->terminate(kIOServiceRequired | kIOServiceSynchronous);
+        pointing_wrapper->release();
+        pointing_wrapper = NULL;
+    }
     releaseResources();
     
     PMstop();
@@ -484,7 +508,7 @@ OSNumber* VoodooI2CMT2SimulatorDevice::newPrimaryUsagePageNumber() const {
 }
 
 OSNumber* VoodooI2CMT2SimulatorDevice::newProductIDNumber() const {
-    return OSNumber::withNumber(0x274, 32);
+    return OSNumber::withNumber(0x290, 32);
 }
 
 OSString* VoodooI2CMT2SimulatorDevice::newProductString() const {
