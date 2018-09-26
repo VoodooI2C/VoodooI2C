@@ -141,20 +141,20 @@ exit:
 
 VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
     VoodooGPIO* gpio_controller = NULL;
-    
+
     // Wait for GPIO controller, up to 1 second
     OSDictionary* name_match = OSDictionary::withCapacity(1);
     name_match = IOService::serviceMatching("VoodooGPIO");
-    
+
     IOService* matched = waitForMatchingService(name_match, 1000000000);
     gpio_controller = OSDynamicCast(VoodooGPIO, matched);
-    
+
     if (gpio_controller != NULL) {
         IOLog("%s::Got GPIO Controller! %s\n", getName(), gpio_controller->getName());
     }
     name_match->release();
     OSSafeReleaseNULL(matched);
-    
+
     return gpio_controller;
 }
 
