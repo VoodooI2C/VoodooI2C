@@ -204,6 +204,7 @@ IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {
             .length = *length,
         },
     };
+
     return controller->transferI2C(msgs, 1);
 }
 
