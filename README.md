@@ -52,7 +52,3 @@ We are looking for competent C++, OS X kernel, Linux kernel, I2C, HID etc develo
 * Create a new feature branch and add commits
 * Push your feature branch to your fork
 * Submit a pull request upstream
-
-## Donations
-
-Donations can be made via Bitcoin to the following wallet: https://live.blockcypher.com/btc/address/1EUxSExh8XCveWxVDVQqnez2o95AnG8Qhr/ .
