@@ -57,6 +57,8 @@ public:
     void constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp);
     IOReturn setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
     
+    static bool getMultitouchPreferences(void* target, void* ref_con, IOService* multitouch_device, IONotifier* notifier);
+
     IOReturn getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
     virtual IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
     virtual OSNumber* newVendorIDNumber() const override;
@@ -104,6 +106,8 @@ private:
     IOCommandGate* command_gate;
     MAGIC_TRACKPAD_INPUT_REPORT input_report;
     VoodooI2CMT2PointingWrapper* pointing_wrapper;
+    IONotifier* multitouch_device_notifier;
+    OSDictionary* multitouch_device_preferences;
 
     int factor_x;
     int factor_y;

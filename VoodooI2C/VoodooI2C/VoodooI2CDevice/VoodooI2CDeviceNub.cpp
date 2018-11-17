@@ -249,6 +249,8 @@ bool VoodooI2CDeviceNub::start(IOService* provider) {
         goto exit;
     }
 
+    setProperty("IOName", reinterpret_cast<const char*>(OSDynamicCast(OSData, getProperty("name"))->getBytesNoCopy()));
+
     registerService();
 
     setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
