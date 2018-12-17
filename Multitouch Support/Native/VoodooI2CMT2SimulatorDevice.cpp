@@ -106,15 +106,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         
         IOFixed scaled_old_x = (((transducer->coordinates.x.last.value)* 1.0f) / engine->interface->logical_max_x) * 7612;
         
-        IOFixed max_x_tp = (engine->interface->logical_max_x * (factor_ref / factor_x));
-        IOFixed max_y_tp = (engine->interface->logical_max_y * (factor_ref / factor_y));
-        
-        if (max_x_tp < 7612 && max_y_tp < 5065){
-            scaled_x = (transducer->coordinates.x.value() * 1.0f * (factor_ref / factor_x)) + (7612 - max_x_tp);
-            scaled_y = (transducer->coordinates.y.value() * 1.0f * (factor_ref / factor_y)) + (5065 - max_y_tp);
-            scaled_old_x = (transducer->coordinates.x.last.value * 1.0f) + (7612 - max_x_tp);
-        }
-        
         uint8_t scaled_old_x_truncated = scaled_old_x;
         
         new_touch_state[i]++;
@@ -500,11 +491,20 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
-    if (report_id == 0xD9) {
-        unsigned char buffer[] = {0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26}; //Sensor Surface Description
-        
+    if (report_id == 0xD9) {       
         //Sensor Surface Width = 0x3cf0 (0xf0, 0x3c) = 15.600 cm
-        //Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm
+        //Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm*/
+        
+        uint32_t rawWidth = engine->interface->physical_max_x * 10;
+        uint32_t rawHeight = engine->interface->physical_max_y * 10;
+        
+        uint8_t rawWidthLower = rawWidth & 0xff;
+        uint8_t rawWidthHigher = (rawWidth >> 8) & 0xff;
+        
+        uint8_t rawHeightLower = rawHeight & 0xff;
+        uint8_t rawHeightHigher = (rawHeight >> 8) & 0xff;
+        
+        unsigned char buffer[] = {0xD9, rawWidthLower, rawWidthHigher, 0x00, 0x00, rawHeightLower, rawHeightHigher, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26}; //Sensor Surface Description
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
@@ -524,6 +524,15 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     if (report_id == 0xDB) {
+        uint32_t rawWidth = engine->interface->physical_max_x * 10;
+        uint32_t rawHeight = engine->interface->physical_max_y * 10;
+        
+        uint8_t rawWidthLower = rawWidth & 0xff;
+        uint8_t rawWidthHigher = (rawWidth >> 8) & 0xff;
+        
+        uint8_t rawHeightLower = rawHeight & 0xff;
+        uint8_t rawHeightHigher = (rawHeight >> 8) & 0xff;
+        
         unsigned char buffer[] = {0xDB, 0x01, 0x02, 0x00,
             /* Start 0xD1 */ 0xD1, 0x81, /* End 0xD1 */
             0x0D, 0x00,
@@ -533,8 +542,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
             0x07, 0x00,
             /* Start 0xA1 */ 0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01, /* End 0xA1 */
             0x11, 0x00,
-            /* Start 0xD9 */ 0xD9, 0xF0, 0x3C, 0x00, 0x00, 0x20, 0x2B, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26, /* End 0xD9 */
-            0x05, 0x00,
+            /* Start 0xD9 */ 0xD9, rawWidthLower, rawWidthHigher, 0x00, 0x00, rawHeightLower, rawHeightHigher, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26,
             /* Start 0x7F */ 0x7F, 0x00, 0x00, 0x00, 0x00 /*End 0x7F */};
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
