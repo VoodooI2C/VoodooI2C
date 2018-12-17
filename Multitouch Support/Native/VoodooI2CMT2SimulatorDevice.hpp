@@ -109,8 +109,9 @@ private:
     IONotifier* multitouch_device_notifier;
     OSDictionary* multitouch_device_preferences;
 
-    int factor_x;
-    int factor_y;
+    IOFixed factor_x;
+    IOFixed factor_y;
+    IOFixed factor_ref;
     
     void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
 };

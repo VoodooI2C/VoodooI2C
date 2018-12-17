@@ -101,10 +101,20 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         SInt16 x_min = 3678;
         SInt16 y_min = 2479;
         
-        IOFixed scaled_x = (((transducer->coordinates.x.value()) * 1.0f / factor_x) / engine->interface->logical_max_x) * 7612;
-        IOFixed scaled_y = (((transducer->coordinates.y.value()) * 1.0f / factor_y) / engine->interface->logical_max_y) * 5065;
+        IOFixed scaled_x = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_y = (((transducer->coordinates.y.value()) * 1.0f) / engine->interface->logical_max_y) * 5065;
         
-        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value)* 1.0f / factor_x) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value)* 1.0f) / engine->interface->logical_max_x) * 7612;
+        
+        IOFixed max_x_tp = (engine->interface->logical_max_x * (factor_ref / factor_x));
+        IOFixed max_y_tp = (engine->interface->logical_max_y * (factor_ref / factor_y));
+        
+        if (max_x_tp < 7612 && max_y_tp < 5065){
+            scaled_x = (transducer->coordinates.x.value() * 1.0f * (factor_ref / factor_x)) + (7612 - max_x_tp);
+            scaled_y = (transducer->coordinates.y.value() * 1.0f * (factor_ref / factor_y)) + (5065 - max_y_tp);
+            scaled_old_x = (transducer->coordinates.x.last.value * 1.0f) + (7612 - max_x_tp);
+        }
+        
         uint8_t scaled_old_x_truncated = scaled_old_x;
         
         new_touch_state[i]++;
@@ -298,6 +308,8 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 
     factor_x = engine->interface->logical_max_x / engine->interface->physical_max_x;
     factor_y = engine->interface->logical_max_y / engine->interface->physical_max_y;
+    
+    factor_ref = 4.75;
 
     if (!factor_x)
         factor_x = 1;
