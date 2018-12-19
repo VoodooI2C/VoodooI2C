@@ -182,10 +182,10 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
 
         if (!transducer->tip_switch.value()) {
             newunknown = 0xF4;
-            finger_data.Size = 0x10;
-            finger_data.Pressure = 0x10;
-            finger_data.Touch_Minor = 64;
-            finger_data.Touch_Major = 64;
+            finger_data.Size = 0x0;
+            finger_data.Pressure = 0x0;
+            finger_data.Touch_Minor = 0;
+            finger_data.Touch_Major = 0;
         }
 
         stashed_unknown[i] = newunknown;
@@ -337,6 +337,11 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 
     if (!factor_y)
         factor_y = 1;
+    
+    for (int i = 0; i < 15; i++){
+        touch_state[i] = 0;
+        new_touch_state[i] = 0;
+    }
     
 
     pointing_wrapper = new VoodooI2CMT2PointingWrapper;
@@ -491,7 +496,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
-    if (report_id == 0xD9) {       
+    if (report_id == 0xD9) {
         //Sensor Surface Width = 0x3cf0 (0xf0, 0x3c) = 15.600 cm
         //Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm*/
         
