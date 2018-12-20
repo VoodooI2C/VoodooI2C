@@ -22,8 +22,6 @@
 #include "../VoodooI2CDigitiserTransducer.hpp"
 #include "../VoodooI2CMultitouchInterface.hpp"
 
-#include "VoodooI2CMT2PointingWrapper.hpp"
-
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     UInt8 AbsX;
     UInt8 AbsXY;
@@ -105,7 +103,6 @@ private:
     IOWorkLoop* work_loop;
     IOCommandGate* command_gate;
     MAGIC_TRACKPAD_INPUT_REPORT input_report;
-    VoodooI2CMT2PointingWrapper* pointing_wrapper;
     IONotifier* multitouch_device_notifier;
     OSDictionary* multitouch_device_preferences;
 
