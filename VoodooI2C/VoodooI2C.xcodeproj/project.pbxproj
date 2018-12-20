@@ -485,6 +485,8 @@
 				AC2603AC1F2F294000CF238F /* Frameworks */,
 				AC2603AD1F2F294000CF238F /* Headers */,
 				AC2603AE1F2F294000CF238F /* Resources */,
+                AC4EEE2D1F3B2F1D00D0A6E0 /* Generate Documentation */,
+                AC2603BF1F2F508700CF238F /* Linting */,
 				AC0955921F4EE9B00052E343 /* Add GPIO and Services Plugin */,
 				ACC7F1451FEC9EA800200004 /* Output Version Number */,
 			);
