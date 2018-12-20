@@ -46,6 +46,7 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     
     parent = provider;
     simulator = OSTypeAlloc(VoodooI2CMT2SimulatorDevice);
+    actuator = OSTypeAlloc(VoodooI2CMT2ActuatorDevice);
     
     if (!simulator->init(NULL) ||
         !simulator->attach(this) ||
@@ -53,8 +54,15 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
         IOLog("%s Could not initialise simulator\n", getName());
         OSSafeReleaseNULL(simulator);
     }
+    
+    if (!actuator->init(NULL) ||
+        !actuator->attach(this) ||
+        !actuator->start(this)) {
+        IOLog("%s Could not initialise actuator\n", getName());
+        OSSafeReleaseNULL(actuator);
+    }
 
-    if (!simulator)
+    if (!simulator || !actuator)
         return false;
 
     return true;
