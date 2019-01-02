@@ -257,23 +257,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     input_report = {};
 }
 
-bool VoodooI2CMT2SimulatorDevice::getMultitouchPreferences(void* target, void* ref_con, IOService* multitouch_device, IONotifier* notifier) {
-    VoodooI2CMT2SimulatorDevice* simulator = (VoodooI2CMT2SimulatorDevice*)target;
-    
-    IOLog("VoodooI2C: Got multitouch matched\n");
-    
-    simulator->multitouch_device_preferences = OSDynamicCast(OSDictionary, simulator->getProperty("MultitouchPreferences", gIOServicePlane, kIORegistryIterateRecursively));
-
-        if (simulator->multitouch_device_preferences) {
-            IOLog("VoodooI2C: Got multitouch preferences\n");
-            
-            simulator->multitouch_device_notifier->disable();
-            simulator->multitouch_device_notifier->remove();
-        }
-
-    return true;
-}
-
 bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     if (!super::start(provider))
         return false;
@@ -320,8 +303,6 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
         touch_state[i] = 0;
         new_touch_state[i] = 0;
     }
-    
-    multitouch_device_notifier = addMatchingNotification(gIOFirstPublishNotification, IOService::serviceMatching("AppleMultitouchDevice"), VoodooI2CMT2SimulatorDevice::getMultitouchPreferences, this, NULL, 0);
     
     ready_for_reports = true;
     

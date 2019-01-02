@@ -103,8 +103,6 @@ private:
     IOWorkLoop* work_loop;
     IOCommandGate* command_gate;
     MAGIC_TRACKPAD_INPUT_REPORT input_report;
-    IONotifier* multitouch_device_notifier;
-    OSDictionary* multitouch_device_preferences;
 
     IOFixed factor_x;
     IOFixed factor_y;
