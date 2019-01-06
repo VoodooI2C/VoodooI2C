@@ -123,6 +123,13 @@
 			remoteGlobalIDString = ACD148A21FF17DE00008EA7B;
 			remoteInfo = VoodooI2CSynaptics;
 		};
+		AC9B87DB21E263C7007C2EEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F1F613BD20902F4C00F1B282;
+			remoteInfo = VoodooI2CAtmelMXT;
+		};
 		ACA4A00B21E259D700A91B61 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */;
@@ -539,6 +546,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				AC9B87DC21E263C7007C2EEE /* PBXTargetDependency */,
 				ACF5BF2221717C6000E9104C /* PBXTargetDependency */,
 				1211322C2129671C00E4D720 /* PBXTargetDependency */,
 				AC2DC7381F7F0E670071CDCA /* PBXTargetDependency */,
@@ -821,6 +829,11 @@
 			isa = PBXTargetDependency;
 			name = VoodooI2CServices;
 			targetProxy = AC2DC7371F7F0E670071CDCA /* PBXContainerItemProxy */;
+		};
+		AC9B87DC21E263C7007C2EEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VoodooI2CAtmelMXT;
+			targetProxy = AC9B87DB21E263C7007C2EEE /* PBXContainerItemProxy */;
 		};
 		ACBE3FEE1FEDF49B0027F52E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
