@@ -25,6 +25,15 @@
 		AC6268941F2F6CF1000CBF2D /* VoodooI2CController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC6268921F2F6CF1000CBF2D /* VoodooI2CController.cpp */; };
 		AC6268951F2F6CF1000CBF2D /* VoodooI2CController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC6268931F2F6CF1000CBF2D /* VoodooI2CController.hpp */; };
 		AC7400B91F3B6F1000937DD5 /* Introduction.md in Sources */ = {isa = PBXBuildFile; fileRef = AC7400B81F3B6F1000937DD5 /* Introduction.md */; };
+		ACA49FFE21E2566B00A91B61 /* Satellites.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF521E2566A00A91B61 /* Satellites.md */; };
+		ACA49FFF21E2566B00A91B61 /* Installation.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF621E2566A00A91B61 /* Installation.md */; };
+		ACA4A00021E2566B00A91B61 /* Supported Gestures.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF721E2566B00A91B61 /* Supported Gestures.md */; };
+		ACA4A00121E2566B00A91B61 /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF821E2566B00A91B61 /* Troubleshooting.md */; };
+		ACA4A00221E2566B00A91B61 /* USB Support.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF921E2566B00A91B61 /* USB Support.md */; };
+		ACA4A00321E2566B00A91B61 /* Credits.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFA21E2566B00A91B61 /* Credits.md */; };
+		ACA4A00421E2566B00A91B61 /* Polling Mode.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFB21E2566B00A91B61 /* Polling Mode.md */; };
+		ACA4A00521E2566B00A91B61 /* Common Errors.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFC21E2566B00A91B61 /* Common Errors.md */; };
+		ACA4A00621E2566B00A91B61 /* GPIO Pinning.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFD21E2566B00A91B61 /* GPIO Pinning.md */; };
 		ACD09F031F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD09F011F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp */; };
 		ACD09F041F756B7800E9829A /* VoodooI2CMultitouchInterface.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD09F021F756B7800E9829A /* VoodooI2CMultitouchInterface.hpp */; };
 		ACD86D8F2151BF5600C474A9 /* VoodooI2CMT2SimulatorDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D8B2151BF5600C474A9 /* VoodooI2CMT2SimulatorDevice.cpp */; };
@@ -114,6 +123,13 @@
 			remoteGlobalIDString = ACD148A21FF17DE00008EA7B;
 			remoteInfo = VoodooI2CSynaptics;
 		};
+		ACA4A00B21E259D700A91B61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F1F613BE20902F4C00F1B282;
+			remoteInfo = VoodooI2CAtmelMXT;
+		};
 		ACB62EFA21717B3A00DF6D8B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */;
@@ -156,13 +172,6 @@
 			remoteGlobalIDString = AC0DE5DE1F4FFB4B006149C8;
 			remoteInfo = VoodooI2CHID;
 		};
-		F10E967921DEBA7400AC5C8B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F1F613BE20902F4C00F1B282;
-			remoteInfo = VoodooI2CAtmelMXT;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -193,6 +202,16 @@
 		AC6268931F2F6CF1000CBF2D /* VoodooI2CController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CController.hpp; path = VoodooI2CController/VoodooI2CController.hpp; sourceTree = "<group>"; };
 		AC7400B81F3B6F1000937DD5 /* Introduction.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Introduction.md; path = ../../Documentation/Introduction.md; sourceTree = "<group>"; };
 		AC94C8382119E50400D26081 /* VoodooI2CSynaptics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CSynaptics.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CSynaptics/VoodooI2CSynaptics.xcodeproj"; sourceTree = "<group>"; };
+		ACA49FF521E2566A00A91B61 /* Satellites.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Satellites.md; path = ../../Documentation/Satellites.md; sourceTree = "<group>"; };
+		ACA49FF621E2566A00A91B61 /* Installation.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Installation.md; path = ../../Documentation/Installation.md; sourceTree = "<group>"; };
+		ACA49FF721E2566B00A91B61 /* Supported Gestures.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Supported Gestures.md"; path = "../../Documentation/Supported Gestures.md"; sourceTree = "<group>"; };
+		ACA49FF821E2566B00A91B61 /* Troubleshooting.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Troubleshooting.md; path = ../../Documentation/Troubleshooting.md; sourceTree = "<group>"; };
+		ACA49FF921E2566B00A91B61 /* USB Support.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "USB Support.md"; path = "../../Documentation/USB Support.md"; sourceTree = "<group>"; };
+		ACA49FFA21E2566B00A91B61 /* Credits.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = Credits.md; path = ../../Documentation/Credits.md; sourceTree = "<group>"; };
+		ACA49FFB21E2566B00A91B61 /* Polling Mode.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Polling Mode.md"; path = "../../Documentation/Polling Mode.md"; sourceTree = "<group>"; };
+		ACA49FFC21E2566B00A91B61 /* Common Errors.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Common Errors.md"; path = "../../Documentation/Common Errors.md"; sourceTree = "<group>"; };
+		ACA49FFD21E2566B00A91B61 /* GPIO Pinning.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "GPIO Pinning.md"; path = "../../Documentation/GPIO Pinning.md"; sourceTree = "<group>"; };
+		ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CAtmelMXT.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CAtmelMXT/VoodooI2CAtmelMXT.xcodeproj"; sourceTree = "<group>"; };
 		ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CSynaptics.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CSynaptics/VoodooI2CSynaptics.xcodeproj"; sourceTree = "<group>"; };
 		ACBE3FF01FEDF4FA0027F52E /* VoodooI2CUPDDEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CUPDDEngine.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CUPDDEngine/VoodooI2CUPDDEngine.xcodeproj"; sourceTree = "<group>"; };
 		ACD09F011F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CMultitouchInterface.cpp; path = "../../Multitouch Support/VoodooI2CMultitouchInterface.cpp"; sourceTree = "<group>"; };
@@ -217,7 +236,6 @@
 		ACF810E71F3304720031A6F5 /* VoodooI2CControllerNub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerNub.hpp; path = VoodooI2CController/VoodooI2CControllerNub.hpp; sourceTree = "<group>"; };
 		ACFCBA8E1F33644D00F9B59C /* VoodooI2CControllerDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CControllerDriver.cpp; path = VoodooI2CController/VoodooI2CControllerDriver.cpp; sourceTree = "<group>"; };
 		ACFCBA8F1F33644D00F9B59C /* VoodooI2CControllerDriver.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerDriver.hpp; path = VoodooI2CController/VoodooI2CControllerDriver.hpp; sourceTree = "<group>"; };
-		F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CAtmelMXT.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CAtmelMXT/VoodooI2CAtmelMXT.xcodeproj"; sourceTree = "<group>"; };
 		F17E754521CB4EFD00E8E90F /* VoodooI2CMT2ActuatorDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CMT2ActuatorDevice.cpp; path = "../../Multitouch Support/Native/VoodooI2CMT2ActuatorDevice.cpp"; sourceTree = "<group>"; };
 		F17E754621CB4EFD00E8E90F /* VoodooI2CMT2ActuatorDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CMT2ActuatorDevice.hpp; path = "../../Multitouch Support/Native/VoodooI2CMT2ActuatorDevice.hpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -252,7 +270,7 @@
 		AC0387531F54182100ECEDF9 /* VoodooI2C Satellites */ = {
 			isa = PBXGroup;
 			children = (
-				F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */,
+				ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */,
 				ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */,
 				121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */,
 				ACBE3FF01FEDF4FA0027F52E /* VoodooI2CUPDDEngine.xcodeproj */,
@@ -394,6 +412,15 @@
 		AC7400B71F3B6EB700937DD5 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
+				ACA49FFC21E2566B00A91B61 /* Common Errors.md */,
+				ACA49FFA21E2566B00A91B61 /* Credits.md */,
+				ACA49FFD21E2566B00A91B61 /* GPIO Pinning.md */,
+				ACA49FF621E2566A00A91B61 /* Installation.md */,
+				ACA49FFB21E2566B00A91B61 /* Polling Mode.md */,
+				ACA49FF521E2566A00A91B61 /* Satellites.md */,
+				ACA49FF721E2566B00A91B61 /* Supported Gestures.md */,
+				ACA49FF821E2566B00A91B61 /* Troubleshooting.md */,
+				ACA49FF921E2566B00A91B61 /* USB Support.md */,
 				AC7400B81F3B6F1000937DD5 /* Introduction.md */,
 			);
 			name = Documentation;
@@ -403,6 +430,14 @@
 			isa = PBXGroup;
 			children = (
 				AC94C83D2119E50400D26081 /* VoodooI2CSynaptics.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ACA4A00821E259D700A91B61 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ACA4A00C21E259D700A91B61 /* VoodooI2CAtmelMXT.kext */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -450,14 +485,6 @@
 				ACF6E5861F759B5D00A0CD61 /* VoodooI2CCSGestureEngine.hpp */,
 			);
 			name = CSGesture;
-			sourceTree = "<group>";
-		};
-		F10E967621DEBA7400AC5C8B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F10E967A21DEBA7400AC5C8B /* VoodooI2CAtmelMXT.kext */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -552,8 +579,8 @@
 					ProjectRef = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
 				},
 				{
-					ProductGroup = F10E967621DEBA7400AC5C8B /* Products */;
-					ProjectRef = F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */;
+					ProductGroup = ACA4A00821E259D700A91B61 /* Products */;
+					ProjectRef = ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */;
 				},
 				{
 					ProductGroup = 7B30D6981F91141300190488 /* Products */;
@@ -634,6 +661,13 @@
 			remoteRef = AC94C83C2119E50400D26081 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		ACA4A00C21E259D700A91B61 /* VoodooI2CAtmelMXT.kext */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VoodooI2CAtmelMXT.kext;
+			remoteRef = ACA4A00B21E259D700A91B61 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		ACB62EFB21717B3A00DF6D8B /* VoodooI2CSynaptics.kext */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -648,13 +682,6 @@
 			remoteRef = ACBE3FF41FEDF4FA0027F52E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F10E967A21DEBA7400AC5C8B /* VoodooI2CAtmelMXT.kext */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = VoodooI2CAtmelMXT.kext;
-			remoteRef = F10E967921DEBA7400AC5C8B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -662,6 +689,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACA4A00221E2566B00A91B61 /* USB Support.md in Resources */,
+				ACA4A00021E2566B00A91B61 /* Supported Gestures.md in Resources */,
+				ACA4A00121E2566B00A91B61 /* Troubleshooting.md in Resources */,
+				ACA4A00621E2566B00A91B61 /* GPIO Pinning.md in Resources */,
+				ACA4A00321E2566B00A91B61 /* Credits.md in Resources */,
+				ACA4A00421E2566B00A91B61 /* Polling Mode.md in Resources */,
+				ACA4A00521E2566B00A91B61 /* Common Errors.md in Resources */,
+				ACA49FFF21E2566B00A91B61 /* Installation.md in Resources */,
+				ACA49FFE21E2566B00A91B61 /* Satellites.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

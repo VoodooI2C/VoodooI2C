@@ -16,3 +16,6 @@
 [submodule "VoodooI2C Satellites/VoodooI2CFTE"]
 	path = VoodooI2C Satellites/VoodooI2CFTE
 	url = https://github.com/prizraksarvar/VoodooI2CFTE.git
+[submodule "VoodooI2C Satellites/VoodooI2CAtmelMXT"]
+	path = VoodooI2C Satellites/VoodooI2CAtmelMXT
+	url = https://github.com/coolstar/VoodooI2CAtmelMXT
