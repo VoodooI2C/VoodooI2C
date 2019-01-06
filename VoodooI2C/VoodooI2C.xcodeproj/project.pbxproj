@@ -212,6 +212,7 @@
 		ACA49FFC21E2566B00A91B61 /* Common Errors.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "Common Errors.md"; path = "../../Documentation/Common Errors.md"; sourceTree = "<group>"; };
 		ACA49FFD21E2566B00A91B61 /* GPIO Pinning.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = "GPIO Pinning.md"; path = "../../Documentation/GPIO Pinning.md"; sourceTree = "<group>"; };
 		ACA4A00721E259D600A91B61 /* VoodooI2CAtmelMXT.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CAtmelMXT.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CAtmelMXT/VoodooI2CAtmelMXT.xcodeproj"; sourceTree = "<group>"; };
+		ACA4A01021E2606400A91B61 /* Build Environment.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = "Build Environment.md"; path = "../../Documentation/Build Environment.md"; sourceTree = "<group>"; };
 		ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CSynaptics.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CSynaptics/VoodooI2CSynaptics.xcodeproj"; sourceTree = "<group>"; };
 		ACBE3FF01FEDF4FA0027F52E /* VoodooI2CUPDDEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CUPDDEngine.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CUPDDEngine/VoodooI2CUPDDEngine.xcodeproj"; sourceTree = "<group>"; };
 		ACD09F011F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CMultitouchInterface.cpp; path = "../../Multitouch Support/VoodooI2CMultitouchInterface.cpp"; sourceTree = "<group>"; };
@@ -422,6 +423,7 @@
 				ACA49FF821E2566B00A91B61 /* Troubleshooting.md */,
 				ACA49FF921E2566B00A91B61 /* USB Support.md */,
 				AC7400B81F3B6F1000937DD5 /* Introduction.md */,
+				ACA4A01021E2606400A91B61 /* Build Environment.md */,
 			);
 			name = Documentation;
 			sourceTree = "<group>";
@@ -531,6 +533,8 @@
 				AC2603AE1F2F294000CF238F /* Resources */,
 				AC0955921F4EE9B00052E343 /* Add GPIO and Services Plugin */,
 				ACC7F1451FEC9EA800200004 /* Output Version Number */,
+				ACA4A00D21E25F0E00A91B61 /* Linting */,
+				ACA4A00F21E25F3500A91B61 /* Generate Documentation */,
 			);
 			buildRules = (
 			);
@@ -718,6 +722,42 @@
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns\nrm -rf ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns/VoodooGPIO.kext\nmv ${BUILT_PRODUCTS_DIR}/VoodooGPIO.kext ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns\n\nrm -rf ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns/VoodooI2CServices.kext\nmv ${BUILT_PRODUCTS_DIR}/VoodooI2CServices.kext ${BUILT_PRODUCTS_DIR}/VoodooI2C.kext/Contents/PlugIns";
 			showEnvVarsInLog = 0;
+		};
+		ACA4A00D21E25F0E00A91B61 /* Linting */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Linting;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int ./\n";
+		};
+		ACA4A00F21E25F3500A91B61 /* Generate Documentation */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Documentation";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pwd; find .*/VoodooI2C .*/Dependencies .*/Multitouch\\\\ Support .*/VoodooI2C\\\\ Satellites -name \\\"*.hpp\\\" -print0 | xargs -0 cldoc generate -I. -I.*/Dependencies/Headers -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wno-inconsistent-missing-override -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -I\\\"../Dependencies/Headers\\\" -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge \\\"../Documentation\\\" --basedir .\n";
 		};
 		ACC7F1451FEC9EA800200004 /* Output Version Number */ = {
 			isa = PBXShellScriptBuildPhase;

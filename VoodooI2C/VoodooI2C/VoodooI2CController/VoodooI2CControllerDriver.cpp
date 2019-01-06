@@ -47,7 +47,7 @@ IOWorkLoop* VoodooI2CControllerDriver::getWorkLoop() {
     // Do we have a work loop already?, if so return it NOW.
     if ((vm_address_t) work_loop >> 1)
         return work_loop;
-    
+
     if (OSCompareAndSwap(0, 1, reinterpret_cast<IOWorkLoop*>(&work_loop))) {
         // Construct the workloop and set the cntrlSync variable
         // to whatever the result is and return
@@ -59,7 +59,7 @@ IOWorkLoop* VoodooI2CControllerDriver::getWorkLoop() {
             thread_block(0);
         }
     }
-    
+
     return work_loop;
 }
 
@@ -94,29 +94,29 @@ void VoodooI2CControllerDriver::handleAbortI2C() {
 
 void VoodooI2CControllerDriver::handleInterrupt(OSObject* owner, IOInterruptEventSource* src, int intCount) {
     UInt32 status, enabled;
-    
+
     enabled = readRegister(DW_IC_ENABLE);
     status = readRegister(DW_IC_RAW_INTR_STAT);
-    
+
     if (!enabled || !(status &~DW_IC_INTR_ACTIVITY))
         return;
-    
+
     status = readClearInterruptBits();
-    
+
     if (status & DW_IC_INTR_TX_ABRT) {
         bus_device->command_error |= DW_IC_ERR_TX_ABRT;
         bus_device->status = STATUS_IDLE;
-        
+
         writeRegister(0, DW_IC_INTR_MASK);
         goto wakeup;
     }
-    
+
     if (status & DW_IC_INTR_RX_FULL)
         readFromBus();
-    
+
     if (status & DW_IC_INTR_TX_EMPTY)
         transferMessageToBus();
-    
+
 wakeup:
     if ((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device->message_error) {
         command_gate->commandWakeup(&bus_device->command_complete);
