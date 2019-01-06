@@ -41,11 +41,8 @@ sudo pip install cpplint
 
 In order to streamline user experience, we use (a modified version of) `cldoc` to automatically generate documentation on two levels. `cldoc` will forst compile all the Markdown files in the `Documentation` directory. It will then crawl the project repository and compile documentation for each documented function, class, variable etc. These files are packaged together during continuous integration and are uploaded to the [documentation site](https://voodooi2c.github.io) that you are currently on. We will further discuss documentation later on.
 
-To install `cldoc`, run the following command:
+To install `cldoc`, first clone the custom version of `cldoc` from [this repo](https://github.com/alexandred/cldoc) then follow the "Installing from source" instructions found [here](http://jessevdk.github.io/cldoc/gettingstarted.html).
 
-```
-git clone https://github.com/alexandred/cldoc/ && cd cldoc && sudo make install
-```
 ## Building, loading, and installing VoodooI2C
 
 You should now be ready to build VoodooI2C. With XCode, open the `VoodooI2C.xcworkspace` file and build it as usual. Once the build is complete, the products directory should be populated with the `VoodooI2C.kext` file along with many other satellite kexts.
