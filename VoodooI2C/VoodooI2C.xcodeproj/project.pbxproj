@@ -156,6 +156,13 @@
 			remoteGlobalIDString = AC0DE5DE1F4FFB4B006149C8;
 			remoteInfo = VoodooI2CHID;
 		};
+		F10E967921DEBA7400AC5C8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F1F613BE20902F4C00F1B282;
+			remoteInfo = VoodooI2CAtmelMXT;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -210,6 +217,7 @@
 		ACF810E71F3304720031A6F5 /* VoodooI2CControllerNub.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerNub.hpp; path = VoodooI2CController/VoodooI2CControllerNub.hpp; sourceTree = "<group>"; };
 		ACFCBA8E1F33644D00F9B59C /* VoodooI2CControllerDriver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CControllerDriver.cpp; path = VoodooI2CController/VoodooI2CControllerDriver.cpp; sourceTree = "<group>"; };
 		ACFCBA8F1F33644D00F9B59C /* VoodooI2CControllerDriver.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerDriver.hpp; path = VoodooI2CController/VoodooI2CControllerDriver.hpp; sourceTree = "<group>"; };
+		F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CAtmelMXT.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CAtmelMXT/VoodooI2CAtmelMXT.xcodeproj"; sourceTree = "<group>"; };
 		F17E754521CB4EFD00E8E90F /* VoodooI2CMT2ActuatorDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CMT2ActuatorDevice.cpp; path = "../../Multitouch Support/Native/VoodooI2CMT2ActuatorDevice.cpp"; sourceTree = "<group>"; };
 		F17E754621CB4EFD00E8E90F /* VoodooI2CMT2ActuatorDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CMT2ActuatorDevice.hpp; path = "../../Multitouch Support/Native/VoodooI2CMT2ActuatorDevice.hpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -244,6 +252,7 @@
 		AC0387531F54182100ECEDF9 /* VoodooI2C Satellites */ = {
 			isa = PBXGroup;
 			children = (
+				F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */,
 				ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */,
 				121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */,
 				ACBE3FF01FEDF4FA0027F52E /* VoodooI2CUPDDEngine.xcodeproj */,
@@ -443,6 +452,14 @@
 			name = CSGesture;
 			sourceTree = "<group>";
 		};
+		F10E967621DEBA7400AC5C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F10E967A21DEBA7400AC5C8B /* VoodooI2CAtmelMXT.kext */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -535,6 +552,10 @@
 					ProjectRef = AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */;
 				},
 				{
+					ProductGroup = F10E967621DEBA7400AC5C8B /* Products */;
+					ProjectRef = F10E967521DEBA7400AC5C8B /* VoodooI2CAtmelMXT.xcodeproj */;
+				},
+				{
 					ProductGroup = 7B30D6981F91141300190488 /* Products */;
 					ProjectRef = 7B30D6971F91141300190488 /* VoodooI2CELAN.xcodeproj */;
 				},
@@ -551,12 +572,12 @@
 					ProjectRef = AC2DC7311F7F0E5B0071CDCA /* VoodooI2CServices.xcodeproj */;
 				},
 				{
-					ProductGroup = ACB62EF721717B3A00DF6D8B /* Products */;
-					ProjectRef = ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */;
-				},
-				{
 					ProductGroup = AC94C8392119E50400D26081 /* Products */;
 					ProjectRef = AC94C8382119E50400D26081 /* VoodooI2CSynaptics.xcodeproj */;
+				},
+				{
+					ProductGroup = ACB62EF721717B3A00DF6D8B /* Products */;
+					ProjectRef = ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */;
 				},
 				{
 					ProductGroup = ACBE3FF11FEDF4FA0027F52E /* Products */;
@@ -625,6 +646,13 @@
 			fileType = wrapper.cfbundle;
 			path = VoodooI2CUPDDEngine.kext;
 			remoteRef = ACBE3FF41FEDF4FA0027F52E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F10E967A21DEBA7400AC5C8B /* VoodooI2CAtmelMXT.kext */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = VoodooI2CAtmelMXT.kext;
+			remoteRef = F10E967921DEBA7400AC5C8B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
