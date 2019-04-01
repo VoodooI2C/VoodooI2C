@@ -40,6 +40,9 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     if (!transducer)
         return;
     
+    if (transducer->type==kDigitiserTransducerStylus)
+        stylus_check = 1;
+    
     // physical button
     input_report.Button = transducer->physical_button.value();
     
@@ -67,7 +70,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     bool input_active = false;
     
     for (int i = 0; i < multitouch_event.contact_count + 1; i++) {
-        VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(i));
+        VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(i + stylus_check));
         
         new_touch_state[i] = touch_state[i];
         touch_state[i] = 0;
