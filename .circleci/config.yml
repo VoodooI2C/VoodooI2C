@@ -3,7 +3,6 @@ jobs:
   build:
     working_directory: ~/alexandred/VoodooI2C
     parallelism: 1
-    shell: /bin/bash --login
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
     macos:
@@ -25,7 +24,7 @@ jobs:
       - run: pip install git+https://github.com/alexandred/cldoc.git --user
       - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
       - run: git submodule init && git submodule update
-      - run: set -o pipefail && xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -derivedDataPath build clean build
+      - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -derivedDataPath build clean build
 
       - run: find $HOME/Library/Developer/Xcode/DerivedData -name '*.xcactivitylog' -exec cp {} $CIRCLE_ARTIFACTS/xcactivitylog \; || true
       # Save artifacts
@@ -33,6 +32,8 @@ jobs:
           path: /tmp/circleci-artifacts
   
   deploy:
+    macos:
+      xcode: 10.2.0
     steps:
       # Machine Setup
       - checkout
