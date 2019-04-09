@@ -21,7 +21,7 @@ jobs:
           # Default branch if not
           - v1-dep-master-
       - run: pip install cpplint
-      - run: pip install git+https://github.com/alexandred/cldoc.git --user
+      - run: pip install git+https://github.com/alexandred/cldoc.git
       - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
       - run: git submodule init && git submodule update
       - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -derivedDataPath build clean build
