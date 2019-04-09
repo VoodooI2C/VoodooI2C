@@ -47,7 +47,15 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     input_report.Button = transducer->physical_button.value();
     
     // touch active
+
+    // rotation check
     
+    UInt8 transform = 0;
+    OSNumber* number = OSDynamicCast(OSNumber, engine->interface->getProperty(kIOFBTransformKey));
+    
+    if (number)
+        transform = number->unsigned8BitValue();
+
     // multitouch report id
         input_report.multitouch_report_id = 0x31; //Magic
     
@@ -105,7 +113,22 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         IOFixed scaled_old_x = (((transducer->coordinates.x.last.value)* 1.0f) / engine->interface->logical_max_x) * 7612;
         
         uint8_t scaled_old_x_truncated = scaled_old_x;
+
         
+        if (transform) {
+            if (transform & kIOFBSwapAxes) {
+                scaled_x = (((transducer->coordinates.y.value()) * 1.0f) / engine->interface->logical_max_y) * 7612;
+                scaled_y = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 5065;
+            }
+            
+            if (transform & kIOFBInvertX){
+                scaled_x = 7612 - scaled_x;
+            }
+            if (transform & kIOFBInvertY){
+                scaled_y = 5065 - scaled_y;
+            }
+        }
+
         new_touch_state[i]++;
         touch_state[i] = new_touch_state[i];
         
