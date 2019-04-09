@@ -19,25 +19,25 @@ class VoodooCSGestureHIDWrapper : public IOHIDDevice
 public:
     VoodooI2CCSGestureEngine *gestureEngine;
     
-    virtual bool start(IOService *provider) override;
+    bool start(IOService *provider) override;
     
-    virtual IOReturn setProperties(OSObject *properties) override;
+    IOReturn setProperties(OSObject *properties) override;
     
-    virtual IOReturn newReportDescriptor(IOMemoryDescriptor **descriptor) const override;
+    IOReturn newReportDescriptor(IOMemoryDescriptor **descriptor) const override;
     
-    virtual IOReturn setReport(IOMemoryDescriptor *report,IOHIDReportType reportType,IOOptionBits options=0) override;
-    virtual IOReturn getReport(IOMemoryDescriptor *report,IOHIDReportType reportType,IOOptionBits options) override;
+    IOReturn setReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options=0) override;
+    IOReturn getReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) override;
     
-    virtual OSString* newManufacturerString() const override;
-    virtual OSNumber* newPrimaryUsageNumber() const override;
-    virtual OSNumber* newPrimaryUsagePageNumber() const override;
-    virtual OSNumber* newProductIDNumber() const override;
-    virtual OSString* newProductString() const override;
-    virtual OSString* newSerialNumberString() const override;
-    virtual OSString* newTransportString() const override;
-    virtual OSNumber* newVendorIDNumber() const override;
+    OSString* newManufacturerString() const override;
+    OSNumber* newPrimaryUsageNumber() const override;
+    OSNumber* newPrimaryUsagePageNumber() const override;
+    OSNumber* newProductIDNumber() const override;
+    OSString* newProductString() const override;
+    OSString* newSerialNumberString() const override;
+    OSString* newTransportString() const override;
+    OSNumber* newVendorIDNumber() const override;
     
-    virtual OSNumber* newLocationIDNumber() const override;
+    OSNumber* newLocationIDNumber() const override;
 };
 
 #endif /* VoodooI2C_VoodooCSGestureHIDWrapper_h */

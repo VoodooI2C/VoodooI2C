@@ -58,30 +58,30 @@ public:
     static bool getMultitouchPreferences(void* target, void* ref_con, IOService* multitouch_device, IONotifier* notifier);
 
     IOReturn getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
-    virtual IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
-    virtual OSNumber* newVendorIDNumber() const override;
+    IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
+    OSNumber* newVendorIDNumber() const override;
     
     
-    virtual OSNumber* newProductIDNumber() const override;
+    OSNumber* newProductIDNumber() const override;
     
     
-    virtual OSNumber* newVersionNumber() const override;
+    OSNumber* newVersionNumber() const override;
     
     
-    virtual OSString* newTransportString() const override;
+    OSString* newTransportString() const override;
     
     
-    virtual OSString* newManufacturerString() const override;
+    OSString* newManufacturerString() const override;
     
-    virtual OSNumber* newPrimaryUsageNumber() const override;
+    OSNumber* newPrimaryUsageNumber() const override;
     
-    virtual OSNumber* newPrimaryUsagePageNumber() const override;
+    OSNumber* newPrimaryUsagePageNumber() const override;
     
-    virtual OSString* newProductString() const override;
+    OSString* newProductString() const override;
     
-    virtual OSString* newSerialNumberString() const override;
+    OSString* newSerialNumberString() const override;
     
-    virtual OSNumber* newLocationIDNumber() const override;
+    OSNumber* newLocationIDNumber() const override;
     
     IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
     
