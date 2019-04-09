@@ -40,7 +40,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     if (!transducer)
         return;
     
-    if (transducer->type==kDigitiserTransducerStylus)
+    if (transducer->type == kDigitiserTransducerStylus)
         stylus_check = 1;
     
     // physical button
@@ -121,10 +121,10 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
                 scaled_y = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 5065;
             }
             
-            if (transform & kIOFBInvertX){
+            if (transform & kIOFBInvertX) {
                 scaled_x = 7612 - scaled_x;
             }
-            if (transform & kIOFBInvertY){
+            if (transform & kIOFBInvertY) {
                 scaled_y = 5065 - scaled_y;
             }
         }
@@ -134,33 +134,33 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         
         int newunknown = stashed_unknown[i];
         
-        if (abs(scaled_x - scaled_old_x_truncated) > 50){
-            if (scaled_x <= 23){
+        if (abs(scaled_x - scaled_old_x_truncated) > 50) {
+            if (scaled_x <= 23) {
                 newunknown = 0x44;
-            } else if (scaled_x <= 27){
+            } else if (scaled_x <= 27) {
                 newunknown = 0x64;
-            } else if (scaled_x <= 37){
+            } else if (scaled_x <= 37) {
                 newunknown = 0x84;
-            } else if (scaled_x <= 2307){
+            } else if (scaled_x <= 2307) {
                 newunknown = 0x94;
-            } else if (scaled_x <= 3059){
+            } else if (scaled_x <= 3059) {
                 newunknown = 0x90;
-            } else if (scaled_x <= 4139){
+            } else if (scaled_x <= 4139) {
                 newunknown = 0x8c;
-            } else if (scaled_x <= 5015){
+            } else if (scaled_x <= 5015) {
                 newunknown = 0x88;
-            } else if (scaled_x <= 7553){
+            } else if (scaled_x <= 7553) {
                 newunknown = 0x94;
-            } else if (scaled_x <= 7600){
+            } else if (scaled_x <= 7600) {
                 newunknown = 0x84;
-            } else if (scaled_x <= 7605){
+            } else if (scaled_x <= 7605) {
                 newunknown = 0x64;
             } else {
                 newunknown = 0x44;
             }
         }
 
-        if(first_unknownbit == -1) {
+        if (first_unknownbit == -1) {
             first_unknownbit = newunknown;
         }
         newunknown = first_unknownbit - (4 * i);
@@ -333,7 +333,7 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     if (!factor_y)
         factor_y = 1;
     
-    for (int i = 0; i < 15; i++){
+    for (int i = 0; i < 15; i++) {
         touch_state[i] = 0;
         new_touch_state[i] = 0;
     }
@@ -354,7 +354,7 @@ void VoodooI2CMT2SimulatorDevice::stop(IOService* provider) {
 IOReturn VoodooI2CMT2SimulatorDevice::setPowerState(unsigned long whichState, IOService* whatDevice) {
     if (whatDevice != this)
         return kIOReturnInvalid;
-    if (whichState == 0){
+    if (whichState == 0) {
         // ready_for_reports = false;
     } else {
         // ready_for_reports = true;
