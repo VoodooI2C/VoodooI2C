@@ -43,7 +43,7 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
     UInt8 multitouch_report_id;
     UInt8 timestamp_buffer[3];
     
-    MAGIC_TRACKPAD_INPUT_REPORT_FINGER FINGERS[12]; //May support more fingers
+    MAGIC_TRACKPAD_INPUT_REPORT_FINGER FINGERS[12]; // May support more fingers
 };
 
 class VoodooI2CNativeEngine;

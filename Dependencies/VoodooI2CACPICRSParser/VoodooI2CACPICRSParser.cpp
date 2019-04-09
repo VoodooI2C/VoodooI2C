@@ -33,7 +33,7 @@ void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t off
     
     uint8_t bustype = crs[offset + 5];
     if (bustype != 1)
-        return; //Only support I2C. Bus type 2 = SPI, 3 = UART
+        return; // Only support I2C. Bus type 2 = SPI, 3 = UART
     
     uint8_t flags = crs[offset + 6];
     
@@ -98,7 +98,7 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
     uint16_t pin_number;
     memcpy(&pin_number, crs + offset + pin_offset, sizeof(uint16_t));
     
-    if (pin_number == 0xFFFF) //pinNumber 0xFFFF is invalid
+    if (pin_number == 0xFFFF) // pinNumber 0xFFFF is invalid
         return;
     
     /*char *gpioController = (char *)malloc(vendorOffset - resourceOffset);
@@ -106,7 +106,7 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
     IOLog("GPIO Controller: %s\n", gpioController);*/
     
     if (gpio_type == 0) {
-        //GPIOInt
+        // GPIOInt
         
         found_gpio_interrupts = true;
         
@@ -153,7 +153,7 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
     }
     
     if (gpio_type == 1) {
-        //GPIOIo
+        // GPIOIo
         
         found_gpio_io = true;
         

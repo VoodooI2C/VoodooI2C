@@ -57,7 +57,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         transform = number->unsigned8BitValue();
 
     // multitouch report id
-        input_report.multitouch_report_id = 0x31; //Magic
+    input_report.multitouch_report_id = 0x31; // Magic
     
     // timestamp
     AbsoluteTime relative_timestamp = timestamp;
@@ -243,7 +243,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     int total_report_len = (9 * multitouch_event.contact_count) + 12;
     IOBufferMemoryDescriptor* buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
 
-    if (! is_error_input_active) {
+    if (!is_error_input_active) {
       buffer_report->writeBytes(0, &input_report, total_report_len);
       handleReport(buffer_report, kIOHIDReportTypeInput);
     }
@@ -374,7 +374,6 @@ void VoodooI2CMT2SimulatorDevice::releaseResources() {
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
-    
     UInt32 report_id = options & 0xFF;
     
     if (report_id == 0x1) {
@@ -452,30 +451,30 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     
     if (report_id == 0xD1) {
         unsigned char buffer[] = {0xD1, 0x81};
-        //Family ID = 0x81
+        // Family ID = 0x81
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD3) {
         unsigned char buffer[] = {0xD3, 0x01, 0x16, 0x1E, 0x03, 0x95, 0x00, 0x14, 0x1E, 0x62, 0x05, 0x00, 0x00};
-        //Sensor Rows = 0x16
-        //Sensor Columns = 0x1e
+        // Sensor Rows = 0x16
+        // Sensor Columns = 0x1e
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD0) {
-        unsigned char buffer[] = {0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00}; //Sensor Region Description
+        unsigned char buffer[] = {0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00}; // Sensor Region Description
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xA1) {
-        unsigned char buffer[] = {0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01}; //Sensor Region Param
+        unsigned char buffer[] = {0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01}; // Sensor Region Param
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD9) {
-        //Sensor Surface Width = 0x3cf0 (0xf0, 0x3c) = 15.600 cm
-        //Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm*/
+        // Sensor Surface Width = 0x3cf0 (0xf0, 0x3c) = 15.600 cm
+        // Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm
         
         uint32_t rawWidth = engine->interface->physical_max_x * 10;
         uint32_t rawHeight = engine->interface->physical_max_y * 10;
@@ -486,7 +485,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
         uint8_t rawHeightLower = rawHeight & 0xff;
         uint8_t rawHeightHigher = (rawHeight >> 8) & 0xff;
         
-        unsigned char buffer[] = {0xD9, rawWidthLower, rawWidthHigher, 0x00, 0x00, rawHeightLower, rawHeightHigher, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26}; //Sensor Surface Description
+        unsigned char buffer[] = {0xD9, rawWidthLower, rawWidthHigher, 0x00, 0x00, rawHeightLower, rawHeightHigher, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26}; // Sensor Surface Description
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
