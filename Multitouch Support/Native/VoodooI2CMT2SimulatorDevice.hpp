@@ -22,6 +22,9 @@
 #include "../VoodooI2CDigitiserTransducer.hpp"
 #include "../VoodooI2CMultitouchInterface.hpp"
 
+#define MT2_MAX_X 7612
+#define MT2_MAX_Y 5065
+
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     UInt8 AbsX;
     UInt8 AbsXY;

@@ -103,29 +103,29 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         SInt16 x_min = 3678;
         SInt16 y_min = 2479;
         
-        IOFixed scaled_x = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 7612;
-        IOFixed scaled_y = (((transducer->coordinates.y.value()) * 1.0f) / engine->interface->logical_max_y) * 5065;
+        IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
+        IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_Y;
 
-        if (scaled_x < 1 && scaled_y > 5064) {
+        if (scaled_x < 1 && scaled_y >= MT2_MAX_Y) {
             is_error_input_active = true;
         }
         
-        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value)* 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
         
         uint8_t scaled_old_x_truncated = scaled_old_x;
 
         
         if (transform) {
             if (transform & kIOFBSwapAxes) {
-                scaled_x = (((transducer->coordinates.y.value()) * 1.0f) / engine->interface->logical_max_y) * 7612;
-                scaled_y = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 5065;
+                scaled_x = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_X;
+                scaled_y = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_Y;
             }
             
             if (transform & kIOFBInvertX) {
-                scaled_x = 7612 - scaled_x;
+                scaled_x = MT2_MAX_X - scaled_x;
             }
             if (transform & kIOFBInvertY) {
-                scaled_y = 5065 - scaled_y;
+                scaled_y = MT2_MAX_Y - scaled_y;
             }
         }
 
