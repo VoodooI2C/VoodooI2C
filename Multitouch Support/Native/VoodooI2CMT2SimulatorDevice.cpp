@@ -322,17 +322,6 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     engine->parent->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
-    factor_x = engine->interface->logical_max_x / engine->interface->physical_max_x;
-    factor_y = engine->interface->logical_max_y / engine->interface->physical_max_y;
-    
-    factor_ref = 4.75;
-
-    if (!factor_x)
-        factor_x = 1;
-
-    if (!factor_y)
-        factor_y = 1;
-    
     for (int i = 0; i < 15; i++) {
         touch_state[i] = 0;
         new_touch_state[i] = 0;

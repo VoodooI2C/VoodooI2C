@@ -93,7 +93,7 @@ public:
     void stop(IOService* provider);
     
     void releaseResources();
-protected:
+
 private:
     bool ready_for_reports = false;
     VoodooI2CNativeEngine* engine;
@@ -102,16 +102,11 @@ private:
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];
-    int last_finger_count;
     int stylus_check = 0;
     IOWorkLoop* work_loop;
     IOCommandGate* command_gate;
     MAGIC_TRACKPAD_INPUT_REPORT input_report;
 
-    IOFixed factor_x;
-    IOFixed factor_y;
-    IOFixed factor_ref;
-    
     void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
 };
 
