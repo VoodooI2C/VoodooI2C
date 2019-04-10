@@ -25,15 +25,6 @@
 		AC6268941F2F6CF1000CBF2D /* VoodooI2CController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC6268921F2F6CF1000CBF2D /* VoodooI2CController.cpp */; };
 		AC6268951F2F6CF1000CBF2D /* VoodooI2CController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC6268931F2F6CF1000CBF2D /* VoodooI2CController.hpp */; };
 		AC7400B91F3B6F1000937DD5 /* Introduction.md in Sources */ = {isa = PBXBuildFile; fileRef = AC7400B81F3B6F1000937DD5 /* Introduction.md */; };
-		ACA49FFE21E2566B00A91B61 /* Satellites.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF521E2566A00A91B61 /* Satellites.md */; };
-		ACA49FFF21E2566B00A91B61 /* Installation.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF621E2566A00A91B61 /* Installation.md */; };
-		ACA4A00021E2566B00A91B61 /* Supported Gestures.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF721E2566B00A91B61 /* Supported Gestures.md */; };
-		ACA4A00121E2566B00A91B61 /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF821E2566B00A91B61 /* Troubleshooting.md */; };
-		ACA4A00221E2566B00A91B61 /* USB Support.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF921E2566B00A91B61 /* USB Support.md */; };
-		ACA4A00321E2566B00A91B61 /* Credits.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFA21E2566B00A91B61 /* Credits.md */; };
-		ACA4A00421E2566B00A91B61 /* Polling Mode.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFB21E2566B00A91B61 /* Polling Mode.md */; };
-		ACA4A00521E2566B00A91B61 /* Common Errors.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFC21E2566B00A91B61 /* Common Errors.md */; };
-		ACA4A00621E2566B00A91B61 /* GPIO Pinning.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFD21E2566B00A91B61 /* GPIO Pinning.md */; };
 		ACD09F031F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD09F011F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp */; };
 		ACD09F041F756B7800E9829A /* VoodooI2CMultitouchInterface.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD09F021F756B7800E9829A /* VoodooI2CMultitouchInterface.hpp */; };
 		ACD86D8F2151BF5600C474A9 /* VoodooI2CMT2SimulatorDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D8B2151BF5600C474A9 /* VoodooI2CMT2SimulatorDevice.cpp */; };
@@ -701,15 +692,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACA4A00221E2566B00A91B61 /* USB Support.md in Resources */,
-				ACA4A00021E2566B00A91B61 /* Supported Gestures.md in Resources */,
-				ACA4A00121E2566B00A91B61 /* Troubleshooting.md in Resources */,
-				ACA4A00621E2566B00A91B61 /* GPIO Pinning.md in Resources */,
-				ACA4A00321E2566B00A91B61 /* Credits.md in Resources */,
-				ACA4A00421E2566B00A91B61 /* Polling Mode.md in Resources */,
-				ACA4A00521E2566B00A91B61 /* Common Errors.md in Resources */,
-				ACA49FFF21E2566B00A91B61 /* Installation.md in Resources */,
-				ACA49FFE21E2566B00A91B61 /* Satellites.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
