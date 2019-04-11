@@ -30,11 +30,19 @@ jobs:
       # Save artifacts
       - store_artifacts:
           path: /tmp/circleci-artifacts
+      
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build/Build/Products/Release/*
+            - docs/*
   
   deploy:
     macos:
       xcode: 10.2.0
     steps:
+      - attach_workspace:
+          at: ./
       # Machine Setup
       - checkout
       - run: brew update
@@ -42,7 +50,7 @@ jobs:
       - run: brew install ghr
       - run:
           name: "Publish Release on GitHub"
-          command: export NEW_LINES=$'\n\n\n' && export LAST_TEN_COMMITS="$(git log `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --oneline --format=" - %s" | head -10)" && export NUM_COMMITS="$(git rev-list `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --count)" && cd $TARGET_BUILD_DIR && export VOODOOI2C_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "VoodooI2C.kext/Contents/info.plist") && mkdir Archives && zip -r Archives/"VoodooI2C-$VOODOOI2C_VERSION.zip" *.kext && zip -r Archives/"VoodooI2C-Debug-Symbols-$VOODOOI2C_VERSION.zip" *.dSYM && ghr -b "Since the last release there have been $NUM_COMMITS commit(s). The descriptions for the first (at most) 10 of these are as follows $NEW_LINES $LAST_TEN_COMMITS" --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION Archives/
+          command: export NEW_LINES=$'\n\n\n' && export LAST_TEN_COMMITS="$(git log `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --oneline --format=" - %s" | head -10)" && export NUM_COMMITS="$(git rev-list `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --count)" && cd build/Build/Products/Release && export VOODOOI2C_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "VoodooI2C.kext/Contents/info.plist") && mkdir Archives && zip -r Archives/"VoodooI2C-$VOODOOI2C_VERSION.zip" *.kext && zip -r Archives/"VoodooI2C-Debug-Symbols-$VOODOOI2C_VERSION.zip" *.dSYM && ghr -b "Since the last release there have been $NUM_COMMITS commit(s). The descriptions for the first (at most) 10 of these are as follows $NEW_LINES $LAST_TEN_COMMITS" --username alexandred --token $GITHUB_TOKEN --replace $VOODOOI2C_VERSION Archives/
       - run:
           name: "Update Documentation"
           command: mkdir docrepo && cp -R docs/* docrepo/ && cd docrepo && git init . && git remote add origin https://$DOCUMENTATION_TOKEN@github.com/VoodooI2C/VoodooI2C.github.io.git && git add . && git commit -m "add documentation" && git push -f --set-upstream origin master
