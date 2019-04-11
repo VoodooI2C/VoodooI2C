@@ -51,7 +51,7 @@ class VoodooI2CDeviceNub : public IOService {
      * is invalid
      */
 
-    IOReturn disableInterrupt(int source);
+    IOReturn disableInterrupt(int source) override;
 
     /* Enables an interrupt source
      * @source The index of the interrupt source in the case of APIC interrupts
@@ -63,7 +63,7 @@ class VoodooI2CDeviceNub : public IOService {
      * is invalid
      */
 
-    IOReturn enableInterrupt(int source);
+    IOReturn enableInterrupt(int source) override;
 
     /* Gets the type of an interrupt source
      * @source The index of the interrupt source in the case of APIC interrupts
@@ -75,7 +75,7 @@ class VoodooI2CDeviceNub : public IOService {
      * is invalid
      */
 
-    IOReturn getInterruptType(int source, int *interruptType);
+    IOReturn getInterruptType(int source, int *interruptType) override;
 
     /* Gets an *IOWorkLoop* object
      *
@@ -108,7 +108,7 @@ class VoodooI2CDeviceNub : public IOService {
      * the interrupt already has an installed handler
      */
 
-    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon);
+    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon) override;
 
     /* Starts the device nub
      * @provider The controller that drives this slave device
@@ -118,13 +118,13 @@ class VoodooI2CDeviceNub : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* Stops the device nub
      * @provider The controller that drives this slave device
      */
 
-    void stop(IOService* provider);
+    void stop(IOService* provider) override;
 
     /* Unregisters a slave for interrupts
      * @source he index of the interrupt source in the case of APIC interrupts
@@ -134,7 +134,7 @@ class VoodooI2CDeviceNub : public IOService {
      * @return *kIOReturnSuccess* upon a successful unregistration, *kIOReturnNoInterrupt* if the interrupt source is invalid
      */
 
-    IOReturn unregisterInterrupt(int source);
+    IOReturn unregisterInterrupt(int source) override;
 
     /* Transmits an I2C write request to the slave device
      * @values A buffer containing the message to be written

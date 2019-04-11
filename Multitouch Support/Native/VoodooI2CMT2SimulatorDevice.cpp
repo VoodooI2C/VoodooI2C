@@ -40,7 +40,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     if (!transducer)
         return;
     
-    if (transducer->type==kDigitiserTransducerStylus)
+    if (transducer->type == kDigitiserTransducerStylus)
         stylus_check = 1;
     
     // physical button
@@ -57,7 +57,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         transform = number->unsigned8BitValue();
 
     // multitouch report id
-        input_report.multitouch_report_id = 0x31; //Magic
+    input_report.multitouch_report_id = 0x31; // Magic
     
     // timestamp
     AbsoluteTime relative_timestamp = timestamp;
@@ -103,29 +103,29 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         SInt16 x_min = 3678;
         SInt16 y_min = 2479;
         
-        IOFixed scaled_x = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 7612;
-        IOFixed scaled_y = (((transducer->coordinates.y.value()) * 1.0f) / engine->interface->logical_max_y) * 5065;
+        IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
+        IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_Y;
 
-        if (scaled_x < 1 && scaled_y > 5064) {
+        if (scaled_x < 1 && scaled_y >= MT2_MAX_Y) {
             is_error_input_active = true;
         }
         
-        IOFixed scaled_old_x = (((transducer->coordinates.x.last.value)* 1.0f) / engine->interface->logical_max_x) * 7612;
+        IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
         
         uint8_t scaled_old_x_truncated = scaled_old_x;
 
         
         if (transform) {
             if (transform & kIOFBSwapAxes) {
-                scaled_x = (((transducer->coordinates.y.value()) * 1.0f) / engine->interface->logical_max_y) * 7612;
-                scaled_y = (((transducer->coordinates.x.value()) * 1.0f) / engine->interface->logical_max_x) * 5065;
+                scaled_x = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_X;
+                scaled_y = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_Y;
             }
             
-            if (transform & kIOFBInvertX){
-                scaled_x = 7612 - scaled_x;
+            if (transform & kIOFBInvertX) {
+                scaled_x = MT2_MAX_X - scaled_x;
             }
-            if (transform & kIOFBInvertY){
-                scaled_y = 5065 - scaled_y;
+            if (transform & kIOFBInvertY) {
+                scaled_y = MT2_MAX_Y - scaled_y;
             }
         }
 
@@ -134,33 +134,33 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         
         int newunknown = stashed_unknown[i];
         
-        if (abs(scaled_x - scaled_old_x_truncated) > 50){
-            if (scaled_x <= 23){
+        if (abs(scaled_x - scaled_old_x_truncated) > 50) {
+            if (scaled_x <= 23) {
                 newunknown = 0x44;
-            } else if (scaled_x <= 27){
+            } else if (scaled_x <= 27) {
                 newunknown = 0x64;
-            } else if (scaled_x <= 37){
+            } else if (scaled_x <= 37) {
                 newunknown = 0x84;
-            } else if (scaled_x <= 2307){
+            } else if (scaled_x <= 2307) {
                 newunknown = 0x94;
-            } else if (scaled_x <= 3059){
+            } else if (scaled_x <= 3059) {
                 newunknown = 0x90;
-            } else if (scaled_x <= 4139){
+            } else if (scaled_x <= 4139) {
                 newunknown = 0x8c;
-            } else if (scaled_x <= 5015){
+            } else if (scaled_x <= 5015) {
                 newunknown = 0x88;
-            } else if (scaled_x <= 7553){
+            } else if (scaled_x <= 7553) {
                 newunknown = 0x94;
-            } else if (scaled_x <= 7600){
+            } else if (scaled_x <= 7600) {
                 newunknown = 0x84;
-            } else if (scaled_x <= 7605){
+            } else if (scaled_x <= 7605) {
                 newunknown = 0x64;
             } else {
                 newunknown = 0x44;
             }
         }
 
-        if(first_unknownbit == -1) {
+        if (first_unknownbit == -1) {
             first_unknownbit = newunknown;
         }
         newunknown = first_unknownbit - (4 * i);
@@ -243,7 +243,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     int total_report_len = (9 * multitouch_event.contact_count) + 12;
     IOBufferMemoryDescriptor* buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
 
-    if (! is_error_input_active) {
+    if (!is_error_input_active) {
       buffer_report->writeBytes(0, &input_report, total_report_len);
       handleReport(buffer_report, kIOHIDReportTypeInput);
     }
@@ -322,18 +322,7 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     engine->parent->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
-    factor_x = engine->interface->logical_max_x / engine->interface->physical_max_x;
-    factor_y = engine->interface->logical_max_y / engine->interface->physical_max_y;
-    
-    factor_ref = 4.75;
-
-    if (!factor_x)
-        factor_x = 1;
-
-    if (!factor_y)
-        factor_y = 1;
-    
-    for (int i = 0; i < 15; i++){
+    for (int i = 0; i < 15; i++) {
         touch_state[i] = 0;
         new_touch_state[i] = 0;
     }
@@ -354,7 +343,7 @@ void VoodooI2CMT2SimulatorDevice::stop(IOService* provider) {
 IOReturn VoodooI2CMT2SimulatorDevice::setPowerState(unsigned long whichState, IOService* whatDevice) {
     if (whatDevice != this)
         return kIOReturnInvalid;
-    if (whichState == 0){
+    if (whichState == 0) {
         // ready_for_reports = false;
     } else {
         // ready_for_reports = true;
@@ -374,7 +363,6 @@ void VoodooI2CMT2SimulatorDevice::releaseResources() {
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
-    
     UInt32 report_id = options & 0xFF;
     
     if (report_id == 0x1) {
@@ -452,30 +440,30 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     
     if (report_id == 0xD1) {
         unsigned char buffer[] = {0xD1, 0x81};
-        //Family ID = 0x81
+        // Family ID = 0x81
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD3) {
         unsigned char buffer[] = {0xD3, 0x01, 0x16, 0x1E, 0x03, 0x95, 0x00, 0x14, 0x1E, 0x62, 0x05, 0x00, 0x00};
-        //Sensor Rows = 0x16
-        //Sensor Columns = 0x1e
+        // Sensor Rows = 0x16
+        // Sensor Columns = 0x1e
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD0) {
-        unsigned char buffer[] = {0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00}; //Sensor Region Description
+        unsigned char buffer[] = {0xD0, 0x02, 0x01, 0x00, 0x14, 0x01, 0x00, 0x1E, 0x00, 0x02, 0x14, 0x02, 0x01, 0x0E, 0x02, 0x00}; // Sensor Region Description
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xA1) {
-        unsigned char buffer[] = {0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01}; //Sensor Region Param
+        unsigned char buffer[] = {0xA1, 0x00, 0x00, 0x05, 0x00, 0xFC, 0x01}; // Sensor Region Param
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     
     if (report_id == 0xD9) {
-        //Sensor Surface Width = 0x3cf0 (0xf0, 0x3c) = 15.600 cm
-        //Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm*/
+        // Sensor Surface Width = 0x3cf0 (0xf0, 0x3c) = 15.600 cm
+        // Sensor Surface Height = 0x2b20 (0x20, 0x2b) = 11.040 cm
         
         uint32_t rawWidth = engine->interface->physical_max_x * 10;
         uint32_t rawHeight = engine->interface->physical_max_y * 10;
@@ -486,7 +474,7 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
         uint8_t rawHeightLower = rawHeight & 0xff;
         uint8_t rawHeightHigher = (rawHeight >> 8) & 0xff;
         
-        unsigned char buffer[] = {0xD9, rawWidthLower, rawWidthHigher, 0x00, 0x00, rawHeightLower, rawHeightHigher, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26}; //Sensor Surface Description
+        unsigned char buffer[] = {0xD9, rawWidthLower, rawWidthHigher, 0x00, 0x00, rawHeightLower, rawHeightHigher, 0x00, 0x00, 0x44, 0xE3, 0x52, 0xFF, 0xBD, 0x1E, 0xE4, 0x26}; // Sensor Surface Description
         get_buffer->appendBytes(buffer, sizeof(buffer));
     }
     

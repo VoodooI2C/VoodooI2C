@@ -24,16 +24,6 @@
 		AC4954521F31E91D0040E11F /* VoodooI2CPCIController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC4954501F31E91D0040E11F /* VoodooI2CPCIController.hpp */; };
 		AC6268941F2F6CF1000CBF2D /* VoodooI2CController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC6268921F2F6CF1000CBF2D /* VoodooI2CController.cpp */; };
 		AC6268951F2F6CF1000CBF2D /* VoodooI2CController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC6268931F2F6CF1000CBF2D /* VoodooI2CController.hpp */; };
-		AC7400B91F3B6F1000937DD5 /* Introduction.md in Sources */ = {isa = PBXBuildFile; fileRef = AC7400B81F3B6F1000937DD5 /* Introduction.md */; };
-		ACA49FFE21E2566B00A91B61 /* Satellites.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF521E2566A00A91B61 /* Satellites.md */; };
-		ACA49FFF21E2566B00A91B61 /* Installation.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF621E2566A00A91B61 /* Installation.md */; };
-		ACA4A00021E2566B00A91B61 /* Supported Gestures.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF721E2566B00A91B61 /* Supported Gestures.md */; };
-		ACA4A00121E2566B00A91B61 /* Troubleshooting.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF821E2566B00A91B61 /* Troubleshooting.md */; };
-		ACA4A00221E2566B00A91B61 /* USB Support.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FF921E2566B00A91B61 /* USB Support.md */; };
-		ACA4A00321E2566B00A91B61 /* Credits.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFA21E2566B00A91B61 /* Credits.md */; };
-		ACA4A00421E2566B00A91B61 /* Polling Mode.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFB21E2566B00A91B61 /* Polling Mode.md */; };
-		ACA4A00521E2566B00A91B61 /* Common Errors.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFC21E2566B00A91B61 /* Common Errors.md */; };
-		ACA4A00621E2566B00A91B61 /* GPIO Pinning.md in Resources */ = {isa = PBXBuildFile; fileRef = ACA49FFD21E2566B00A91B61 /* GPIO Pinning.md */; };
 		ACD09F031F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD09F011F756B7800E9829A /* VoodooI2CMultitouchInterface.cpp */; };
 		ACD09F041F756B7800E9829A /* VoodooI2CMultitouchInterface.hpp in Headers */ = {isa = PBXBuildFile; fileRef = ACD09F021F756B7800E9829A /* VoodooI2CMultitouchInterface.hpp */; };
 		ACD86D8F2151BF5600C474A9 /* VoodooI2CMT2SimulatorDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D8B2151BF5600C474A9 /* VoodooI2CMT2SimulatorDevice.cpp */; };
@@ -566,7 +556,7 @@
 		AC2603A71F2F294000CF238F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Alexandre Daoud";
 				TargetAttributes = {
 					AC2603AF1F2F294000CF238F = {
@@ -701,15 +691,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACA4A00221E2566B00A91B61 /* USB Support.md in Resources */,
-				ACA4A00021E2566B00A91B61 /* Supported Gestures.md in Resources */,
-				ACA4A00121E2566B00A91B61 /* Troubleshooting.md in Resources */,
-				ACA4A00621E2566B00A91B61 /* GPIO Pinning.md in Resources */,
-				ACA4A00321E2566B00A91B61 /* Credits.md in Resources */,
-				ACA4A00421E2566B00A91B61 /* Polling Mode.md in Resources */,
-				ACA4A00521E2566B00A91B61 /* Common Errors.md in Resources */,
-				ACA49FFF21E2566B00A91B61 /* Installation.md in Resources */,
-				ACA49FFE21E2566B00A91B61 /* Satellites.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,7 +746,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pwd; find .*/VoodooI2C .*/Dependencies .*/Multitouch\\ Support .*/VoodooI2C\\ Satellites -name \"*.hpp\" -print0 | xargs -0 cldoc generate -I. -I.*/Dependencies/Headers -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wno-inconsistent-missing-override -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDK_ROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -I\"../Dependencies/Headers\" -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge \"../Documentation\" --basedir .\n";
+			shellScript = "pwd; find .*/VoodooI2C .*/Dependencies .*/Multitouch\\ Support .*/VoodooI2C\\ Satellites -name \"*.hpp\" -print0 | xargs -0 cldoc generate -I. -I.*/Dependencies/Headers -x c++ -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -nostdinc -std=gnu++11 -stdlib=libc++ -fmodules -gmodules -fmodules-cache-path=${MODULE_CACHE_DIR} -fmodules-prune-interval=86400 -fmodules-prune-after=345600 -fbuild-session-file=${MODULE_CACHE_DIR}/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror=non-modular-include-in-framework-module -fno-builtin -Wno-trigraphs -fno-exceptions -fno-rtti -msoft-float -O0 -fno-common -mkernel -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Wunreachable-code -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wno-inconsistent-missing-override -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-c++11-extensions -DDEBUG=1 -DKERNEL -DKERNEL_PRIVATE -DDRIVER_PRIVATE -DAPPLE -DNeXT -fapple-kext -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.10 -g -Wno-sign-conversion -Winfinite-recursion -Wno-move -I${SDKROOT}/System/Library/Frameworks/Kernel.framework/PrivateHeaders -I${SDKROOT}/System/Library/Frameworks/Kernel.framework/Headers -I${DERIVED_SOURCES_DIR}/x86_64 -I${DERIVED_SOURCES_DIR} -I\"../Dependencies/Headers\" -Wno-inconsistent-missing-override -Wno-unused-variable -- --output ../docs --report --merge \"../Documentation\" --basedir .\n";
 		};
 		ACC7F1451FEC9EA800200004 /* Output Version Number */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -791,7 +772,6 @@
 			files = (
 				AC0E757A1F69ACEE002268D0 /* VoodooI2CDigitiserStylus.cpp in Sources */,
 				AC0E75761F69997B002268D0 /* VoodooI2CDigitiserTransducer.cpp in Sources */,
-				AC7400B91F3B6F1000937DD5 /* Introduction.md in Sources */,
 				AC0AD4581F3842800070A642 /* VoodooI2CDeviceNub.cpp in Sources */,
 				ACF6E5911F759EA000A0CD61 /* csgesturescroll.cpp in Sources */,
 				ACF810E81F3304720031A6F5 /* VoodooI2CControllerNub.cpp in Sources */,
@@ -867,15 +847,24 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -914,15 +903,24 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

@@ -41,7 +41,7 @@ class VoodooI2CControllerNub : public IOService {
      * @return *true* on succesful attach, *false* otherwise
      */
 
-    bool attach(IOService* provider);
+    bool attach(IOService* provider) override;
 
     /* Detaches the nub from the physical controller
      * @provider The physical controller
@@ -50,11 +50,11 @@ class VoodooI2CControllerNub : public IOService {
      * entry in the IOService plane.
      */
 
-    void detach(IOService* provider);
+    void detach(IOService* provider) override;
 
-    IOReturn disableInterrupt(int source);
+    IOReturn disableInterrupt(int source) override;
 
-    IOReturn enableInterrupt(int source);
+    IOReturn enableInterrupt(int source) override;
 
     /* Evaluates ACPI methods pertaining to the controller's ACPI device in the ACPI tables
      * @method   The name of the method to be evaluated
@@ -74,7 +74,7 @@ class VoodooI2CControllerNub : public IOService {
      * @return The value of the register
      */
 
-    IOReturn getInterruptType(int source, int *interruptType);
+    IOReturn getInterruptType(int source, int *interruptType) override;
 
     UInt32 readRegister(int offset);
 
@@ -87,9 +87,9 @@ class VoodooI2CControllerNub : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon);
+    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon) override;
 
-    bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* Stops the controller nub
      * @provider The physical controller
@@ -100,7 +100,7 @@ class VoodooI2CControllerNub : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    void stop(IOService* provider);
+    void stop(IOService* provider) override;
 
     /* Passes to <VoodooI2CController::writeRegister>
      * @value  The *UInt32* value to be written
@@ -111,7 +111,7 @@ class VoodooI2CControllerNub : public IOService {
 
     void writeRegister(UInt32 value, int offset);
 
-    IOReturn unregisterInterrupt(int source);
+    IOReturn unregisterInterrupt(int source) override;
 
  private:
     /* Handles an interrupt when the controller asserts its interrupt line

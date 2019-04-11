@@ -79,7 +79,7 @@ class VoodooI2CControllerDriver : public IOService {
      * allocated in <init>.
      */
 
-    void free();
+    void free() override;
 
     /* Handles an interrupt that has been asserted by the controller */
 
@@ -94,7 +94,7 @@ class VoodooI2CControllerDriver : public IOService {
      * @return *true* on successful initialisation, *false* otherwise
      */
 
-    bool init(OSDictionary* properties);
+    bool init(OSDictionary* properties) override;
 
     /* Probes the controller to determine whether or not we can drive it
      * @provider The provider which we have matched against
@@ -111,7 +111,7 @@ class VoodooI2CControllerDriver : public IOService {
      * otherwise
      */
 
-    VoodooI2CControllerDriver* probe(IOService* provider, SInt32* score);
+    VoodooI2CControllerDriver* probe(IOService* provider, SInt32* score) override;
 
     /* Starts the bus
      * @provider The provider which we have matched against
@@ -123,7 +123,7 @@ class VoodooI2CControllerDriver : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* Stops the bus
      * @provider The provider which we have matched against
@@ -133,7 +133,7 @@ class VoodooI2CControllerDriver : public IOService {
      * stopping the associated device nubs.
      */
 
-    void stop(IOService* provider);
+    void stop(IOService* provider) override;
 
     /* Directs the command gate to add an I2C transfer routine to the work loop
      * @messages The messages to be transferred
@@ -236,7 +236,7 @@ class VoodooI2CControllerDriver : public IOService {
      * @return *kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise
      */
 
-    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
+    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice) override;
 
     /* Toggle the bus's enabled state
      * @param enabled The power state the bus is expected to enter represented by either

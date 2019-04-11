@@ -14,12 +14,12 @@
 #include "VoodooI2CACPICRSParser.hpp"
 #include "linuxirq.hpp"
 
-VoodooI2CACPICRSParser::VoodooI2CACPICRSParser(){
+VoodooI2CACPICRSParser::VoodooI2CACPICRSParser() {
     found_gpio_interrupts = false;
     found_i2c = false;
 }
 
-void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t offset, uint32_t sz){
+void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t offset, uint32_t sz) {
     if (found_i2c)
         return;
     if (offset >= sz)
@@ -33,7 +33,7 @@ void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t off
     
     uint8_t bustype = crs[offset + 5];
     if (bustype != 1)
-        return; //Only support I2C. Bus type 2 = SPI, 3 = UART
+        return; // Only support I2C. Bus type 2 = SPI, 3 = UART
     
     uint8_t flags = crs[offset + 6];
     
@@ -43,7 +43,7 @@ void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t off
     /*uint16_t datalen;
     memcpy(&datalen, crs + offset + 10, sizeof(uint16_t));*/
     
-    if (bustype == 1){
+    if (bustype == 1) {
         found_i2c = true;
         
         i2c_info.resource_consumer = (flags >> 1) & 0x1;
@@ -66,7 +66,7 @@ void VoodooI2CACPICRSParser::parseACPISerialBus(uint8_t const* crs, uint32_t off
     }
 }
 
-void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, uint32_t sz){
+void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, uint32_t sz) {
     if (found_gpio_interrupts)
         return;
     if (offset >= sz)
@@ -98,15 +98,15 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
     uint16_t pin_number;
     memcpy(&pin_number, crs + offset + pin_offset, sizeof(uint16_t));
     
-    if (pin_number == 0xFFFF) //pinNumber 0xFFFF is invalid
+    if (pin_number == 0xFFFF) // pinNumber 0xFFFF is invalid
         return;
     
     /*char *gpioController = (char *)malloc(vendorOffset - resourceOffset);
     memcpy(gpioController, crs + offset + resourceOffset, vendorOffset - resourceOffset);
     IOLog("GPIO Controller: %s\n", gpioController);*/
     
-    if (gpio_type == 0){
-        //GPIOInt
+    if (gpio_type == 0) {
+        // GPIOInt
         
         found_gpio_interrupts = true;
         
@@ -122,8 +122,8 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
         gpio_interrupts.pin_number = pin_number;
         
         int irq = 0;
-        if (gpio_interrupts.level_interrupt){
-            switch (gpio_interrupts.interrupt_polarity){
+        if (gpio_interrupts.level_interrupt) {
+            switch (gpio_interrupts.interrupt_polarity) {
                 case 0:
                     irq = IRQ_TYPE_LEVEL_HIGH;
                     break;
@@ -152,8 +152,8 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
         gpio_interrupts.irq_type = irq;
     }
     
-    if (gpio_type == 1){
-        //GPIOIo
+    if (gpio_type == 1) {
+        // GPIOIo
         
         found_gpio_io = true;
         
@@ -166,7 +166,7 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
     }
 }
 
-void VoodooI2CACPICRSParser::parseACPICRS(uint8_t const* crs, uint32_t offset, uint32_t sz){
+void VoodooI2CACPICRSParser::parseACPICRS(uint8_t const* crs, uint32_t offset, uint32_t sz) {
     if (offset >= sz)
         return;
     

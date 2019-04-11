@@ -22,6 +22,9 @@
 #include "../VoodooI2CDigitiserTransducer.hpp"
 #include "../VoodooI2CMultitouchInterface.hpp"
 
+#define MT2_MAX_X 7612
+#define MT2_MAX_Y 5065
+
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     UInt8 AbsX;
     UInt8 AbsXY;
@@ -43,7 +46,7 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
     UInt8 multitouch_report_id;
     UInt8 timestamp_buffer[3];
     
-    MAGIC_TRACKPAD_INPUT_REPORT_FINGER FINGERS[12]; //May support more fingers
+    MAGIC_TRACKPAD_INPUT_REPORT_FINGER FINGERS[12]; // May support more fingers
 };
 
 class VoodooI2CNativeEngine;
@@ -58,30 +61,30 @@ public:
     static bool getMultitouchPreferences(void* target, void* ref_con, IOService* multitouch_device, IONotifier* notifier);
 
     IOReturn getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
-    virtual IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
-    virtual OSNumber* newVendorIDNumber() const override;
+    IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
+    OSNumber* newVendorIDNumber() const override;
     
     
-    virtual OSNumber* newProductIDNumber() const override;
+    OSNumber* newProductIDNumber() const override;
     
     
-    virtual OSNumber* newVersionNumber() const override;
+    OSNumber* newVersionNumber() const override;
     
     
-    virtual OSString* newTransportString() const override;
+    OSString* newTransportString() const override;
     
     
-    virtual OSString* newManufacturerString() const override;
+    OSString* newManufacturerString() const override;
     
-    virtual OSNumber* newPrimaryUsageNumber() const override;
+    OSNumber* newPrimaryUsageNumber() const override;
     
-    virtual OSNumber* newPrimaryUsagePageNumber() const override;
+    OSNumber* newPrimaryUsagePageNumber() const override;
     
-    virtual OSString* newProductString() const override;
+    OSString* newProductString() const override;
     
-    virtual OSString* newSerialNumberString() const override;
+    OSString* newSerialNumberString() const override;
     
-    virtual OSNumber* newLocationIDNumber() const override;
+    OSNumber* newLocationIDNumber() const override;
     
     IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
     
@@ -90,7 +93,7 @@ public:
     void stop(IOService* provider);
     
     void releaseResources();
-protected:
+
 private:
     bool ready_for_reports = false;
     VoodooI2CNativeEngine* engine;
@@ -99,16 +102,11 @@ private:
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];
-    int last_finger_count;
     int stylus_check = 0;
     IOWorkLoop* work_loop;
     IOCommandGate* command_gate;
     MAGIC_TRACKPAD_INPUT_REPORT input_report;
 
-    IOFixed factor_x;
-    IOFixed factor_y;
-    IOFixed factor_ref;
-    
     void constructReportGated(VoodooI2CMultitouchEvent& multitouch_event, AbsoluteTime& timestamp);
 };
 
