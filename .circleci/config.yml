@@ -41,10 +41,10 @@ jobs:
     macos:
       xcode: 10.2.0
     steps:
-      - attach_workspace:
-          at: ./
       # Machine Setup
       - checkout
+      - attach_workspace:
+          at: ./
       - run: brew update
       - run: brew tap tcnksm/ghr
       - run: brew install ghr
