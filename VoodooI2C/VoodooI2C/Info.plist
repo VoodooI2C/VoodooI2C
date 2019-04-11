@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.4</string>
+	<string>2.1.5</string>
 	<key>CFBundleVersion</key>
-	<string>2.1.4</string>
+	<string>2.1.5</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>Custom MT2 Personality</key>
@@ -515,8 +515,8 @@
 				<string>pci8086,a160</string>
 				<string>pci8086,a161</string>
 				<string>pci8086,a162</string>
-                <string>pci8086,a368</string>
-                <string>pci8086,a369</string>
+				<string>pci8086,a368</string>
+				<string>pci8086,a369</string>
 			</array>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
