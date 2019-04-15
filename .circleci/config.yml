@@ -22,7 +22,7 @@ jobs:
           - v1-dep-master-
       - run:
           name: "Download the macOS 10.12 SDK"
-          command: cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs && curl -O -L https://github.com/alexey-lysiuk/macos-sdk/releases/download/10.12/MacOSX10.12.tar.bz2 && tar -xjf MacOSX10.12.tar.bz2 && cd $CIRCLE_WORKING_DIRECTORY
+          command: curl -L https://github.com/alexey-lysiuk/macos-sdk/releases/download/10.12/MacOSX10.12.tar.bz2 -o /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.tar.bz2 && tar -xjf /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.tar.bz2 -C /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
       - run: pip install cpplint
       - run: pip install git+https://github.com/alexandred/cldoc.git
       - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
