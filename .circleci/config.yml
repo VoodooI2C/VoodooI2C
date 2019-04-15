@@ -20,23 +20,26 @@ jobs:
           - v1-dep-{{ .Branch }}-
           # Default branch if not
           - v1-dep-master-
+      - run:
+          name: "Download the macOS 10.12 SDK"
+          command: cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs && curl -O -L https://github.com/alexey-lysiuk/macos-sdk/releases/download/10.12/MacOSX10.12.tar.bz2 && tar -xjf MacOSX10.12.tar.bz2 && cd $CIRCLE_WORKING_DIRECTORY
       - run: pip install cpplint
       - run: pip install git+https://github.com/alexandred/cldoc.git
       - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
       - run: git submodule init && git submodule update
-      - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -derivedDataPath build clean build
+      - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -sdk macosx10.12 -derivedDataPath build clean build
 
       - run: find $HOME/Library/Developer/Xcode/DerivedData -name '*.xcactivitylog' -exec cp {} $CIRCLE_ARTIFACTS/xcactivitylog \; || true
       # Save artifacts
       - store_artifacts:
           path: /tmp/circleci-artifacts
-      
+
       - persist_to_workspace:
           root: ./
           paths:
             - build/Build/Products/Release/*
             - docs/*
-  
+
   deploy:
     macos:
       xcode: 10.2.0
