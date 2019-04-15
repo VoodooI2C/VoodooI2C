@@ -567,10 +567,11 @@
 			};
 			buildConfigurationList = AC2603AA1F2F294000CF238F /* Build configuration list for PBXProject "VoodooI2C" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = AC2603A61F2F294000CF238F;
 			productRefGroup = AC2603B11F2F294000CF238F /* Products */;
@@ -950,12 +951,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2.1.4;
+				CURRENT_PROJECT_VERSION = 2.1.6;
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULE_NAME = com.alexandred.VoodooI2C;
-				MODULE_VERSION = 2.1.4;
+				MODULE_VERSION = 2.1.6;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -971,12 +972,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2.1.4;
+				CURRENT_PROJECT_VERSION = 2.1.6;
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULE_NAME = com.alexandred.VoodooI2C;
-				MODULE_VERSION = 2.1.4;
+				MODULE_VERSION = 2.1.6;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
