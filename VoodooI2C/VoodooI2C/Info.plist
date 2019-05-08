@@ -514,6 +514,8 @@
 				<string>pci8086,9d61</string>
 				<string>pci8086,9d62</string>
 				<string>pci8086,9d63</string>
+        <string>pci8086,9de8</string>
+				<string>pci8086,9de9</string>
 				<string>pci8086,a160</string>
 				<string>pci8086,a161</string>
 				<string>pci8086,a162</string>
