@@ -89,7 +89,6 @@ class VoodooI2CMultitouchInterface : public IOService {
 
     void stop(IOService* provider) override;
 
- protected:
  private:
     OSOrderedSet* engines;
 };

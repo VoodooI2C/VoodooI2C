@@ -13,7 +13,7 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
-#include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.h"
+#include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
 
 class VoodooI2CControllerDriver;
 
