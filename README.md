@@ -18,7 +18,10 @@ The following Intel I2C controllers are fully supported:
 
 1. `INT33C2` and `INT33C3` - Haswell era
 2. `INT3432` and `INT3433` - Broadwell era
-3. `pci8086,9d60`, `pci8086,9d61`, `pci8086,a160` and `pci8086,a161` - Skylake/Kabylake era
+3. `pci8086,9d60`, `pci8086,9d61`, `pci8086,9d62` and `pci8086,9d63` - Skylake era
+4. `pci8086,a160` and `pci8086,a161` - Kaby Lake era
+5. `pci8086,9de8` and `pci8086,9de9` - Cannon Lake/Whiskey Lake era
+6. `pci8086,a368` and `pci8086,a369` - Coffee Lake era
 
 The following device classes are fully supported:
 

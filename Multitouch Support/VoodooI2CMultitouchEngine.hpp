@@ -59,9 +59,6 @@ class VoodooI2CMultitouchEngine : public IOService {
      */
 
     virtual void stop(IOService* provider);
-
- protected:
- private:
 };
 
 
