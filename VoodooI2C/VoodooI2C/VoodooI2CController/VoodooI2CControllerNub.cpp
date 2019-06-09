@@ -106,7 +106,7 @@ bool VoodooI2CControllerNub::start(IOService* provider) {
     if (!super::start(provider))
         return false;
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     registerService();
 

@@ -476,7 +476,7 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     interrupt_source->enable();
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     registerService();
 
