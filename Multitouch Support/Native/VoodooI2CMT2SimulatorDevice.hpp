@@ -98,7 +98,7 @@ private:
     bool ready_for_reports = false;
     VoodooI2CNativeEngine* engine;
     AbsoluteTime start_timestamp;
-    OSData* new_get_report_buffer;
+    OSData* new_get_report_buffer = NULL;
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];

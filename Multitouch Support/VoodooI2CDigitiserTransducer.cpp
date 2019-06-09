@@ -36,6 +36,7 @@ VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(Digitiser
         goto exit;
     
     if (!transducer->init()) {
+        transducer->release();
         transducer = NULL;
         goto exit;
     }
