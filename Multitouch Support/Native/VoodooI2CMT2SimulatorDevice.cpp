@@ -437,9 +437,10 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     Boolean getReportedAllocated = true;
     
     OSData* get_buffer = OSData::withCapacity(1);
-    
-   if (!get_buffer || (report_id == 0x1 && !new_get_report_buffer)) {
-        return kIOReturnNoResources;
+
+    if (!get_buffer || (report_id == 0x1 && !new_get_report_buffer)) {
+       OSSafeReleaseNULL(get_buffer);
+       return kIOReturnNoResources;
     }
     
     if (report_id == 0x0) {

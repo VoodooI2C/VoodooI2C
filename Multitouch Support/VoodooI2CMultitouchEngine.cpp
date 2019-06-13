@@ -44,7 +44,7 @@ bool VoodooI2CMultitouchEngine::start(IOService* provider) {
 
     interface->open(this);
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     registerService();
 
