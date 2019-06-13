@@ -351,19 +351,16 @@ void VoodooI2CControllerDriver::readFromBus() {
 void VoodooI2CControllerDriver::releaseResources() {
     if (command_gate) {
         work_loop->removeEventSource(command_gate);
-        command_gate->release();
-        command_gate = NULL;
+        OSSafeReleaseNULL(command_gate);
     }
 
     if (interrupt_source) {
         interrupt_source->disable();
         work_loop->removeEventSource(interrupt_source);
-        interrupt_source->release();
-        interrupt_source = NULL;
+        OSSafeReleaseNULL(interrupt_source);
     }
 
-    if (work_loop)
-        OSSafeReleaseNULL(work_loop);
+    OSSafeReleaseNULL(work_loop);
 }
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
@@ -492,11 +489,13 @@ void VoodooI2CControllerDriver::stop(IOService* provider) {
     if (device_nubs) {
         while (device_nubs->getCount() > 0) {
             VoodooI2CDeviceNub *nub = reinterpret_cast<VoodooI2CDeviceNub*>(device_nubs->getLastObject());
+            nub->stop(this);
             nub->detach(this);
             device_nubs->removeObject(device_nubs->getCount() - 1);
-            OSSafeReleaseNULL(nub);
         }
     }
+    
+    OSSafeReleaseNULL(device_nubs);
 
     toggleBusState(kVoodooI2CStateOff);
 
