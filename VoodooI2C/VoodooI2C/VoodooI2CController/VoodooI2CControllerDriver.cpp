@@ -263,6 +263,7 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
                         }
 
                     device_nubs->setObject(device_nub);
+                    device_nub->release();
                 }
                 iterator->release();
             }
