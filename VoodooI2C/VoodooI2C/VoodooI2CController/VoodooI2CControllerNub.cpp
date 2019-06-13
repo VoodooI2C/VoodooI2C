@@ -8,7 +8,6 @@
 
 #include "VoodooI2CController.hpp"
 #include "VoodooI2CControllerNub.hpp"
-#include "VoodooI2CControllerDriver.hpp"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CControllerNub, IOService);
@@ -19,21 +18,19 @@ bool VoodooI2CControllerNub::attach(IOService* provider) {
     }
 
     controller = OSDynamicCast(VoodooI2CController, provider);
-    controller->retain();
-
-    name = controller->physical_device->name;
 
     if (!controller)
         return false;
+
+    controller->retain();
+
+    name = controller->physical_device->name;
 
     return true;
 }
 
 void VoodooI2CControllerNub::detach(IOService* provider) {
-    if (controller) {
-        controller->release();
-        controller = NULL;
-    }
+    OSSafeReleaseNULL(controller);
 
     super::detach(provider);
 }

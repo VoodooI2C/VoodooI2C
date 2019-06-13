@@ -17,7 +17,6 @@
 #include <IOKit/IOCommandGate.h>
 
 class VoodooI2CController;
-class VoodooI2CControllerDriver;
 
 /* Implements a controller nub to which an instance of <VoodooI2CControllerDriver> may attach
  *
@@ -29,7 +28,6 @@ class VoodooI2CControllerNub : public IOService {
 
  public:
     VoodooI2CController* controller;
-    VoodooI2CControllerDriver* driver;
     const char* name;
 
     /* Attaches the nub to the physical controller

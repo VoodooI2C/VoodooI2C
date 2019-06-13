@@ -52,23 +52,26 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 
 IOReturn VoodooI2CController::publishNub() {
     IOLog("%s::%s Publishing nub\n", getName(), physical_device->name);
-
+    bool was_attached = false;
+    bool was_started = false;
     nub = new VoodooI2CControllerNub;
 
     if (!nub || !nub->init()) {
         IOLog("%s::%s Could not initialise nub", getName(), physical_device->name);
         goto exit;
     }
-
+   
     if (!nub->attach(this)) {
         IOLog("%s::%s Could not attach nub", getName(), physical_device->name);
         goto exit;
     }
+    was_attached = true;
 
     if (!nub->start(this)) {
         IOLog("%s::%s Could not start nub", getName(), physical_device->name);
         goto exit;
     }
+    was_started = true;
 
     setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
@@ -76,9 +79,15 @@ IOReturn VoodooI2CController::publishNub() {
 
 exit:
     if (nub) {
-        nub->stop(this);
-            nub->release();
-            nub = NULL;
+        if(was_started) {
+             nub->stop(this);
+        }
+
+        if(was_attached) {
+            nub->detach(this);
+        }
+       
+        OSSafeReleaseNULL(nub);
     }
 
     return kIOReturnError;
@@ -89,18 +98,19 @@ UInt32 VoodooI2CController::readRegister(int offset) {
 }
 
 void VoodooI2CController::releaseResources() {
+    if (nub) {
+        nub->stop(this);
+        nub->detach(this);
+        OSSafeReleaseNULL(nub);
+    }
+    
     if (physical_device) {
-        if (nub) {
-            nub->detach(this);
-            OSSafeReleaseNULL(nub);
-        }
+        OSSafeReleaseNULL(physical_device->mmap);
 
-        if (physical_device->mmap) {
-            physical_device->mmap->release();
-            physical_device->mmap = NULL;
+        if(physical_device->provider) {
+            physical_device->provider->close(this);
         }
-
-        physical_device->provider->close(this);
+        
         OSSafeReleaseNULL(physical_device->provider);
     }
 
@@ -141,12 +151,6 @@ exit:
 }
 
 void VoodooI2CController::stop(IOService* provider) {
-    if (nub) {
-        nub->stop(this);
-        nub->release();
-        nub = NULL;
-    }
-
     releaseResources();
 
     super::stop(provider);
