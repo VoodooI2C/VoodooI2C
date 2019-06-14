@@ -354,12 +354,12 @@ IOReturn VoodooI2CMT2SimulatorDevice::setPowerState(unsigned long whichState, IO
 void VoodooI2CMT2SimulatorDevice::releaseResources() {
     if (command_gate) {
         work_loop->removeEventSource(command_gate);
-        command_gate->release();
-        command_gate = NULL;
+        OSSafeReleaseNULL(command_gate);
     }
     
-    if (work_loop)
-        OSSafeReleaseNULL(work_loop);
+    OSSafeReleaseNULL(work_loop);
+    
+    OSSafeReleaseNULL(new_get_report_buffer);
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {

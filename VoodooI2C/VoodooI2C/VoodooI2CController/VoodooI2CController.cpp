@@ -54,7 +54,7 @@ IOReturn VoodooI2CController::publishNub() {
     IOLog("%s::%s Publishing nub\n", getName(), physical_device->name);
     bool was_attached = false;
     bool was_started = false;
-    nub = new VoodooI2CControllerNub;
+    nub = OSTypeAlloc(VoodooI2CControllerNub);
 
     if (!nub || !nub->init()) {
         IOLog("%s::%s Could not initialise nub", getName(), physical_device->name);

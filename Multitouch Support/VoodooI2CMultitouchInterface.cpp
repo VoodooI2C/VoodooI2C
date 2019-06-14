@@ -60,8 +60,7 @@ bool VoodooI2CMultitouchInterface::start(IOService* provider) {
 }
 
 void VoodooI2CMultitouchInterface::stop(IOService* provider) {
-    if (engines) {
-        engines->flushCollection();
-        OSSafeReleaseNULL(engines);
-    }
+    OSSafeReleaseNULL(engines);
+    
+    super::stop(provider);
 }
