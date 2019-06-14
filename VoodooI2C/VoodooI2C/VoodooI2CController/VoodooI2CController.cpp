@@ -60,7 +60,7 @@ IOReturn VoodooI2CController::publishNub() {
         IOLog("%s::%s Could not initialise nub", getName(), physical_device->name);
         goto exit;
     }
-   
+
     if (!nub->attach(this)) {
         IOLog("%s::%s Could not attach nub", getName(), physical_device->name);
         goto exit;
@@ -79,14 +79,14 @@ IOReturn VoodooI2CController::publishNub() {
 
 exit:
     if (nub) {
-        if(was_started) {
+        if (was_started) {
              nub->stop(this);
         }
 
-        if(was_attached) {
+        if (was_attached) {
             nub->detach(this);
         }
-       
+
         OSSafeReleaseNULL(nub);
     }
 
@@ -103,14 +103,14 @@ void VoodooI2CController::releaseResources() {
         nub->detach(this);
         OSSafeReleaseNULL(nub);
     }
-    
+
     if (physical_device) {
         OSSafeReleaseNULL(physical_device->mmap);
 
-        if(physical_device->provider) {
+        if (physical_device->provider) {
             physical_device->provider->close(this);
         }
-        
+
         OSSafeReleaseNULL(physical_device->provider);
     }
 
