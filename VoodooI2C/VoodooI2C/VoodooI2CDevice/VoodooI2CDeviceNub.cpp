@@ -32,7 +32,7 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         IOLog("%s::%s Could not get controller\n", controller_name, child->getName());
         return false;
     }
-    
+
     controller->retain();
 
     if (getDeviceResources() != kIOReturnSuccess) {
