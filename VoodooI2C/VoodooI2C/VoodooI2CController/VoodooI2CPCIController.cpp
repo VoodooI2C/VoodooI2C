@@ -100,5 +100,6 @@ bool VoodooI2CPCIController::start(IOService* provider) {
 }
 
 void VoodooI2CPCIController::stop(IOService* provider) {
+    OSSafeReleaseNULL(physical_device->acpi_device);
     super::stop(provider);
 }
