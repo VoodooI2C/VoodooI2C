@@ -489,7 +489,7 @@ exit:
 void VoodooI2CControllerDriver::stop(IOService* provider) {
     if (device_nubs) {
         while (device_nubs->getCount() > 0) {
-            VoodooI2CDeviceNub *nub = reinterpret_cast<VoodooI2CDeviceNub*>(device_nubs->getLastObject());
+            VoodooI2CDeviceNub *nub = OSDynamicCast(VoodooI2CDeviceNub, device_nubs->getLastObject());
             nub->stop(this);
             nub->detach(this);
             device_nubs->removeObject(device_nubs->getCount() - 1);

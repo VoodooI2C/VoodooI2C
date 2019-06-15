@@ -57,7 +57,7 @@ IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOServi
             configurePCI();
             skylakeLPSSResetHack();
 
-            physical_device->awake = false;
+            physical_device->awake = true;
             IOLog("%s::%s Woke up\n", getName(), physical_device->name);
         }
     }
