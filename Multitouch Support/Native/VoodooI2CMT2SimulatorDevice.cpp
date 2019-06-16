@@ -319,7 +319,7 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     }
 
     PMinit();
-    engine->parent->joinPMtree(this);
+    provider->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
     for (int i = 0; i < 15; i++) {

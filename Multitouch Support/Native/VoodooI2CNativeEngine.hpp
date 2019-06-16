@@ -29,10 +29,6 @@ class VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     void stop(IOService* provider);
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
-    
-    IOService* parent;
-
- protected:
  private:
     VoodooI2CMT2SimulatorDevice* simulator;
     VoodooI2CMT2ActuatorDevice* actuator;

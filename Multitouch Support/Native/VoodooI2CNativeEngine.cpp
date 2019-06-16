@@ -43,8 +43,7 @@ void VoodooI2CNativeEngine::free() {
 bool VoodooI2CNativeEngine::start(IOService* provider) {
     if (!super::start(provider))
         return false;
-    
-    parent = provider;
+
     simulator = OSTypeAlloc(VoodooI2CMT2SimulatorDevice);
     actuator = OSTypeAlloc(VoodooI2CMT2ActuatorDevice);
     
