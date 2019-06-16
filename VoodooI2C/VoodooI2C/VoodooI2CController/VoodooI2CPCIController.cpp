@@ -20,25 +20,22 @@ void VoodooI2CPCIController::configurePCI() {
 }
 
 IOReturn VoodooI2CPCIController::getACPIDevice() {
-    OSString*  acpi_path;
-
-    acpi_path = reinterpret_cast<OSString*>(physical_device->pci_device->copyProperty(kACPIDevicePathKey));
-    if (acpi_path && !OSDynamicCast(OSString, acpi_path)) {
-        acpi_path->release();
+    // Get ACPI device path
+    OSObject* acpi_path_object = physical_device->pci_device->copyProperty(kACPIDevicePathKey);
+    OSString* acpi_path = OSDynamicCast(OSString, acpi_path_object);
+    if (!acpi_path) {
+        OSSafeReleaseNULL(acpi_path_object);
         return kIOReturnError;
     }
 
-    if (acpi_path) {
-        IORegistryEntry* entry;
+    // Get ACPI device
+    IORegistryEntry* entry = IORegistryEntry::fromPath(acpi_path->getCStringNoCopy());
+    acpi_path->release();
 
-        // fromPath returns a retain()'d entry that needs to be released later
-        entry = IORegistryEntry::fromPath(acpi_path->getCStringNoCopy());
-        acpi_path->release();
-
-        if (entry && entry->metaCast("IOACPIPlatformDevice"))
-            physical_device->acpi_device = reinterpret_cast<IOACPIPlatformDevice*>(entry);
-        else if (entry)
-            entry->release();
+    physical_device->acpi_device = OSDynamicCast(IOACPIPlatformDevice, entry);
+    if (!physical_device->acpi_device) {
+        OSSafeReleaseNULL(entry);
+        return kIOReturnError;
     }
 
     return kIOReturnSuccess;
