@@ -37,6 +37,16 @@ bool VoodooI2CMultitouchInterface::open(IOService* client) {
     return true;
 }
 
+void VoodooI2CMultitouchInterface::close(IOService* forClient, IOOptionBits options) {
+    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
+    
+    if (!engine) {
+        return;
+    }
+    
+    engines->removeObject(engine);
+}
+
 SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b) {
     if (a->getScore() > b->getScore())
         return 1;

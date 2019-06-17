@@ -65,6 +65,12 @@ class VoodooI2CMultitouchInterface : public IOService {
      */
 
     bool open(IOService* client);
+    
+    /* Called by <VoodooI2CMultitouchEngine> to close a client connection
+     * @forClient An instance of <VoodooI2CMultitouchEngine> that wishes to close the connection
+     * @options options avaliable for the close
+     */
+    void close(IOService* forClient, IOOptionBits options = 0) override;
 
     /* Orders engines according to <VoodooI2CMultitouchEngine::getScore>
      * @a The first engine in the comparison
