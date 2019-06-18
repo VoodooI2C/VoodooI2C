@@ -35,3 +35,8 @@ bool VoodooI2CLogger::start(IOService* provider) {
 
     return true;
 }
+
+void VoodooI2CLogger::stop(IOService *provider) {
+    detachFromChild(provider, VoodooI2CServices::gVoodooI2CPlane);
+    super::stop(provider);
+}
