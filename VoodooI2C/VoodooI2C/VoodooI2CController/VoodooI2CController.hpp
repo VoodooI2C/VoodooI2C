@@ -93,7 +93,7 @@ class VoodooI2CController : public IOService {
     void writeRegister(UInt32 value, int offset);
 
     VoodooI2CControllerNub* nub;
-    VoodooI2CControllerPhysicalDevice* physical_device;
+    VoodooI2CControllerPhysicalDevice physical_device;
 
  protected:
     /* Maps the controller's memory to a virtual address

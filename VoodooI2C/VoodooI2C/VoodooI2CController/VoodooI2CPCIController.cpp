@@ -12,16 +12,16 @@
 OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
 
 void VoodooI2CPCIController::configurePCI() {
-    IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device->name);
-    physical_device->pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
+    IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
+    physical_device.pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
 
-    physical_device->pci_device->setBusMasterEnable(true);
-    physical_device->pci_device->setMemoryEnable(true);
+    physical_device.pci_device->setBusMasterEnable(true);
+    physical_device.pci_device->setMemoryEnable(true);
 }
 
 IOReturn VoodooI2CPCIController::getACPIDevice() {
     // Get ACPI device path
-    OSObject* acpi_path_object = physical_device->pci_device->copyProperty(kACPIDevicePathKey);
+    OSObject* acpi_path_object = physical_device.pci_device->copyProperty(kACPIDevicePathKey);
     OSString* acpi_path = OSDynamicCast(OSString, acpi_path_object);
     if (!acpi_path) {
         OSSafeReleaseNULL(acpi_path_object);
@@ -32,8 +32,8 @@ IOReturn VoodooI2CPCIController::getACPIDevice() {
     IORegistryEntry* entry = IORegistryEntry::fromPath(acpi_path->getCStringNoCopy());
     acpi_path->release();
 
-    physical_device->acpi_device = OSDynamicCast(IOACPIPlatformDevice, entry);
-    if (!physical_device->acpi_device) {
+    physical_device.acpi_device = OSDynamicCast(IOACPIPlatformDevice, entry);
+    if (!physical_device.acpi_device) {
         OSSafeReleaseNULL(entry);
         return kIOReturnError;
     }
@@ -46,16 +46,16 @@ IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOServi
         return kIOPMAckImplied;
 
     if (whichState == kIOPMPowerOff) {
-        physical_device->awake = false;
+        physical_device.awake = false;
 
-        IOLog("%s::%s Going to sleep\n", getName(), physical_device->name);
+        IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
     } else {
-        if (!physical_device->awake) {
+        if (!physical_device.awake) {
             configurePCI();
             skylakeLPSSResetHack();
 
-            physical_device->awake = true;
-            IOLog("%s::%s Woke up\n", getName(), physical_device->name);
+            physical_device.awake = true;
+            IOLog("%s::%s Woke up\n", getName(), physical_device.name);
         }
     }
     return kIOPMAckImplied;
@@ -70,24 +70,24 @@ bool VoodooI2CPCIController::start(IOService* provider) {
         return false;
     }
 
-    physical_device->pci_device = OSDynamicCast(IOPCIDevice, provider);
+    physical_device.pci_device = OSDynamicCast(IOPCIDevice, provider);
 
     if (getACPIDevice() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not get ACPI device for PCI provider", getName(), physical_device->name);
+        IOLog("%s::%s Could not get ACPI device for PCI provider", getName(), physical_device.name);
         return false;
     }
 
     configurePCI();
 
     if (mapMemory() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not map memory\n", getName(), physical_device->name);
+        IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
         return false;
     }
 
     skylakeLPSSResetHack();
 
     if (publishNub() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not publish nub\n", getName(), physical_device->name);
+        IOLog("%s::%s Could not publish nub\n", getName(), physical_device.name);
         return false;
     }
 
@@ -97,6 +97,6 @@ bool VoodooI2CPCIController::start(IOService* provider) {
 }
 
 void VoodooI2CPCIController::stop(IOService* provider) {
-    OSSafeReleaseNULL(physical_device->acpi_device);
+    OSSafeReleaseNULL(physical_device.acpi_device);
     super::stop(provider);
 }

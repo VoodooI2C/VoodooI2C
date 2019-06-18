@@ -36,7 +36,7 @@ typedef struct {
 
 typedef struct {
     UInt32 abort_source;
-    VoodooI2CControllerBusConfig* acpi_config;
+    VoodooI2CControllerBusConfig acpi_config;
     bool awake;
     UInt32 bus_config;
     int command_error;
@@ -69,7 +69,7 @@ class VoodooI2CControllerDriver : public IOService {
   OSDeclareDefaultStructors(VoodooI2CControllerDriver);
 
  public:
-    VoodooI2CControllerBusDevice* bus_device;
+    VoodooI2CControllerBusDevice bus_device;
     OSArray* device_nubs;
     VoodooI2CControllerNub* nub;
 
