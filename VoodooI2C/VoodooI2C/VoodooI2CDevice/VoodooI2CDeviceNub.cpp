@@ -33,8 +33,6 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         return false;
     }
 
-    controller->retain();
-
     if (getDeviceResources() != kIOReturnSuccess) {
         IOLog("%s::%s Could not get device resources\n", controller_name, child->getName());
         return false;
@@ -51,7 +49,6 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         // Give the GPIO controller some time to load
 
         IOSleep(500);
-        gpio_controller->retain();
     }
 
     setName(child->getName());
@@ -221,6 +218,7 @@ IOReturn VoodooI2CDeviceNub::registerInterrupt(int source, OSObject *target, IOI
 
 void VoodooI2CDeviceNub::releaseResources() {
     if (command_gate) {
+        command_gate->disable();
         work_loop->removeEventSource(command_gate);
         OSSafeReleaseNULL(command_gate);
     }
@@ -261,8 +259,6 @@ exit:
 
 void VoodooI2CDeviceNub::stop(IOService* provider) {
     releaseResources();
-    OSSafeReleaseNULL(gpio_controller);
-    OSSafeReleaseNULL(controller);
     super::stop(provider);
 }
 

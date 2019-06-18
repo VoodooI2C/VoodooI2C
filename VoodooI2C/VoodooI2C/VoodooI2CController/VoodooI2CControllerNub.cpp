@@ -22,16 +22,12 @@ bool VoodooI2CControllerNub::attach(IOService* provider) {
     if (!controller)
         return false;
 
-    controller->retain();
-
     name = controller->physical_device->name;
 
     return true;
 }
 
 void VoodooI2CControllerNub::detach(IOService* provider) {
-    OSSafeReleaseNULL(controller);
-
     super::detach(provider);
 }
 

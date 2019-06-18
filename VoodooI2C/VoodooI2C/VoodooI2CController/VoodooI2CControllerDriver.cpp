@@ -220,6 +220,11 @@ VoodooI2CControllerDriver* VoodooI2CControllerDriver::probe(IOService* provider,
     }
 
     nub = OSDynamicCast(VoodooI2CControllerNub, provider);
+    
+    if (!nub) {
+        IOLog("%s::%s VoodooI2CControllerNub not found\n", getName(), bus_device->name);
+        return NULL;
+    }
 
     bus_device->name = nub->name;
 
@@ -350,17 +355,17 @@ void VoodooI2CControllerDriver::readFromBus() {
 }
 
 void VoodooI2CControllerDriver::releaseResources() {
-    if (command_gate) {
-        work_loop->removeEventSource(command_gate);
-        OSSafeReleaseNULL(command_gate);
-    }
-
     if (interrupt_source) {
         interrupt_source->disable();
         work_loop->removeEventSource(interrupt_source);
         OSSafeReleaseNULL(interrupt_source);
     }
 
+    if (command_gate) {
+        work_loop->removeEventSource(command_gate);
+    }
+    
+    OSSafeReleaseNULL(command_gate);
     OSSafeReleaseNULL(work_loop);
 }
 
@@ -489,9 +494,9 @@ exit:
 void VoodooI2CControllerDriver::stop(IOService* provider) {
     if (device_nubs) {
         while (device_nubs->getCount() > 0) {
-            VoodooI2CDeviceNub *nub = OSDynamicCast(VoodooI2CDeviceNub, device_nubs->getLastObject());
-            nub->stop(this);
-            nub->detach(this);
+            VoodooI2CDeviceNub *device_nub = OSDynamicCast(VoodooI2CDeviceNub, device_nubs->getLastObject());
+            device_nub->stop(this);
+            device_nub->detach(this);
             device_nubs->removeObject(device_nubs->getCount() - 1);
         }
     }
