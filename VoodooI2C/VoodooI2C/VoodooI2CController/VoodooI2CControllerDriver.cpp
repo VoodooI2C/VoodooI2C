@@ -427,11 +427,13 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     PMinit();
 
-    work_loop = reinterpret_cast<IOWorkLoop*>(getWorkLoop());
+    work_loop = getWorkLoop();
     if (!work_loop) {
         IOLog("%s::%s Could not get work loop\n", getName(), bus_device.name);
         goto exit;
     }
+
+    work_loop->retain();
 
     interrupt_source =
     IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CControllerDriver::handleInterrupt), nub);
@@ -447,7 +449,6 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
         IOLog("%s::%s Could not open command gate\n", getName(), bus_device.name);
         goto exit;
     }
-    work_loop->retain();
 
     nub->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
