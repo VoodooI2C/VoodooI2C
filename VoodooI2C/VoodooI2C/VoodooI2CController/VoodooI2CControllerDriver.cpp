@@ -216,7 +216,7 @@ VoodooI2CControllerDriver* VoodooI2CControllerDriver::probe(IOService* provider,
     }
 
     nub = OSDynamicCast(VoodooI2CControllerNub, provider);
-    
+
     if (!nub) {
         IOLog("%s::%s VoodooI2CControllerNub not found\n", getName(), bus_device.name);
         return NULL;
@@ -360,7 +360,7 @@ void VoodooI2CControllerDriver::releaseResources() {
     if (command_gate) {
         work_loop->removeEventSource(command_gate);
     }
-    
+
     OSSafeReleaseNULL(command_gate);
     OSSafeReleaseNULL(work_loop);
 }

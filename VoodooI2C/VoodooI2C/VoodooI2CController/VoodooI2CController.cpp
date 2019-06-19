@@ -103,12 +103,12 @@ void VoodooI2CController::releaseResources() {
     }
 
     OSSafeReleaseNULL(physical_device.mmap);
-    
+
     if (physical_device.provider) {
         physical_device.provider->close(this);
         OSSafeReleaseNULL(physical_device.provider);
     }
-    
+
     PMstop();
 }
 
