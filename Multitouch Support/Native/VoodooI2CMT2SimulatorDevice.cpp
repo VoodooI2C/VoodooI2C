@@ -295,6 +295,8 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     if (!super::start(provider))
         return false;
     
+    ready_for_reports = false;
+    
     clock_get_uptime(&start_timestamp);
     
     engine = OSDynamicCast(VoodooI2CNativeEngine, provider);
@@ -326,6 +328,10 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
         touch_state[i] = 0;
         new_touch_state[i] = 0;
     }
+    
+    stylus_check = 0;
+    
+    new_get_report_buffer = nullptr;
     
     ready_for_reports = true;
     
