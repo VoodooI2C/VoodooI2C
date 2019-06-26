@@ -11,33 +11,11 @@
 #define super VoodooI2CMultitouchEngine
 OSDefineMetaClassAndStructors(VoodooI2CNativeEngine, VoodooI2CMultitouchEngine);
 
-bool VoodooI2CNativeEngine::attach(IOService* provider) {
-    if (!super::attach(provider))
-        return false;
-
-    return true;
-}
-
-void VoodooI2CNativeEngine::detach(IOService* provider) {
-    super::detach(provider);
-}
-
-bool VoodooI2CNativeEngine::init(OSDictionary* properties) {
-    if (!super::init(properties))
-        return false;
-
-    return true;
-}
-
 MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
     if (simulator)
         simulator->constructReport(event, timestamp);
 
     return MultitouchReturnContinue;
-}
-
-void VoodooI2CNativeEngine::free() {
-    super::free();
 }
 
 bool VoodooI2CNativeEngine::start(IOService* provider) {

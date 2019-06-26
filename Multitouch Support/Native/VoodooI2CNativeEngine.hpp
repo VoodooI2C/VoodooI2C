@@ -21,10 +21,6 @@ class VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
   OSDeclareDefaultStructors(VoodooI2CNativeEngine);
 
  public:
-    bool attach(IOService* provider);
-    void detach(IOService* provider);
-    bool init(OSDictionary* properties);
-    void free();
     bool start(IOService* provider);
     void stop(IOService* provider);
     
