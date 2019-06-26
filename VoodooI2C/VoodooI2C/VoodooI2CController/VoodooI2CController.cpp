@@ -50,10 +50,7 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 
 IOReturn VoodooI2CController::publishNub() {
     IOLog("%s::%s Publishing nub\n", getName(), physical_device.name);
-    bool was_attached = false;
-    bool was_started = false;
     nub = OSTypeAlloc(VoodooI2CControllerNub);
-
     if (!nub || !nub->init()) {
         IOLog("%s::%s Could not initialise nub", getName(), physical_device.name);
         goto exit;
@@ -63,31 +60,18 @@ IOReturn VoodooI2CController::publishNub() {
         IOLog("%s::%s Could not attach nub", getName(), physical_device.name);
         goto exit;
     }
-    was_attached = true;
 
     if (!nub->start(this)) {
         IOLog("%s::%s Could not start nub", getName(), physical_device.name);
+        nub->detach(this);
         goto exit;
     }
-    was_started = true;
 
     setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
-
     return kIOReturnSuccess;
 
 exit:
-    if (nub) {
-        if (was_started) {
-             nub->stop(this);
-        }
-
-        if (was_attached) {
-            nub->detach(this);
-        }
-
-        OSSafeReleaseNULL(nub);
-    }
-
+    OSSafeReleaseNULL(nub);
     return kIOReturnError;
 }
 

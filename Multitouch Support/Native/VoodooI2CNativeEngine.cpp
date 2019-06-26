@@ -71,13 +71,13 @@ void VoodooI2CNativeEngine::stop(IOService* provider) {
     if (simulator) {
         simulator->stop(this);
         simulator->detach(this);
-        OSSafeReleaseNULL(simulator);
+        //OSSafeReleaseNULL(simulator);
     }
     
     if (actuator) {
         actuator->stop(this);
         actuator->detach(this);
-        OSSafeReleaseNULL(actuator);
+        //OSSafeReleaseNULL(actuator);
     }
     
     super::stop(provider);
