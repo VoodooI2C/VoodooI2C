@@ -16,11 +16,8 @@ VoodooI2CDigitiserStylus* VoodooI2CDigitiserStylus::stylus(DigitiserTransducerTy
     
     transducer = OSTypeAlloc(VoodooI2CDigitiserStylus);
     
-    if (!transducer)
-        goto exit;
-    
-    if (!transducer->init()) {
-        transducer = NULL;
+    if (!transducer || !transducer->init()) {
+        OSSafeReleaseNULL(transducer);
         goto exit;
     }
     

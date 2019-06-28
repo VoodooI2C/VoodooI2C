@@ -32,12 +32,8 @@ VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(Digitiser
     
     transducer = OSTypeAlloc(VoodooI2CDigitiserTransducer);
     
-    if (!transducer)
-        goto exit;
-    
-    if (!transducer->init()) {
-        transducer->release();
-        transducer = NULL;
+    if (!transducer || !transducer->init()) {
+        OSSafeReleaseNULL(transducer);
         goto exit;
     }
     
