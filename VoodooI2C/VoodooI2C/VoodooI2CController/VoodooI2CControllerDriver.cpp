@@ -263,7 +263,7 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
                     }
                     OSSafeReleaseNULL(child_properties);
 
-                    if (!device_nub->start(this)) {
+                    if (nub_initialized && !device_nub->start(this)) {
                         device_nub->detach(this);
                         nub_initialized = false;
                     }
