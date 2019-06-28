@@ -260,13 +260,12 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
                         !device_nub->init(child_properties) ||
                         !device_nub->attach(this, child)) {
                         nub_initialized = false;
-                    }
-                    OSSafeReleaseNULL(child_properties);
-
-                    if (nub_initialized && !device_nub->start(this)) {
+                    } else if (!device_nub->start(this)) {
                         device_nub->detach(this);
                         nub_initialized = false;
                     }
+
+                    OSSafeReleaseNULL(child_properties);
 
                     if (!nub_initialized) {
                         IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device.name, getMatchedName(child));

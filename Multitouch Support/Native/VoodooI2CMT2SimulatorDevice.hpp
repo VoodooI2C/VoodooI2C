@@ -57,8 +57,6 @@ class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
 public:
     void constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp);
     IOReturn setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
-    
-    static bool getMultitouchPreferences(void* target, void* ref_con, IOService* multitouch_device, IONotifier* notifier);
 
     IOReturn getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
     IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
