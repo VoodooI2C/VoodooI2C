@@ -244,24 +244,36 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
     IOService* child;
     IORegistryIterator* children = IORegistryIterator::iterateOver(nub->controller->physical_device.acpi_device, gIOACPIPlane);
 
-    if (children != 0) {
+    if (children) {
         OSOrderedSet* set = children->iterateAll();
-        if (set != 0) {
+        if (set) {
             OSIterator *iterator = OSCollectionIterator::withCollection(set);
-            if (iterator != 0) {
+            if (iterator) {
                 while ((child = reinterpret_cast<IOService*>(iterator->getNextObject()))) {
                     IOLog("%s::%s Found I2C device: %s\n", getName(), bus_device.name, getMatchedName(child));
 
                     VoodooI2CDeviceNub* device_nub = OSTypeAlloc(VoodooI2CDeviceNub);
 
-                        if (!device_nub->init(child->dictionaryWithProperties()) ||
-                            !device_nub->attach(this, child) ||
-                            !device_nub->start(this)) {
-                            IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device.name, getMatchedName(child));
-                            OSSafeReleaseNULL(device_nub);
+                    OSDictionary* child_properties = child->dictionaryWithProperties();
+                    bool nub_initialized = true;
+                    if (!device_nub ||
+                        !device_nub->init(child_properties) ||
+                        !device_nub->attach(this, child)) {
+                        nub_initialized = false;
+                    }
+                    OSSafeReleaseNULL(child_properties);
 
-                            continue;
-                        }
+                    if (!device_nub->start(this)) {
+                        device_nub->detach(this);
+                        nub_initialized = false;
+                    }
+
+                    if (!nub_initialized) {
+                        IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device.name, getMatchedName(child));
+                        OSSafeReleaseNULL(device_nub);
+
+                        continue;
+                    }
 
                     device_nubs->setObject(device_nub);
                     device_nub->release();
@@ -270,8 +282,8 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
             }
             set->release();
         }
+        children->release();
     }
-    children->release();
 
     return kIOReturnSuccess;
 }
