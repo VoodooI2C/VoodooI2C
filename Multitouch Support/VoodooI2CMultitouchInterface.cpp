@@ -29,12 +29,12 @@ void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEven
 bool VoodooI2CMultitouchInterface::open(IOService* client) {
     VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, client);
 
-    if (!engine || !super::open(client))
+    if (!engine)
         return false;
 
     engines->setObject(engine);
 
-    return true;
+    return super::open(client)  ;
 }
 
 void VoodooI2CMultitouchInterface::close(IOService* forClient, IOOptionBits options) {
