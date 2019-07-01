@@ -21,8 +21,11 @@ class VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
   OSDeclareDefaultStructors(VoodooI2CNativeEngine);
 
  public:
-    bool start(IOService* provider);
-    void stop(IOService* provider);
+    bool init(OSDictionary* properties) override;
+    void free() override;
+
+    bool start(IOService* provider) override;
+    void stop(IOService* provider) override;
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
  private:
