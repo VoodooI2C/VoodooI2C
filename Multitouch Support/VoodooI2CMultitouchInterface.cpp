@@ -26,10 +26,10 @@ void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEven
     }
 }
 
-bool VoodooI2CMultitouchInterface::open(IOService* client) {
-    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, client);
+bool VoodooI2CMultitouchInterface::handleOpen(IOService* forClient, IOOptionBits options, void* arg) {
+    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
 
-    if (!engine || !super::open(client))
+    if (!engine || !super::handleOpen(forClient, options, arg))
         return false;
 
     engines->setObject(engine);
@@ -37,16 +37,13 @@ bool VoodooI2CMultitouchInterface::open(IOService* client) {
     return true;
 }
 
-void VoodooI2CMultitouchInterface::close(IOService* forClient, IOOptionBits options) {
+void VoodooI2CMultitouchInterface::handleClose(IOService* forClient, IOOptionBits options) {
     VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
-    
-    if (!engine) {
-        return;
-    }
-    
-    engines->removeObject(engine);
 
-    super::close(forClient, options);
+    if (engine)
+        engines->removeObject(engine);
+
+    super::handleClose(forClient, options);
 }
 
 SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b) {
@@ -59,9 +56,8 @@ SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, V
 }
 
 bool VoodooI2CMultitouchInterface::start(IOService* provider) {
-    if (!super::start(provider)) {
+    if (!super::start(provider))
         return false;
-    }
 
     engines = OSOrderedSet::withCapacity(1, (OSOrderedSet::OSOrderFunction)VoodooI2CMultitouchInterface::orderEngines);
 
@@ -73,6 +69,6 @@ bool VoodooI2CMultitouchInterface::start(IOService* provider) {
 
 void VoodooI2CMultitouchInterface::stop(IOService* provider) {
     OSSafeReleaseNULL(engines);
-    
+
     super::stop(provider);
 }
