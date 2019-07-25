@@ -73,6 +73,12 @@ class VoodooI2CMultitouchInterface : public IOService {
      */
 
     void handleClose(IOService* client, IOOptionBits options) override;
+    
+    
+    /* Provides a check if the calling IOService instance has called open
+     * @forClient An instance of <VoodooI2CMultitouchEngine> that wishes to check if it has called open
+     */
+    bool handleIsOpen(const IOService *forClient ) const override;
 
     /* Orders engines according to <VoodooI2CMultitouchEngine::getScore>
      * @a The first engine in the comparison

@@ -29,7 +29,7 @@ void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEven
 bool VoodooI2CMultitouchInterface::handleOpen(IOService* forClient, IOOptionBits options, void* arg) {
     VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
 
-    if (!engine || !super::handleOpen(forClient, options, arg))
+    if (!engine)
         return false;
 
     engines->setObject(engine);
@@ -42,8 +42,16 @@ void VoodooI2CMultitouchInterface::handleClose(IOService* forClient, IOOptionBit
 
     if (engine)
         engines->removeObject(engine);
+}
 
-    super::handleClose(forClient, options);
+bool VoodooI2CMultitouchInterface::handleIsOpen(const IOService *forClient ) const {
+    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
+    
+    if (engine) {
+        return engines->containsObject(engine);
+    }
+    
+    return false;
 }
 
 SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b) {
