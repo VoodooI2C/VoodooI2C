@@ -37,7 +37,7 @@ class VoodooI2CControllerNub;
  * are responsible for low-level interfacing with the physical hardware. For the driver implementing
  * the properiety Designware I2C controller interface, see <VoodooI2CControllerDriver>.
  */
-class VoodooI2CController : public IOService {
+class EXPORT VoodooI2CController : public IOService {
   OSDeclareDefaultStructors(VoodooI2CController);
 
  public:

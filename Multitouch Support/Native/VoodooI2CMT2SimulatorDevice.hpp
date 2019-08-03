@@ -51,7 +51,7 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
 
 class VoodooI2CNativeEngine;
 
-class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
+class EXPORT VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
     OSDeclareDefaultStructors(VoodooI2CMT2SimulatorDevice);
     
 public:

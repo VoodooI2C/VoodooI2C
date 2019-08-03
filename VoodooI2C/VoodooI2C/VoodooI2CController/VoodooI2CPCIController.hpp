@@ -21,7 +21,7 @@
  * The members of this class are responsible for low-level interfacing with the physical PCI hardware.
  */
 
-class VoodooI2CPCIController : public VoodooI2CController {
+class EXPORT VoodooI2CPCIController : public VoodooI2CController {
     OSDeclareDefaultStructors(VoodooI2CPCIController);
 
  private:

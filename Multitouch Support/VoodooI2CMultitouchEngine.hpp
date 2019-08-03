@@ -19,7 +19,7 @@ class VoodooI2CMultitouchInterface;
 
 /* Base class that all mutltitouch engines should inherit from */
 
-class VoodooI2CMultitouchEngine : public IOService {
+class EXPORT VoodooI2CMultitouchEngine : public IOService {
   OSDeclareDefaultStructors(VoodooI2CMultitouchEngine);
 
  public:

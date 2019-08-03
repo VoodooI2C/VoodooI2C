@@ -65,7 +65,7 @@ class VoodooI2CController;
  * The members of this class are responsible for interfacing with the I2C bus and implementing the I2C protocol. The driver also
  * publishes nubs for each I2C slave device attached to the bus it drives.
  */
-class VoodooI2CControllerDriver : public IOService {
+class EXPORT VoodooI2CControllerDriver : public IOService {
   OSDeclareDefaultStructors(VoodooI2CControllerDriver);
 
  public:

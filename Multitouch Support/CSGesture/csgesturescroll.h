@@ -10,7 +10,7 @@
 
 class VoodooCSGestureHIPointingWrapper;
 
-class CSGestureScroll : public IOService {
+class EXPORT CSGestureScroll : public IOService {
     typedef IOService super;
     OSDeclareDefaultStructors(CSGestureScroll);
     

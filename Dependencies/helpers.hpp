@@ -12,6 +12,10 @@
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 #define kIOPMPowerOff                       0
 #define kVoodooI2CIOPMNumberPowerStates     2
 

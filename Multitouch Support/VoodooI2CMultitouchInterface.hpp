@@ -40,7 +40,7 @@ class VoodooI2CMultitouchEngine;
  * This allows for situations in which different multitouch engines handle different gestures.
  */
 
-class VoodooI2CMultitouchInterface : public IOService {
+class EXPORT VoodooI2CMultitouchInterface : public IOService {
   OSDeclareDefaultStructors(VoodooI2CMultitouchInterface);
 
  public:

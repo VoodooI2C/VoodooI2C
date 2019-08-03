@@ -17,7 +17,7 @@
 #include "VoodooI2CMT2SimulatorDevice.hpp"
 #include "VoodooI2CMT2ActuatorDevice.hpp"
 
-class VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
+class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
   OSDeclareDefaultStructors(VoodooI2CNativeEngine);
 
  public:

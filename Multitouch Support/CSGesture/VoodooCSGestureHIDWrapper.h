@@ -11,9 +11,13 @@
 
 #include <IOKit/hid/IOHIDDevice.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 class VoodooI2CCSGestureEngine;
 
-class VoodooCSGestureHIDWrapper : public IOHIDDevice
+class EXPORT VoodooCSGestureHIDWrapper : public IOHIDDevice
 {
     OSDeclareDefaultStructors(VoodooCSGestureHIDWrapper)
 public:

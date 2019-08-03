@@ -22,4 +22,8 @@ typedef UInt32 MultitouchReturn;
 #define MultitouchReturnContinue 0x0
 #define MultitouchReturnBreak 0x1
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 #endif /* MultitouchHelpers_hpp */
