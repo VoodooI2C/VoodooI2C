@@ -83,7 +83,7 @@ class VoodooI2CDeviceNub : public IOService {
      * the nub itself along with any drivers that attach to it.
      * @return A pointer to an *IOWorkLoop* object, else *NULL*
      */
-    IOWorkLoop* getWorkLoop();
+    IOWorkLoop* getWorkLoop(void) const override;
 
     /* Transmits an I2C read request to the slave device
      * @values The buffer that the returned data is to be written into

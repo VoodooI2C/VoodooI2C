@@ -160,8 +160,6 @@ class VoodooI2CControllerDriver : public IOService {
 
     IOReturn getBusConfig();
 
-    IOWorkLoop* getWorkLoop();
-
     /* Prints an error message when the bus reports a transaction error */
 
     void handleAbortI2C();
