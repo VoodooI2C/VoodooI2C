@@ -33,7 +33,7 @@ If the number is not **at least** 4 then your system is not suitable for VoodooI
 	3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,9d62' and 'pci8086,9d63' - Skylake era
 	4. 'pci8086,a160' and 'pci8086,a161' - Kaby Lake era
 	5. 'pci8086,9de8' and 'pci8086,9de9' - Cannon Lake/Whiskey Lake era
-	6. 'pci8086,a368' and 'pci8086,a369' - Coffee Lake era
+	6. 'pci8086,a368', 'pci8086,a369', 'pci8086,a36a' and 'pci8086,a36b' - Coffee Lake era
 
 4. Your machine should have at least one supported I2C device. For the vast majority of users, this will be an I2C-HID device. Examples of I2C-HID devices include Precision touchpads, touchscreens and sensor hubs.
 
