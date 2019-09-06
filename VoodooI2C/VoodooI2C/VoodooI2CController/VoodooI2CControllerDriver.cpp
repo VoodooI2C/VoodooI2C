@@ -160,8 +160,9 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
 
     nanoseconds_to_absolutetime(10000, &abstime);
 
-    sleep = command_gate->commandSleep(&bus_device->command_complete, (UInt32)abstime);
-
+    // sleep = command_gate->commandSleep(&bus_device->command_complete, (UInt32)abstime);  // Wrong syntax.
+    // sleep = command_gate->commandSleep(&bus_device->command_complete, abstime, THREAD_ABORTSAFE);  // Correct syntax but it doesn't work correctly here.
+    sleep = command_gate->commandSleep(&bus_device->command_complete, THREAD_ABORTSAFE);
     if ( sleep == THREAD_TIMED_OUT ) {
         IOLog("%s::%s Timeout waiting for bus to accept transfer request\n", getName(), bus_device->name);
         initialiseBus();
@@ -343,7 +344,8 @@ void VoodooI2CControllerDriver::releaseResources() {
     }
 
     if (work_loop)
-        OSSafeReleaseNULL(work_loop);
+        // OSSafeReleaseNULL(work_loop);
+        work_loop = NULL;
 }
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
@@ -408,11 +410,12 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     PMinit();
 
-    work_loop = reinterpret_cast<IOWorkLoop*>(getWorkLoop());
+    work_loop = getWorkLoop();
     if (!work_loop) {
         IOLog("%s::%s Could not get work loop\n", getName(), bus_device->name);
         goto exit;
     }
+    work_loop->retain();
 
     interrupt_source =
     IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CControllerDriver::handleInterrupt), nub);
@@ -421,14 +424,12 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
         IOLog("%s::%s::Could not add interrupt source to work loop\n", getName(), bus_device->name);
         goto exit;
     }
-    interrupt_source->enable();
 
     command_gate = IOCommandGate::commandGate(this);
     if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
         IOLog("%s::%s Could not open command gate\n", getName(), bus_device->name);
         goto exit;
     }
-    work_loop->retain();
 
     nub->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
