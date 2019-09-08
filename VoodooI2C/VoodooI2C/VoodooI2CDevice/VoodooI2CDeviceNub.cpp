@@ -166,6 +166,7 @@ IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
 }
 
 IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop(void) const {
+    // 0x00000000 = not initialized. 0x00000001 = busy. 0xXXXXXXXX = initialized.
     static IOWorkLoop* __work_loop = NULL;
 
     // Do we have a work loop already?, if so return it NOW.
@@ -188,7 +189,7 @@ IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop(void) const {
 }
 
 IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
-    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
+    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
 }
 
 IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {
@@ -226,7 +227,7 @@ void VoodooI2CDeviceNub::releaseResources() {
     }
 
     if (work_loop) {
-        // work_loop->release();
+        work_loop->release();
         work_loop = NULL;
     }
 }
