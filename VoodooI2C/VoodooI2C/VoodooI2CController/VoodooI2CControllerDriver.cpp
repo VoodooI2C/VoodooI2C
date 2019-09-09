@@ -140,7 +140,7 @@ IOReturn VoodooI2CControllerDriver::initialiseBus() {
 }
 
 IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMessage* messages, int* number) {
-    AbsoluteTime abstime;
+    AbsoluteTime abstime, deadline;
     IOReturn sleep;
 
     bus_device->messages = messages;
@@ -158,11 +158,14 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
 
     requestTransferI2C();
 
-    nanoseconds_to_absolutetime(10000, &abstime);
+    /*
+     * Sleep timeout to prevent the caller from deadlock :
+     *   10ms is required, for example, when reading the HID descriptor at the first time.
+     */
+    nanoseconds_to_absolutetime(20000000, &abstime);
+    clock_absolutetime_interval_to_deadline(abstime, &deadline);
+    sleep = command_gate->commandSleep(&bus_device->command_complete, deadline, THREAD_INTERRUPTIBLE);
 
-    // sleep = command_gate->commandSleep(&bus_device->command_complete, (UInt32)abstime);  // Wrong syntax.
-    // sleep = command_gate->commandSleep(&bus_device->command_complete, abstime, THREAD_ABORTSAFE);  // Correct syntax but it doesn't work correctly here.
-    sleep = command_gate->commandSleep(&bus_device->command_complete, THREAD_ABORTSAFE);
     if ( sleep == THREAD_TIMED_OUT ) {
         IOLog("%s::%s Timeout waiting for bus to accept transfer request\n", getName(), bus_device->name);
         initialiseBus();
