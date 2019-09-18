@@ -143,6 +143,9 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     AbsoluteTime abstime, deadline;
     IOReturn sleep;
 
+    if (waitBusNotBusyI2C() != kIOReturnSuccess)
+        return kIOReturnBusy;
+
     bus_device->messages = messages;
     bus_device->message_number = *number;
     bus_device->command_error = 0;
@@ -152,9 +155,6 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     bus_device->status = STATUS_IDLE;
     bus_device->abort_source = 0;
     bus_device->receive_outstanding = 0;
-
-    if (waitBusNotBusyI2C() != kIOReturnSuccess)
-        return kIOReturnBusy;
 
     requestTransferI2C();
 
@@ -347,8 +347,7 @@ void VoodooI2CControllerDriver::releaseResources() {
     }
 
     if (work_loop)
-        // OSSafeReleaseNULL(work_loop);
-        work_loop = NULL;
+        OSSafeReleaseNULL(work_loop);
 }
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
@@ -411,8 +410,6 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     if (!super::start(provider))
         return false;
 
-    PMinit();
-
     work_loop = getWorkLoop();
     if (!work_loop) {
         IOLog("%s::%s Could not get work loop\n", getName(), bus_device->name);
@@ -434,6 +431,7 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
         goto exit;
     }
 
+    PMinit();
     nub->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
