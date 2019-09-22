@@ -161,8 +161,9 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     /*
      * Sleep timeout to prevent the caller from deadlock :
      *   10ms is required, for example, when reading the HID descriptor at the first time.
+     *   Timeout is set to 100ms (10ms x 10 times)
      */
-    nanoseconds_to_absolutetime(20000000, &abstime);
+    nanoseconds_to_absolutetime(100000000, &abstime);
     clock_absolutetime_interval_to_deadline(abstime, &deadline);
     sleep = command_gate->commandSleep(&bus_device->command_complete, deadline, THREAD_INTERRUPTIBLE);
 
@@ -639,7 +640,7 @@ void VoodooI2CControllerDriver::transferMessageToBus() {
 }
 
 IOReturn VoodooI2CControllerDriver::waitBusNotBusyI2C() {
-    int timeout = TIMEOUT * 150;
+    int timeout = TIMEOUT * 150, firstDelay = 100;
 
     while (readRegister(DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
         if (timeout <= 0) {
@@ -647,8 +648,10 @@ IOReturn VoodooI2CControllerDriver::waitBusNotBusyI2C() {
             return kIOReturnBusy;
         }
         timeout--;
-
-        IODelay(1100);
+        if (firstDelay-- >= 0)
+            IODelay(100);
+        else
+            IOSleep(1);
     }
 
     return kIOReturnSuccess;
