@@ -21,11 +21,11 @@
 enum {
     // transforms
     kIOFBRotateFlags                    = 0x0000000f,
-    
+
     kIOFBSwapAxes                       = 0x00000001,
     kIOFBInvertX                        = 0x00000002,
     kIOFBInvertY                        = 0x00000004,
-    
+
     kIOFBRotate0                        = 0x00000000,
     kIOFBRotate90                       = kIOFBSwapAxes | kIOFBInvertX,
     kIOFBRotate180                      = kIOFBInvertX  | kIOFBInvertY,
@@ -40,7 +40,7 @@ class VoodooI2CMultitouchEngine;
  * This allows for situations in which different multitouch engines handle different gestures.
  */
 
-class VoodooI2CMultitouchInterface : public IOService {
+class EXPORT VoodooI2CMultitouchInterface : public IOService {
   OSDeclareDefaultStructors(VoodooI2CMultitouchInterface);
 
  public:
@@ -58,13 +58,27 @@ class VoodooI2CMultitouchInterface : public IOService {
 
     void handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
 
-    /* Called by <VoodooI2CMultitouchEngine> to open a client connection
-     * @client An instance of <VoodooI2CMultitouchEngine> that wishes to be a client
+    /* Controls the open behavior of <VoodooI2CMultitouchInterface>
+     * @forClient An instance of <VoodooI2CMultitouchEngine> that wishes to be a client
+     * @options Options avaliable for the open
      *
      * @return *true* upon successful opening, *false* otherwise
      */
 
-    bool open(IOService* client);
+    bool handleOpen(IOService* forClient, IOOptionBits options, void* arg) override;
+
+    /* Controls the close behavior of <VoodooI2CMultitouchInterface>
+     * @forClient An instance of <VoodooI2CMultitouchEngine> that wishes to close the connection
+     * @options Options avaliable for the close
+     */
+
+    void handleClose(IOService* client, IOOptionBits options) override;
+    
+    
+    /* Provides a check if the calling IOService instance has called open
+     * @forClient An instance of <VoodooI2CMultitouchEngine> that wishes to check if it has called open
+     */
+    bool handleIsOpen(const IOService *forClient ) const override;
 
     /* Orders engines according to <VoodooI2CMultitouchEngine::getScore>
      * @a The first engine in the comparison

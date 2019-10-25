@@ -15,6 +15,10 @@
 #include <libkern/c++/OSDictionary.h>
 #include <IOKit/hid/IOHIDElement.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 struct ValueWithTime {
     UInt16 value = 0;
     AbsoluteTime timestamp = 0;
@@ -81,7 +85,7 @@ typedef struct {
 
 /* Represents a transducer of a physical digitiser device */
 
-class VoodooI2CDigitiserTransducer : public OSObject {
+class EXPORT VoodooI2CDigitiserTransducer : public OSObject {
     OSDeclareDefaultStructors(VoodooI2CDigitiserTransducer);
     
 public:

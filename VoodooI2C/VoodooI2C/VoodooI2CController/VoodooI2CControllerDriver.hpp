@@ -36,7 +36,7 @@ typedef struct {
 
 typedef struct {
     UInt32 abort_source;
-    VoodooI2CControllerBusConfig* acpi_config;
+    VoodooI2CControllerBusConfig acpi_config;
     bool awake;
     UInt32 bus_config;
     int command_error;
@@ -65,11 +65,11 @@ class VoodooI2CController;
  * The members of this class are responsible for interfacing with the I2C bus and implementing the I2C protocol. The driver also
  * publishes nubs for each I2C slave device attached to the bus it drives.
  */
-class VoodooI2CControllerDriver : public IOService {
+class EXPORT VoodooI2CControllerDriver : public IOService {
   OSDeclareDefaultStructors(VoodooI2CControllerDriver);
 
  public:
-    VoodooI2CControllerBusDevice* bus_device;
+    VoodooI2CControllerBusDevice bus_device;
     OSArray* device_nubs;
     VoodooI2CControllerNub* nub;
 

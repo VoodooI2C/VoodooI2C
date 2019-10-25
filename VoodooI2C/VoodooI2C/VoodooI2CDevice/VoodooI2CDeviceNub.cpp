@@ -88,20 +88,20 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
 
     if (crs_parser.found_i2c) {
         use_10bit_addressing = crs_parser.i2c_info.address_mode_10Bit;
-        setProperty("addrWidth", OSNumber::withNumber(use_10bit_addressing ? 10 : 7, 8));
+        setProperty("addrWidth", use_10bit_addressing ? 10 : 7, 8);
 
         i2c_address = crs_parser.i2c_info.address;
-        setProperty("i2cAddress", OSNumber::withNumber(i2c_address, 16));
+        setProperty("i2cAddress", i2c_address, 16);
 
-        setProperty("sclHz", OSNumber::withNumber(crs_parser.i2c_info.bus_speed, 32));
+        setProperty("sclHz", crs_parser.i2c_info.bus_speed, 32);
     } else {
         IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", controller_name, getName());
         return kIOReturnNotFound;
     }
 
     if (crs_parser.found_gpio_interrupts) {
-        setProperty("gpioPin", OSNumber::withNumber(crs_parser.gpio_interrupts.pin_number, 16));
-        setProperty("gpioIRQ", OSNumber::withNumber(crs_parser.gpio_interrupts.irq_type, 16));
+        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
+        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
         has_gpio_interrupts = true;
         gpio_pin = crs_parser.gpio_interrupts.pin_number;
@@ -218,15 +218,12 @@ IOReturn VoodooI2CDeviceNub::registerInterrupt(int source, OSObject *target, IOI
 
 void VoodooI2CDeviceNub::releaseResources() {
     if (command_gate) {
+        command_gate->disable();
         work_loop->removeEventSource(command_gate);
-        command_gate->release();
-        command_gate = NULL;
+        OSSafeReleaseNULL(command_gate);
     }
 
-    if (work_loop) {
-        work_loop->release();
-        work_loop = NULL;
-    }
+    OSSafeReleaseNULL(work_loop);
 }
 
 bool VoodooI2CDeviceNub::start(IOService* provider) {
@@ -252,7 +249,7 @@ bool VoodooI2CDeviceNub::start(IOService* provider) {
 
     registerService();
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     return true;
 exit:
@@ -261,11 +258,7 @@ exit:
 }
 
 void VoodooI2CDeviceNub::stop(IOService* provider) {
-    if (gpio_controller) {
-        gpio_controller->release();
-        gpio_controller = NULL;
-    }
-
+    releaseResources();
     super::stop(provider);
 }
 

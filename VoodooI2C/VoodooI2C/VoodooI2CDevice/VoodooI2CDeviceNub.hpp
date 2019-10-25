@@ -15,6 +15,10 @@
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 class VoodooI2CControllerDriver;
 
 /* Implements a device nub to which an instance of a device driver may attach. Examples include <VoodooI2CHIDDevice>
@@ -25,7 +29,7 @@ class VoodooI2CControllerDriver;
  * and I2C protocol messaging.
  */
 
-class VoodooI2CDeviceNub : public IOService {
+class EXPORT VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);
 
  public:

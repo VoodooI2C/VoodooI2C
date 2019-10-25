@@ -16,7 +16,7 @@
  * The members of this class are responsible for low-level interfacing with the physical ACPI hardware.
  */
 
-class VoodooI2CACPIController : public VoodooI2CController {
+class EXPORT VoodooI2CACPIController : public VoodooI2CController {
     OSDeclareDefaultStructors(VoodooI2CACPIController);
 
  private:

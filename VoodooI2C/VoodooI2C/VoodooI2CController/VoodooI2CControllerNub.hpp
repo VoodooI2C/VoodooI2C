@@ -16,20 +16,22 @@
 #include <IOKit/IOInterruptEventSource.h>
 #include <IOKit/IOCommandGate.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 class VoodooI2CController;
-class VoodooI2CControllerDriver;
 
 /* Implements a controller nub to which an instance of <VoodooI2CControllerDriver> may attach
  *
  * The members of this class are responsible for acting as a middle-man between the physical 
  * device and the I2C bus iself.
  */
-class VoodooI2CControllerNub : public IOService {
+class EXPORT VoodooI2CControllerNub : public IOService {
     OSDeclareDefaultStructors(VoodooI2CControllerNub);
 
  public:
     VoodooI2CController* controller;
-    VoodooI2CControllerDriver* driver;
     const char* name;
 
     /* Attaches the nub to the physical controller

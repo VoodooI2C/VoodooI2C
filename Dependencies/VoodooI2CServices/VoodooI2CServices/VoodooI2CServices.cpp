@@ -20,7 +20,6 @@ bool VoodooI2CServices::attachDevice(void* target, void* ref_con, IOService* new
     } else {
         IORegistryEntry* parent = new_service->getParentEntry(gIOServicePlane);
         new_service->attachToParent(parent, gVoodooI2CPlane);
-        // parent->release();
     }
 
     return true;
@@ -29,8 +28,6 @@ bool VoodooI2CServices::attachDevice(void* target, void* ref_con, IOService* new
 bool VoodooI2CServices::detachDevice(void* target, void* ref_con, IOService* new_service, IONotifier* notifier) {
     IORegistryEntry* parent = new_service->getParentEntry(gVoodooI2CPlane);
     new_service->detachFromParent(parent, gVoodooI2CPlane);
-    // parent->release();
-
     return true;
 }
 
@@ -61,6 +58,10 @@ bool VoodooI2CServices::start(IOService* provider) {
 
 void VoodooI2CServices::stop(IOService* provider) {
     device_matcher->remove();
+    terminate_matcher->remove();
+    
+    OSSafeReleaseNULL(device_matcher);
+    OSSafeReleaseNULL(terminate_matcher);
 
     detachFromParent(getRegistryRoot(), gVoodooI2CPlane);
 

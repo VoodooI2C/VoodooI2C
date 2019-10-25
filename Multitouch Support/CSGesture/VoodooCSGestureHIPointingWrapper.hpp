@@ -11,9 +11,13 @@
 
 #include <IOKit/hidsystem/IOHIPointing.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 class VoodooI2CCSGestureEngine;
 
-class VoodooCSGestureHIPointingWrapper : public IOHIPointing {
+class EXPORT VoodooCSGestureHIPointingWrapper : public IOHIPointing {
     typedef IOHIPointing super;
     OSDeclareDefaultStructors(VoodooCSGestureHIPointingWrapper);
     

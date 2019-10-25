@@ -321,7 +321,7 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
     }
 
     PMinit();
-    engine->parent->joinPMtree(this);
+    provider->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
     for (int i = 0; i < 15; i++) {
@@ -360,12 +360,12 @@ IOReturn VoodooI2CMT2SimulatorDevice::setPowerState(unsigned long whichState, IO
 void VoodooI2CMT2SimulatorDevice::releaseResources() {
     if (command_gate) {
         work_loop->removeEventSource(command_gate);
-        command_gate->release();
-        command_gate = NULL;
+        OSSafeReleaseNULL(command_gate);
     }
     
-    if (work_loop)
-        OSSafeReleaseNULL(work_loop);
+    OSSafeReleaseNULL(work_loop);
+    
+    OSSafeReleaseNULL(new_get_report_buffer);
 }
 
 IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
@@ -380,7 +380,15 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
         
         report->complete();
         
+        if (new_get_report_buffer) {
+            new_get_report_buffer->release();
+        }
+        
         new_get_report_buffer = OSData::withCapacity(1);
+        
+        if (!new_get_report_buffer) {
+            return kIOReturnNoResources;
+        }
         
         UInt8 value = raw_buffer[1];
         
@@ -432,8 +440,14 @@ IOReturn VoodooI2CMT2SimulatorDevice::setReport(IOMemoryDescriptor* report, IOHI
 
 IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options) {
     UInt32 report_id = options & 0xFF;
+    Boolean getReportedAllocated = true;
     
     OSData* get_buffer = OSData::withCapacity(1);
+
+    if (!get_buffer || (report_id == 0x1 && !new_get_report_buffer)) {
+       OSSafeReleaseNULL(get_buffer);
+       return kIOReturnNoResources;
+    }
     
     if (report_id == 0x0) {
         unsigned char buffer[] = {0x0, 0x01};
@@ -441,7 +455,9 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     if (report_id == 0x1) {
+        get_buffer->release();
         get_buffer = new_get_report_buffer;
+        getReportedAllocated = false;
     }
     
     if (report_id == 0xD1) {
@@ -524,6 +540,10 @@ IOReturn VoodooI2CMT2SimulatorDevice::getReport(IOMemoryDescriptor* report, IOHI
     }
     
     report->writeBytes(0, get_buffer->getBytesNoCopy(), get_buffer->getLength());
+    
+   if (getReportedAllocated) {
+        get_buffer->release();
+   }
     
     return kIOReturnSuccess;
 }

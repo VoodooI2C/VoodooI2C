@@ -51,14 +51,12 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
 
 class VoodooI2CNativeEngine;
 
-class VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
+class EXPORT VoodooI2CMT2SimulatorDevice : public IOHIDDevice {
     OSDeclareDefaultStructors(VoodooI2CMT2SimulatorDevice);
     
 public:
     void constructReport(VoodooI2CMultitouchEvent multitouch_event, AbsoluteTime timestamp);
     IOReturn setReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
-    
-    static bool getMultitouchPreferences(void* target, void* ref_con, IOService* multitouch_device, IONotifier* notifier);
 
     IOReturn getReport(IOMemoryDescriptor* report, IOHIDReportType reportType, IOOptionBits options);
     IOReturn newReportDescriptor(IOMemoryDescriptor** descriptor) const override;
@@ -98,7 +96,7 @@ private:
     bool ready_for_reports = false;
     VoodooI2CNativeEngine* engine;
     AbsoluteTime start_timestamp;
-    OSData* new_get_report_buffer;
+    OSData* new_get_report_buffer = NULL;
     UInt16 stashed_unknown[15];
     UInt8 touch_state[15];
     UInt8 new_touch_state[15];
