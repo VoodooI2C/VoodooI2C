@@ -176,9 +176,9 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
 
     nanoseconds_to_absolutetime(10000, &abstime);
 
-    sleep = command_gate->commandSleep(&bus_device.command_complete, (UInt32)abstime);
+    sleep = command_gate->commandSleep(&bus_device.command_complete, abstime, THREAD_UNINT);
 
-    if ( sleep == THREAD_TIMED_OUT ) {
+    if (sleep == THREAD_TIMED_OUT) {
         IOLog("%s::%s Timeout waiting for bus to accept transfer request\n", getName(), bus_device.name);
         initialiseBus();
         return kIOReturnTimeout;
