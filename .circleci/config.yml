@@ -6,7 +6,7 @@ jobs:
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
     macos:
-      xcode: 10.2.0
+      xcode: 11.3.0
     steps:
       # Machine Setup
       - checkout
@@ -30,6 +30,9 @@ jobs:
       - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -sdk macosx10.12 -derivedDataPath build clean build
 
       - run: find $HOME/Library/Developer/Xcode/DerivedData -name '*.xcactivitylog' -exec cp {} $CIRCLE_ARTIFACTS/xcactivitylog \; || true
+      - run:
+          name: "Copy build artifacts"
+          command: cp -R build/Build/Products/Release/ $CIRCLE_ARTIFACTS
       # Save artifacts
       - store_artifacts:
           path: /tmp/circleci-artifacts
@@ -42,7 +45,7 @@ jobs:
 
   deploy:
     macos:
-      xcode: 10.2.0
+      xcode: 11.3.0
     steps:
       # Machine Setup
       - checkout
