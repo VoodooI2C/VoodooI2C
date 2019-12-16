@@ -185,7 +185,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
      */
     nanoseconds_to_absolutetime(100000000, &abstime);
     clock_absolutetime_interval_to_deadline(abstime, &deadline);
-    sleep = command_gate->commandSleep(&bus_device->command_complete, deadline, THREAD_INTERRUPTIBLE);
+    sleep = command_gate->commandSleep(&bus_device.command_complete, deadline, THREAD_INTERRUPTIBLE);
 
     if (sleep == THREAD_TIMED_OUT) {
         IOLog("%s::%s Timeout waiting for bus to accept transfer request\n", getName(), bus_device.name);
