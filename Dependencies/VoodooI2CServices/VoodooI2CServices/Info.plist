@@ -18,21 +18,8 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>OSBundleCompatibleVersion</key>
-	<string>1.0.0</string>
 	<key>IOKitPersonalities</key>
 	<dict>
-		<key>VoodooI2CServices</key>
-		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-			<key>IOClass</key>
-			<string>VoodooI2CServices</string>
-			<key>IOMatchCategory</key>
-			<string>VoodooI2CServices</string>
-			<key>IOProviderClass</key>
-			<string>IOResources</string>
-		</dict>
 		<key>VoodooI2CLogger</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
@@ -44,9 +31,22 @@
 			<key>IOProviderClass</key>
 			<string>VoodooI2CServices</string>
 		</dict>
+		<key>VoodooI2CServices</key>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			<key>IOClass</key>
+			<string>VoodooI2CServices</string>
+			<key>IOMatchCategory</key>
+			<string>VoodooI2CServices</string>
+			<key>IOProviderClass</key>
+			<string>IOResources</string>
+		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
+	<key>OSBundleCompatibleVersion</key>
+	<string>1.0.0</string>
 	<key>OSBundleLibraries</key>
 	<dict>
 		<key>com.apple.kpi.iokit</key>
@@ -54,5 +54,7 @@
 		<key>com.apple.kpi.libkern</key>
 		<string>14</string>
 	</dict>
+	<key>OSBundleRequired</key>
+	<string>Root</string>
 </dict>
 </plist>

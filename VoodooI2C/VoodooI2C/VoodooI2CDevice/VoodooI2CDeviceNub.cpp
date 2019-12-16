@@ -165,28 +165,33 @@ IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
     }
 }
 
-IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop() {
-    // Do we have a work loop already?, if so return it NOW.
-    if ((vm_address_t) work_loop >> 1)
-        return work_loop;
+IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop(void) const {
+    // 0x00000000 = not initialized. 0x00000001 = busy. 0xXXXXXXXX = initialized.
+    static IOWorkLoop* __work_loop = NULL;
 
-    if (OSCompareAndSwap(0, 1, reinterpret_cast<IOWorkLoop*>(&work_loop))) {
-        // Construct the workloop and set the cntrlSync variable
+    // Do we have a work loop already?, if so return it NOW.
+//    if ((vm_address_t) work_loop >> 1)
+//        return work_loop;
+    if ((vm_address_t) __work_loop >> 1)
+        return __work_loop;
+
+    if (OSCompareAndSwap(0, 1, reinterpret_cast<IOWorkLoop*>(&__work_loop))) {
+        // Construct the workloop and set the __work_loop variable
         // to whatever the result is and return
-        work_loop = IOWorkLoop::workLoop();
+        __work_loop = IOWorkLoop::workLoop();
     } else {
-        while (reinterpret_cast<IOWorkLoop*>(work_loop) == reinterpret_cast<IOWorkLoop*>(1)) {
-            // Spin around the cntrlSync variable until the
+        while (reinterpret_cast<IOWorkLoop*>(__work_loop) == reinterpret_cast<IOWorkLoop*>(1)) {
+            // Spin around the __work_loop variable until the
             // initialization finishes.
             thread_block(0);
         }
     }
 
-    return work_loop;
+    return __work_loop;
 }
 
 IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
-    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
+    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
 }
 
 IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {

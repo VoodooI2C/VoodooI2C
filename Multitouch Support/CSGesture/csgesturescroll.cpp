@@ -295,13 +295,17 @@ bool CSGestureScroll::start(IOService *provider){
 
 void CSGestureScroll::stop(){
     if (_scrollTimer){
-        _scrollTimer->cancelTimeout();
+        _scrollTimer->cancelTimeout(); // disable before removal.
+        if (_workLoop)
+            _workLoop->removeEventSource(_scrollTimer);
         _scrollTimer->release();
         _scrollTimer = NULL;
     }
     
     if (_disableScrollDelayTimer){
         _disableScrollDelayTimer->cancelTimeout();
+        if (_workLoop)
+            _workLoop->removeEventSource(_disableScrollDelayTimer);
         _disableScrollDelayTimer->release();
         _disableScrollDelayTimer = NULL;
     }

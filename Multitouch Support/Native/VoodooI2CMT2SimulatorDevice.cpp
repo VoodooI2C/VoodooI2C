@@ -103,22 +103,27 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         SInt16 x_min = 3678;
         SInt16 y_min = 2479;
         
-        IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
-        IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_Y;
+        //IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
+        //IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_Y;
+        IOFixed scaled_x = ((IOFixed)transducer->coordinates.x.value() * MT2_MAX_X) / engine->interface->logical_max_x;
+        IOFixed scaled_y = ((IOFixed)transducer->coordinates.y.value() * MT2_MAX_Y) / engine->interface->logical_max_y;
 
         if (scaled_x < 1 && scaled_y >= MT2_MAX_Y) {
             is_error_input_active = true;
         }
         
-        IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
+        //IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
+        IOFixed scaled_old_x = ((IOFixed)transducer->coordinates.x.last.value * MT2_MAX_X) / (IOFixed)engine->interface->logical_max_x;
         
         uint8_t scaled_old_x_truncated = scaled_old_x;
 
         
         if (transform) {
             if (transform & kIOFBSwapAxes) {
-                scaled_x = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_X;
-                scaled_y = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_Y;
+                //scaled_x = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_X;
+                //scaled_y = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_Y;
+                scaled_x = ((IOFixed)transducer->coordinates.y.value() * MT2_MAX_X) / (IOFixed)engine->interface->logical_max_y;
+                scaled_y = ((IOFixed)transducer->coordinates.x.value() * MT2_MAX_Y) / (IOFixed)engine->interface->logical_max_x;
             }
             
             if (transform & kIOFBInvertX) {
