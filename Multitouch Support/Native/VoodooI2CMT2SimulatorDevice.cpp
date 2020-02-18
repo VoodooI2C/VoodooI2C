@@ -252,6 +252,9 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     buffer_report = NULL;
 
     if (!input_active) {
+        for (int i = 0; i < 15; i++)
+            new_touch_state[i] = touch_state[i] = 0;
+
         input_report.FINGERS[0].Size = 0x0;
         input_report.FINGERS[0].Pressure = 0x0;
         input_report.FINGERS[0].Touch_Major = 0x0;
