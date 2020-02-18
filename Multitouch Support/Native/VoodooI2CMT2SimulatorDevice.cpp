@@ -256,27 +256,11 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
 
         stashed_unknown[i] = newunknown;
         
-        SInt16 adjusted_x = scaled_x - x_min;
-        SInt16 adjusted_y = scaled_y - y_min;
-        adjusted_y = adjusted_y * -1;
+        finger_data.X = (SInt16)(scaled_x - x_min);
+        finger_data.Y = (SInt16)(scaled_y - y_min) * -1;
         
-        uint16_t rawx = *(uint16_t *)&adjusted_x;
-        uint16_t rawy = *(uint16_t *)&adjusted_y;
-        
-        finger_data.AbsX = rawx & 0xff;
-        
-        finger_data.AbsXY = 0;
-        finger_data.AbsXY |= (rawx >> 8) & 0x0f;
-        if ((rawx >> 15) & 0x01)
-            finger_data.AbsXY |= 0x10;
-        
-        finger_data.AbsXY |= (rawy << 5) & 0xe0;
-        finger_data.AbsY[0] = (rawy >> 3) & 0xff;
-        finger_data.AbsY[1] = (rawy >> 11) & 0x01;
-        if ((rawy >> 15) & 0x01)
-            finger_data.AbsY[1] |= 0x02;
-        
-        finger_data.AbsY[1] |= newunknown;
+        finger_data.Unknown = newunknown >> 2;
+        finger_data.State = newunknown >> 5;
         
         finger_data.Angle = angle_bits;
         finger_data.Reserved = 0x0;
@@ -319,8 +303,9 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         handleReport(buffer_report, kIOHIDReportTypeInput);
         buffer_report->release();
         
-        input_report.FINGERS[0].AbsY[1] &= ~0xF4;
-        input_report.FINGERS[0].AbsY[1] |= 0x14;
+        input_report.FINGERS[0].Unknown &= 0x2;
+        input_report.FINGERS[0].Unknown |= 0x5;
+        input_report.FINGERS[0].State = 0x0;
         
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
         buffer_report->writeBytes(0, &input_report, total_report_len);

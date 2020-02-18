@@ -25,10 +25,37 @@
 #define MT2_MAX_X 7612
 #define MT2_MAX_Y 5065
 
+/* Finger Packet
+ +---+---+---+---+---+---+---+---+---+
+ |   | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+ +---+---+---+---+---+---+---+---+---+
+ | 0 |           x: SInt13           |
+ +---+-----------+                   +
+ | 1 |           |                   |
+ +---+           +-------------------+
+ | 2 |           y: SInt13           |
+ +---+-----------+-----------+       +
+ | 3 |   state   |  unknown  |       |
+ |   |   UInt3   |   UInt3   |       |
+ +---+-----------+-----------+-------+
+ | 4 |       touchMajor: UInt8       |
+ +---+-------------------------------+
+ | 5 |       touchMinor: UInt8       |
+ +---+-------------------------------+
+ | 6 |          size: UInt8          |
+ +---+-------------------------------+
+ | 7 |        pressure: UInt8        |
+ +---+-----------+---+---------------+
+ | 8 |   angle   | 0 |   fingerID    |
+ |   |   UInt3   |   |     UInt4     |
+ +---+-----------+---+---------------+
+ */
+
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
-    UInt8 AbsX;
-    UInt8 AbsXY;
-    UInt8 AbsY[2];
+    SInt16 X: 13;
+    SInt16 Y: 13;
+    UInt8 Unknown: 3;
+    UInt8 State: 3;
     UInt8 Touch_Major;
     UInt8 Touch_Minor;
     UInt8 Size;
