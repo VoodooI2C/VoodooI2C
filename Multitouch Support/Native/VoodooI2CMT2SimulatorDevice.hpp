@@ -33,7 +33,9 @@ struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     UInt8 Touch_Minor;
     UInt8 Size;
     UInt8 Pressure;
-    UInt8 Orientation_Origin;
+    UInt8 Identifier: 4;
+    UInt8 Reserved: 1;
+    UInt8 Angle: 3;
 };
 
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT {
