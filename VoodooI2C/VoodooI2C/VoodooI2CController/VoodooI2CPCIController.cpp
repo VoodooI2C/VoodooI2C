@@ -12,11 +12,43 @@
 OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
 
 void VoodooI2CPCIController::configurePCI() {
+    char tmp[2];
+    const char kCometLakeflag[2] = {'2', 'e'};
+    
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
-    physical_device.pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
-
-    physical_device.pci_device->setBusMasterEnable(true);
-    physical_device.pci_device->setMemoryEnable(true);
+    auto pci_device = physical_device.pci_device;
+    pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
+    
+    /* To apply this patch, we need to check if it's 10th Comet Lake CPU
+       because this hack patch can't work in other platforms like 8th Kaby Lake R.
+       Every 10th CPU 's id includes "2e" in the index 8 and index9, which can be used to check the
+       platform. Thx for @Williambj1 's discovery.*/
+    
+    OSString *mystring = OSString::withCString(physical_device.name);
+    if (!mystring){
+        IOLog("%s::%s Get IONameMatched data error!\n", getName(), physical_device.name);
+        return;
+    }
+    
+    //Write your computer 's id flag for comparision
+    tmp[0] = mystring->getChar(8);
+    tmp[1] = mystring->getChar(9);
+    
+    
+    /* If it is Comet Lake, then let's apply Forcing D0 here.
+       It will modify 0x80 below to your findings.*/
+    
+    if (tmp[0] == kCometLakeflag[0] && tmp[1] == kCometLakeflag[1]){
+        IOLog("%s::%s Current CPU is Comet Lake, patching...\n", getName(), physical_device.name);
+        uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
+        uint16_t newPowerStateWord = (oldPowerStateWord & (~0x3)) | 0x0;
+        // Modify 0x80 below to your findings.
+        pci_device->configWrite16(0x80 + 0x4, newPowerStateWord);
+        IOLog("%s::%s Successfully patched!\n", getName(), physical_device.name);
+    }
+    
+    pci_device->setBusMasterEnable(true);
+    pci_device->setMemoryEnable(true);
 }
 
 IOReturn VoodooI2CPCIController::getACPIDevice() {
