@@ -22,8 +22,8 @@
 #include "../VoodooI2CDigitiserTransducer.hpp"
 #include "../VoodooI2CMultitouchInterface.hpp"
 
-#define MT2_MAX_X 7612
-#define MT2_MAX_Y 5065
+#define MT2_MAX_X 8134
+#define MT2_MAX_Y 5206
 
 /* Finger Packet
  +---+---+---+---+---+---+---+---+---+
@@ -35,7 +35,7 @@
  +---+           +-------------------+
  | 2 |           y: SInt13           |
  +---+-----------+-----------+       +
- | 3 |   state   |  unknown  |       |
+ | 3 |   state   |  priority |       |
  |   |   UInt3   |   UInt3   |       |
  +---+-----------+-----------+-------+
  | 4 |       touchMajor: UInt8       |
@@ -54,14 +54,14 @@
 struct __attribute__((__packed__)) MAGIC_TRACKPAD_INPUT_REPORT_FINGER {
     SInt16 X: 13;
     SInt16 Y: 13;
-    UInt8 Unknown: 3;
+    UInt8 Priority: 3;
     UInt8 State: 3;
     UInt8 Touch_Major;
     UInt8 Touch_Minor;
     UInt8 Size;
     UInt8 Pressure;
     UInt8 Identifier: 4;
-    UInt8 Reserved: 1;
+    UInt8 : 1;
     UInt8 Angle: 3;
 };
 

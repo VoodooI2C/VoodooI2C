@@ -100,8 +100,8 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
 
         MAGIC_TRACKPAD_INPUT_REPORT_FINGER& finger_data = input_report.FINGERS[i];
         
-        SInt16 x_min = 3678;
-        SInt16 y_min = 2479;
+        SInt16 x_min = MT2_MAX_X / 2;
+        SInt16 y_min = MT2_MAX_Y / 2;
         
         IOFixed scaled_x = ((transducer->coordinates.x.value() * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
         IOFixed scaled_y = ((transducer->coordinates.y.value() * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_Y;
@@ -178,68 +178,16 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         new_touch_state[i]++;
         touch_state[i] = new_touch_state[i];
         
-        int newunknown = stashed_unknown[i];
-        
-        if (abs(scaled_x - scaled_old_x_truncated) > 50) {
-            if (scaled_x <= 23) {
-                newunknown = 0x44;
-            } else if (scaled_x <= 27) {
-                newunknown = 0x64;
-            } else if (scaled_x <= 37) {
-                newunknown = 0x84;
-            } else if (scaled_x <= 2307) {
-                newunknown = 0x94;
-            } else if (scaled_x <= 3059) {
-                newunknown = 0x90;
-            } else if (scaled_x <= 4139) {
-                newunknown = 0x8c;
-            } else if (scaled_x <= 5015) {
-                newunknown = 0x88;
-            } else if (scaled_x <= 7553) {
-                newunknown = 0x94;
-            } else if (scaled_x <= 7600) {
-                newunknown = 0x84;
-            } else if (scaled_x <= 7605) {
-                newunknown = 0x64;
-            } else {
-                newunknown = 0x44;
-            }
-        }
-
-        if (first_unknownbit == -1) {
-            first_unknownbit = newunknown;
-        }
-        newunknown = first_unknownbit - (4 * i);
-        
         if (new_touch_state[i] > 4) {
-            finger_data.Size = 10;
-            finger_data.Pressure = 10;
-            finger_data.Touch_Minor = 32;
-            finger_data.Touch_Major = 32;
-        } else if (new_touch_state[i] == 1) {
-            newunknown = 0x20;
-            finger_data.Size = 0;
-            finger_data.Pressure = 0x0;
-            finger_data.Touch_Minor = 0x0;
-            finger_data.Touch_Major = 0x0;
-        } else if (new_touch_state[i] == 2) {
-            newunknown = 0x70;
-            finger_data.Size = 8;
-            finger_data.Pressure = 10;
-            finger_data.Touch_Minor = 16;
-            finger_data.Touch_Major = 16;
-        } else if (new_touch_state[i] == 3) {
-            finger_data.Size = 10;
-            finger_data.Pressure = 10;
-            finger_data.Touch_Minor = 32;
-            finger_data.Touch_Major = 32;
-        } else if (new_touch_state[i] == 4) {
-            finger_data.Size = 10;
-            finger_data.Pressure = 10;
-            finger_data.Touch_Minor = 32;
-            finger_data.Touch_Major = 32;
+            finger_data.State = 0x4;
+        } else {
+            finger_data.State = new_touch_state[i];
         }
         
+        finger_data.Priority = 4 - i;
+        finger_data.Size = 10;
+        finger_data.Touch_Minor = 20;
+        finger_data.Touch_Major = 20;
         
         if (transducer->tip_pressure.value() || (input_report.Button)) {
             finger_data.Pressure = 120;
@@ -247,23 +195,18 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         
 
         if (!transducer->tip_switch.value()) {
-            newunknown = 0xF4;
+            finger_data.State = 0x7;
+            finger_data.Priority = 0x5;
             finger_data.Size = 0x0;
             finger_data.Pressure = 0x0;
             finger_data.Touch_Minor = 0;
             finger_data.Touch_Major = 0;
         }
 
-        stashed_unknown[i] = newunknown;
-        
         finger_data.X = (SInt16)(scaled_x - x_min);
         finger_data.Y = (SInt16)(scaled_y - y_min) * -1;
         
-        finger_data.Unknown = newunknown >> 2;
-        finger_data.State = newunknown >> 5;
-        
         finger_data.Angle = angle_bits;
-        finger_data.Reserved = 0x0;
         finger_data.Identifier = transducer->secondary_id + 1;
     }
 
@@ -303,8 +246,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         handleReport(buffer_report, kIOHIDReportTypeInput);
         buffer_report->release();
         
-        input_report.FINGERS[0].Unknown &= 0x2;
-        input_report.FINGERS[0].Unknown |= 0x5;
+        input_report.FINGERS[0].Priority = 0x0;
         input_report.FINGERS[0].State = 0x0;
         
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
