@@ -126,9 +126,7 @@ private:
     VoodooI2CNativeEngine* engine;
     AbsoluteTime start_timestamp;
     OSData* new_get_report_buffer = NULL;
-    UInt16 stashed_unknown[15];
     UInt64 touch_state[15];
-    UInt64 new_touch_state[15];
     int stylus_check = 0;
     IOWorkLoop* work_loop;
     IOCommandGate* command_gate;

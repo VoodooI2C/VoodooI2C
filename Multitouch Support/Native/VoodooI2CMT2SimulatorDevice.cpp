@@ -74,15 +74,11 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
     input_report.timestamp_buffer[2] = (milli_timestamp >> 0xd) & 0xFF;
     
     // finger data
-    int first_unknownbit = -1;
     bool input_active = false;
     bool is_error_input_active = false;
     
     for (int i = 0; i < multitouch_event.contact_count + 1; i++) {
         VoodooI2CDigitiserTransducer* transducer = OSDynamicCast(VoodooI2CDigitiserTransducer, multitouch_event.transducers->getObject(i + stylus_check));
-        
-        new_touch_state[i] = touch_state[i];
-        touch_state[i] = 0;
         
         if (!transducer || !transducer->is_valid)
             continue;
@@ -92,7 +88,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         }
         
         if (!transducer->tip_switch.value()) {
-            new_touch_state[i] = 0;
             touch_state[i] = 0;
         } else {
             input_active = true;
@@ -112,9 +107,6 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         
         IOFixed scaled_old_x = ((transducer->coordinates.x.last.value * 1.0f) / engine->interface->logical_max_x) * MT2_MAX_X;
         IOFixed scaled_old_y = ((transducer->coordinates.y.last.value * 1.0f) / engine->interface->logical_max_y) * MT2_MAX_Y;
-        
-        uint8_t scaled_old_x_truncated = scaled_old_x;
-
         
         if (transform) {
             if (transform & kIOFBSwapAxes) {
@@ -175,13 +167,11 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             }
         }
 
-        new_touch_state[i]++;
-        touch_state[i] = new_touch_state[i];
-        
-        if (new_touch_state[i] > 4) {
+        touch_state[i]++;
+        if (touch_state[i] > 4) {
             finger_data.State = 0x4;
         } else {
-            finger_data.State = new_touch_state[i];
+            finger_data.State = touch_state[i];
         }
         
         finger_data.Priority = 4 - i;
@@ -228,7 +218,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
 
     if (!input_active) {
         for (int i = 0; i < 15; i++)
-            new_touch_state[i] = touch_state[i] = 0;
+            touch_state[i] = 0;
 
         input_report.FINGERS[0].Size = 0x0;
         input_report.FINGERS[0].Pressure = 0x0;
@@ -304,7 +294,6 @@ bool VoodooI2CMT2SimulatorDevice::start(IOService* provider) {
 
     for (int i = 0; i < 15; i++) {
         touch_state[i] = 0;
-        new_touch_state[i] = 0;
     }
     
     stylus_check = 0;
