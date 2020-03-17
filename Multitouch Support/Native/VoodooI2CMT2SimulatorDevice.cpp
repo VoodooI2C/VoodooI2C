@@ -87,8 +87,9 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             continue;
         }
         
+        UInt16 finger_id = transducer->secondary_id % 15; // in case the obtained id is greater than 14, usually 0~4 for common devices.
         if (!transducer->tip_switch.value()) {
-            touch_state[i] = 0;
+            touch_state[finger_id] = 0;
         } else {
             input_active = true;
         }
@@ -167,11 +168,11 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
             }
         }
 
-        touch_state[i]++;
-        if (touch_state[i] > 4) {
+        touch_state[finger_id]++;
+        if (touch_state[finger_id] > 4) {
             finger_data.State = 0x4;
         } else {
-            finger_data.State = touch_state[i];
+            finger_data.State = touch_state[finger_id];
         }
         
         finger_data.Priority = 4 - i;
@@ -197,7 +198,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         finger_data.Y = (SInt16)(scaled_y - y_min) * -1;
         
         finger_data.Angle = angle_bits;
-        finger_data.Identifier = transducer->secondary_id + 1;
+        finger_data.Identifier = finger_id + 1;
     }
 
     if (input_active)
@@ -236,7 +237,7 @@ void VoodooI2CMT2SimulatorDevice::constructReportGated(VoodooI2CMultitouchEvent&
         handleReport(buffer_report, kIOHIDReportTypeInput);
         buffer_report->release();
         
-        input_report.FINGERS[0].Priority = 0x0;
+        input_report.FINGERS[0].Priority = 0x5;
         input_report.FINGERS[0].State = 0x0;
         
         buffer_report = IOBufferMemoryDescriptor::inTaskWithOptions(kernel_task, 0, total_report_len);
