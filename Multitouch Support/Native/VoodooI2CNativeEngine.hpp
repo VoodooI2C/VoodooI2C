@@ -13,24 +13,27 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 
+#include "../VoodooI2CMultitouchInterface.hpp"
 #include "../VoodooI2CMultitouchEngine.hpp"
-#include "VoodooI2CMT2SimulatorDevice.hpp"
-#include "VoodooI2CMT2ActuatorDevice.hpp"
+
+
+#include "../../Dependencies/VoodooInput/VoodooInput/VoodooInputMultitouch/VoodooInputTransducer.h"
+#include "../../Dependencies/VoodooInput/VoodooInput/VoodooInputMultitouch/VoodooInputMessages.h"
 
 class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
-  OSDeclareDefaultStructors(VoodooI2CNativeEngine);
-
+    OSDeclareDefaultStructors(VoodooI2CNativeEngine);
+    
+    VoodooInputEvent message;
+    VoodooI2CMultitouchInterface* parentProvider;
+    IOService* voodooInputInstance;
  public:
-    bool init(OSDictionary* properties) override;
-    void free() override;
-
     bool start(IOService* provider) override;
     void stop(IOService* provider) override;
     
+    bool handleOpen(IOService *forClient, IOOptionBits options, void *arg) override;
+    void handleClose(IOService *forClient, IOOptionBits options) override;
+    
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
- private:
-    VoodooI2CMT2SimulatorDevice* simulator;
-    VoodooI2CMT2ActuatorDevice* actuator;
 };
 
 

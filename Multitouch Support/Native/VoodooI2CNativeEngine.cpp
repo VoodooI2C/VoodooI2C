@@ -12,72 +12,94 @@
 OSDefineMetaClassAndStructors(VoodooI2CNativeEngine, VoodooI2CMultitouchEngine);
 
 MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp) {
-    if (simulator)
-        simulator->constructReport(event, timestamp);
-
-    return MultitouchReturnContinue;
-}
-
-bool VoodooI2CNativeEngine::init(OSDictionary* properties) {
-    if (!super::init(properties))
-        return false;
-
-    simulator = OSTypeAlloc(VoodooI2CMT2SimulatorDevice);
-    actuator = OSTypeAlloc(VoodooI2CMT2ActuatorDevice);
-
-    if (!simulator || !actuator) {
-        OSSafeReleaseNULL(simulator);
-        OSSafeReleaseNULL(actuator);
-        return false;
+    if (!voodooInputInstance) {
+        return MultitouchReturnContinue;
     }
 
-    return true;
-}
+    message.timestamp = timestamp;
+    message.contact_count = event.contact_count;
+    
+    for (int i = 0; i < event.contact_count; i++) {
+        VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i);
+        VoodooInputTransducer* inputTransducer = &message.transducers[i];
+        
+        if (!transducer) {
+            continue;
+        }
+        
+        inputTransducer->id = transducer->id;
+        inputTransducer->secondaryId = transducer->secondary_id;
+        
+        inputTransducer->type = VoodooInputTransducerType::FINGER;
+        
+        inputTransducer->isValid = transducer->is_valid;
+        inputTransducer->isTransducerActive = transducer->tip_switch.value();
+        inputTransducer->isPhysicalButtonDown = transducer->physical_button.value();
+        
+        inputTransducer->currentCoordinates.x = transducer->coordinates.x.value();
+        inputTransducer->previousCoordinates.x = transducer->coordinates.x.last.value;
+        
+        inputTransducer->currentCoordinates.y = transducer->coordinates.y.value();
+        inputTransducer->previousCoordinates.y = transducer->coordinates.y.last.value;
+        
+        IOLog("VoodooI2C Native (%d): %dx%d\n", i, transducer->coordinates.x.value(), transducer->coordinates.y.value());
+        
+        inputTransducer->timestamp = timestamp;
 
-void VoodooI2CNativeEngine::free() {
-    OSSafeReleaseNULL(simulator);
-    OSSafeReleaseNULL(actuator);
+        // TODO: does VoodooI2C know width(s)? how does it measure pressure?
+        inputTransducer->currentCoordinates.width = transducer->tip_pressure.value() / 2;
+        inputTransducer->previousCoordinates.width = transducer->tip_pressure.last.value / 2;
 
-    super::free();
+        inputTransducer->currentCoordinates.pressure = transducer->tip_pressure.value();
+        inputTransducer->previousCoordinates.pressure = transducer->tip_pressure.last.value;
+    }
+    
+    super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
+    
+    return MultitouchReturnBreak;
 }
 
 bool VoodooI2CNativeEngine::start(IOService* provider) {
     if (!super::start(provider))
         return false;
-
-    // Initialize simulator device
-    if (!simulator->init(NULL) || !simulator->attach(this))
-        goto exit;
-    else if (!simulator->start(this)) {
-        simulator->detach(this);
-        goto exit;
+    
+    parentProvider = NULL;
+    parentProvider = OSDynamicCast(VoodooI2CMultitouchInterface, provider);
+    
+    if (!parentProvider) {
+        return false;
     }
 
-    // Initialize actuator device
-    if (!actuator->init(NULL) || !actuator->attach(this))
-        goto exit;
-    else if (!actuator->start(this)) {
-        actuator->detach(this);
-        goto exit;
-    }
+    voodooInputInstance = NULL;
+    
+    setProperty(VOODOO_INPUT_LOGICAL_MAX_X_KEY, parentProvider->logical_max_x, 32);
+    setProperty(VOODOO_INPUT_LOGICAL_MAX_Y_KEY, parentProvider->logical_max_y, 32);
+    
+    setProperty(VOODOO_INPUT_PHYSICAL_MAX_X_KEY, parentProvider->physical_max_x * 10, 32);
+    setProperty(VOODOO_INPUT_PHYSICAL_MAX_Y_KEY, parentProvider->physical_max_y * 10, 32);
+    
+    setProperty(kIOFBTransformKey, 0ull, 32);
+    setProperty("VoodooInputSupported", kOSBooleanTrue);
 
     return true;
-
-exit:
-    IOLog("%s Failed initializing simulator and actuator devices", getName());
-    return false;
 }
 
 void VoodooI2CNativeEngine::stop(IOService* provider) {
-    if (simulator) {
-        simulator->stop(this);
-        simulator->detach(this);
-    }
-
-    if (actuator) {
-        actuator->stop(this);
-        actuator->detach(this);
-    }
-
     super::stop(provider);
+}
+
+bool VoodooI2CNativeEngine::handleOpen(IOService *forClient, IOOptionBits options, void *arg) {
+    if (forClient && forClient->getProperty(VOODOO_INPUT_IDENTIFIER)) {
+        voodooInputInstance = forClient;
+        voodooInputInstance->retain();
+        
+        return true;
+    }
+    
+    return super::handleOpen(forClient, options, arg);
+}
+
+void VoodooI2CNativeEngine::handleClose(IOService *forClient, IOOptionBits options) {
+    OSSafeReleaseNULL(voodooInputInstance);
+    super::handleClose(forClient, options);
 }
