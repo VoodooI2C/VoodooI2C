@@ -41,9 +41,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         
         inputTransducer->currentCoordinates.y = transducer->coordinates.y.value();
         inputTransducer->previousCoordinates.y = transducer->coordinates.y.last.value;
-        
-        IOLog("VoodooI2C Native (%d): %dx%d\n", i, transducer->coordinates.x.value(), transducer->coordinates.y.value());
-        
+        inputTransducer->supportsPressure = false;
         inputTransducer->timestamp = timestamp;
 
         // TODO: does VoodooI2C know width(s)? how does it measure pressure?
