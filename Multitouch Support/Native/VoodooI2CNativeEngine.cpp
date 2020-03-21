@@ -22,6 +22,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     for (int i = 0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
+        memset(inputTransducer, 0, sizeof(VoodooInputTransducer));
         
         if (!transducer) {
             continue;
@@ -30,7 +31,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         inputTransducer->id = transducer->id;
         inputTransducer->secondaryId = transducer->secondary_id;
         
-        inputTransducer->type = VoodooInputTransducerType::FINGER;
+        inputTransducer->type = (transducer->type == DigitiserTransducerType::kDigitiserTransducerFinger) ? VoodooInputTransducerType::FINGER : VoodooInputTransducerType::STYLUS;
         
         inputTransducer->isValid = transducer->is_valid;
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
@@ -60,8 +61,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 bool VoodooI2CNativeEngine::start(IOService* provider) {
     if (!super::start(provider))
         return false;
-    
-    parentProvider = NULL;
+
     parentProvider = OSDynamicCast(VoodooI2CMultitouchInterface, provider);
     
     if (!parentProvider) {
