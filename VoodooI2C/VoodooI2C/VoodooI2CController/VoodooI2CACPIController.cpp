@@ -30,6 +30,7 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
 
     if (whichState == kIOPMPowerOff) {
         physical_device.awake = false;
+        unmapMemory();
 
         setACPIPowerState(kVoodooI2CStateOff);
 
@@ -37,7 +38,8 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
     } else {
         if (!physical_device.awake) {
             setACPIPowerState(kVoodooI2CStateOn);
-
+            if (mapMemory() != kIOReturnSuccess)
+                IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
             physical_device.awake = true;
             IOLog("%s::%s Woke up\n", getName(), physical_device.name);
         }

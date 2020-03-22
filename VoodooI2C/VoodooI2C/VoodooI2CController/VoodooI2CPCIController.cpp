@@ -79,11 +79,13 @@ IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOServi
 
     if (whichState == kIOPMPowerOff) {
         physical_device.awake = false;
-
+        unmapMemory();
         IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
     } else {
         if (!physical_device.awake) {
             configurePCI();
+            if (mapMemory() != kIOReturnSuccess)
+                IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
             skylakeLPSSResetHack();
 
             physical_device.awake = true;
