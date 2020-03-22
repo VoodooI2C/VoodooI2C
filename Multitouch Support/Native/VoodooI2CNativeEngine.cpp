@@ -18,11 +18,11 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
     message.timestamp = timestamp;
     message.contact_count = event.contact_count;
+    memset(message.transducers, 0, VOODOO_INPUT_MAX_TRANSDUCERS * sizeof(VoodooInputTransducer));
     
     for (int i = 0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
-        memset(inputTransducer, 0, sizeof(VoodooInputTransducer));
         
         if (!transducer) {
             continue;
