@@ -54,5 +54,7 @@
 		<key>com.apple.kpi.libkern</key>
 		<string>14</string>
 	</dict>
+	<key>OSBundleRequired</key>
+	<string>Root</string>
 </dict>
 </plist>
