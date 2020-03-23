@@ -40,7 +40,6 @@ IOReturn VoodooI2CController::mapMemory() {
 
 IOReturn VoodooI2CController::unmapMemory() {
     OSSafeReleaseNULL(physical_device.mmap);
-    physical_device.mmap = 0;
     return kIOReturnSuccess;
 }
 
