@@ -111,7 +111,7 @@ class EXPORT VoodooI2CController : public IOService {
       */
 
     IOReturn unmapMemory();
-
+    
     /* Publishes a <VoodooI2CControllerNub> entry into the IORegistry for matching
      *
      * This function instantiates a new <VoodooI2CControllerNub> object and attaches it
