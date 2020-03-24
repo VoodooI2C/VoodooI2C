@@ -38,6 +38,11 @@ IOReturn VoodooI2CController::mapMemory() {
     }
 }
 
+IOReturn VoodooI2CController::unmapMemory() {
+    OSSafeReleaseNULL(physical_device.mmap);
+    return kIOReturnSuccess;
+}
+
 VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* score) {
     if (!super::probe(provider, score)) {
         if (debug_logging)
@@ -76,7 +81,16 @@ exit:
 }
 
 UInt32 VoodooI2CController::readRegister(int offset) {
-    return *(const volatile UInt32 *)(physical_device.mmap->getVirtualAddress() + offset);
+    if (physical_device.mmap != 0) {
+         IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
+         if (address != 0)
+             return *(const volatile UInt32 *)(address + offset);
+         else
+             IOLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+     } else {
+         IOLog("%s::%s readRegister at offset 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+     }
+     return 0;
 }
 
 void VoodooI2CController::releaseResources() {
@@ -136,5 +150,13 @@ void VoodooI2CController::stop(IOService* provider) {
 }
 
 void VoodooI2CController::writeRegister(UInt32 value, int offset) {
-    *(volatile UInt32 *)(physical_device.mmap->getVirtualAddress() + offset) = value;
+    if (physical_device.mmap != 0) {
+        IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
+        if (address != 0)
+            *(volatile UInt32 *)(address + offset) = value;
+        else
+            IOLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+    } else {
+        IOLog("%s::%s writeRegister at 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+    }
 }

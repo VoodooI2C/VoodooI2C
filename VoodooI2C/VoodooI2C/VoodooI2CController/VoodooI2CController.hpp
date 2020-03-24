@@ -104,6 +104,14 @@ class EXPORT VoodooI2CController : public IOService {
 
     IOReturn mapMemory();
 
+    /* Releases the controller's mapped memory
+      *
+      * @return *KIOReturnSuccess* on successful releasing, *kIOReturnDeviceError*
+      *  otherwise
+      */
+
+    IOReturn unmapMemory();
+
     /* Publishes a <VoodooI2CControllerNub> entry into the IORegistry for matching
      *
      * This function instantiates a new <VoodooI2CControllerNub> object and attaches it
