@@ -55,6 +55,9 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
+    if (voodooI2CHIDInstance)
+        super::messageClient(kIOMessageVoodooNativeEngineMessage, voodooI2CHIDInstance);
+    
     return MultitouchReturnBreak;
 }
 
@@ -78,11 +81,29 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     
     setProperty(kIOFBTransformKey, 0ull, 32);
     setProperty("VoodooInputSupported", kOSBooleanTrue);
+    
+    provider = parentProvider;
+    while (provider) {
+        if (!strcmp(provider->getName(), "VoodooI2CHIDDevice")) {
+            IOLog("%s::start: VoodooI2CHIDDevice has been found\n", getName());
+            voodooI2CHIDInstance = provider;
+            provider = voodooI2CHIDInstance->getProvider();
+            if (provider && !provider->getProperty("gpioPin") && !provider->getProperty("gpioIRQ")) {
+                if (!open(voodooI2CHIDInstance))
+                    IOLog("%s::start: VoodooI2CHIDDevice could not open!\n", getName());
+            }
+            break;
+        }
+        provider = provider->getProvider();
+    }
+
 
     return true;
 }
 
 void VoodooI2CNativeEngine::stop(IOService* provider) {
+    if (voodooI2CHIDInstance && isOpen(voodooI2CHIDInstance))
+         close(voodooI2CHIDInstance);
     super::stop(provider);
 }
 

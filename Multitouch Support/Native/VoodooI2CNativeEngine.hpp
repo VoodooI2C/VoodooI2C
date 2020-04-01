@@ -19,6 +19,7 @@
 
 #include "../../Dependencies/VoodooInput/VoodooInput/VoodooInputMultitouch/VoodooInputTransducer.h"
 #include "../../Dependencies/VoodooInput/VoodooInput/VoodooInputMultitouch/VoodooInputMessages.h"
+#include "../../Dependencies/helpers.hpp"
 
 class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     OSDeclareDefaultStructors(VoodooI2CNativeEngine);
@@ -26,6 +27,7 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     VoodooInputEvent message;
     VoodooI2CMultitouchInterface* parentProvider;
     IOService* voodooInputInstance;
+    IOService* voodooI2CHIDInstance;
  public:
     bool start(IOService* provider) override;
     void stop(IOService* provider) override;

@@ -35,4 +35,7 @@ static IOPMPowerState VoodooI2CIOPMPowerStates[kVoodooI2CIOPMNumberPowerStates] 
     {1, kIOPMPowerOn, kIOPMPowerOn, kIOPMPowerOn, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
+// message number used for Polling Mode optimisation
+#define kIOMessageVoodooNativeEngineMessage 54321
+
 #endif /* helpers_hpp */
