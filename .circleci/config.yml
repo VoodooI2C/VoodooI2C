@@ -21,13 +21,13 @@ jobs:
           # Default branch if not
           - v1-dep-master-
       - run:
-          name: "Download the macOS 10.12 SDK"
-          command: curl -L https://github.com/alexey-lysiuk/macos-sdk/releases/download/10.12/MacOSX10.12.tar.bz2 -o /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.tar.bz2 && tar -xjf /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.tar.bz2 -C /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          name: "Download the macOS 10.13 SDK"
+          command: curl -L https://github.com/alexey-lysiuk/macos-sdk/releases/download/10.13/MacOSX10.13.tar.bz2 -o /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.tar.bz2 && tar -xjf /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.tar.bz2 -C /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
       - run: pip install cpplint
       - run: pip install git+https://github.com/alexandred/cldoc.git
       - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
       - run: git submodule init && git submodule update
-      - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -sdk macosx10.12 -derivedDataPath build clean build
+      - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -sdk macosx10.13 -derivedDataPath build clean build
 
       - run: find $HOME/Library/Developer/Xcode/DerivedData -name '*.xcactivitylog' -exec cp {} $CIRCLE_ARTIFACTS/xcactivitylog \; || true
       - run:
