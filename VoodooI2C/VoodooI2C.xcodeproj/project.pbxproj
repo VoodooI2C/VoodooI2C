@@ -541,7 +541,7 @@
 		AC2603A71F2F294000CF238F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Alexandre Daoud";
 				TargetAttributes = {
 					AC2603AF1F2F294000CF238F = {
@@ -918,6 +918,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.3;
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
@@ -939,6 +940,7 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.3;
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"../Dependencies/Headers\"/**";
