@@ -5,7 +5,6 @@ jobs:
     parallelism: 1
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
-      BUILD_MODE: prebuilt
     macos:
       xcode: 11.3.0
     steps:
@@ -14,6 +13,7 @@ jobs:
       # Prepare for artifact and test results
       - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run: xcodebuild -version
+      - run: BUILD_HOME=$CIRCLE_TAG
       # Restore the dependency cache
       - restore_cache:
           keys:
