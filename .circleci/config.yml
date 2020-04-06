@@ -5,6 +5,7 @@ jobs:
     parallelism: 1
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      BUILD_MODE: prebuilt
     macos:
       xcode: 11.3.0
     steps:
