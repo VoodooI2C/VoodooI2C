@@ -25,6 +25,7 @@ xcuserdata/
 
 .DS_Store
 VoodooI2C\ Satellites/*
+Dependencies/VoodooInput/*
 docs/index.html
 docs/search.json
 docs/xml/*
