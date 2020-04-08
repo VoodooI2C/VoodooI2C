@@ -13,7 +13,6 @@ jobs:
       # Prepare for artifact and test results
       - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run: xcodebuild -version
-      - run: BUILD_HOME=$CIRCLE_TAG
       # Restore the dependency cache
       - restore_cache:
           keys:
