@@ -30,6 +30,9 @@ git submodule update
 
 VoodooI2C relies on certain packages to aid its build and deploy process. It is not strictly necessary to have these dependencies installed and the build phases that are dependent on them can be removed from the build phases for the main VoodooI2C project. Anyone who wishes to contribute to VoodooI2C, however, must have them installed and we will not accept PRs where the build phases have been deleted (as we depend on them for continuous integration).
 
+### VoodooInput
+VoodooI2C depends on VoodooInput for multitouch handling. You will need to retrieve and build the latest versions of VoodooInput by running `src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies`. Please run the command in the Git repository root, to ensure that the `VoodooInput` folder exists within the `Dependencies` folder.
+
 ### `cpplint`
 
 We use `cpplint` to lint most of the repository's file in order to enforce a common programming paradigm across the project's many components. As such, we encourage all contributions to be linted against `cpplint` . To install `cpplint`, you must have the `pip` package manager installed on your system. If you do not, a quick Google search will tell you how to do so. Then run this command:

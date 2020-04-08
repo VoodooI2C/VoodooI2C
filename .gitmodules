@@ -16,6 +16,3 @@
 [submodule "VoodooI2C Satellites/VoodooI2CAtmelMXT"]
 	path = VoodooI2C Satellites/VoodooI2CAtmelMXT
 	url = https://github.com/coolstar/VoodooI2CAtmelMXT
-[submodule "Dependencies/VoodooInput"]
-	path = Dependencies/VoodooInput
-	url = https://github.com/acidanthera/VoodooInput.git
