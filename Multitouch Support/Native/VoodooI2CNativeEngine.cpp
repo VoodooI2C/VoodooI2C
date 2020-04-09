@@ -51,6 +51,15 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
         inputTransducer->currentCoordinates.pressure = transducer->tip_pressure.value();
         inputTransducer->previousCoordinates.pressure = transducer->tip_pressure.last.value;
+
+        // Force Touch emulation
+        // The button state is saved in the first transducer
+        if (((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value()) {
+            inputTransducer->supportsPressure = true;
+            inputTransducer->isPhysicalButtonDown = 0x0;
+            inputTransducer->currentCoordinates.pressure = 0xff;
+            inputTransducer->currentCoordinates.width = 10;
+        }
     }
     
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
