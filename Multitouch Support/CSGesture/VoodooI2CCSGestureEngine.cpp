@@ -667,7 +667,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
     if (!handled && !sc->buttondown && !sc->mouseDownDueToTap)
         handledByScroll = handled = ProcessScroll(sc, abovethreshold, iToUse);
     if (!handled)
-        handled = ProcessMove(sc, abovethreshold, iToUse);
+        ProcessMove(sc, abovethreshold, iToUse);
     
 #pragma mark process clickpad press state
     int buttonmask = 0;

@@ -34,6 +34,7 @@ void VoodooI2CPCIController::configurePCI() {
     tmp[0] = mystring->getChar(8);
     tmp[1] = mystring->getChar(9);
 
+    OSSafeReleaseNULL(mystring);
 
     /* If it is Comet Lake, then let's apply Forcing D0 here.
        It will modify 0x80 below to your findings.*/

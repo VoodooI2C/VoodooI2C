@@ -144,6 +144,7 @@ void VoodooI2CACPICRSParser::parseACPIGPIO(uint8_t const* crs, uint32_t offset, 
                     break;
                 case 2:
                     irq = IRQ_TYPE_EDGE_BOTH;
+                    break;
                 default:
                     irq = IRQ_TYPE_EDGE_FALLING;
                     break;
