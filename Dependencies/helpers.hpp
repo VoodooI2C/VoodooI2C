@@ -25,6 +25,13 @@ UInt16 abs(SInt16 x);
 
 const char* getMatchedName(IOService* provider);
 
+inline void setOSDictionaryNumber(OSDictionary* dictionary, const char * key, UInt32 number) {
+    if (OSNumber* os_number = OSNumber::withNumber(number, 32)) {
+        dictionary->setObject(key, os_number);
+        os_number->release();
+    }
+}
+
 enum VoodooI2CState {
     kVoodooI2CStateOff = 0,
     kVoodooI2CStateOn = 1
