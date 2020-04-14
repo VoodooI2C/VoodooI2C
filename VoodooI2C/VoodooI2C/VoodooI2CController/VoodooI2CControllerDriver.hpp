@@ -83,7 +83,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
     /* Handles an interrupt that has been asserted by the controller */
 
-    void handleInterrupt(OSObject* owner, IOInterruptEventSource* src, int intCount);
+    void handleInterrupt(OSObject* target, void* refCon, IOService* nubDevice, int source);
 
     /* Initialises <VoodooI2CControllerDriver> class
      * @properties OSDictionary* representing the matched personality
@@ -146,7 +146,6 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
  private:
     IOCommandGate* command_gate;
-    IOInterruptEventSource* interrupt_source;
     IOWorkLoop* work_loop;
 
     /* Requests the nub to fetch bus configuration values from the ACPI tables

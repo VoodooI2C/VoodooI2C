@@ -69,14 +69,16 @@ void VoodooI2CControllerDriver::handleAbortI2C() {
     IOLog("%s::%s I2C Transaction error: 0x%08x - aborting\n", getName(), bus_device.name, bus_device.abort_source);
 }
 
-void VoodooI2CControllerDriver::handleInterrupt(OSObject* owner, IOInterruptEventSource* src, int intCount) {
+void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, IOService* nubDevice, int source) {
+    nub->disableInterrupt(0);
+
     UInt32 status, enabled;
 
     enabled = readRegister(DW_IC_ENABLE);
     status = readRegister(DW_IC_RAW_INTR_STAT);
 
     if (!enabled || !(status &~DW_IC_INTR_ACTIVITY))
-        return;
+        goto exit;
 
     status = readClearInterruptBits();
 
@@ -98,6 +100,9 @@ wakeup:
     if ((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device.message_error) {
         command_gate->commandWakeup(&bus_device.command_complete);
     }
+
+exit:
+    nub->enableInterrupt(0);
 }
 
 bool VoodooI2CControllerDriver::init(OSDictionary* properties) {
@@ -348,11 +353,8 @@ void VoodooI2CControllerDriver::readFromBus() {
 }
 
 void VoodooI2CControllerDriver::releaseResources() {
-    if (interrupt_source) {
-        interrupt_source->disable();
-        work_loop->removeEventSource(interrupt_source);
-        OSSafeReleaseNULL(interrupt_source);
-    }
+    nub->disableInterrupt(0);
+    nub->unregisterInterrupt(0);
 
     if (command_gate) {
         work_loop->removeEventSource(command_gate);
@@ -431,10 +433,8 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     work_loop->retain();
 
-    interrupt_source =
-    IOInterruptEventSource::interruptEventSource(this, OSMemberFunctionCast(IOInterruptEventAction, this, &VoodooI2CControllerDriver::handleInterrupt), nub);
 
-    if (!interrupt_source || work_loop->addEventSource(interrupt_source) != kIOReturnSuccess) {
+    if (nub->registerInterrupt(0, this, OSMemberFunctionCast(IOInterruptAction, this, &VoodooI2CControllerDriver::handleInterrupt), 0) != kIOReturnSuccess) {
         IOLog("%s::%s::Could not add interrupt source to work loop\n", getName(), bus_device.name);
         goto exit;
     }
@@ -470,7 +470,7 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     toggleInterrupts(kVoodooI2CStateOff);
 
-    interrupt_source->enable();
+    nub->enableInterrupt(0);
 
     setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
