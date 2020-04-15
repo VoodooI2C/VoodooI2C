@@ -472,6 +472,8 @@
 			<string>VoodooI2CNativeEngine</string>
 			<key>IOProviderClass</key>
 			<string>VoodooI2CMultitouchInterface</string>
+			<key>EnableForceTouchEmulation</key>
+			<true/>
 		</dict>
 		<key>VoodooI2CACPIController</key>
 		<dict>

@@ -26,6 +26,8 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     VoodooInputEvent message;
     VoodooI2CMultitouchInterface* parentProvider;
     IOService* voodooInputInstance;
+
+    bool isForceTouchEmulationEnabled;
  public:
     bool start(IOService* provider) override;
     void stop(IOService* provider) override;
