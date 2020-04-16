@@ -362,6 +362,10 @@ void VoodooI2CControllerDriver::releaseResources() {
 
     OSSafeReleaseNULL(command_gate);
     OSSafeReleaseNULL(work_loop);
+
+    if (i2c_bus_lock) {
+        IOLockFree(i2c_bus_lock);
+    }
 }
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
@@ -423,6 +427,11 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
 bool VoodooI2CControllerDriver::start(IOService* provider) {
     if (!super::start(provider))
         return false;
+    i2c_bus_lock = IOLockAlloc();
+    if (!i2c_bus_lock) {
+        IOLog("%s::%s Could not allocate I2C bus lock\n", getName(), bus_device.name);
+        goto exit;
+    }
 
     work_loop = getWorkLoop();
     if (!work_loop) {
@@ -537,7 +546,10 @@ void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {
 }
 
 IOReturn VoodooI2CControllerDriver::transferI2C(VoodooI2CControllerBusMessage* messages, int number) {
-    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CControllerDriver::transferI2CGated), messages, &number);
+    IOLockLock(i2c_bus_lock);
+    IOReturn ret = command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CControllerDriver::transferI2CGated), messages, &number);
+    IOLockUnlock(i2c_bus_lock);
+    return ret;
 }
 
 IOReturn VoodooI2CControllerDriver::transferI2CGated(VoodooI2CControllerBusMessage* messages, int* number) {
