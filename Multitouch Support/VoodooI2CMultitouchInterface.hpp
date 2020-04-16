@@ -48,6 +48,7 @@ class EXPORT VoodooI2CMultitouchInterface : public IOService {
     UInt32 logical_max_y = 0;
     UInt32 physical_max_x = 0;
     UInt32 physical_max_y = 0;
+    bool isForceClickEnabled = true;
 
     /* Forwards a multitouch event to the attached multitouch engines
      * @event The event to forward

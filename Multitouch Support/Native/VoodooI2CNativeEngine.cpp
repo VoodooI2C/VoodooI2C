@@ -54,7 +54,9 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
         // Force Touch emulation
         // The button state is saved in the first transducer
-        if (isForceTouchEmulationEnabled && ((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value()) {
+        if (isForceTouchEmulationEnabled
+            && ((VoodooI2CMultitouchInterface*) getProvider())->isForceClickEnabled
+            && ((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value()) {
             inputTransducer->supportsPressure = true;
             inputTransducer->isPhysicalButtonDown = 0x0;
             inputTransducer->currentCoordinates.pressure = 0xff;
