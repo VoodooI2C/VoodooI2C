@@ -88,22 +88,10 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     setProperty(kIOFBTransformKey, 0ull, 32);
     setProperty("VoodooInputSupported", kOSBooleanTrue);
 
-
-    OSDictionary* nameMatch = IOService::serviceMatching("AppleMultitouchDevice");
-    appleMultitouchDevice = waitForMatchingService(nameMatch, 1e9);
-    if (!appleMultitouchDevice) {
-        IOLog("%s::fail to get AppleMultitouchDevice\n", getName());
-    }
-    nameMatch->release();
-
     return true;
 }
 
 bool VoodooI2CNativeEngine::isForceClickEnabled() {
-    if (!appleMultitouchDevice) {
-        return lastIsForceClickEnabled;
-    }
-
     AbsoluteTime now_abs;
     uint64_t diff_ns;
     clock_get_uptime(&now_abs);
@@ -115,7 +103,7 @@ bool VoodooI2CNativeEngine::isForceClickEnabled() {
     }
 
     // Blocking reading here takes about 10 microseconds
-    OSDictionary* dict = OSDynamicCast(OSDictionary, appleMultitouchDevice->getProperty("MultitouchPreferences", gIOServicePlane, kIORegistryIterateRecursively));
+    OSDictionary* dict = OSDynamicCast(OSDictionary, this->getProperty("MultitouchPreferences", gIOServicePlane, kIORegistryIterateRecursively));
     if (!dict) {
         return lastIsForceClickEnabled;
     }

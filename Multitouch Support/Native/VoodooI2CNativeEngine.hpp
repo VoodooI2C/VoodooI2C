@@ -26,7 +26,6 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     VoodooInputEvent message;
     VoodooI2CMultitouchInterface* parentProvider;
     IOService* voodooInputInstance;
-    IOService* appleMultitouchDevice;
 
     bool lastIsForceClickEnabled = true;
     AbsoluteTime lastForceClickPropertyUpdateTime;
