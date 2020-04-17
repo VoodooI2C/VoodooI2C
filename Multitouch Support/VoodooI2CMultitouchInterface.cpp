@@ -80,17 +80,3 @@ void VoodooI2CMultitouchInterface::stop(IOService* provider) {
 
     super::stop(provider);
 }
-
-IOReturn VoodooI2CMultitouchInterface::setProperties(OSObject* properties) {
-    if (engines) {
-        for (int i = 0, count = engines->getCount(); i < count; i++) {
-            VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, engines->getObject(i));
-            if (!engine) {
-                continue;
-            }
-            engine->setProperties(properties);
-        }
-    }
-
-    return kIOReturnSuccess;
-}

@@ -26,9 +26,12 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     VoodooInputEvent message;
     VoodooI2CMultitouchInterface* parentProvider;
     IOService* voodooInputInstance;
+    IOService* appleMultitouchDevice;
 
-    bool isForceTouchEmulationEnabled;
-    bool isForceClickEnabled;
+    bool lastIsForceClickEnabled = true;
+    AbsoluteTime lastForceClickPropertyUpdateTime;
+
+    bool isForceClickEnabled();
  public:
     bool start(IOService* provider) override;
     void stop(IOService* provider) override;
@@ -37,7 +40,6 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     void handleClose(IOService *forClient, IOOptionBits options) override;
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
-    IOReturn setProperties(OSObject* properties) override;
 };
 
 

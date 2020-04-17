@@ -54,8 +54,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
         // Force Touch emulation
         // The button state is saved in the first transducer
-        if (isForceTouchEmulationEnabled && isForceClickEnabled
-            && ((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value()) {
+        if (((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value() && isForceClickEnabled()) {
             inputTransducer->supportsPressure = true;
             inputTransducer->isPhysicalButtonDown = 0x0;
             inputTransducer->currentCoordinates.pressure = 0xff;
@@ -66,31 +65,6 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
     return MultitouchReturnBreak;
-}
-
-IOReturn VoodooI2CNativeEngine::setProperties(OSObject* properties) {
-    OSDictionary* dict = OSDynamicCast(OSDictionary, properties);
-
-    if (dict != NULL) {
-        if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
-            while (OSSymbol* key = OSDynamicCast(OSSymbol, i->getNextObject())) {
-                // System -> Preferences -> Trackpad -> Force Click and haptic feedback
-                // ActuateDetents
-                if (key->isEqualTo("ActuateDetents")) {
-                    OSNumber* value = OSDynamicCast(OSNumber, dict->getObject(key));
-
-                    if (value != NULL) {
-                        IOLog("%s::setProperties %s = %d\n", getName(), key->getCStringNoCopy(), value->unsigned32BitValue());
-                        isForceClickEnabled = value->unsigned32BitValue();
-                    }
-                }
-            }
-
-            i->release();
-        }
-    }
-
-    return kIOReturnSuccess;
 }
 
 bool VoodooI2CNativeEngine::start(IOService* provider) {
@@ -114,14 +88,55 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     setProperty(kIOFBTransformKey, 0ull, 32);
     setProperty("VoodooInputSupported", kOSBooleanTrue);
 
-    isForceClickEnabled = true;
-    isForceTouchEmulationEnabled = true;
-    OSBoolean* enableForceTouchEmulationProperty = OSDynamicCast(OSBoolean, this->getProperty("EnableForceTouchEmulation"));
-    if (enableForceTouchEmulationProperty) {
-        isForceTouchEmulationEnabled = enableForceTouchEmulationProperty->getValue();
+
+    OSDictionary* nameMatch = IOService::serviceMatching("AppleMultitouchDevice");
+    appleMultitouchDevice = waitForMatchingService(nameMatch, 1e9);
+    if (!appleMultitouchDevice) {
+        IOLog("%s::fail to get AppleMultitouchDevice\n", getName());
     }
+    nameMatch->release();
 
     return true;
+}
+
+bool VoodooI2CNativeEngine::isForceClickEnabled() {
+    if (!appleMultitouchDevice) {
+        return lastIsForceClickEnabled;
+    }
+
+    AbsoluteTime now_abs;
+    uint64_t diff_ns;
+    clock_get_uptime(&now_abs);
+    absolutetime_to_nanoseconds(now_abs - lastForceClickPropertyUpdateTime, &diff_ns);
+
+    if (diff_ns < 1e9) {
+        lastForceClickPropertyUpdateTime = now_abs;
+        return lastIsForceClickEnabled;
+    }
+
+    // Blocking reading here takes about 10 microseconds
+    OSDictionary* dict = OSDynamicCast(OSDictionary, appleMultitouchDevice->getProperty("MultitouchPreferences", gIOServicePlane, kIORegistryIterateRecursively));
+    if (!dict) {
+        return lastIsForceClickEnabled;
+    }
+    if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
+        while (OSSymbol* key = OSDynamicCast(OSSymbol, i->getNextObject())) {
+            // System -> Preferences -> Trackpad -> Force Click and haptic feedback
+            // ForceSuppressed
+            if (key->isEqualTo("ForceSuppressed")) {
+                OSBoolean* value = OSDynamicCast(OSBoolean, dict->getObject(key));
+
+                if (value != NULL) {
+                    lastIsForceClickEnabled = !value->getValue();
+                }
+            }
+        }
+
+        i->release();
+    }
+
+    lastForceClickPropertyUpdateTime = now_abs;
+    return lastIsForceClickEnabled;
 }
 
 void VoodooI2CNativeEngine::stop(IOService* provider) {

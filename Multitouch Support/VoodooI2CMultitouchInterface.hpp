@@ -103,8 +103,6 @@ class EXPORT VoodooI2CMultitouchInterface : public IOService {
 
     void stop(IOService* provider) override;
 
-    IOReturn setProperties(OSObject* properties) override;
-
  private:
     OSOrderedSet* engines;
 };
