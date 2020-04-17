@@ -54,8 +54,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
         // Force Touch emulation
         // The button state is saved in the first transducer
-        if (isForceTouchEmulationEnabled
-            && ((VoodooI2CMultitouchInterface*) getProvider())->isForceClickEnabled
+        if (isForceTouchEmulationEnabled && isForceClickEnabled
             && ((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value()) {
             inputTransducer->supportsPressure = true;
             inputTransducer->isPhysicalButtonDown = 0x0;
@@ -67,6 +66,31 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
     return MultitouchReturnBreak;
+}
+
+IOReturn VoodooI2CNativeEngine::setProperties(OSObject* properties) {
+    OSDictionary* dict = OSDynamicCast(OSDictionary, properties);
+
+    if (dict != NULL) {
+        if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
+            while (OSSymbol* key = OSDynamicCast(OSSymbol, i->getNextObject())) {
+                // System -> Preferences -> Trackpad -> Force Click and haptic feedback
+                // ActuateDetents
+                if (key->isEqualTo("ActuateDetents")) {
+                    OSNumber* value = OSDynamicCast(OSNumber, dict->getObject(key));
+
+                    if (value != NULL) {
+                        IOLog("%s::setProperties %s = %d\n", getName(), key->getCStringNoCopy(), value->unsigned32BitValue());
+                        isForceClickEnabled = value->unsigned32BitValue();
+                    }
+                }
+            }
+
+            i->release();
+        }
+    }
+
+    return kIOReturnSuccess;
 }
 
 bool VoodooI2CNativeEngine::start(IOService* provider) {
@@ -90,6 +114,7 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     setProperty(kIOFBTransformKey, 0ull, 32);
     setProperty("VoodooInputSupported", kOSBooleanTrue);
 
+    isForceClickEnabled = true;
     isForceTouchEmulationEnabled = true;
     OSBoolean* enableForceTouchEmulationProperty = OSDynamicCast(OSBoolean, this->getProperty("EnableForceTouchEmulation"));
     if (enableForceTouchEmulationProperty) {
