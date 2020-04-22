@@ -138,11 +138,15 @@ bool VoodooI2CNativeEngine::handleOpen(IOService *forClient, IOOptionBits option
         
         return true;
     }
-    
-    return super::handleOpen(forClient, options, arg);
+    return false;
+}
+
+bool VoodooI2CNativeEngine::handleIsOpen(const IOService *forClient) const {
+    return voodooInputInstance != NULL && forClient == voodooInputInstance;
 }
 
 void VoodooI2CNativeEngine::handleClose(IOService *forClient, IOOptionBits options) {
-    OSSafeReleaseNULL(voodooInputInstance);
-    super::handleClose(forClient, options);
+    if (voodooInputInstance && forClient == voodooInputInstance) {
+        OSSafeReleaseNULL(voodooInputInstance);
+    }
 }
