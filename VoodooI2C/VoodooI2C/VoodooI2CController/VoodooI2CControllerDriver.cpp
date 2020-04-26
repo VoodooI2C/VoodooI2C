@@ -74,6 +74,10 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
 
     UInt32 status, enabled;
 
+    if (!bus_device.awake) {
+        goto exit;
+    }
+
     enabled = readRegister(DW_IC_ENABLE);
     status = readRegister(DW_IC_RAW_INTR_STAT);
 
@@ -144,7 +148,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     AbsoluteTime abstime, deadline;
     IOReturn sleep;
 
-    if (waitBusNotBusyI2C() != kIOReturnSuccess) {
+    if (!bus_device.awake || waitBusNotBusyI2C() != kIOReturnSuccess) {
         return kIOReturnBusy;
     }
 
@@ -408,9 +412,12 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
     if (whatDevice != this)
         return kIOPMAckImplied;
 
+    // Ensure we are not in the middle of a i2c session.
+    IOLockLock(i2c_bus_lock);
     if (!whichState) {
         bus_device.awake = false;
         toggleBusState(kVoodooI2CStateOff);
+        nub->disableInterrupt(0);
         IOLog("%s::%s Going to sleep\n", getName(), bus_device.name);
     } else {
         if (!bus_device.awake) {
@@ -418,9 +425,11 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
             initialiseBus();
             toggleInterrupts(kVoodooI2CStateOff);
             bus_device.awake = true;
+            nub->enableInterrupt(0);
             IOLog("%s::%s Woke up\n", getName(), bus_device.name);
         }
     }
+    IOLockUnlock(i2c_bus_lock);
     return kIOPMAckImplied;
 }
 
