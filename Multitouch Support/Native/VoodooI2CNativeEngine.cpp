@@ -95,6 +95,8 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     
     setProperty(kIOFBTransformKey, 0ull, 32);
     setProperty("VoodooInputSupported", kOSBooleanTrue);
+    
+    stylus_check = 0;
 
     return true;
 }
