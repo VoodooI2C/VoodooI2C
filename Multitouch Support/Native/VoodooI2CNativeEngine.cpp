@@ -20,8 +20,16 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     message.contact_count = event.contact_count;
     memset(message.transducers, 0, VOODOO_INPUT_MAX_TRANSDUCERS * sizeof(VoodooInputTransducer));
     
+    VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(0);
+
+    if (!transducer)
+        return MultitouchReturnBreak;
+    
+    if (transducer->type == kDigitiserTransducerStylus)
+        stylus_check = 1;
+    
     for (int i = 0; i < event.contact_count; i++) {
-        VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i);
+        VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i+stylus_check);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
         
         if (!transducer) {
