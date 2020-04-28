@@ -418,6 +418,7 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
         bus_device.awake = false;
         toggleBusState(kVoodooI2CStateOff);
         nub->disableInterrupt(0);
+        nub->unregisterInterrupt(0);
         IOLog("%s::%s Going to sleep\n", getName(), bus_device.name);
     } else {
         if (!bus_device.awake) {
@@ -425,7 +426,11 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
             initialiseBus();
             toggleInterrupts(kVoodooI2CStateOff);
             bus_device.awake = true;
-            nub->enableInterrupt(0);
+            if (nub->registerInterrupt(0, this, OSMemberFunctionCast(IOInterruptAction, this, &VoodooI2CControllerDriver::handleInterrupt), 0) != kIOReturnSuccess) {
+                IOLog("%s::%s::Could not register interrupt\n", getName(), bus_device.name);
+            } else {
+                nub->enableInterrupt(0);
+            }
             IOLog("%s::%s Woke up\n", getName(), bus_device.name);
         }
     }
