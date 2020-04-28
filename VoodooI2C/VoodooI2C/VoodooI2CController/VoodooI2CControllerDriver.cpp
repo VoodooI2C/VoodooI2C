@@ -427,7 +427,6 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
         IOLog("%s::%s Could not get work loop\n", getName(), bus_device.name);
         goto exit;
     }
-    work_loop->retain();
 
     work_loop->retain();
 
