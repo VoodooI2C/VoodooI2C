@@ -8,6 +8,9 @@
 #include "VoodooI2CController.hpp"
 #include "VoodooI2CControllerNub.hpp"
 
+// Log only if current thread is interruptible, otherwise we will get a panic.
+#define TryLog(args...) do { if (ml_get_interrupts_enabled()) IOLog(args); } while (0)
+
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CController, IOService);
 
@@ -86,9 +89,9 @@ UInt32 VoodooI2CController::readRegister(int offset) {
          if (address != 0)
              return *(const volatile UInt32 *)(address + offset);
          else
-             IOLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+             TryLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
      } else {
-         IOLog("%s::%s readRegister at offset 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+         TryLog("%s::%s readRegister at offset 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
      }
      return 0;
 }
@@ -155,8 +158,8 @@ void VoodooI2CController::writeRegister(UInt32 value, int offset) {
         if (address != 0)
             *(volatile UInt32 *)(address + offset) = value;
         else
-            IOLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+            TryLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
     } else {
-        IOLog("%s::%s writeRegister at 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+        TryLog("%s::%s writeRegister at 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
     }
 }
