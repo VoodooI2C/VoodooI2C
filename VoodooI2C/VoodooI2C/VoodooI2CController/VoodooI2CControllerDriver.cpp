@@ -70,6 +70,7 @@ void VoodooI2CControllerDriver::handleAbortI2C() {
 }
 
 void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, IOService* nubDevice, int source) {
+    /* Direct interrupt context. Do NOT block the thread by memory allocation, IOLog, IOLockLock, command_gate->runAction, ... */
     nub->disableInterrupt(0);
 
     UInt32 status, enabled;
