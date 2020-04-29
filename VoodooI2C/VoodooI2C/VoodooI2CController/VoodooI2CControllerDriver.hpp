@@ -148,6 +148,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     IOCommandGate* command_gate;
     IOWorkLoop* work_loop;
     IOLock* i2c_bus_lock = nullptr;
+    bool is_interrupt_registered = false;
 
     /* Requests the nub to fetch bus configuration values from the ACPI tables
      *
