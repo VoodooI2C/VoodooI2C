@@ -148,6 +148,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     IOCommandGate* command_gate;
     IOWorkLoop* work_loop;
     IOLock* i2c_bus_lock = nullptr;
+    bool is_interrupt_registered = false;
 
     /* Requests the nub to fetch bus configuration values from the ACPI tables
      *
@@ -287,6 +288,22 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
      */
 
     IOReturn waitBusNotBusyI2C();
+
+    /* Register and enable the interrupt for I2C bus
+     *
+     * Note: Do NOT call this function in direct interrupt context.
+     *
+     * @return *kIOReturnSuccess* on interrupt successfully registered and enabled, *kIOReturnStillOpen* if already started.
+     * Otherwise *kIOReturnNoInterrupt* is returned if the source is not valid; *kIOReturnNoResources* is returned if the interrupt already has an installed handler.
+     */
+    IOReturn startI2CInterrupt();
+
+    /* Disable and unregister the interrupt for I2C bus
+     *
+     * Note: Do NOT call this function in direct interrupt context.
+     *
+     */
+    void stopI2CInterrupt();
 };
 
 
