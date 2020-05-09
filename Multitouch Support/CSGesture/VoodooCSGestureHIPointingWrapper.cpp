@@ -33,20 +33,20 @@ IOFixed VoodooCSGestureHIPointingWrapper::resolution(){
     return (300) << 16;
 };
 
-bool VoodooCSGestureHIPointingWrapper::init(){
+bool VoodooCSGestureHIPointingWrapper::init() {
     if (!super::init())
         return false;
     
     return true;
 }
 
-bool VoodooCSGestureHIPointingWrapper::start(IOService *provider){
+bool VoodooCSGestureHIPointingWrapper::start(IOService *provider) {
     if (!super::start(provider))
         return false;
 
     int enabledProperty = 1;
     
-    if (version_major>=16) {
+    if (version_major >= 16) {
         
         setProperty("SupportsGestureScrolling", true);
         setProperty("TrackpadFourFingerGestures", false);
@@ -95,11 +95,11 @@ bool VoodooCSGestureHIPointingWrapper::start(IOService *provider){
     return true;
 }
 
-void VoodooCSGestureHIPointingWrapper::stop(IOService *provider){
+void VoodooCSGestureHIPointingWrapper::stop(IOService *provider) {
     super::stop(provider);
 }
 
-void VoodooCSGestureHIPointingWrapper::updateRelativeMouse(int dx, int dy, int buttons){
+void VoodooCSGestureHIPointingWrapper::updateRelativeMouse(int dx, int dy, int buttons) {
     // 0x1 = left button
     // 0x2 = right button
     // 0x4 = middle button
@@ -109,7 +109,7 @@ void VoodooCSGestureHIPointingWrapper::updateRelativeMouse(int dx, int dy, int b
     dispatchRelativePointerEvent(dx, dy, buttons, now_abs);
 }
 
-void VoodooCSGestureHIPointingWrapper::updateAbsoluteMouse(SInt16 x, SInt16 y, int buttons){
+void VoodooCSGestureHIPointingWrapper::updateAbsoluteMouse(SInt16 x, SInt16 y, int buttons) {
     // 0x1 = left button
     // 0x2 = right button
     // 0x4 = middle button
@@ -132,7 +132,7 @@ void VoodooCSGestureHIPointingWrapper::updateAbsoluteMouse(SInt16 x, SInt16 y, i
     dispatchAbsolutePointerEvent(&loc, &bounds, buttons, false, 0, 0, 0, 90, now_abs);
 }
 
-void VoodooCSGestureHIPointingWrapper::updateScroll(short dy, short dx, short dz){
+void VoodooCSGestureHIPointingWrapper::updateScroll(short dy, short dx, short dz) {
     uint64_t now_abs;
     clock_get_uptime(&now_abs);
     if (!horizontalScroll)
@@ -153,17 +153,17 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
      */
     
     OSBoolean *clicking = OSDynamicCast(OSBoolean, dict->getObject("Clicking"));
-    if(clicking) {
+    if (clicking) {
         gesturerec->softc.settings.tapToClickEnabled = clicking->isTrue();
     } else {
         OSNumber *clickingNum = OSDynamicCast(OSNumber, dict->getObject("Clicking"));
-        if (clickingNum ){
+        if (clickingNum) {
             gesturerec->softc.settings.tapToClickEnabled = clickingNum->unsigned32BitValue() & 0x1;
         }
     }
     
     OSBoolean *dragging = OSDynamicCast(OSBoolean, dict->getObject("Dragging"));
-    if (dragging){
+    if (dragging) {
         gesturerec->softc.settings.tapDragEnabled = dragging->isTrue();
     } else {
         OSNumber *draggingNum = OSDynamicCast(OSNumber, dict->getObject("Dragging"));
@@ -174,23 +174,22 @@ IOReturn VoodooCSGestureHIPointingWrapper::setParamProperties(OSDictionary *dict
     }
     
     OSBoolean *hscroll  = OSDynamicCast(OSBoolean, dict->getObject("TrackpadHorizScroll"));
-    if (hscroll){
+    if (hscroll) {
         horizontalScroll = hscroll->isTrue();
     } else {
-        
         OSNumber *hscrollNum = OSDynamicCast(OSNumber, dict->getObject("TrackpadHorizScroll"));
-        if(hscrollNum) {
+        if (hscrollNum) {
             horizontalScroll = hscrollNum->unsigned32BitValue() & 0x1;
         }
     }
     
     OSBoolean* right_click = OSDynamicCast(OSBoolean, dict->getObject("TrackpadCornerSecondaryClick"));
-    if (right_click){
+    if (right_click) {
         gesturerec->softc.settings.literal_right_click = right_click->isTrue();
     } else {
         
         OSNumber *right_click_num = OSDynamicCast(OSNumber, dict->getObject("TrackpadCornerSecondaryClick"));
-        if(right_click_num) {
+        if (right_click_num) {
             gesturerec->softc.settings.literal_right_click = right_click_num->unsigned32BitValue() & 0x1;
         }
     }

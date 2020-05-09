@@ -30,7 +30,7 @@
 
 class VoodooI2CMultitouchInterface;
 
-class VoodooI2CCSGestureEngine : VoodooI2CMultitouchEngine {
+class EXPORT VoodooI2CCSGestureEngine : VoodooI2CMultitouchEngine {
     OSDeclareDefaultStructors(VoodooI2CCSGestureEngine);
 private:
     VoodooCSGestureHIDWrapper *_wrapper;

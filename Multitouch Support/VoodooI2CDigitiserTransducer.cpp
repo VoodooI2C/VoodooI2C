@@ -30,13 +30,10 @@ bool VoodooI2CDigitiserTransducer::serialize(OSSerialize* serializer) {
 VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection) {
     VoodooI2CDigitiserTransducer* transducer = NULL;
     
-    transducer = new VoodooI2CDigitiserTransducer;
+    transducer = OSTypeAlloc(VoodooI2CDigitiserTransducer);
     
-    if (!transducer)
-        goto exit;
-    
-    if (!transducer->init()) {
-        transducer = NULL;
+    if (!transducer || !transducer->init()) {
+        OSSafeReleaseNULL(transducer);
         goto exit;
     }
     

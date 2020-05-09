@@ -18,7 +18,11 @@ The following Intel I2C controllers are fully supported:
 
 1. `INT33C2` and `INT33C3` - Haswell era
 2. `INT3432` and `INT3433` - Broadwell era
-3. `pci8086,9d60`, `pci8086,9d61`, `pci8086,a160` and `pci8086,a161` - Skylake/Kabylake era
+3. `pci8086,9d60`, `pci8086,9d61`, `pci8086,9d62` and `pci8086,9d63` - Skylake era
+4. `pci8086,a160` and `pci8086,a161` - Kaby Lake era
+5. `pci8086,9de8` and `pci8086,9de9` - Cannon Lake/Whiskey Lake era
+6. `pci8086,a368`, `pci8086,a369`, `pci8086,a36a` and `pci8086,a36b` - Coffee Lake era
+7. `pci8086,2e8` and `pci8086,2e9` - Comet Lake era
 
 The following device classes are fully supported:
 
@@ -52,7 +56,3 @@ We are looking for competent C++, OS X kernel, Linux kernel, I2C, HID etc develo
 * Create a new feature branch and add commits
 * Push your feature branch to your fork
 * Submit a pull request upstream
-
-## Donations
-
-Donations can be made via Bitcoin to the following wallet: https://live.blockcypher.com/btc/address/1EUxSExh8XCveWxVDVQqnez2o95AnG8Qhr/ .

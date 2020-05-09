@@ -22,6 +22,7 @@ class VoodooI2CLogger : public IOService {
 
  public:
     bool start(IOService* provider);
+    void stop(IOService* provider);
 
  protected:
  private:

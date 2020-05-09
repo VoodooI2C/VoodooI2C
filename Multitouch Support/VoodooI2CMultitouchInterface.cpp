@@ -26,8 +26,8 @@ void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEven
     }
 }
 
-bool VoodooI2CMultitouchInterface::open(IOService* client) {
-    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, client);
+bool VoodooI2CMultitouchInterface::handleOpen(IOService* forClient, IOOptionBits options, void* arg) {
+    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
 
     if (!engine)
         return false;
@@ -35,6 +35,23 @@ bool VoodooI2CMultitouchInterface::open(IOService* client) {
     engines->setObject(engine);
 
     return true;
+}
+
+void VoodooI2CMultitouchInterface::handleClose(IOService* forClient, IOOptionBits options) {
+    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
+
+    if (engine)
+        engines->removeObject(engine);
+}
+
+bool VoodooI2CMultitouchInterface::handleIsOpen(const IOService *forClient ) const {
+    VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
+    
+    if (engine) {
+        return engines->containsObject(engine);
+    }
+    
+    return false;
 }
 
 SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b) {
@@ -47,22 +64,19 @@ SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, V
 }
 
 bool VoodooI2CMultitouchInterface::start(IOService* provider) {
-    if (!super::start(provider)) {
+    if (!super::start(provider))
         return false;
-    }
 
     engines = OSOrderedSet::withCapacity(1, (OSOrderedSet::OSOrderFunction)VoodooI2CMultitouchInterface::orderEngines);
 
-    OSNumber* number = OSNumber::withNumber("0", 32);
-    setProperty(kIOFBTransformKey, number);
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty(kIOFBTransformKey, 0ull, 32);
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     return true;
 }
 
 void VoodooI2CMultitouchInterface::stop(IOService* provider) {
-    if (engines) {
-        engines->flushCollection();
-        OSSafeReleaseNULL(engines);
-    }
+    OSSafeReleaseNULL(engines);
+
+    super::stop(provider);
 }

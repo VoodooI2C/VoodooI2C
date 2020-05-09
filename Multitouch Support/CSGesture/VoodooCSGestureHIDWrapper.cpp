@@ -14,7 +14,7 @@ OSDefineMetaClassAndStructors(VoodooCSGestureHIDWrapper, IOHIDDevice)
 bool VoodooCSGestureHIDWrapper::start(IOService *provider) {
     if (!IOHIDDevice::start(provider))
         return false;
-    setProperty("HIDDefaultBehavior", OSString::withCString("Trackpad"));
+    setProperty("HIDDefaultBehavior", "Trackpad");
     return true;
 }
 
@@ -35,7 +35,7 @@ IOReturn VoodooCSGestureHIDWrapper::setReport(IOMemoryDescriptor *report, IOHIDR
 }
 
 IOReturn VoodooCSGestureHIDWrapper::getReport(IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) {
-    if (reportType == kIOHIDReportTypeOutput){
+    if (reportType == kIOHIDReportTypeOutput) {
         gestureEngine->write_report_to_buffer(report);
         return kIOReturnSuccess;
     }

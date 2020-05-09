@@ -13,7 +13,11 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
-#include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.h"
+#include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
+
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
 
 class VoodooI2CControllerDriver;
 
@@ -25,7 +29,7 @@ class VoodooI2CControllerDriver;
  * and I2C protocol messaging.
  */
 
-class VoodooI2CDeviceNub : public IOService {
+class EXPORT VoodooI2CDeviceNub : public IOService {
   OSDeclareDefaultStructors(VoodooI2CDeviceNub);
 
  public:
@@ -51,7 +55,7 @@ class VoodooI2CDeviceNub : public IOService {
      * is invalid
      */
 
-    IOReturn disableInterrupt(int source);
+    IOReturn disableInterrupt(int source) override;
 
     /* Enables an interrupt source
      * @source The index of the interrupt source in the case of APIC interrupts
@@ -63,7 +67,7 @@ class VoodooI2CDeviceNub : public IOService {
      * is invalid
      */
 
-    IOReturn enableInterrupt(int source);
+    IOReturn enableInterrupt(int source) override;
 
     /* Gets the type of an interrupt source
      * @source The index of the interrupt source in the case of APIC interrupts
@@ -75,7 +79,7 @@ class VoodooI2CDeviceNub : public IOService {
      * is invalid
      */
 
-    IOReturn getInterruptType(int source, int *interruptType);
+    IOReturn getInterruptType(int source, int *interruptType) override;
 
     /* Gets an *IOWorkLoop* object
      *
@@ -83,7 +87,7 @@ class VoodooI2CDeviceNub : public IOService {
      * the nub itself along with any drivers that attach to it.
      * @return A pointer to an *IOWorkLoop* object, else *NULL*
      */
-    IOWorkLoop* getWorkLoop();
+    IOWorkLoop* getWorkLoop(void) const override;
 
     /* Transmits an I2C read request to the slave device
      * @values The buffer that the returned data is to be written into
@@ -108,7 +112,7 @@ class VoodooI2CDeviceNub : public IOService {
      * the interrupt already has an installed handler
      */
 
-    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon);
+    IOReturn registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon) override;
 
     /* Starts the device nub
      * @provider The controller that drives this slave device
@@ -118,13 +122,13 @@ class VoodooI2CDeviceNub : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* Stops the device nub
      * @provider The controller that drives this slave device
      */
 
-    void stop(IOService* provider);
+    void stop(IOService* provider) override;
 
     /* Unregisters a slave for interrupts
      * @source he index of the interrupt source in the case of APIC interrupts
@@ -134,7 +138,7 @@ class VoodooI2CDeviceNub : public IOService {
      * @return *kIOReturnSuccess* upon a successful unregistration, *kIOReturnNoInterrupt* if the interrupt source is invalid
      */
 
-    IOReturn unregisterInterrupt(int source);
+    IOReturn unregisterInterrupt(int source) override;
 
     /* Transmits an I2C write request to the slave device
      * @values A buffer containing the message to be written

@@ -88,20 +88,20 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
 
     if (crs_parser.found_i2c) {
         use_10bit_addressing = crs_parser.i2c_info.address_mode_10Bit;
-        setProperty("addrWidth", OSNumber::withNumber(use_10bit_addressing ? 10 : 7, 8));
+        setProperty("addrWidth", use_10bit_addressing ? 10 : 7, 8);
 
         i2c_address = crs_parser.i2c_info.address;
-        setProperty("i2cAddress", OSNumber::withNumber(i2c_address, 16));
+        setProperty("i2cAddress", i2c_address, 16);
 
-        setProperty("sclHz", OSNumber::withNumber(crs_parser.i2c_info.bus_speed, 32));
+        setProperty("sclHz", crs_parser.i2c_info.bus_speed, 32);
     } else {
         IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", controller_name, getName());
         return kIOReturnNotFound;
     }
 
     if (crs_parser.found_gpio_interrupts) {
-        setProperty("gpioPin", OSNumber::withNumber(crs_parser.gpio_interrupts.pin_number, 16));
-        setProperty("gpioIRQ", OSNumber::withNumber(crs_parser.gpio_interrupts.irq_type, 16));
+        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
+        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
         has_gpio_interrupts = true;
         gpio_pin = crs_parser.gpio_interrupts.pin_number;
@@ -143,8 +143,7 @@ VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
     VoodooGPIO* gpio_controller = NULL;
 
     // Wait for GPIO controller, up to 1 second
-    OSDictionary* name_match = OSDictionary::withCapacity(1);
-    name_match = IOService::serviceMatching("VoodooGPIO");
+    OSDictionary* name_match = IOService::serviceMatching("VoodooGPIO");
 
     IOService* matched = waitForMatchingService(name_match, 1000000000);
     gpio_controller = OSDynamicCast(VoodooGPIO, matched);
@@ -166,28 +165,31 @@ IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
     }
 }
 
-IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop() {
-    // Do we have a work loop already?, if so return it NOW.
-    if ((vm_address_t) work_loop >> 1)
-        return work_loop;
+IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop(void) const {
+    // 0x00000000 = not initialized. 0x00000001 = busy. 0xXXXXXXXX = initialized.
+    static IOWorkLoop* __work_loop = NULL;
 
-    if (OSCompareAndSwap(0, 1, reinterpret_cast<IOWorkLoop*>(&work_loop))) {
-        // Construct the workloop and set the cntrlSync variable
+    // Do we have a work loop already?, if so return it NOW.
+    if ((vm_address_t) __work_loop >> 1)
+        return __work_loop;
+
+    if (OSCompareAndSwap(0, 1, reinterpret_cast<IOWorkLoop*>(&__work_loop))) {
+        // Construct the workloop and set the __work_loop variable
         // to whatever the result is and return
-        work_loop = IOWorkLoop::workLoop();
+        __work_loop = IOWorkLoop::workLoop();
     } else {
-        while (reinterpret_cast<IOWorkLoop*>(work_loop) == reinterpret_cast<IOWorkLoop*>(1)) {
-            // Spin around the cntrlSync variable until the
+        while (reinterpret_cast<IOWorkLoop*>(__work_loop) == reinterpret_cast<IOWorkLoop*>(1)) {
+            // Spin around the __work_loop variable until the
             // initialization finishes.
             thread_block(0);
         }
     }
 
-    return work_loop;
+    return __work_loop;
 }
 
 IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
-    return command_gate->runAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
+    return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
 }
 
 IOReturn VoodooI2CDeviceNub::readI2CGated(UInt8* values, UInt16* length) {
@@ -219,15 +221,12 @@ IOReturn VoodooI2CDeviceNub::registerInterrupt(int source, OSObject *target, IOI
 
 void VoodooI2CDeviceNub::releaseResources() {
     if (command_gate) {
+        command_gate->disable();
         work_loop->removeEventSource(command_gate);
-        command_gate->release();
-        command_gate = NULL;
+        OSSafeReleaseNULL(command_gate);
     }
 
-    if (work_loop) {
-        work_loop->release();
-        work_loop = NULL;
-    }
+    OSSafeReleaseNULL(work_loop);
 }
 
 bool VoodooI2CDeviceNub::start(IOService* provider) {
@@ -249,9 +248,11 @@ bool VoodooI2CDeviceNub::start(IOService* provider) {
         goto exit;
     }
 
+    setProperty("IOName", reinterpret_cast<const char*>(OSDynamicCast(OSData, getProperty("name"))->getBytesNoCopy()));
+
     registerService();
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     return true;
 exit:
@@ -260,11 +261,7 @@ exit:
 }
 
 void VoodooI2CDeviceNub::stop(IOService* provider) {
-    if (gpio_controller) {
-        gpio_controller->release();
-        gpio_controller = NULL;
-    }
-
+    releaseResources();
     super::stop(provider);
 }
 

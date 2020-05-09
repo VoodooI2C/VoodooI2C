@@ -8,7 +8,6 @@
 
 #include "VoodooI2CController.hpp"
 #include "VoodooI2CControllerNub.hpp"
-#include "VoodooI2CControllerDriver.hpp"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CControllerNub, IOService);
@@ -19,36 +18,30 @@ bool VoodooI2CControllerNub::attach(IOService* provider) {
     }
 
     controller = OSDynamicCast(VoodooI2CController, provider);
-    controller->retain();
-
-    name = controller->physical_device->name;
 
     if (!controller)
         return false;
+
+    name = controller->physical_device.name;
 
     return true;
 }
 
 void VoodooI2CControllerNub::detach(IOService* provider) {
-    if (controller) {
-        controller->release();
-        controller = NULL;
-    }
-
     super::detach(provider);
 }
 
 IOReturn VoodooI2CControllerNub::disableInterrupt(int source) {
-    return controller->physical_device->provider->disableInterrupt(source);
+    return controller->physical_device.provider->disableInterrupt(source);
 }
 
 IOReturn VoodooI2CControllerNub::enableInterrupt(int source) {
-    return controller->physical_device->provider->enableInterrupt(source);
+    return controller->physical_device.provider->enableInterrupt(source);
 }
 
 IOReturn VoodooI2CControllerNub::getACPIParams(const char* method, UInt32* hcnt, UInt32* lcnt, UInt32* sda_hold) {
     OSObject *object;
-    IOReturn status = controller->physical_device->acpi_device->evaluateObject(method, &object);
+    IOReturn status = controller->physical_device.acpi_device->evaluateObject(method, &object);
 
     if (status == kIOReturnSuccess && object) {
         OSArray* values = OSDynamicCast(OSArray, object);
@@ -91,7 +84,7 @@ exit:
 }
 
 IOReturn VoodooI2CControllerNub::getInterruptType(int source, int *interruptType) {
-    return controller->physical_device->provider->getInterruptType(source, interruptType);
+    return controller->physical_device.provider->getInterruptType(source, interruptType);
 }
 
 UInt32 VoodooI2CControllerNub::readRegister(int offset) {
@@ -99,14 +92,14 @@ UInt32 VoodooI2CControllerNub::readRegister(int offset) {
 }
 
 IOReturn VoodooI2CControllerNub::registerInterrupt(int source, OSObject *target, IOInterruptAction handler, void *refcon) {
-    return controller->physical_device->provider->registerInterrupt(source, target, handler, refcon);
+    return controller->physical_device.provider->registerInterrupt(source, target, handler, refcon);
 }
 
 bool VoodooI2CControllerNub::start(IOService* provider) {
     if (!super::start(provider))
         return false;
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     registerService();
 
@@ -118,7 +111,7 @@ void VoodooI2CControllerNub::stop(IOService* provider) {
 }
 
 IOReturn VoodooI2CControllerNub::unregisterInterrupt(int source) {
-    return controller->physical_device->provider->unregisterInterrupt(source);
+    return controller->physical_device.provider->unregisterInterrupt(source);
 }
 
 void VoodooI2CControllerNub::writeRegister(UInt32 value, int offset) {

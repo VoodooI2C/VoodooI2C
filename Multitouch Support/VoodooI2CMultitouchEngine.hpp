@@ -19,7 +19,7 @@ class VoodooI2CMultitouchInterface;
 
 /* Base class that all mutltitouch engines should inherit from */
 
-class VoodooI2CMultitouchEngine : public IOService {
+class EXPORT VoodooI2CMultitouchEngine : public IOService {
   OSDeclareDefaultStructors(VoodooI2CMultitouchEngine);
 
  public:
@@ -41,6 +41,8 @@ class VoodooI2CMultitouchEngine : public IOService {
 
     virtual MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
 
+    bool willTerminate(IOService* provider, IOOptionBits options) override;
+
     /* Sets up the multitouch engine
      * @provider The <VoodooI2CMultitouchInterface> that we have matched against
      *
@@ -50,18 +52,6 @@ class VoodooI2CMultitouchEngine : public IOService {
      */
 
     virtual bool start(IOService* provider);
-
-    /* Stops the multitouch engine
-     * @provider The <VoodooI2CMultitouchInterface> that we have matched against
-     *
-     * This function is intended to be overwritten by an inherited class but should still be called at the end of the the overwritten
-     * function.
-     */
-
-    virtual void stop(IOService* provider);
-
- protected:
- private:
 };
 
 

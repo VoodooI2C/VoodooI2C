@@ -13,12 +13,12 @@ OSDefineMetaClassAndStructors(VoodooI2CACPIController, VoodooI2CController);
 
 IOReturn VoodooI2CACPIController::setACPIPowerState(VoodooI2CState enabled) {
     if (enabled) {
-        IOLog("%s::%s Set ACPI power state _PS0\n", getName(), physical_device->name);
-        if (!physical_device->acpi_device->evaluateObject("_PS0"))
+        IOLog("%s::%s Set ACPI power state _PS0\n", getName(), physical_device.name);
+        if (!physical_device.acpi_device->evaluateObject("_PS0"))
             return kIOReturnNoPower;
     } else {
-        IOLog("%s::%s Set ACPI power state _PS3\n", getName(), physical_device->name);
-        if (!physical_device->acpi_device->evaluateObject("_PS3"))
+        IOLog("%s::%s Set ACPI power state _PS3\n", getName(), physical_device.name);
+        if (!physical_device.acpi_device->evaluateObject("_PS3"))
             return kIOReturnNoPower;
     }
     return kIOReturnSuccess;
@@ -29,17 +29,19 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
         return kIOPMAckImplied;
 
     if (whichState == kIOPMPowerOff) {
-        physical_device->awake = false;
+        physical_device.awake = false;
+        unmapMemory();
 
         setACPIPowerState(kVoodooI2CStateOff);
 
-        IOLog("%s::%s Going to sleep\n", getName(), physical_device->name);
+        IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
     } else {
-        if (!physical_device->awake) {
+        if (!physical_device.awake) {
             setACPIPowerState(kVoodooI2CStateOn);
-
-            physical_device->awake = true;
-            IOLog("%s::%s Woke up\n", getName(), physical_device->name);
+            if (mapMemory() != kIOReturnSuccess)
+                IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
+            physical_device.awake = true;
+            IOLog("%s::%s Woke up\n", getName(), physical_device.name);
         }
     }
     return kIOPMAckImplied;
@@ -50,17 +52,17 @@ bool VoodooI2CACPIController::start(IOService* provider) {
         return false;
     }
 
-    physical_device->acpi_device = OSDynamicCast(IOACPIPlatformDevice, provider);
+    physical_device.acpi_device = OSDynamicCast(IOACPIPlatformDevice, provider);
 
     setACPIPowerState(kVoodooI2CStateOn);
 
     if (mapMemory() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not map memory\n", getName(), physical_device->name);
+        IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
         return false;
     }
 
     if (publishNub() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not publish nub\n", getName(), physical_device->name);
+        IOLog("%s::%s Could not publish nub\n", getName(), physical_device.name);
         return false;
     }
 

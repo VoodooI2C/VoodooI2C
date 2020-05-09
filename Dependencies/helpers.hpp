@@ -12,6 +12,10 @@
 #include <IOKit/IOService.h>
 #include <IOKit/IOLib.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 #define kIOPMPowerOff                       0
 #define kVoodooI2CIOPMNumberPowerStates     2
 
@@ -20,6 +24,13 @@
 UInt16 abs(SInt16 x);
 
 const char* getMatchedName(IOService* provider);
+
+inline void setOSDictionaryNumber(OSDictionary* dictionary, const char * key, UInt32 number) {
+    if (OSNumber* os_number = OSNumber::withNumber(number, 32)) {
+        dictionary->setObject(key, os_number);
+        os_number->release();
+    }
+}
 
 enum VoodooI2CState {
     kVoodooI2CStateOff = 0,

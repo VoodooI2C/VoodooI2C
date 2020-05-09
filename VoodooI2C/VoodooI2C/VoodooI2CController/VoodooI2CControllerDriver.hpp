@@ -36,7 +36,7 @@ typedef struct {
 
 typedef struct {
     UInt32 abort_source;
-    VoodooI2CControllerBusConfig* acpi_config;
+    VoodooI2CControllerBusConfig acpi_config;
     bool awake;
     UInt32 bus_config;
     int command_error;
@@ -65,11 +65,11 @@ class VoodooI2CController;
  * The members of this class are responsible for interfacing with the I2C bus and implementing the I2C protocol. The driver also
  * publishes nubs for each I2C slave device attached to the bus it drives.
  */
-class VoodooI2CControllerDriver : public IOService {
+class EXPORT VoodooI2CControllerDriver : public IOService {
   OSDeclareDefaultStructors(VoodooI2CControllerDriver);
 
  public:
-    VoodooI2CControllerBusDevice* bus_device;
+    VoodooI2CControllerBusDevice bus_device;
     OSArray* device_nubs;
     VoodooI2CControllerNub* nub;
 
@@ -79,11 +79,11 @@ class VoodooI2CControllerDriver : public IOService {
      * allocated in <init>.
      */
 
-    void free();
+    void free() override;
 
     /* Handles an interrupt that has been asserted by the controller */
 
-    void handleInterrupt(OSObject* owner, IOInterruptEventSource* src, int intCount);
+    void handleInterrupt(OSObject* target, void* refCon, IOService* nubDevice, int source);
 
     /* Initialises <VoodooI2CControllerDriver> class
      * @properties OSDictionary* representing the matched personality
@@ -94,7 +94,7 @@ class VoodooI2CControllerDriver : public IOService {
      * @return *true* on successful initialisation, *false* otherwise
      */
 
-    bool init(OSDictionary* properties);
+    bool init(OSDictionary* properties) override;
 
     /* Probes the controller to determine whether or not we can drive it
      * @provider The provider which we have matched against
@@ -111,7 +111,7 @@ class VoodooI2CControllerDriver : public IOService {
      * otherwise
      */
 
-    VoodooI2CControllerDriver* probe(IOService* provider, SInt32* score);
+    VoodooI2CControllerDriver* probe(IOService* provider, SInt32* score) override;
 
     /* Starts the bus
      * @provider The provider which we have matched against
@@ -123,7 +123,7 @@ class VoodooI2CControllerDriver : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* Stops the bus
      * @provider The provider which we have matched against
@@ -133,7 +133,7 @@ class VoodooI2CControllerDriver : public IOService {
      * stopping the associated device nubs.
      */
 
-    void stop(IOService* provider);
+    void stop(IOService* provider) override;
 
     /* Directs the command gate to add an I2C transfer routine to the work loop
      * @messages The messages to be transferred
@@ -146,8 +146,9 @@ class VoodooI2CControllerDriver : public IOService {
 
  private:
     IOCommandGate* command_gate;
-    IOInterruptEventSource* interrupt_source;
     IOWorkLoop* work_loop;
+    IOLock* i2c_bus_lock = nullptr;
+    bool is_interrupt_registered = false;
 
     /* Requests the nub to fetch bus configuration values from the ACPI tables
      *
@@ -234,7 +235,7 @@ class VoodooI2CControllerDriver : public IOService {
      * @return *kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise
      */
 
-    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
+    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice) override;
 
     /* Toggle the bus's enabled state
      * @param enabled The power state the bus is expected to enter represented by either
@@ -287,6 +288,22 @@ class VoodooI2CControllerDriver : public IOService {
      */
 
     IOReturn waitBusNotBusyI2C();
+
+    /* Register and enable the interrupt for I2C bus
+     *
+     * Note: Do NOT call this function in direct interrupt context.
+     *
+     * @return *kIOReturnSuccess* on interrupt successfully registered and enabled, *kIOReturnStillOpen* if already started.
+     * Otherwise *kIOReturnNoInterrupt* is returned if the source is not valid; *kIOReturnNoResources* is returned if the interrupt already has an installed handler.
+     */
+    IOReturn startI2CInterrupt();
+
+    /* Disable and unregister the interrupt for I2C bus
+     *
+     * Note: Do NOT call this function in direct interrupt context.
+     *
+     */
+    void stopI2CInterrupt();
 };
 
 

@@ -14,13 +14,10 @@ OSDefineMetaClassAndStructors(VoodooI2CDigitiserStylus, VoodooI2CDigitiserTransd
 VoodooI2CDigitiserStylus* VoodooI2CDigitiserStylus::stylus(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection) {
     VoodooI2CDigitiserStylus* transducer = NULL;
     
-    transducer = new VoodooI2CDigitiserStylus;
+    transducer = OSTypeAlloc(VoodooI2CDigitiserStylus);
     
-    if (!transducer)
-        goto exit;
-    
-    if (!transducer->init()) {
-        transducer = NULL;
+    if (!transducer || !transducer->init()) {
+        OSSafeReleaseNULL(transducer);
         goto exit;
     }
     

@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>KEXT</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.4</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>2.1.4</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>IOKitPersonalities</key>
 	<dict>
 		<key>Custom MT2 Personality</key>
@@ -471,7 +471,7 @@
 			<key>IOMatchCategory</key>
 			<string>VoodooI2CNativeEngine</string>
 			<key>IOProviderClass</key>
-			<string>IOService</string>
+			<string>VoodooI2CMultitouchInterface</string>
 		</dict>
 		<key>VoodooI2CACPIController</key>
 		<dict>
@@ -510,11 +510,21 @@
 			<string>VoodooI2CPCIController</string>
 			<key>IONameMatch</key>
 			<array>
+				<string>pci8086,2e8</string>
+				<string>pci8086,2e9</string>
 				<string>pci8086,9d60</string>
 				<string>pci8086,9d61</string>
+				<string>pci8086,9d62</string>
+				<string>pci8086,9d63</string>
+				<string>pci8086,9de8</string>
+				<string>pci8086,9de9</string>
 				<string>pci8086,a160</string>
 				<string>pci8086,a161</string>
 				<string>pci8086,a162</string>
+				<string>pci8086,a368</string>
+				<string>pci8086,a369</string>
+				<string>pci8086,a36a</string>
+				<string>pci8086,a36b</string>
 			</array>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
@@ -523,7 +533,7 @@
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2017 Alexandre Daoud. All rights reserved.</string>
+	<string>Copyright © 2020 Alexandre Daoud. All rights reserved.</string>
 	<key>OSBundleCompatibleVersion</key>
 	<string>2.0.0</string>
 	<key>OSBundleLibraries</key>
@@ -547,5 +557,7 @@
 		<key>org.coolstar.VoodooGPIO</key>
 		<string>1.1</string>
 	</dict>
+	<key>OSBundleRequired</key>
+	<string>Root</string>
 </dict>
 </plist>

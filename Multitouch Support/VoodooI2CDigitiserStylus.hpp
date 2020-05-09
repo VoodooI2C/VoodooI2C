@@ -15,9 +15,10 @@
 
 #include "VoodooI2CDigitiserTransducer.hpp"
 
+
 /* Represents a stylus-type transducer */
 
-class VoodooI2CDigitiserStylus : public VoodooI2CDigitiserTransducer {
+class EXPORT VoodooI2CDigitiserStylus : public VoodooI2CDigitiserTransducer {
   OSDeclareDefaultStructors(VoodooI2CDigitiserStylus);
 
  public:
@@ -28,9 +29,6 @@ class VoodooI2CDigitiserStylus : public VoodooI2CDigitiserTransducer {
     bool invert;
     
     static VoodooI2CDigitiserStylus* stylus(DigitiserTransducerType transducer_type, IOHIDElement* digitizer_collection);
-
- protected:
- private:
 };
 
 #endif /* VoodooI2CDigitiserStylus_hpp */

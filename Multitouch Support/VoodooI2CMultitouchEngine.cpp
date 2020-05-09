@@ -33,6 +33,13 @@ MultitouchReturn VoodooI2CMultitouchEngine::handleInterruptReport(VoodooI2CMulti
     return MultitouchReturnContinue;
 }
 
+bool VoodooI2CMultitouchEngine::willTerminate(IOService* provider, IOOptionBits options) {
+    if (provider->isOpen(this))
+        provider->close(this);
+
+    return super::willTerminate(provider, options);
+}
+
 bool VoodooI2CMultitouchEngine::start(IOService* provider) {
     if (!super::start(provider))
         return false;
@@ -44,18 +51,9 @@ bool VoodooI2CMultitouchEngine::start(IOService* provider) {
 
     interface->open(this);
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
 
     registerService();
 
     return true;
-}
-
-void VoodooI2CMultitouchEngine::stop(IOService* provider) {
-    if (interface) {
-        interface->close(this);
-        OSSafeReleaseNULL(interface);
-    }
-
-    super::stop(provider);
 }

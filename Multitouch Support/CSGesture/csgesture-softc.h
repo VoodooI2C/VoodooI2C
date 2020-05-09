@@ -26,9 +26,6 @@ struct csgesture_softc {
     //hardware info
     bool infoSetup;
     
-    char product_id[16];
-    char firmware_version[4];
-    
     int resx;
     int resy;
     int phyx;

@@ -8,12 +8,13 @@
 #include "VoodooI2CController.hpp"
 #include "VoodooI2CControllerNub.hpp"
 
+// Log only if current thread is interruptible, otherwise we will get a panic.
+#define TryLog(args...) do { if (ml_get_interrupts_enabled()) IOLog(args); } while (0)
+
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CController, IOService);
 
 void VoodooI2CController::free() {
-    IOFree(physical_device, sizeof(VoodooI2CControllerPhysicalDevice));
-
     super::free();
 }
 
@@ -24,20 +25,25 @@ bool VoodooI2CController::init(OSDictionary* properties) {
         return false;
     }
 
-    physical_device = reinterpret_cast<VoodooI2CControllerPhysicalDevice*>(IOMalloc(sizeof(VoodooI2CControllerPhysicalDevice)));
-    physical_device->awake = true;
+    memset(&physical_device, 0, sizeof(VoodooI2CControllerPhysicalDevice));
+    physical_device.awake = true;
 
     return true;
 }
 
 IOReturn VoodooI2CController::mapMemory() {
-    if (physical_device->provider->getDeviceMemoryCount() == 0) {
+    if (physical_device.provider->getDeviceMemoryCount() == 0) {
         return kIOReturnDeviceError;
     } else {
-        physical_device->mmap = physical_device->provider->mapDeviceMemoryWithIndex(0);
-        if (!physical_device->mmap) return kIOReturnDeviceError;
+        physical_device.mmap = physical_device.provider->mapDeviceMemoryWithIndex(0);
+        if (!physical_device.mmap) return kIOReturnDeviceError;
         return kIOReturnSuccess;
     }
+}
+
+IOReturn VoodooI2CController::unmapMemory() {
+    OSSafeReleaseNULL(physical_device.mmap);
+    return kIOReturnSuccess;
 }
 
 VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* score) {
@@ -51,57 +57,57 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 }
 
 IOReturn VoodooI2CController::publishNub() {
-    IOLog("%s::%s Publishing nub\n", getName(), physical_device->name);
-
-    nub = new VoodooI2CControllerNub;
-
+    IOLog("%s::%s Publishing nub\n", getName(), physical_device.name);
+    nub = OSTypeAlloc(VoodooI2CControllerNub);
     if (!nub || !nub->init()) {
-        IOLog("%s::%s Could not initialise nub", getName(), physical_device->name);
+        IOLog("%s::%s Could not initialise nub", getName(), physical_device.name);
         goto exit;
     }
 
     if (!nub->attach(this)) {
-        IOLog("%s::%s Could not attach nub", getName(), physical_device->name);
+        IOLog("%s::%s Could not attach nub", getName(), physical_device.name);
         goto exit;
     }
 
     if (!nub->start(this)) {
-        IOLog("%s::%s Could not start nub", getName(), physical_device->name);
+        IOLog("%s::%s Could not start nub", getName(), physical_device.name);
+        nub->detach(this);
         goto exit;
     }
 
-    setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
-
+    setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
     return kIOReturnSuccess;
 
 exit:
-    if (nub) {
-        nub->stop(this);
-            nub->release();
-            nub = NULL;
-    }
-
+    OSSafeReleaseNULL(nub);
     return kIOReturnError;
 }
 
 UInt32 VoodooI2CController::readRegister(int offset) {
-    return *(const volatile UInt32 *)(physical_device->mmap->getVirtualAddress() + offset);
+    if (physical_device.mmap != 0) {
+         IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
+         if (address != 0)
+             return *(const volatile UInt32 *)(address + offset);
+         else
+             TryLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+     } else {
+         TryLog("%s::%s readRegister at offset 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+     }
+     return 0;
 }
 
 void VoodooI2CController::releaseResources() {
-    if (physical_device) {
-        if (nub) {
-            nub->detach(this);
-            OSSafeReleaseNULL(nub);
-        }
+    if (nub) {
+        nub->stop(this);
+        nub->detach(this);
+        OSSafeReleaseNULL(nub);
+    }
 
-        if (physical_device->mmap) {
-            physical_device->mmap->release();
-            physical_device->mmap = NULL;
-        }
+    OSSafeReleaseNULL(physical_device.mmap);
 
-        physical_device->provider->close(this);
-        OSSafeReleaseNULL(physical_device->provider);
+    if (physical_device.provider) {
+        physical_device.provider->close(this);
+        OSSafeReleaseNULL(physical_device.provider);
     }
 
     PMstop();
@@ -116,22 +122,22 @@ bool VoodooI2CController::start(IOService* provider) {
         goto exit;
     }
 
-    physical_device->provider = provider;
-    physical_device->name = getMatchedName(physical_device->provider);
+    physical_device.provider = provider;
+    physical_device.name = getMatchedName(physical_device.provider);
 
     PMinit();
-    physical_device->provider->joinPMtree(this);
+    physical_device.provider->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
-    IOLog("%s::%s Starting I2C controller\n", getName(), physical_device->name);
+    IOLog("%s::%s Starting I2C controller\n", getName(), physical_device.name);
 
-    physical_device->provider->retain();
-    if (!physical_device->provider->open(this)) {
-        IOLog("%s::%s Could not open provider\n", getName(), physical_device->name);
+    physical_device.provider->retain();
+    if (!physical_device.provider->open(this)) {
+        IOLog("%s::%s Could not open provider\n", getName(), physical_device.name);
     }
 
-    provider->setProperty("VoodooI2CServices Supported", OSBoolean::withBoolean(true));
-    provider->setProperty("isI2CController", OSBoolean::withBoolean(true));
+    provider->setProperty("VoodooI2CServices Supported", kOSBooleanTrue);
+    provider->setProperty("isI2CController", kOSBooleanTrue);
 
     return true;
 
@@ -141,17 +147,19 @@ exit:
 }
 
 void VoodooI2CController::stop(IOService* provider) {
-    if (nub) {
-        nub->stop(this);
-        nub->release();
-        nub = NULL;
-    }
-
     releaseResources();
 
     super::stop(provider);
 }
 
 void VoodooI2CController::writeRegister(UInt32 value, int offset) {
-    *(volatile UInt32 *)(physical_device->mmap->getVirtualAddress() + offset) = value;
+    if (physical_device.mmap != 0) {
+        IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
+        if (address != 0)
+            *(volatile UInt32 *)(address + offset) = value;
+        else
+            TryLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+    } else {
+        TryLog("%s::%s writeRegister at 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+    }
 }

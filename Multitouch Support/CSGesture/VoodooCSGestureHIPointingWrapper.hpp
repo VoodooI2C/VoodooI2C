@@ -11,9 +11,13 @@
 
 #include <IOKit/hidsystem/IOHIPointing.h>
 
+#ifndef EXPORT
+#define EXPORT __attribute__((visibility("default")))
+#endif
+
 class VoodooI2CCSGestureEngine;
 
-class VoodooCSGestureHIPointingWrapper : public IOHIPointing {
+class EXPORT VoodooCSGestureHIPointingWrapper : public IOHIPointing {
     typedef IOHIPointing super;
     OSDeclareDefaultStructors(VoodooCSGestureHIPointingWrapper);
     
@@ -21,21 +25,21 @@ private:
     bool horizontalScroll;
     
 protected:
-    virtual IOItemCount buttonCount() override;
-    virtual IOFixed resolution() override;
+    IOItemCount buttonCount() override;
+    IOFixed resolution() override;
     
 public:
     VoodooI2CCSGestureEngine* gesturerec;
     
-    virtual bool init() override;
+    bool init() override;
     
-    virtual bool start(IOService *provider) override;
-    virtual void stop(IOService *provider) override;
+    bool start(IOService *provider) override;
+    void stop(IOService *provider) override;
     
-    virtual UInt32 deviceType() override;
-    virtual UInt32 interfaceID() override;
+    UInt32 deviceType() override;
+    UInt32 interfaceID() override;
     
-    virtual IOReturn setParamProperties(OSDictionary *dict) override;
+    IOReturn setParamProperties(OSDictionary *dict) override;
     
     void updateRelativeMouse(int dx, int dy, int buttons);
     void updateAbsoluteMouse(SInt16 x, SInt16 y, int buttons);

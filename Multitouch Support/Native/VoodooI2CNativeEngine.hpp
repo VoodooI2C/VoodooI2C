@@ -13,27 +13,35 @@
 #include <IOKit/IOKitKeys.h>
 #include <IOKit/IOService.h>
 
+#include "../VoodooI2CMultitouchInterface.hpp"
 #include "../VoodooI2CMultitouchEngine.hpp"
-#include "VoodooI2CMT2SimulatorDevice.hpp"
 
-class VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
-  OSDeclareDefaultStructors(VoodooI2CNativeEngine);
 
+#include "VoodooInputMultitouch/VoodooInputTransducer.h"
+#include "VoodooInputMultitouch/VoodooInputMessages.h"
+
+class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
+    OSDeclareDefaultStructors(VoodooI2CNativeEngine);
+    
+    VoodooInputEvent message;
+    VoodooI2CMultitouchInterface* parentProvider;
+    IOService* voodooInputInstance;
+
+    bool lastIsForceClickEnabled = true;
+    AbsoluteTime lastForceClickPropertyUpdateTime;
+
+    bool isForceClickEnabled();
  public:
-    bool attach(IOService* provider);
-    void detach(IOService* provider);
-    bool init(OSDictionary* properties);
-    void free();
-    bool start(IOService* provider);
-    void stop(IOService* provider);
+    bool start(IOService* provider) override;
+    void stop(IOService* provider) override;
+    
+    bool handleOpen(IOService *forClient, IOOptionBits options, void *arg) override;
+    bool handleIsOpen(const IOService *forClient) const override;
+    void handleClose(IOService *forClient, IOOptionBits options) override;
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
-    
-    IOService* parent;
-
- protected:
  private:
-    VoodooI2CMT2SimulatorDevice* simulator;
+    int stylus_check = 0;
 };
 
 

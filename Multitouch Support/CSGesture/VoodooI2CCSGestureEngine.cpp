@@ -141,9 +141,9 @@ MultitouchReturn VoodooI2CCSGestureEngine::handleInterruptReport(VoodooI2CMultit
                     }
 
                     if (transform & kIOFBInvertX)
-                    softc.x[i] = (interface->logical_max_x / softc.factor_x) - softc.x[i];
+                        softc.x[i] = (interface->logical_max_x / softc.factor_x) - softc.x[i];
                     if (transform & kIOFBInvertY)
-                        softc.y[i] = (interface->logical_max_y / softc.factor_y) - softc.x[i];
+                        softc.y[i] = (interface->logical_max_y / softc.factor_y) - softc.y[i];
                 }
                 
                 if (transducer->tip_pressure.value())
@@ -667,7 +667,7 @@ void VoodooI2CCSGestureEngine::ProcessGesture(csgesture_softc *sc) {
     if (!handled && !sc->buttondown && !sc->mouseDownDueToTap)
         handledByScroll = handled = ProcessScroll(sc, abovethreshold, iToUse);
     if (!handled)
-        handled = ProcessMove(sc, abovethreshold, iToUse);
+        ProcessMove(sc, abovethreshold, iToUse);
     
 #pragma mark process clickpad press state
     int buttonmask = 0;
@@ -893,12 +893,6 @@ bool VoodooI2CCSGestureEngine::start(IOService *service) {
     
     uint16_t max_x = interface->logical_max_x;
     uint16_t max_y = interface->logical_max_y;
-    
-    uint16_t hw_res_x = 401;
-    uint16_t hw_res_y = 262;
-    
-    sprintf(softc.product_id, "ELAN");
-    sprintf(softc.firmware_version, "0561");
     
     softc.resx = max_x;
     softc.resy = max_y;
