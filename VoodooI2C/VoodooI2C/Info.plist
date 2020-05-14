@@ -510,6 +510,7 @@
 			<string>VoodooI2CPCIController</string>
 			<key>IONameMatch</key>
 			<array>
+				<string>pci8086,34e8</string>
 				<string>pci8086,2e8</string>
 				<string>pci8086,2e9</string>
 				<string>pci8086,9d60</string>
