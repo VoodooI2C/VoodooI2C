@@ -1,18 +1,18 @@
 [submodule "Dependencies/VoodooGPIO"]
 	path = Dependencies/VoodooGPIO
-	url = https://github.com/alexandred/VoodooGPIO.git
+	url = https://github.com/VoodooI2C/VoodooGPIO.git
 [submodule "VoodooI2C Satellites/VoodooI2CHID"]
 	path = VoodooI2C Satellites/VoodooI2CHID
-	url = https://github.com/alexandred/VoodooI2CHID.git
+	url = https://github.com/VoodooI2C/VoodooI2CHID.git
 [submodule "VoodooI2C Satellites/VoodooI2CELAN"]
 	path = VoodooI2C Satellites/VoodooI2CELAN
-	url = https://github.com/kprinssu/VoodooI2CELAN.git
+	url = https://github.com/VoodooI2C/VoodooI2CELAN.git
 [submodule "VoodooI2C Satellites/VoodooI2CSynaptics"]
 	path = VoodooI2C Satellites/VoodooI2CSynaptics
-	url = https://github.com/alexandred/VoodooI2CSynaptics.git
+	url = https://github.com/VoodooI2C/VoodooI2CSynaptics.git
 [submodule "VoodooI2C Satellites/VoodooI2CFTE"]
 	path = VoodooI2C Satellites/VoodooI2CFTE
-	url = https://github.com/prizraksarvar/VoodooI2CFTE.git
+	url = https://github.com/VoodooI2C/VoodooI2CFTE.git
 [submodule "VoodooI2C Satellites/VoodooI2CAtmelMXT"]
 	path = VoodooI2C Satellites/VoodooI2CAtmelMXT
 	url = https://github.com/coolstar/VoodooI2CAtmelMXT
