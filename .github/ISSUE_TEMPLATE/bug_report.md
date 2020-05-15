@@ -17,7 +17,7 @@ Please answer yes or no after reading https://voodooi2c.github.io/#Common%20Erro
 Please answer yes or no after reading https://voodooi2c.github.io/#Troubleshooting/Troubleshooting.
 
 **Have you searched the issue on Github, Gitter, or Google?**
-Please answer yer or no, this is to avoid creating duplicate Github issues.
+Please answer yes or no, this is to avoid creating duplicate Github issues.
 
 **System Environment**
 Please answer:
