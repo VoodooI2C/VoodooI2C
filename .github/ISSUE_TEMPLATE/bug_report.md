@@ -26,7 +26,7 @@ Please answer:
 3. What is your hardware configuration?
 
 **Troubleshooting Archive**
-Please attach the troubleshooting archive (as per https://voodooi2c.github.io/#Troubleshooting/Troubleshooting) and any additional logs or videos demonstrating the problem.
+Please attach the troubleshooting archive (as per https://voodooi2c.github.io/#Troubleshooting/Troubleshooting) and any additional logs or videos demonstrating the problem. Please attach any extra files to Github and *not* anywhere else like Google Drive.
 
 **Additional context**
 Add any other context about the problem here.
