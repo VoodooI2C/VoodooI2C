@@ -18,6 +18,7 @@ OSDefineMetaClassAndStructors(VoodooI2CControllerDriver, IOService);
 
 void VoodooI2CControllerDriver::free() {
     OSSafeReleaseNULL(device_nubs);
+    OSSafeReleaseNULL(work_loop);
 
     super::free();
 }
@@ -110,6 +111,10 @@ exit:
     nub->enableInterrupt(0);
 }
 
+IOWorkLoop* VoodooI2CControllerDriver::getWorkLoop(void) const {
+    return work_loop;
+}
+
 bool VoodooI2CControllerDriver::init(OSDictionary* properties) {
     if (!super::init(properties))
         return false;
@@ -118,6 +123,11 @@ bool VoodooI2CControllerDriver::init(OSDictionary* properties) {
     bus_device.awake = true;
 
     device_nubs = OSArray::withCapacity(1);
+
+    work_loop = IOWorkLoop::workLoop();
+    if (!work_loop) {
+        return false;
+    }
 
     return true;
 }
@@ -365,7 +375,6 @@ void VoodooI2CControllerDriver::releaseResources() {
     }
 
     OSSafeReleaseNULL(command_gate);
-    OSSafeReleaseNULL(work_loop);
 
     if (i2c_bus_lock) {
         IOLockFree(i2c_bus_lock);
@@ -441,14 +450,6 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
         IOLog("%s::%s Could not allocate I2C bus lock\n", getName(), bus_device.name);
         goto exit;
     }
-
-    work_loop = getWorkLoop();
-    if (!work_loop) {
-        IOLog("%s::%s Could not get work loop\n", getName(), bus_device.name);
-        goto exit;
-    }
-
-    work_loop->retain();
 
     command_gate = IOCommandGate::commandGate(this);
     if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
