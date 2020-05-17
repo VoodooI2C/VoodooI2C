@@ -176,7 +176,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     UInt8 i2c_address;
     bool has_gpio_interrupts;
     bool use_10bit_addressing;
-    IOWorkLoop* work_loop;
+    IOWorkLoop* work_loop = nullptr;
 
     /* Instantiates a <VoodooI2CACPICRSParser> object to grab I2C slave properties as well as potential GPIO interrupt properties.
      *
