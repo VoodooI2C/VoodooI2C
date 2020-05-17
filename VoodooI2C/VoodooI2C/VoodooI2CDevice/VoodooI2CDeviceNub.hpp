@@ -81,14 +81,6 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
 
     IOReturn getInterruptType(int source, int *interruptType) override;
 
-    /* Gets an *IOWorkLoop* object
-     *
-     * This function either grabs the existing workloop or creates a new one if none is found. This workloop is intended to be used by
-     * the nub itself along with any drivers that attach to it.
-     * @return A pointer to an *IOWorkLoop* object, else *NULL*
-     */
-    IOWorkLoop* getWorkLoop(void) const override;
-
     /* Transmits an I2C read request to the slave device
      * @values The buffer that the returned data is to be written into
      * @length The length of the message
@@ -176,7 +168,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     UInt8 i2c_address;
     bool has_gpio_interrupts;
     bool use_10bit_addressing;
-    IOWorkLoop* work_loop;
+    IOWorkLoop* work_loop = nullptr;
 
     /* Instantiates a <VoodooI2CACPICRSParser> object to grab I2C slave properties as well as potential GPIO interrupt properties.
      *
