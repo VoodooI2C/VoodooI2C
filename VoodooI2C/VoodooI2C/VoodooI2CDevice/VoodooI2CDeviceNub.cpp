@@ -165,6 +165,10 @@ IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
     }
 }
 
+IOWorkLoop* VoodooI2CDeviceNub::getWorkLoop(void) const {
+    return work_loop;
+}
+
 IOReturn VoodooI2CDeviceNub::readI2C(UInt8* values, UInt16 length) {
     return command_gate->attemptAction(OSMemberFunctionCast(IOCommandGate::Action, this, &VoodooI2CDeviceNub::readI2CGated), values, &length);
 }
@@ -210,14 +214,12 @@ bool VoodooI2CDeviceNub::start(IOService* provider) {
     if (!super::start(provider))
         return false;
 
-    work_loop = getWorkLoop();
+    work_loop = IOWorkLoop::workLoop();
 
     if (!work_loop) {
         IOLog("%s Could not get work loop\n", getName());
         goto exit;
     }
-
-    work_loop->retain();
 
     command_gate = IOCommandGate::commandGate(this);
     if (!command_gate || (work_loop->addEventSource(command_gate) != kIOReturnSuccess)) {
