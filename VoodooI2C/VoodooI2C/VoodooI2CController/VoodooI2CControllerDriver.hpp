@@ -144,14 +144,6 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
     IOReturn transferI2C(VoodooI2CControllerBusMessage* messages, int number);
 
-    /* Gets an *IOWorkLoop* object
-     *
-     * This function returns the existing workloop. This workloop is intended to be used by
-     * the controller itself along with any drivers that attach to it.
-     * @return A pointer to an *IOWorkLoop* object, else *NULL*
-     */
-    IOWorkLoop* getWorkLoop(void) const override;
-
  private:
     IOCommandGate* command_gate;
     IOWorkLoop* work_loop = nullptr;
