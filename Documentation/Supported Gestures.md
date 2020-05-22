@@ -4,7 +4,7 @@
 
 ## Native Gesture Engine
 
-VoodooI2C v2.1 and newer implement Magic Trackpad 2 simulation. This means that any human input device (be it a trackpad or a touchscreen) will support native gestures. These gestures are configurable in the usual System Preferences Trackpad pane. Note that all gestures listed in this pane are fully supported. For Force Touch, it is simulated with the physical button. If you prefer using the physical button to click and drag, disable the feature by unchecking `Force Click and haptic feedback` in Trackpad pane.
+VoodooI2C v2.1 and newer implement Magic Trackpad 2 simulation. This means that any human input device (be it a trackpad or a touchscreen) will support native gestures. These gestures are configurable in the usual System Preferences Trackpad pane. Note that all gestures listed in this pane are fully supported. Please note that you will need to disable Force Touch for certain gestures such as using the physical button to click and drag. This can be achieved by unchecking the `Force Click and haptic feedback` option in Trackpad settings in System Preferences.
 
 
 Despite everything working as intended, Apple's implementation of tap to drag is (in my humble opinion) poorly implemented and the behaviour is very unusual (especially for those used to Windows or VoodooPS2). If you enable tap to drag without drag lock as per the instructions below, you will notice that there is still a short amount of drag lock that lasts for about 1-1.5 seconds. This is unfortunately unavoidable and occurs even on real macbooks. The best option, in my opinion, is three finger drag. You can reconfigure the usual three finger gestures (such as swiping between spaces) to four finger gestures so that the drag doesn't clash with these.
