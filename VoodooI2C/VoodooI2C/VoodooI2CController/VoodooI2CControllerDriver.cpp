@@ -415,10 +415,12 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
     // Ensure we are not in the middle of a i2c session.
     IOLockLock(i2c_bus_lock);
     if (whichState == 0) {  // index of kIOPMPowerOff state in VoodooI2CIOPMPowerStates
-        bus_device.awake = false;
-        toggleBusState(kVoodooI2CStateOff);
-        stopI2CInterrupt();
-        IOLog("%s::%s Going to sleep\n", getName(), bus_device.name);
+        if (bus_device.awake) {
+            bus_device.awake = false;
+            toggleBusState(kVoodooI2CStateOff);
+            stopI2CInterrupt();
+            IOLog("%s::%s Going to sleep\n", getName(), bus_device.name);
+        }
     } else {
         if (!bus_device.awake) {
             toggleBusState(kVoodooI2CStateOn);

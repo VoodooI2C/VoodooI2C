@@ -29,12 +29,12 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
         return kIOPMAckImplied;
 
     if (whichState == 0) {  // index of kIOPMPowerOff state in VoodooI2CIOPMPowerStates
-        physical_device.awake = false;
-        unmapMemory();
-
-        setACPIPowerState(kVoodooI2CStateOff);
-
-        IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
+        if (physical_device.awake) {
+            physical_device.awake = false;
+            unmapMemory();
+            setACPIPowerState(kVoodooI2CStateOff);
+            IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
+        }
     } else {
         if (!physical_device.awake) {
             setACPIPowerState(kVoodooI2CStateOn);
