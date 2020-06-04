@@ -28,7 +28,7 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
     if (whatDevice != this)
         return kIOPMAckImplied;
 
-    if (whichState == kIOPMPowerOff) {
+    if (whichState == 0) {  // index of kIOPMPowerOff state in VoodooI2CIOPMPowerStates
         physical_device.awake = false;
         unmapMemory();
 
