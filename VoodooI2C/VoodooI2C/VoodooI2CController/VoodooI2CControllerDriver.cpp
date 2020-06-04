@@ -511,7 +511,9 @@ void VoodooI2CControllerDriver::stop(IOService* provider) {
 
     OSSafeReleaseNULL(device_nubs);
 
-    toggleBusState(kVoodooI2CStateOff);
+    if (bus_device.awake) {
+        toggleBusState(kVoodooI2CStateOff);
+    }
 
     releaseResources();
 
