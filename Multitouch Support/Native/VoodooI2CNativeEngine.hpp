@@ -29,6 +29,9 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
 
     bool lastIsForceClickEnabled = true;
     AbsoluteTime lastForceClickPropertyUpdateTime;
+    bool freeFingerTypes[kMT2FingerTypeCount];
+    MT2FingerType getFingerType(VoodooI2CDigitiserTransducer* transducer);
+    void setThumbFingerType(VoodooInputEvent* message);
 
     bool isForceClickEnabled();
  public:
