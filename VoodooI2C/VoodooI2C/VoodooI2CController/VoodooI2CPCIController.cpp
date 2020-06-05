@@ -78,10 +78,12 @@ IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOServi
     if (whatDevice != this)
         return kIOPMAckImplied;
 
-    if (whichState == kIOPMPowerOff) {
-        physical_device.awake = false;
-        unmapMemory();
-        IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
+    if (whichState == 0) {  // index of kIOPMPowerOff state in VoodooI2CIOPMPowerStates
+        if (physical_device.awake) {
+            physical_device.awake = false;
+            unmapMemory();
+            IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
+        }
     } else {
         if (!physical_device.awake) {
             configurePCI();
