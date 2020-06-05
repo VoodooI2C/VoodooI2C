@@ -25,14 +25,10 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     if (!transducer)
         return MultitouchReturnBreak;
     
-    if (!event.contact_count) {
-        memset(freeFingerTypes, true, kMT2FingerTypeCount);
-        freeFingerTypes[kMT2FingerTypeUndefined] = false;
-    }
-    
     if (transducer->type == kDigitiserTransducerStylus)
         stylus_check = 1;
     
+    bool allInvalid = true;
     for (int i = 0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i+stylus_check);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
@@ -41,12 +37,13 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
             continue;
         }
         
-        inputTransducer->fingerType = getFingerType(transducer);
+        inputTransducer->fingerType = kMT2FingerTypeUndefined;
         inputTransducer->secondaryId = transducer->secondary_id;
         
         inputTransducer->type = (transducer->type == DigitiserTransducerType::kDigitiserTransducerFinger) ? VoodooInputTransducerType::FINGER : VoodooInputTransducerType::STYLUS;
         
         inputTransducer->isValid = transducer->is_valid;
+        allInvalid = transducer->tip_switch.value() && allInvalid;
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
         inputTransducer->isPhysicalButtonDown = transducer->physical_button.value();
         
@@ -75,17 +72,27 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         }
     }
     
+    // Reset finger tracking
+    if (allInvalid) {
+        memset(freeFingerTypes, true, kMT2FingerTypeCount);
+        freeFingerTypes[kMT2FingerTypeUndefined] = false;
+    }
+    
     setThumbFingerType(&message);
+    for(int i = 0; i < event.contact_count; i++) {
+        VoodooInputTransducer* inputTransducer = &message.transducers[i];
+        
+        if (inputTransducer->fingerType == kMT2FingerTypeUndefined) {
+            inputTransducer->fingerType = getFingerType(transducer);
+        }
+    }
+    
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
     return MultitouchReturnBreak;
 }
 
 MT2FingerType VoodooI2CNativeEngine::getFingerType(VoodooI2CDigitiserTransducer* transducer) {
-    if (!transducer->is_valid) {
-        return kMT2FingerTypeUndefined;
-    }
-    
     // Shameless copy of VoodooPS2's implementation
     for (MT2FingerType i = kMT2FingerTypeIndexFinger; i < kMT2FingerTypeCount; i = (MT2FingerType)(i + 1)) {
         if (freeFingerTypes[i]) {
