@@ -78,7 +78,11 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         freeFingerTypes[kMT2FingerTypeUndefined] = false;
     }
     
-    setThumbFingerType(&message);
+    // Fixes 2F taps as MT stack
+    if (event.contact_count > 2) {
+        setThumbFingerType(&message);
+    }
+    
     for(int i = 0; i < event.contact_count; i++) {
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
         
