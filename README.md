@@ -24,7 +24,7 @@ The following Intel I2C controllers are fully supported:
 4. `pci8086,a160` and `pci8086,a161` - Kaby Lake era
 5. `pci8086,9de8` and `pci8086,9de9` - Cannon Lake/Whiskey Lake era
 6. `pci8086,a368`, `pci8086,a369`, `pci8086,a36a` and `pci8086,a36b` - Coffee Lake era
-7. `pci8086,2e8` and `pci8086,2e9` - Comet Lake era
+7. `pci8086,2e8`,  `pci8086,2e9`, `pci8086,6e8` and `pci8086,6e9`- Comet Lake era
 
 The following device classes are fully supported:
 
