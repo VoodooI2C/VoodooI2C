@@ -42,7 +42,6 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         inputTransducer->type = (transducer->type == DigitiserTransducerType::kDigitiserTransducerFinger) ? VoodooInputTransducerType::FINGER : VoodooInputTransducerType::STYLUS;
         
         inputTransducer->isValid = transducer->is_valid;
-        allInvalid = transducer->tip_switch.value() && allInvalid;
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
         inputTransducer->isPhysicalButtonDown = transducer->physical_button.value();
         
