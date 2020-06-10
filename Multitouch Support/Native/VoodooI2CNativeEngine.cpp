@@ -37,7 +37,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
             continue;
         }
         
-        inputTransducer->fingerType = kMT2FingerTypeUndefined;
+        inputTransducer->fingerType = (MT2FingerType) (kMT2FingerTypeIndexFinger + (i % 4));
         inputTransducer->secondaryId = transducer->secondary_id;
         
         inputTransducer->type = (transducer->type == DigitiserTransducerType::kDigitiserTransducerFinger) ? VoodooInputTransducerType::FINGER : VoodooInputTransducerType::STYLUS;
@@ -72,58 +72,24 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         }
     }
     
-    // Reset finger tracking
-    if (allInvalid) {
-        memset(freeFingerTypes, true, kMT2FingerTypeCount);
-        freeFingerTypes[kMT2FingerTypeUndefined] = false;
-    }
-    
-    // Fixes 2F taps as MT stack
-    if (event.contact_count > 2) {
-        setThumbFingerType(&message);
-    }
-    
-    for(int i = 0; i < event.contact_count; i++) {
-        VoodooInputTransducer* inputTransducer = &message.transducers[i];
-        
-        if (inputTransducer->fingerType == kMT2FingerTypeUndefined) {
-            inputTransducer->fingerType = getFingerType(transducer);
+    // set the thumb to improve 4F pinch and spread gesture and cross-screen dragging
+    if (event.contact_count >= 4 || transducer->physical_button.value()) {
+        // simple thumb detection: to find the lowest finger touch in the vertical direction.
+        UInt32 y_max = INT32_MAX;
+        int thumb_index = 0;
+        for (int i = 0; i < event.contact_count; i++) {
+            VoodooInputTransducer* inputTransducer = &message.transducers[i];
+            if (inputTransducer->isValid && inputTransducer->currentCoordinates.y <= y_max) {
+                y_max = inputTransducer->currentCoordinates.y;
+                thumb_index = i;
+            }
         }
+        message.transducers[thumb_index].fingerType = kMT2FingerTypeThumb;
     }
-    
+        
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
     return MultitouchReturnBreak;
-}
-
-MT2FingerType VoodooI2CNativeEngine::getFingerType(VoodooI2CDigitiserTransducer* transducer) {
-    // Shameless copy of VoodooPS2's implementation
-    for (MT2FingerType i = kMT2FingerTypeIndexFinger; i < kMT2FingerTypeCount; i = (MT2FingerType)(i + 1)) {
-        if (freeFingerTypes[i]) {
-            freeFingerTypes[i] = false;
-            return i;
-        }
-    }
-    
-    return kMT2FingerTypeUndefined;
-}
-
-void VoodooI2CNativeEngine::setThumbFingerType(VoodooInputEvent* message) {
-    // Find the lowest finger on the y-axis
-    int minY = parentProvider->physical_max_y;
-    int minYIndex = -1;
-    for(int i = 0; i < message->contact_count; i++) {
-        VoodooInputTransducer* inputTransducer = &message->transducers[i];
-        if (inputTransducer->isValid && inputTransducer->currentCoordinates.y <= minY) {
-            minYIndex = i;
-        }
-    }
-    
-    if (minYIndex != -1) {
-        VoodooInputTransducer* inputTransducer = &message->transducers[minYIndex];
-        inputTransducer->fingerType = kMT2FingerTypeThumb;
-        freeFingerTypes[kMT2FingerTypeThumb] = false;
-    }
 }
 
 bool VoodooI2CNativeEngine::start(IOService* provider) {
@@ -137,8 +103,6 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     }
 
     voodooInputInstance = NULL;
-    memset(freeFingerTypes, true, kMT2FingerTypeCount);
-    freeFingerTypes[kMT2FingerTypeUndefined] = false;
     
     setProperty(VOODOO_INPUT_LOGICAL_MAX_X_KEY, parentProvider->logical_max_x, 32);
     setProperty(VOODOO_INPUT_LOGICAL_MAX_Y_KEY, parentProvider->logical_max_y, 32);
