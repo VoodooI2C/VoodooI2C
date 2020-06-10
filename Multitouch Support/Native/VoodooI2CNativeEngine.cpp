@@ -27,8 +27,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     
     if (transducer->type == kDigitiserTransducerStylus)
         stylus_check = 1;
-    
-    bool allInvalid = true;
+
     for (int i = 0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i+stylus_check);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
