@@ -73,11 +73,11 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     // set the thumb to improve 4F pinch and spread gesture and cross-screen dragging
     if (event.contact_count >= 4 || transducer->physical_button.value()) {
         // simple thumb detection: to find the lowest finger touch in the vertical direction.
-        UInt32 y_max = INT32_MAX;
+        UInt32 y_max = 0;
         int thumb_index = 0;
         for (int i = 0; i < event.contact_count; i++) {
             VoodooInputTransducer* inputTransducer = &message.transducers[i];
-            if (inputTransducer->isValid && inputTransducer->currentCoordinates.y <= y_max) {
+            if (inputTransducer->isValid && inputTransducer->currentCoordinates.y >= y_max) {
                 y_max = inputTransducer->currentCoordinates.y;
                 thumb_index = i;
             }
