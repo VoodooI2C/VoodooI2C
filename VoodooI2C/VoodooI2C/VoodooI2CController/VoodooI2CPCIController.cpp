@@ -39,7 +39,7 @@ void VoodooI2CPCIController::configurePCI() {
     /* If it is Comet Lake, then let's apply Forcing D0 here.
        It will modify 0x80 below to your findings.*/
 
-    if ((tmp[0] == kCometLakeflag[0] || tmp[0] == kCometLakeFlag[1])
+    if ((tmp[0] == kCometLakeflag[0] || tmp[0] == kCometLakeflag[1])
         && tmp[1] == kCometLakeflag[2]) {
         IOLog("%s::%s Current CPU is Comet Lake, patching...\n", getName(), physical_device.name);
         uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
