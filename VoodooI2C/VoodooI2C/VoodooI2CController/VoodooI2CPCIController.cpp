@@ -13,7 +13,7 @@ OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
 
 void VoodooI2CPCIController::configurePCI() {
     char tmp[2];
-    const char kCometLakeflag[2] = {'2', 'e'};
+    const char kCometLakeflag[3] = {'2', '6', 'e'};
 
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
     auto pci_device = physical_device.pci_device;
@@ -39,7 +39,8 @@ void VoodooI2CPCIController::configurePCI() {
     /* If it is Comet Lake, then let's apply Forcing D0 here.
        It will modify 0x80 below to your findings.*/
 
-    if (tmp[0] == kCometLakeflag[0] && tmp[1] == kCometLakeflag[1]) {
+    if ((tmp[0] == kCometLakeflag[0] || tmp[0] == kCometLakeFlag[1])
+        && tmp[1] == kCometLakeflag[2]) {
         IOLog("%s::%s Current CPU is Comet Lake, patching...\n", getName(), physical_device.name);
         uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
         uint16_t newPowerStateWord = (oldPowerStateWord & (~0x3)) | 0x0;
