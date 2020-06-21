@@ -80,6 +80,9 @@ class EXPORT VoodooI2CMultitouchInterface : public IOService {
      */
     bool handleIsOpen(const IOService *forClient ) const override;
 
+    using IORegistryEntry::setProperty;
+    bool setProperty(const OSSymbol* key, OSObject* object) override;
+
     /* Orders engines according to <VoodooI2CMultitouchEngine::getScore>
      * @a The first engine in the comparison
      * @b The second engine in the comparison

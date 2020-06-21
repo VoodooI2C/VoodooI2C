@@ -54,6 +54,18 @@ bool VoodooI2CMultitouchInterface::handleIsOpen(const IOService *forClient ) con
     return false;
 }
 
+bool VoodooI2CMultitouchInterface::setProperty(const OSSymbol* key, OSObject* object) {
+    bool result = super::setProperty(key, object);
+    if (result) {
+        for (int i = 0; i < engines->getCount(); i++) {
+            if (VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, engines->getObject(i))) {
+                engine->onPropertyChange();
+            }
+        }
+    }
+    return result;
+}
+
 SInt8 VoodooI2CMultitouchInterface::orderEngines(VoodooI2CMultitouchEngine* a, VoodooI2CMultitouchEngine* b) {
     if (a->getScore() > b->getScore())
         return 1;
