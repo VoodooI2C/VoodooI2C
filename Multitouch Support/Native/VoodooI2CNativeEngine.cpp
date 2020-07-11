@@ -107,8 +107,7 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     
     setProperty(VOODOO_INPUT_PHYSICAL_MAX_X_KEY, parentProvider->physical_max_x * 10, 32);
     setProperty(VOODOO_INPUT_PHYSICAL_MAX_Y_KEY, parentProvider->physical_max_y * 10, 32);
-    
-    setProperty(kIOFBTransformKey, 0ull, 32);
+
     setProperty("VoodooInputSupported", kOSBooleanTrue);
     
     stylus_check = 0;
@@ -150,6 +149,12 @@ bool VoodooI2CNativeEngine::isForceClickEnabled() {
 
     lastForceClickPropertyUpdateTime = now_abs;
     return lastIsForceClickEnabled;
+}
+
+void VoodooI2CNativeEngine::onPropertyChange() {
+    if (voodooInputInstance) {
+        super::messageClient(kIOMessageVoodooInputUpdatePropertiesNotification, voodooInputInstance);
+    }
 }
 
 void VoodooI2CNativeEngine::stop(IOService* provider) {

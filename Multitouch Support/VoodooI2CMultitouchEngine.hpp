@@ -52,6 +52,8 @@ class EXPORT VoodooI2CMultitouchEngine : public IOService {
      */
 
     virtual bool start(IOService* provider);
+
+    virtual void onPropertyChange();
 };
 
 

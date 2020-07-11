@@ -57,3 +57,7 @@ bool VoodooI2CMultitouchEngine::start(IOService* provider) {
 
     return true;
 }
+
+void VoodooI2CMultitouchEngine::onPropertyChange() {
+    return;
+}
