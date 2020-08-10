@@ -14,7 +14,7 @@ OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
 void VoodooI2CPCIController::configurePCI() {
     char tmp[2];
     const char kCometLakeflag[3] = {'2', '6', 'e'};
-    const char kIceLakeflag[2] = {'3','4'};
+    const char kIceLakeflag[2] = {'3', '4'};
 
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
     auto pci_device = physical_device.pci_device;
