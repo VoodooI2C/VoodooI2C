@@ -511,6 +511,7 @@
 			<key>IONameMatch</key>
 			<array>
 				<string>pci8086,34e8</string>
+				<string>pci8086,34e9</string>
 				<string>pci8086,6e8</string>
 				<string>pci8086,6e9</string>
 				<string>pci8086,2e8</string>
