@@ -19,6 +19,9 @@
 #define EXPORT __attribute__((visibility("default")))
 #endif
 
+#define I2C_DSM_TP7G "ef87eb82-f951-46da-84ec-14871ac6f84b"
+#define I2C_DSM_HIDG "3cdff6f7-4267-4555-ad05-b30a3d8938de"
+
 class VoodooI2CControllerDriver;
 
 /* Implements a device nub to which an instance of a device driver may attach. Examples include <VoodooI2CHIDDevice>
@@ -184,6 +187,28 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      */
 
     IOReturn getDeviceResources();
+
+    /* Evaluate _DSM for availability of GPIO interrupts.
+     *
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(XDSM*) parse, *kIOReturnNotFound* if GPIO interrupts were unavailable, *kIOReturnUnsupportedMode* if _DSM doesn't support GPIO.
+     */
+
+    IOReturn getDeviceResourcesDSM();
+
+    /* Instantiates a <VoodooI2CACPICRSParser> object to grab GPIO interrupt properties from _DSM.
+     *
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(XDSM*) and GPIO parse, *kIOReturnNotFound* if GPIO interrupts were unavailable.
+     */
+
+    IOReturn getDSMGPIOInterrupt();
+
+    /*
+     * Gets the HID descriptor address by evaluating the device's '_DSM' method in the ACPI tables
+     *
+     * @return *kIOReturnSuccess* on sucessfully getting the HID descriptor address, *kIOReturnNotFound* if neither the '_DSM' method nor the '_XDSM' was found, *kIOReturnInvalid* if the address is invalid
+     */
+
+    IOReturn getHIDDescriptorAddress();
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
      */
