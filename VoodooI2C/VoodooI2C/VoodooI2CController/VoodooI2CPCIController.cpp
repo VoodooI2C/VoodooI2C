@@ -12,36 +12,21 @@
 OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
 
 void VoodooI2CPCIController::configurePCI() {
-    char tmp[2];
-    const char kCometLakeflag[3] = {'2', '6', 'e'};
-    const char kIceLakeflag[2] = {'3', '4'};
+    int pre, post;
 
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
     auto pci_device = physical_device.pci_device;
     pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
 
-    /* To apply this patch, we need to check if it's 10th Comet Lake CPU
+    /* To apply this patch, we need to check if it's 10th Comet or Ice Lake CPU
        because this hack patch can't work in other platforms like 8th Kaby Lake R.
-       Every 10th CPU 's id includes "2e" in the index 8 and index9, which can be used to check the
-       platform. Thx for @Williambj1 's discovery.*/
-
-    OSString *mystring = OSString::withCString(physical_device.name);
-    if (!mystring) {
-        IOLog("%s::%s Get IONameMatched data error!\n", getName(), physical_device.name);
-        return;
-    }
-
-    // Write your computer 's id flag for comparision
-    tmp[0] = mystring->getChar(8);
-    tmp[1] = mystring->getChar(9);
-
-    OSSafeReleaseNULL(mystring);
+       Every 10th CPU 's i2c device name includes "e" between two numbers,
+       which can be used to check the platform. Thx for @Williambj1 's discovery.*/
 
     /* If it is Comet Lake, then let's apply Forcing D0 here.
        It will modify 0x80 below to your findings.*/
 
-    if (((tmp[0] == kCometLakeflag[0] || tmp[0] == kCometLakeflag[1]) && tmp[1] == kCometLakeflag[2])
-        || (tmp[0] == kIceLakeflag[0] && tmp[1] == kIceLakeflag[1])) {
+    if (sscanf(physical_device.name, "pci8086,%de%d", &pre, &post) == 2) {
         IOLog("%s::%s Current CPU is Comet Lake or Ice Lake, patching...\n",
               getName(), physical_device.name);
         uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
