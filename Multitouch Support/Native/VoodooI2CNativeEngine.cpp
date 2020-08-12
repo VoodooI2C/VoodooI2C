@@ -28,6 +28,8 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     if (transducer->type == kDigitiserTransducerStylus)
         stylus_check = 1;
 
+    int valid_touch_count = 0;
+
     for (int i = 0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i+stylus_check);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
@@ -42,6 +44,9 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         inputTransducer->type = (transducer->type == DigitiserTransducerType::kDigitiserTransducerFinger) ? VoodooInputTransducerType::FINGER : VoodooInputTransducerType::STYLUS;
         
         inputTransducer->isValid = transducer->is_valid;
+        if (inputTransducer->isValid) {
+            valid_touch_count++;
+        }
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
         inputTransducer->isPhysicalButtonDown = transducer->physical_button.value();
         
@@ -71,7 +76,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     }
     
     // set the thumb to improve 4F pinch and spread gesture and cross-screen dragging
-    if (event.contact_count >= 4 || transducer->physical_button.value()) {
+    if (valid_touch_count >= 4 || transducer->physical_button.value()) {
         // simple thumb detection: to find the lowest finger touch in the vertical direction.
         UInt32 y_max = 0;
         int thumb_index = 0;
