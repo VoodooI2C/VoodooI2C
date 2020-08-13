@@ -72,32 +72,41 @@ IOReturn VoodooI2CDeviceNub::enableInterrupt(int source) {
     }
 }
 
-IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
+IOReturn VoodooI2CDeviceNub::evaluateDSM(const char *uuid, UInt32 index, OSObject **result) {
+    IOReturn ret;
     uuid_t guid;
-    uuid_parse(I2C_DSM_TP7G, guid);
+    uuid_parse(uuid, guid);
 
     // convert to mixed-endian
     *(reinterpret_cast<uint32_t *>(guid)) = OSSwapInt32(*(reinterpret_cast<uint32_t *>(guid)));
     *(reinterpret_cast<uint16_t *>(guid) + 2) = OSSwapInt16(*(reinterpret_cast<uint16_t *>(guid) + 2));
     *(reinterpret_cast<uint16_t *>(guid) + 3) = OSSwapInt16(*(reinterpret_cast<uint16_t *>(guid) + 3));
 
-    OSObject *result;
     OSObject *params[4] = {
         OSData::withBytes(guid, 16),
-        OSNumber::withNumber(0x1, 32),
-        OSNumber::withNumber((UInt32)0x0, 32),
+        OSNumber::withNumber(I2C_DSM_REVISION, 32),
+        OSNumber::withNumber(index, 32),
         OSArray::withCapacity(1)
     };
 
-    if (acpi_device->evaluateObject("_DSM", &result, params, 4) != kIOReturnSuccess && acpi_device->evaluateObject("XDSM", &result, params, 4) != kIOReturnSuccess) {
-        IOLog("%s::%s Could not find suitable _DSM or XDSM method in ACPI tables\n", controller_name, getName());
-        return kIOReturnNotFound;
-    }
+    ret = acpi_device->evaluateObject("_DSM", result, params, 4);
+    if (ret != kIOReturnSuccess)
+        ret = acpi_device->evaluateObject("XDSM", result, params, 4);
 
     params[0]->release();
     params[1]->release();
     params[2]->release();
     params[3]->release();
+    return ret;
+}
+
+IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
+    OSObject *result = nullptr;
+
+    if (evaluateDSM(I2C_DSM_TP7G, 0, &result) != kIOReturnSuccess) {
+        IOLog("%s::%s Could not find suitable _DSM or XDSM method in ACPI tables\n", controller_name, getName());
+        return kIOReturnNotFound;
+    }
 
     OSData *data = OSDynamicCast(OSData, result);
 
@@ -107,11 +116,11 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
         return kIOReturnNotFound;
     }
 
-    UInt8 index = *(reinterpret_cast<UInt8 const*>(data->getBytesNoCopy()));
+    UInt8 availableIndex = *(reinterpret_cast<UInt8 const*>(data->getBytesNoCopy()));
     data->release();
 
-    if (!(index & (TP7G_GPIO_INDEX << 1))) {
-        IOLog("%s::%s TP7D index 0x%x doesn't support GPIO report\n", controller_name, getName(), index);
+    if (!(availableIndex & (TP7G_GPIO_INDEX << 1))) {
+        IOLog("%s::%s TP7D index 0x%x doesn't support GPIO report\n", controller_name, getName(), availableIndex);
         return kIOReturnUnsupportedMode;
     }
 
@@ -119,35 +128,17 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
 }
 
 IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt() {
-    uuid_t guid;
-    uuid_parse(I2C_DSM_TP7G, guid);
+    OSObject *result = nullptr;
 
-    // convert to mixed-endian
-    *(reinterpret_cast<uint32_t *>(guid)) = OSSwapInt32(*(reinterpret_cast<uint32_t *>(guid)));
-    *(reinterpret_cast<uint16_t *>(guid) + 2) = OSSwapInt16(*(reinterpret_cast<uint16_t *>(guid) + 2));
-    *(reinterpret_cast<uint16_t *>(guid) + 3) = OSSwapInt16(*(reinterpret_cast<uint16_t *>(guid) + 3));
-
-    OSObject *result = NULL;
-    OSObject *params[4] = {
-        OSData::withBytes(guid, 16),
-        OSNumber::withNumber(0x1, 8),
-        OSNumber::withNumber(0x1, 8),
-        OSNumber::withNumber((UInt32)0x0, 8)
-    };
-
-    if (acpi_device->evaluateObject("_DSM", &result, params, 4) != kIOReturnSuccess && acpi_device->evaluateObject("XDSM", &result, params, 4) != kIOReturnSuccess) {
+    if (evaluateDSM(I2C_DSM_TP7G, 1, &result) != kIOReturnSuccess) {
         IOLog("%s::%s Could not find suitable _DSM or XDSM method in ACPI tables\n", controller_name, getName());
         return kIOReturnNotFound;
     }
 
-    params[0]->release();
-    params[1]->release();
-    params[2]->release();
-    params[3]->release();
-
     OSData *data = OSDynamicCast(OSData, result);
     if (!data || data->getLength() == 1) {
         IOLog("%s::%s Could not get valid _DSM return for GPIO interrupt", controller_name, getName());
+        result->release();
         return kIOReturnNotFound;
     }
 

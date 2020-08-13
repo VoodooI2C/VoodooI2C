@@ -20,6 +20,7 @@
 #endif
 
 #define I2C_DSM_TP7G "ef87eb82-f951-46da-84ec-14871ac6f84b"
+#define I2C_DSM_REVISION 1
 #define TP7G_GPIO_INDEX 1
 
 class VoodooI2CControllerDriver;
@@ -187,6 +188,16 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      */
 
     IOReturn getDeviceResources();
+
+    /* Evaluate _DSM for specific GUID and function index
+     * @uuid Human-readable GUID string (big-endian)
+     * @index Function index
+     * @result The return data
+     *
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, otherwise failed when executing *evaluateObject*.
+     */
+
+    IOReturn evaluateDSM(const char *uuid, UInt32 index, OSObject **result);
 
     /* Evaluate _DSM for availability of resources like GPIO interrupts.
      *
