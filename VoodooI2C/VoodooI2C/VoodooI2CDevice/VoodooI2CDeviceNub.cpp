@@ -8,7 +8,6 @@
 
 #include "../VoodooI2CController/VoodooI2CControllerDriver.hpp"
 #include "VoodooI2CDeviceNub.hpp"
-#include "VoodooI2CACPICRSParser.hpp"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CDeviceNub, IOService);
@@ -127,7 +126,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
     return kIOReturnSuccess;
 }
 
-IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt() {
+IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser) {
     OSObject *result = nullptr;
 
     if (evaluateDSM(I2C_DSM_TP7G, 1, &result) != kIOReturnSuccess) {
@@ -143,22 +142,16 @@ IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt() {
     }
 
     uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
-    VoodooI2CACPICRSParser crs_parser;
-    crs_parser.parseACPICRS(crs, 0, data->getLength());
+    crs_parser->parseACPICRS(crs, 0, data->getLength());
 
     data->release();
 
-    if (!crs_parser.found_gpio_interrupts) {
+    if (!crs_parser->found_gpio_interrupts) {
         IOLog("%s::%s Could not find GPIO interrupt in _DSM", controller_name, getName());
         return kIOReturnNotFound;
     }
 
-    setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
-    setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
-
     has_gpio_interrupts = true;
-    gpio_pin = crs_parser.gpio_interrupts.pin_number;
-    gpio_irq = crs_parser.gpio_interrupts.irq_type;
     IOLog("%s::%s GPIO interrupts retrieved through _DSM method", controller_name, getName());
     return kIOReturnSuccess;
 }
@@ -177,6 +170,8 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     VoodooI2CACPICRSParser crs_parser;
     crs_parser.parseACPICRS(crs, 0, data->getLength());
 
+    data->release();
+
     if (crs_parser.found_i2c) {
         use_10bit_addressing = crs_parser.i2c_info.address_mode_10Bit;
         setProperty("addrWidth", use_10bit_addressing ? 10 : 7, 8);
@@ -190,20 +185,9 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
-    if (crs_parser.found_gpio_interrupts) {
-        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
-        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
-
-        has_gpio_interrupts = true;
-        gpio_pin = crs_parser.gpio_interrupts.pin_number;
-        gpio_irq = crs_parser.gpio_interrupts.irq_type;
-    } else {
+    if (!crs_parser.found_gpio_interrupts) {
         has_gpio_interrupts = false;
-    }
 
-    data->release();
-
-    if (!has_gpio_interrupts) {
         OSArray* interrupt_array = OSDynamicCast(OSArray, acpi_device->getProperty(gIOInterruptSpecifiersKey));
         if (!interrupt_array) {
             IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts.\n", controller_name, getName());
@@ -224,17 +208,28 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
             goto attempt;
         }
 
-        if (*interrupt_pin > 0x2f) {
+        if (*interrupt_pin > 0x2f)
             IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f) and no GPIO interrupts found.\n", controller_name, getName(), *interrupt_pin);
-            goto attempt;
-        }
+        else
+            goto exit;
+    } else {
+        has_gpio_interrupts = true;
+        goto exit;
     }
-    return kIOReturnSuccess;
 
 attempt:
     IOLog("%s::%s Attempting to get GPIO interrupts from _DSM.\n", controller_name, getName());
-    if (getDeviceResourcesDSM() != kIOReturnSuccess || getAlternativeGPIOInterrupt() != kIOReturnSuccess)
+    if (getDeviceResourcesDSM() != kIOReturnSuccess || getAlternativeGPIOInterrupt(&crs_parser) != kIOReturnSuccess)
         IOLog("%s::%s Warning: If your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), getName());
+
+exit:
+    if (has_gpio_interrupts) {
+        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
+        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
+
+        gpio_pin = crs_parser.gpio_interrupts.pin_number;
+        gpio_irq = crs_parser.gpio_interrupts.irq_type;
+    }
     return kIOReturnSuccess;
 }
 

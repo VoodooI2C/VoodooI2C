@@ -14,6 +14,7 @@
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
+#include "../../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp"
 
 #ifndef EXPORT
 #define EXPORT __attribute__((visibility("default")))
@@ -207,11 +208,12 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     IOReturn getDeviceResourcesDSM();
 
     /* Instantiates a <VoodooI2CACPICRSParser> object to grab GPIO interrupt properties from _DSM.
+     * @crs_parser The parser for default _CRS
      *
      * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) and GPIO parse, *kIOReturnNotFound* if GPIO interrupts were unavailable.
      */
 
-    IOReturn getAlternativeGPIOInterrupt();
+    IOReturn getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser);
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
      */
