@@ -38,10 +38,6 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         return false;
     }
 
-    if (getHIDDescriptorAddress() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not get device HID descriptor\n", controller_name, child->getName());
-    }
-
     if (has_gpio_interrupts) {
         gpio_controller = getGPIOController();
 
@@ -76,39 +72,6 @@ IOReturn VoodooI2CDeviceNub::enableInterrupt(int source) {
     }
 }
 
-IOReturn VoodooI2CDeviceNub::getHIDDescriptorAddress() {
-    uuid_t guid;
-    uuid_parse(I2C_DSM_HIDG, guid);
-
-    // convert to mixed-endian
-    *(reinterpret_cast<uint32_t *>(guid)) = OSSwapInt32(*(reinterpret_cast<uint32_t *>(guid)));
-    *(reinterpret_cast<uint16_t *>(guid) + 2) = OSSwapInt16(*(reinterpret_cast<uint16_t *>(guid) + 2));
-    *(reinterpret_cast<uint16_t *>(guid) + 3) = OSSwapInt16(*(reinterpret_cast<uint16_t *>(guid) + 3));
-
-    UInt32 result;
-    OSObject *params[4] = {
-        OSData::withBytes(guid, 16),
-        OSNumber::withNumber(0x1, 8),
-        OSNumber::withNumber(0x1, 8),
-        OSArray::withCapacity(1)
-    };
-    setProperty("HIDDescriptorAddress", false);
-
-    if (acpi_device->evaluateInteger("_DSM", &result, params, 4) != kIOReturnSuccess && acpi_device->evaluateInteger("XDSM", &result, params, 4) != kIOReturnSuccess) {
-        IOLog("%s::%s Could not find suitable _DSM or XDSM method in ACPI tables\n", controller_name, getName());
-        return kIOReturnNotFound;
-    }
-
-    setProperty("HIDDescriptorAddress", result, 32);
-
-    params[0]->release();
-    params[1]->release();
-    params[2]->release();
-    params[3]->release();
-
-    return kIOReturnSuccess;
-}
-
 IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
     uuid_t guid;
     uuid_parse(I2C_DSM_TP7G, guid);
@@ -125,7 +88,6 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
         OSNumber::withNumber((UInt32)0x0, 32),
         OSArray::withCapacity(1)
     };
-    setProperty("TP7GIndex", false);
 
     if (acpi_device->evaluateObject("_DSM", &result, params, 4) != kIOReturnSuccess && acpi_device->evaluateObject("XDSM", &result, params, 4) != kIOReturnSuccess) {
         IOLog("%s::%s Could not find suitable _DSM or XDSM method in ACPI tables\n", controller_name, getName());
@@ -141,16 +103,22 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM() {
 
     if (!data) {
         IOLog("%s::%s Could not find or evaluate _DSM method for GPIO availability", controller_name, getName());
+        result->release();
         return kIOReturnNotFound;
     }
 
-    UInt8 const* index = reinterpret_cast<UInt8 const*>(data->getBytesNoCopy());
-    setProperty("TP7GIndex", *index, 8);
+    UInt8 index = *(reinterpret_cast<UInt8 const*>(data->getBytesNoCopy()));
+    data->release();
 
-    return (*index & (1 << 1)) ? getDSMGPIOInterrupt() : kIOReturnUnsupportedMode;
+    if (!(index & (TP7G_GPIO_INDEX << 1))) {
+        IOLog("%s::%s TP7D index 0x%x doesn't support GPIO report\n", controller_name, getName(), index);
+        return kIOReturnUnsupportedMode;
+    }
+
+    return kIOReturnSuccess;
 }
 
-IOReturn VoodooI2CDeviceNub::getDSMGPIOInterrupt() {
+IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt() {
     uuid_t guid;
     uuid_parse(I2C_DSM_TP7G, guid);
 
@@ -178,8 +146,8 @@ IOReturn VoodooI2CDeviceNub::getDSMGPIOInterrupt() {
     params[3]->release();
 
     OSData *data = OSDynamicCast(OSData, result);
-    if (!data) {
-        IOLog("%s::%s Could not find or evaluate _DSM method for GPIO", controller_name, getName());
+    if (!data || data->getLength() == 1) {
+        IOLog("%s::%s Could not get valid _DSM return for GPIO interrupt", controller_name, getName());
         return kIOReturnNotFound;
     }
 
@@ -189,19 +157,19 @@ IOReturn VoodooI2CDeviceNub::getDSMGPIOInterrupt() {
 
     data->release();
 
-    if (crs_parser.found_gpio_interrupts) {
-        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
-        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
-
-        has_gpio_interrupts = true;
-        gpio_pin = crs_parser.gpio_interrupts.pin_number;
-        gpio_irq = crs_parser.gpio_interrupts.irq_type;
-        IOLog("%s::%s GPIO interrupts retrieved through _DSM method", controller_name, getName());
-        return kIOReturnSuccess;
-    } else {
-        has_gpio_interrupts = false;
+    if (!crs_parser.found_gpio_interrupts) {
+        IOLog("%s::%s Could not find GPIO interrupt in _DSM", controller_name, getName());
         return kIOReturnNotFound;
     }
+
+    setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
+    setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
+
+    has_gpio_interrupts = true;
+    gpio_pin = crs_parser.gpio_interrupts.pin_number;
+    gpio_irq = crs_parser.gpio_interrupts.irq_type;
+    IOLog("%s::%s GPIO interrupts retrieved through _DSM method", controller_name, getName());
+    return kIOReturnSuccess;
 }
 
 IOReturn VoodooI2CDeviceNub::getDeviceResources() {
@@ -271,9 +239,10 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         }
     }
     return kIOReturnSuccess;
+
 attempt:
     IOLog("%s::%s Attempting to get GPIO interrupts from _DSM.\n", controller_name, getName());
-    if (getDeviceResourcesDSM() != kIOReturnSuccess)
+    if (getDeviceResourcesDSM() != kIOReturnSuccess || getAlternativeGPIOInterrupt() != kIOReturnSuccess)
         IOLog("%s::%s Warning: If your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), getName());
     return kIOReturnSuccess;
 }
