@@ -14,7 +14,6 @@
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
-#include "../../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp"
 
 #ifndef EXPORT
 #define EXPORT __attribute__((visibility("default")))
@@ -22,6 +21,7 @@
 
 #define I2C_DSM_TP7G "ef87eb82-f951-46da-84ec-14871ac6f84b"
 #define I2C_DSM_REVISION 1
+#define DSM_SUPPORT_INDEX 0
 #define TP7G_GPIO_INDEX 1
 
 class VoodooI2CControllerDriver;
@@ -193,27 +193,21 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     /* Evaluate _DSM for specific GUID and function index
      * @uuid Human-readable GUID string (big-endian)
      * @index Function index
-     * @result The return data
+     * @result The return is a buffer containing one bit for each function index if Function Index is zero, otherwise could be any data object (See 9.1.1 _DSM (Device Specific Method) in ACPI Specification, Version 6.3)
      *
      * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, otherwise failed when executing *evaluateObject*.
      */
 
     IOReturn evaluateDSM(const char *uuid, UInt32 index, OSObject **result);
 
-    /* Evaluate _DSM for availability of resources like GPIO interrupts.
+    /* Evaluate _DSM for availability of I2C resources like GPIO interrupts.
+     * @index Function index
+     * @result The return could be any data object
      *
-     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if GPIO interrupts were unavailable, *kIOReturnUnsupportedMode* if _DSM doesn't support GPIO report.
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if GPIO interrupts were unavailable, *kIOReturnUnsupportedMode* if _DSM doesn't support desired function
      */
 
-    IOReturn getDeviceResourcesDSM();
-
-    /* Instantiates a <VoodooI2CACPICRSParser> object to grab GPIO interrupt properties from _DSM.
-     * @crs_parser The parser for default _CRS
-     *
-     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) and GPIO parse, *kIOReturnNotFound* if GPIO interrupts were unavailable.
-     */
-
-    IOReturn getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser);
+    IOReturn getDeviceResourcesDSM(UInt32 index, OSObject **result);
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
      */
