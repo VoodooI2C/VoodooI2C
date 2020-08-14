@@ -71,8 +71,8 @@ class EXPORT VoodooI2CPCIController : public VoodooI2CController {
  * The members of this class are responsible for low-level interfacing with the physical PCI hardware.
  */
 
-class EXPORT VoodooI2CPCICMLController : public VoodooI2CPCIController {
-    OSDeclareDefaultStructors(VoodooI2CPCICMLController);
+class EXPORT VoodooI2CPCILakeController : public VoodooI2CPCIController {
+    OSDeclareDefaultStructors(VoodooI2CPCILakeController);
 
  private:
     void configurePCI() APPLE_KEXT_OVERRIDE;

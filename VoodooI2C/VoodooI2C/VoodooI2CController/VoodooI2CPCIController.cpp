@@ -10,9 +10,9 @@
 
 #define super VoodooI2CController
 OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
-OSDefineMetaClassAndStructors(VoodooI2CPCICMLController, VoodooI2CPCIController);
+OSDefineMetaClassAndStructors(VoodooI2CPCILakeController, VoodooI2CPCIController);
 
-void VoodooI2CPCICMLController::configurePCI() {
+void VoodooI2CPCILakeController::configurePCI() {
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
     auto pci_device = physical_device.pci_device;
     pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
