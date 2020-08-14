@@ -553,7 +553,7 @@
 				<string>pci8086,2eb</string>
 			</array>
 			<key>IOProbeScore</key>
-			<real>9999</real>
+			<integer>9999</integer>
 			<key>IOProviderClass</key>
 			<string>IOService</string>
 		</dict>

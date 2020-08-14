@@ -17,13 +17,12 @@ void VoodooI2CPCICMLController::configurePCI() {
     auto pci_device = physical_device.pci_device;
     pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
 
-    /* Apply Forcing D0 which modify 0x80 below to your findings.*/
+    /* Apply Forcing D0 patch which modify 0x80 below to your findings.*/
 
     IOLog("%s::%s Current CPU is Comet Lake or Ice Lake, patching...\n",
           getName(), physical_device.name);
     uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
     uint16_t newPowerStateWord = (oldPowerStateWord & (~0x3)) | 0x0;
-    // Modify 0x80 below to your findings.
     pci_device->configWrite16(0x80 + 0x4, newPowerStateWord);
 
     pci_device->setBusMasterEnable(true);
