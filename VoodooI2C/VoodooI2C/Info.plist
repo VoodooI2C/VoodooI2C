@@ -531,12 +531,12 @@
 			<key>IOProviderClass</key>
 			<string>IOService</string>
 		</dict>
-		<key>VoodooI2CPCICometLakeController</key>
+		<key>VoodooI2CPCICMLController</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
 			<key>IOClass</key>
-			<string>VoodooI2CPCICometLakeController</string>
+			<string>VoodooI2CPCICMLController</string>
 			<key>IONameMatch</key>
 			<array>
 				<string>pci8086,34e8</string>
