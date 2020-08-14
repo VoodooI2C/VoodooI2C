@@ -10,31 +10,30 @@
 
 #define super VoodooI2CController
 OSDefineMetaClassAndStructors(VoodooI2CPCIController, VoodooI2CController);
+OSDefineMetaClassAndStructors(VoodooI2CPCICMLController, VoodooI2CPCIController);
 
-void VoodooI2CPCIController::configurePCI() {
-    int pre, post;
-
+void VoodooI2CPCICMLController::configurePCI() {
     IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
     auto pci_device = physical_device.pci_device;
     pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
 
-    /* To apply this patch, we need to check if it's 10th Comet or Ice Lake CPU
-       because this hack patch can't work in other platforms like 8th Kaby Lake R.
-       Every 10th CPU 's i2c device name includes "e" between two numbers,
-       which can be used to check the platform. Thx for @Williambj1 's discovery.*/
+    /* Apply Forcing D0 which modify 0x80 below to your findings.*/
 
-    /* If it is Comet Lake, then let's apply Forcing D0 here.
-       It will modify 0x80 below to your findings.*/
+    IOLog("%s::%s Current CPU is Comet Lake or Ice Lake, patching...\n",
+          getName(), physical_device.name);
+    uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
+    uint16_t newPowerStateWord = (oldPowerStateWord & (~0x3)) | 0x0;
+    // Modify 0x80 below to your findings.
+    pci_device->configWrite16(0x80 + 0x4, newPowerStateWord);
 
-    if (sscanf(physical_device.name, "pci8086,%de%d", &pre, &post) == 2) {
-        IOLog("%s::%s Current CPU is Comet Lake or Ice Lake, patching...\n",
-              getName(), physical_device.name);
-        uint16_t oldPowerStateWord = pci_device->configRead16(0x80 + 0x4);
-        uint16_t newPowerStateWord = (oldPowerStateWord & (~0x3)) | 0x0;
-        // Modify 0x80 below to your findings.
-        pci_device->configWrite16(0x80 + 0x4, newPowerStateWord);
-        IOLog("%s::%s Successfully patched!\n", getName(), physical_device.name);
-    }
+    pci_device->setBusMasterEnable(true);
+    pci_device->setMemoryEnable(true);
+}
+
+void VoodooI2CPCIController::configurePCI() {
+    IOLog("%s::%s Set PCI power state D0\n", getName(), physical_device.name);
+    auto pci_device = physical_device.pci_device;
+    pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
 
     pci_device->setBusMasterEnable(true);
     pci_device->setMemoryEnable(true);

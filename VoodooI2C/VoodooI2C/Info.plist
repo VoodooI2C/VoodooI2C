@@ -510,18 +510,14 @@
 			<string>VoodooI2CPCIController</string>
 			<key>IONameMatch</key>
 			<array>
-				<string>pci8086,34e8</string>
-				<string>pci8086,34e9</string>
-				<string>pci8086,6e8</string>
-				<string>pci8086,6e9</string>
-				<string>pci8086,2e8</string>
-				<string>pci8086,2e9</string>
 				<string>pci8086,9d60</string>
 				<string>pci8086,9d61</string>
 				<string>pci8086,9d62</string>
 				<string>pci8086,9d63</string>
 				<string>pci8086,9de8</string>
 				<string>pci8086,9de9</string>
+				<string>pci8086,9dea</string>
+				<string>pci8086,9deb</string>
 				<string>pci8086,a160</string>
 				<string>pci8086,a161</string>
 				<string>pci8086,a162</string>
@@ -532,6 +528,32 @@
 			</array>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
+			<key>IOProviderClass</key>
+			<string>IOService</string>
+		</dict>
+		<key>VoodooI2CPCICometLakeController</key>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CPCICometLakeController</string>
+			<key>IONameMatch</key>
+			<array>
+				<string>pci8086,34e8</string>
+				<string>pci8086,34e9</string>
+				<string>pci8086,34ea</string>
+				<string>pci8086,34eb</string>
+				<string>pci8086,6e8</string>
+				<string>pci8086,6e9</string>
+				<string>pci8086,6ea</string>
+				<string>pci8086,6eb</string>
+				<string>pci8086,2e8</string>
+				<string>pci8086,2e9</string>
+				<string>pci8086,2ea</string>
+				<string>pci8086,2eb</string>
+			</array>
+			<key>IOProbeScore</key>
+			<real>9999</real>
 			<key>IOProviderClass</key>
 			<string>IOService</string>
 		</dict>
