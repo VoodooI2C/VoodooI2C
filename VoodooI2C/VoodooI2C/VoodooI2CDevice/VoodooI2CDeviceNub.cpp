@@ -108,7 +108,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     OSData *data = OSDynamicCast(OSData, *result);
 
     if (!data) {
-        IOLog("%s::%s Could not find or evaluate _DSM method for GPIO availability", controller_name, getName());
+        IOLog("%s::%s Could not get valid return from _DSM or XDSM method\n", controller_name, getName());
         return kIOReturnNotFound;
     }
 
@@ -116,7 +116,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     data->release();
 
     if (!(availableIndex & (index << 1))) {
-        IOLog("%s::%s TP7D doesn't support index 0x%x\n", controller_name, getName(), availableIndex);
+        IOLog("%s::%s _DSM or XDSM method doesn't support TP7G index 0x%x\n", controller_name, getName(), availableIndex);
         return kIOReturnUnsupportedMode;
     }
 
@@ -126,14 +126,15 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
 bool VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser) {
     OSObject *result;
     if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess) {
-        IOLog("%s::%s failed to retrieve GPIO interrupt from _DSM or XDSM\n", controller_name, getName());
+        IOLog("%s::%s failed to retrieve GPIO interrupt from _DSM or XDSM method\n", controller_name, getName());
         result->release();
         return false;
     }
 
     OSData *data = OSDynamicCast(OSData, result);
     if (!data) {
-        IOLog("%s::%s Could not get valid _DSM return for GPIO interrupt", controller_name, getName());
+        IOLog("%s::%s Could not get valid _DSM or XDSM return for GPIO interrupt\n", controller_name, getName());
+        result->release();
         return false;
     }
 
@@ -143,11 +144,11 @@ bool VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs
     data->release();
 
     if (!crs_parser->found_gpio_interrupts) {
-        IOLog("%s::%s Failed to find GPIO interrupt from _DSM", controller_name, getName());
+        IOLog("%s::%s Failed to find GPIO interrupt from _DSM or XDSM method\n", controller_name, getName());
         return false;
     }
 
-    IOLog("%s::%s GPIO interrupts retrieved through _DSM method", controller_name, getName());
+    IOLog("%s::%s GPIO interrupts retrieved through _DSM or XDSM method\n", controller_name, getName());
     return true;
 }
 
@@ -157,7 +158,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
 
     OSData *data = OSDynamicCast(OSData, result);
     if (!data) {
-        IOLog("%s::%s Could not find or evaluate _CRS method", controller_name, getName());
+        IOLog("%s::%s Could not find or evaluate _CRS method\n", controller_name, getName());
         return kIOReturnNotFound;
     }
 
