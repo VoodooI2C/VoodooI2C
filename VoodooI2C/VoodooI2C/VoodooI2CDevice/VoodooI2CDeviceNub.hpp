@@ -213,7 +213,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     /* Instantiates a <VoodooI2CACPICRSParser> object to retrieve GPIO interrupt from _DSM.
      * @crs_parser The parser for default _CRS
      *
-     * @return true if GPIO interrupt is available from _DSM
+     * @return true if GPIO interrupt is parsed from _DSM successfully
      */
     bool getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser);
 

@@ -116,7 +116,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     data->release();
 
     if (!(availableIndex & (index << 1))) {
-        IOLog("%s::%s TP7D index 0x%x doesn't support GPIO report\n", controller_name, getName(), availableIndex);
+        IOLog("%s::%s TP7D doesn't support index 0x%x\n", controller_name, getName(), availableIndex);
         return kIOReturnUnsupportedMode;
     }
 
@@ -126,7 +126,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
 bool VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser) {
     OSObject *result;
     if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess) {
-        IOLog("%s::%s Warning: If your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), getName());
+        IOLog("%s::%s failed to retrieve GPIO interrupt from _DSM or XDSM\n", controller_name, getName());
         result->release();
         return false;
     }
@@ -147,7 +147,6 @@ bool VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs
         return false;
     }
 
-    has_gpio_interrupts = true;
     IOLog("%s::%s GPIO interrupts retrieved through _DSM method", controller_name, getName());
     return true;
 }
