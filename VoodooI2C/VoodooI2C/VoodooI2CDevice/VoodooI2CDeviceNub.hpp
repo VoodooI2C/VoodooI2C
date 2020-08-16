@@ -20,9 +20,11 @@
 #define EXPORT __attribute__((visibility("default")))
 #endif
 
+#define I2C_DSM_HIDG "3cdff6f7-4267-4555-ad05-b30a3d8938de"
 #define I2C_DSM_TP7G "ef87eb82-f951-46da-84ec-14871ac6f84b"
 #define I2C_DSM_REVISION 1
 #define DSM_SUPPORT_INDEX 0
+#define HIDG_DESC_INDEX 1
 #define TP7G_GPIO_INDEX 1
 
 class VoodooI2CControllerDriver;
@@ -171,6 +173,25 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
 
     IOReturn writeReadI2C(UInt8* write_buffer, UInt16 write_length, UInt8* read_buffer, UInt16 read_length);
 
+    /* Evaluate _DSM for specific GUID and function index. Assume Revision ID is 1 for now.
+     * @uuid Human-readable GUID string (big-endian)
+     * @index Function index
+     * @result The return is a buffer containing one bit for each function index if Function Index is zero, otherwise could be any data object (See 9.1.1 _DSM (Device Specific Method) in ACPI Specification, Version 6.3)
+     *
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, otherwise failed when executing *evaluateObject*.
+     */
+
+    IOReturn evaluateDSM(const char *uuid, UInt32 index, OSObject **result);
+
+    /* Evaluate _DSM for availability of I2C resources like GPIO interrupts.
+     * @index Function index
+     * @result The return could be any data object
+     *
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if resources were unavailable, *kIOReturnUnsupportedMode* if _DSM doesn't support desired function
+     */
+
+    IOReturn getDeviceResourcesDSM(UInt32 index, OSObject **result);
+
  private:
     IOACPIPlatformDevice* acpi_device;
     IOCommandGate* command_gate;
@@ -190,25 +211,6 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      */
 
     IOReturn getDeviceResources();
-
-    /* Evaluate _DSM for specific GUID and function index
-     * @uuid Human-readable GUID string (big-endian)
-     * @index Function index
-     * @result The return is a buffer containing one bit for each function index if Function Index is zero, otherwise could be any data object (See 9.1.1 _DSM (Device Specific Method) in ACPI Specification, Version 6.3)
-     *
-     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, otherwise failed when executing *evaluateObject*.
-     */
-
-    IOReturn evaluateDSM(const char *uuid, UInt32 index, OSObject **result);
-
-    /* Evaluate _DSM for availability of I2C resources like GPIO interrupts.
-     * @index Function index
-     * @result The return could be any data object
-     *
-     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if resources were unavailable, *kIOReturnUnsupportedMode* if _DSM doesn't support desired function
-     */
-
-    IOReturn getDeviceResourcesDSM(UInt32 index, OSObject **result);
 
     /* Instantiates a <VoodooI2CACPICRSParser> object to retrieve GPIO interrupt from _DSM.
      * @crs_parser The parser for default _CRS
