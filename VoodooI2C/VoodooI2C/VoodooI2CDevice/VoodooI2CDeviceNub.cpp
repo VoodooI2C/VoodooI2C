@@ -123,17 +123,17 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     return evaluateDSM(I2C_DSM_TP7G, index, result);
 }
 
-IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser) {
+IOReturn VoodooI2CDeviceNub::getAlternativeInterrupt(VoodooI2CACPICRSParser* crs_parser) {
     OSObject *result = nullptr;
     if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess) {
-        IOLog("%s::%s failed to retrieve GPIO interrupt from _DSM or XDSM method\n", controller_name, getName());
+        IOLog("%s::%s failed to retrieve interrupts from _DSM or XDSM method\n", controller_name, getName());
         result->release();
         return kIOReturnNotFound;
     }
 
     OSData *data = OSDynamicCast(OSData, result);
     if (!data) {
-        IOLog("%s::%s Could not get valid return for GPIO interrupt from _DSM or XDSM method\n", controller_name, getName());
+        IOLog("%s::%s Could not get valid return for interrupts from _DSM or XDSM method\n", controller_name, getName());
         result->release();
         return kIOReturnNotFound;
     }
@@ -144,11 +144,11 @@ IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser*
     data->release();
 
     if (!crs_parser->found_gpio_interrupts) {
-        IOLog("%s::%s Failed to find GPIO interrupt from _DSM or XDSM method\n", controller_name, getName());
+        IOLog("%s::%s Failed to find valid interrupts from _DSM or XDSM method\n", controller_name, getName());
         return kIOReturnNotFound;
     }
 
-    IOLog("%s::%s GPIO interrupts retrieved from _DSM or XDSM method\n", controller_name, getName());
+    IOLog("%s::%s Found valid interrupts from _DSM or XDSM method\n", controller_name, getName());
     return kIOReturnSuccess;
 }
 
@@ -199,7 +199,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     }
 
     if (crs_parser.found_gpio_interrupts ||
-        (!validateInterrupt() && getAlternativeGPIOInterrupt(&crs_parser) == kIOReturnSuccess)) {
+        (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess)) {
         setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
         setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
