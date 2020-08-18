@@ -152,6 +152,22 @@ IOReturn VoodooI2CDeviceNub::getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser*
     return kIOReturnSuccess;
 }
 
+bool VoodooI2CDeviceNub::validateInterrupt() {
+    OSArray* interrupt_array;
+    OSData* interrupt_data;
+    const UInt16* interrupt_pin;
+    if ((interrupt_array = OSDynamicCast(OSArray, acpi_device->getProperty(gIOInterruptSpecifiersKey))) &&
+        (interrupt_data = OSDynamicCast(OSData, interrupt_array->getObject(0))) &&
+        (interrupt_pin = reinterpret_cast<const UInt16*>(interrupt_data->getBytesNoCopy(0, 1)))) {
+        if (*interrupt_pin <= 0x2f) {
+            has_apic_interrupts = true;
+            return true;
+        }
+        IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f)\n", controller_name, getName(), *interrupt_pin);
+    }
+    return false;
+}
+
 IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     OSObject *result = NULL;
     acpi_device->evaluateObject("_CRS", &result);
@@ -182,43 +198,19 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
-    if (crs_parser.found_gpio_interrupts || getAlternativeGPIOInterrupt(&crs_parser) == kIOReturnSuccess) {
+    if (crs_parser.found_gpio_interrupts ||
+        (!validateInterrupt() && getAlternativeGPIOInterrupt(&crs_parser) == kIOReturnSuccess)) {
         setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
         setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
         has_gpio_interrupts = true;
         gpio_pin = crs_parser.gpio_interrupts.pin_number;
         gpio_irq = crs_parser.gpio_interrupts.irq_type;
-    } else {
-        has_gpio_interrupts = false;
     }
 
-    if (!has_gpio_interrupts) {
-        OSArray* interrupt_array = OSDynamicCast(OSArray, acpi_device->getProperty(gIOInterruptSpecifiersKey));
-        if (!interrupt_array) {
-            IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts; if your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), getName());
-            goto exit;
-        }
+    if (!has_apic_interrupts && !has_gpio_interrupts)
+        IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.", controller_name, getName());
 
-        OSData* interrupt_data = OSDynamicCast(OSData, interrupt_array->getObject(0));
-
-        if (!interrupt_data) {
-            IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts; if your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), getName());
-            goto exit;
-        }
-
-        const UInt16* interrupt_pin = reinterpret_cast<const UInt16*>(interrupt_data->getBytesNoCopy(0, 1));
-
-        if (!interrupt_pin) {
-            IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts; if your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), getName());
-            goto exit;
-        }
-
-        if (*interrupt_pin > 0x2f)
-            IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f) and no GPIO interrupts found; if your chosen satellite implements polling then %s will run in polling mode.\n", controller_name, getName(), *interrupt_pin, getName());
-    }
-
-exit:
     return kIOReturnSuccess;
 }
 

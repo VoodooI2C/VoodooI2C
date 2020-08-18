@@ -201,9 +201,17 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     int gpio_irq;
     UInt16 gpio_pin;
     UInt8 i2c_address;
-    bool has_gpio_interrupts;
-    bool use_10bit_addressing;
+    bool has_gpio_interrupts {false};
+    bool has_apic_interrupts {false};
+    bool use_10bit_addressing {false};
     IOWorkLoop* work_loop = nullptr;
+
+    /* Check if a valid interrupt is available less than 0x2f
+     *
+     * @return true if the interrupt can be used
+     */
+
+    bool validateInterrupt();
 
     /* Instantiates a <VoodooI2CACPICRSParser> object to grab I2C slave properties as well as potential GPIO interrupt properties.
      *
@@ -217,6 +225,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      *
      * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if no GPIO Interrupt were found.
      */
+
     IOReturn getAlternativeGPIOInterrupt(VoodooI2CACPICRSParser* crs_parser);
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
