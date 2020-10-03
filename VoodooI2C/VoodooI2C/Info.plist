@@ -502,53 +502,27 @@
 			<key>IOProviderClass</key>
 			<string>VoodooI2CControllerNub</string>
 		</dict>
-		<key>VoodooI2CPCISunrisePointController</key>
+		<key>VoodooI2CPCIController</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
 			<key>IOClass</key>
 			<string>VoodooI2CPCIController</string>
 			<key>IOPCIMatch</key>
-			<string>0x9d608086&amp;0xFFFCFFFF 0xa1608086&amp;0xFFFCFFFF</string>
+			<string>0x9d608086&amp;0xFFFCFFFF 0xa1608086&amp;0xFFFCFFFF 0x9de88086&amp;0xFFFCFFFF 0xa3688086&amp;0xFFFCFFFF</string>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
 			<key>IOProviderClass</key>
 			<string>IOPCIDevice</string>
 		</dict>
-		<key>VoodooI2CPCICannonPointController</key>
-		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>com.alexandred.VoodooI2C</string>
-			<key>IOClass</key>
-			<string>VoodooI2CPCIController</string>
-			<key>IOPCIMatch</key>
-			<string>0x9de88086&amp;0xFFFCFFFF 0xa3688086&amp;0xFFFCFFFF</string>
-			<key>IOProbeScore</key>
-			<integer>9999</integer>
-			<key>IOProviderClass</key>
-			<string>IOPCIDevice</string>
-		</dict>
-		<key>VoodooI2CPCICometLakeController</key>
+		<key>VoodooI2CPCILakeController</key>
 		<dict>
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
 			<key>IOClass</key>
 			<string>VoodooI2CPCILakeController</string>
 			<key>IOPCIMatch</key>
-			<string>0x06e88086&amp;0xFFFCFFFF 0x02e88086&amp;0xFFFCFFFF</string>
-			<key>IOProbeScore</key>
-			<integer>9999</integer>
-			<key>IOProviderClass</key>
-			<string>IOPCIDevice</string>
-		</dict>
-		<key>VoodooI2CPCIIceLakeController</key>
-		<dict>
-			<key>CFBundleIdentifier</key>
-			<string>com.alexandred.VoodooI2C</string>
-			<key>IOClass</key>
-			<string>VoodooI2CPCILakeController</string>
-			<key>IOPCIMatch</key>
-			<string>0x34e88086&amp;0xFFFCFFFF</string>
+			<string>0x06e88086&amp;0xFFFCFFFF 0x02e88086&amp;0xFFFCFFFF 0x34e88086&amp;0xFFFCFFFF</string>
 			<key>IOProbeScore</key>
 			<integer>9999</integer>
 			<key>IOProviderClass</key>
