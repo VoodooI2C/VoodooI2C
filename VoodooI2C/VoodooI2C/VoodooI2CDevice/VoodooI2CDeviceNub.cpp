@@ -125,16 +125,11 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
 
 IOReturn VoodooI2CDeviceNub::getAlternativeInterrupt(VoodooI2CACPICRSParser* crs_parser) {
     OSObject *result = nullptr;
-    if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess) {
-        IOLog("%s::%s failed to retrieve interrupts from _DSM or XDSM method\n", controller_name, getName());
-        result->release();
-        return kIOReturnNotFound;
-    }
-
-    OSData *data = OSDynamicCast(OSData, result);
-    if (!data) {
-        IOLog("%s::%s Could not get valid return for interrupts from _DSM or XDSM method\n", controller_name, getName());
-        result->release();
+    OSData *data = nullptr;
+    if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess ||
+        !(data = OSDynamicCast(OSData, result))) {
+        IOLog("%s::%s Could not retrieve interrupts from _DSM or XDSM method\n", controller_name, getName());
+        OSSafeReleaseNULL(result);
         return kIOReturnNotFound;
     }
 
@@ -169,13 +164,12 @@ bool VoodooI2CDeviceNub::validateInterrupt() {
 }
 
 IOReturn VoodooI2CDeviceNub::getDeviceResources() {
-    OSObject *result = NULL;
-    acpi_device->evaluateObject("_CRS", &result);
-
-    OSData *data = OSDynamicCast(OSData, result);
-    if (!data) {
+    OSObject *result = nullptr;
+    OSData *data = nullptr;
+    if (acpi_device->evaluateObject("_CRS", &result) != kIOReturnSuccess ||
+        !(data = OSDynamicCast(OSData, result))) {
         IOLog("%s::%s Could not find or evaluate _CRS method\n", controller_name, getName());
-        result->release();
+        OSSafeReleaseNULL(result);
         return kIOReturnNotFound;
     }
 
