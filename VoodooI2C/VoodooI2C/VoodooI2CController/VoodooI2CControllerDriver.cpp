@@ -170,7 +170,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
      *   10ms is required, for example, when reading the HID descriptor at the first time.
      *   Timeout is set to 100ms (10ms x 10 times)
      */
-    nanoseconds_to_absolutetime(100000000, &abstime);
+    nanoseconds_to_absolutetime(1000000000, &abstime);
     clock_absolutetime_interval_to_deadline(abstime, &deadline);
     sleep = command_gate->commandSleep(&bus_device.command_complete, deadline, THREAD_INTERRUPTIBLE);
 
@@ -523,7 +523,7 @@ void VoodooI2CControllerDriver::stop(IOService* provider) {
 }
 
 IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
-    int timeout = 500;
+    int timeout = 1000;
 
     do {
         writeRegister(enabled, DW_IC_ENABLE);
