@@ -15,7 +15,8 @@ void VoodooI2CPCILakeController::configurePCI() {
     auto pci_device = physical_device.pci_device;
     pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD0);
 
-    /* Apply Forcing D0 patch which modify 0x80 below to your findings.*/
+    /* Apply Forcing D0 patch which modify 0x80 below to your findings.
+       Credit to @startpenghubingzhou #246 and the unnamed notion author. */
 
     IOLog("%s::%s Current CPU is Comet Lake or Ice Lake, patching...\n",
           getName(), physical_device.name);
