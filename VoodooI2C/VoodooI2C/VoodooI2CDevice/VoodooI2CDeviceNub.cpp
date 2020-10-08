@@ -114,8 +114,9 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
 
     UInt8 availableIndex = *(reinterpret_cast<UInt8 const*>(data->getBytesNoCopy()));
     data->release();
+    *result = nullptr;
 
-    if (!(availableIndex & (index << 1))) {
+    if (!(availableIndex & (1 << index))) {
         IOLog("%s::%s TP7G index 0x%x is not supported\n", controller_name, getName(), availableIndex);
         return kIOReturnUnsupportedMode;
     }
