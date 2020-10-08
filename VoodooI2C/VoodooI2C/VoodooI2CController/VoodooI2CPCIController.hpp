@@ -24,15 +24,16 @@
 class EXPORT VoodooI2CPCIController : public VoodooI2CController {
     OSDeclareDefaultStructors(VoodooI2CPCIController);
 
- private:
+ protected:
     /* Configures the PCI provider
      *
      * This function disables PCI power management (which the controller does not support) by
      * enforcing PCI power state D0. It then enables the PCI bus master and the memory banks.
      */
 
-    void configurePCI();
+    virtual void configurePCI();
 
+ private:
     /* Finds the ACPI device associated to the PCI provider
      *
      * Despite a controller being PCI enumerated, some PCs will sill provide bus configuration values (used in 

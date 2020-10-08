@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6FE8F89C25290B9600318126 /* VoodooI2CPCILakeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FE8F89A25290B9600318126 /* VoodooI2CPCILakeController.cpp */; };
+		6FE8F89D25290B9600318126 /* VoodooI2CPCILakeController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6FE8F89B25290B9600318126 /* VoodooI2CPCILakeController.hpp */; };
 		AC015C471F32345500516383 /* VoodooI2CACPIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */; };
 		AC015C481F32345500516383 /* VoodooI2CACPIController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC015C461F32345500516383 /* VoodooI2CACPIController.hpp */; };
 		AC0955751F4ED4C50052E343 /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0955731F4ED4C50052E343 /* helpers.cpp */; };
@@ -169,6 +171,8 @@
 
 /* Begin PBXFileReference section */
 		121132252129565400E4D720 /* VoodooI2CFTE.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CFTE.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CFTE/VoodooI2CFTE.xcodeproj"; sourceTree = "<group>"; };
+		6FE8F89A25290B9600318126 /* VoodooI2CPCILakeController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CPCILakeController.cpp; path = VoodooI2CController/VoodooI2CPCILakeController.cpp; sourceTree = "<group>"; };
+		6FE8F89B25290B9600318126 /* VoodooI2CPCILakeController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CPCILakeController.hpp; path = VoodooI2CController/VoodooI2CPCILakeController.hpp; sourceTree = "<group>"; };
 		7B30D6971F91141300190488 /* VoodooI2CELAN.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CELAN.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CELAN/VoodooI2CELAN.xcodeproj"; sourceTree = "<group>"; };
 		AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPIController.cpp; path = VoodooI2CController/VoodooI2CACPIController.cpp; sourceTree = "<group>"; };
 		AC015C461F32345500516383 /* VoodooI2CACPIController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CACPIController.hpp; path = VoodooI2CController/VoodooI2CACPIController.hpp; sourceTree = "<group>"; };
@@ -388,6 +392,8 @@
 				AC6268931F2F6CF1000CBF2D /* VoodooI2CController.hpp */,
 				AC49544F1F31E91D0040E11F /* VoodooI2CPCIController.cpp */,
 				AC4954501F31E91D0040E11F /* VoodooI2CPCIController.hpp */,
+				6FE8F89A25290B9600318126 /* VoodooI2CPCILakeController.cpp */,
+				6FE8F89B25290B9600318126 /* VoodooI2CPCILakeController.hpp */,
 				AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */,
 				AC015C461F32345500516383 /* VoodooI2CACPIController.hpp */,
 				ACF810E61F3304720031A6F5 /* VoodooI2CControllerNub.cpp */,
@@ -494,6 +500,7 @@
 				AC0AD4591F3842800070A642 /* VoodooI2CDeviceNub.hpp in Headers */,
 				ACD86D922151BF5600C474A9 /* VoodooI2CNativeEngine.hpp in Headers */,
 				AC015C481F32345500516383 /* VoodooI2CACPIController.hpp in Headers */,
+				6FE8F89D25290B9600318126 /* VoodooI2CPCILakeController.hpp in Headers */,
 				ACF6E5921F759EA000A0CD61 /* csgesturescroll.h in Headers */,
 				ACF6E5941F759EA000A0CD61 /* VoodooCSGestureHIDWrapper.h in Headers */,
 				AC09557A1F4ED4F60052E343 /* linuxirq.hpp in Headers */,
@@ -745,6 +752,7 @@
 				AC0E75761F69997B002268D0 /* VoodooI2CDigitiserTransducer.cpp in Sources */,
 				AC0AD4581F3842800070A642 /* VoodooI2CDeviceNub.cpp in Sources */,
 				ACF6E5911F759EA000A0CD61 /* csgesturescroll.cpp in Sources */,
+				6FE8F89C25290B9600318126 /* VoodooI2CPCILakeController.cpp in Sources */,
 				ACF810E81F3304720031A6F5 /* VoodooI2CControllerNub.cpp in Sources */,
 				AC6268941F2F6CF1000CBF2D /* VoodooI2CController.cpp in Sources */,
 				AC09557B1F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp in Sources */,
