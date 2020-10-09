@@ -88,9 +88,9 @@ IOReturn VoodooI2CDeviceNub::evaluateDSM(const char *uuid, UInt32 index, OSObjec
         OSArray::withCapacity(1),
     };
 
-    ret = acpi_device->evaluateObject("_DSM", result, params, 4);
+    ret = acpi_device->evaluateObject("XDSM", result, params, 4);
     if (ret != kIOReturnSuccess)
-        ret = acpi_device->evaluateObject("XDSM", result, params, 4);
+        ret = acpi_device->evaluateObject("_DSM", result, params, 4);
 
     params[0]->release();
     params[1]->release();
