@@ -1,7 +1,7 @@
 /*
  * Table for debuging common I2C constants.
  *
- * Please note you might need a remove _INI hacks temporary to reveal
+ * Please note you might need to remove _INI hacks temporary for
  * original value.
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
@@ -16,6 +16,8 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
     External (SMD2, FieldUnitObj)
     External (SMD3, FieldUnitObj)
     // I2C Interrupt mode
+    External (GPDI, FieldUnitObj)
+    External (GPLI, FieldUnitObj)
     External (SDM0, FieldUnitObj)
     External (SDM1, FieldUnitObj)
     // I2C Device type
@@ -26,14 +28,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
     {
         Device (I2CD)
         {
-            Name (_HID, EisaId ("PNP0C02"))  // _HID: Hardware ID
+            Name (_HID, EisaId ("PNP0C02"))
             Name (_STA, 0x0F)  // _STA: Status
 
             If (CondRefOf (\GPEN))
             {
                 Device (GPEN)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\GPEN)
                     }
@@ -44,7 +46,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SBRG)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SBRG)
                     }
@@ -55,7 +57,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SMD0)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SMD0)
                     }
@@ -66,7 +68,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SMD1)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SMD1)
                     }
@@ -77,7 +79,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SMD2)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SMD2)
                     }
@@ -88,9 +90,31 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SMD3)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SMD3)
+                    }
+                }
+            }
+
+            If (CondRefOf (\GPDI))
+            {
+                Device (GPDI)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\GPDI)
+                    }
+                }
+            }
+
+            If (CondRefOf (\GPLI))
+            {
+                Device (GPLI)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\GPLI)
                     }
                 }
             }
@@ -99,7 +123,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SDM0)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SDM0)
                     }
@@ -110,7 +134,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SDM1)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SDM1)
                     }
@@ -121,7 +145,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SDS0)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SDS0)
                     }
@@ -132,7 +156,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
             {
                 Device (SDS1)
                 {
-                    Method (_ADR, 0, Serialized)  // _ADR: Address
+                    Method (_ADR, 0, Serialized)
                     {
                         Return (\SDS1)
                     }
