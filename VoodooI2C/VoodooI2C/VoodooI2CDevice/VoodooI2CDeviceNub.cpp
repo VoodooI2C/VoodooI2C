@@ -193,8 +193,10 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
+    uint32_t checkForAltInterrupts;
     if (crs_parser.found_gpio_interrupts ||
-        (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess)) {
+        (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess &&
+         !PE_parse_boot_argn("-vi2c-no-alt-interrupts", &checkForAltInterrupts, sizeof(checkForAltInterrupts)))) {
         setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
         setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
