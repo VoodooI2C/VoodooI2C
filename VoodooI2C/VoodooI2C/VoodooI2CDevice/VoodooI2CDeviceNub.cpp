@@ -213,7 +213,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     uint32_t forcePolling;
     if (checkKernelArg("-vi2c-force-polling")) {
         use_alt_interrupts = false;
-    } else if (readProperty(pci_controller_entry, "force-polling", forcePolling)) {
+    } else if (readProperty(pci_controller_entry, "force-polling", &forcePolling)) {
         use_alt_interrupts = forcePolling != 1;
     }
     

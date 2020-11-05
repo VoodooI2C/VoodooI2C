@@ -298,12 +298,12 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      * @return true if read successful else false
      */
     template <typename T>
-    inline bool readProperty(const IORegistryEntry *entry, const char *name, T &value) {
+    inline bool readProperty(const IORegistryEntry *entry, const char *name, T *value) {
         auto obj = entry->getProperty(name);
         if (obj) {
             auto data = OSDynamicCast(OSData, obj);
             if (data && data->getLength() == sizeof(T)) {
-                value = *static_cast<const T*>(data->getBytesNoCopy());
+                *value = *static_cast<const T*>(data->getBytesNoCopy());
                 return true;
             }
         }
