@@ -31,11 +31,11 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         IOLog("%s::%s Could not get controller\n", controller_name, child->getName());
         return false;
     }
-    
+
     auto matchingDict = IOService::serviceMatching("VoodooI2CPCIController");
     auto service = IOService::waitForMatchingService(matchingDict, 100000000);
     matchingDict->release();
-    
+
     if (service != nullptr) {
         if (service->getParentEntry(gIOServicePlane) != nullptr) {
             pci_controller_entry = service->getParentEntry(gIOServicePlane);
@@ -208,7 +208,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", controller_name, getName());
         return kIOReturnNotFound;
     }
-    
+
     // Check if user wants to disable alt-interrupts
     uint32_t forcePolling;
     if (checkKernelArg("-vi2c-force-polling")) {
@@ -216,7 +216,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     } else if (readProperty(pci_controller_entry, "force-polling", &forcePolling)) {
         use_alt_interrupts = forcePolling != 1;
     }
-    
+
     if (crs_parser.found_gpio_interrupts ||
         (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess &&
          use_alt_interrupts)) {

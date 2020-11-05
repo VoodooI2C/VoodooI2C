@@ -277,7 +277,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      */
 
     IOReturn writeReadI2CGated(UInt8* write_buffer, UInt16* write_length, UInt8* read_buffer, UInt16* read_length);
-    
+
     /* Check if a boot-arg is present
      *
      * @arg boot-arg property name
@@ -288,7 +288,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
         int val[16];
         return PE_parse_boot_argn(arg, &val, sizeof((val)));
     }
-    
+
     /* Reads a device property from an IORegistryEntry instance
      *
      * @entry IORegistryEntry instance to read from
@@ -307,7 +307,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
                 return true;
             }
         }
-        
+
         return false;
     }
 };
