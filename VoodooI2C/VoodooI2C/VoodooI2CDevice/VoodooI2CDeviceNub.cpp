@@ -31,6 +31,22 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         IOLog("%s::%s Could not get controller\n", controller_name, child->getName());
         return false;
     }
+    
+    auto matchingDict = IOService::serviceMatching("VoodooI2CPCIController");
+    auto service = IOService::waitForMatchingService(matchingDict, 100000000);
+    matchingDict->release();
+    
+    if (service != nullptr) {
+        if (service->getParentEntry(gIOServicePlane) != nullptr) {
+            pci_controller_entry = service->getParentEntry(gIOServicePlane);
+        } else {
+            IOLog("%s::%s Could not get parent PCI controller\n", controller_name, child->getName());
+            return false;
+        }
+    } else {
+        IOLog("%s::%s Could not get VoodooI2CPCIController instance\n", controller_name, child->getName());
+        return false;
+    }
 
     if (getDeviceResources() != kIOReturnSuccess) {
         IOLog("%s::%s Could not get device resources\n", controller_name, child->getName());
@@ -192,11 +208,18 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", controller_name, getName());
         return kIOReturnNotFound;
     }
-
-    uint32_t checkForAltInterrupts;
+    
+    // Check if user wants to disable alt-interrupts
+    uint32_t forcePolling;
+    if (checkKernelArg("-vi2c-force-polling")) {
+        use_alt_interrupts = false;
+    } else if (readProperty(pci_controller_entry, "force-polling", forcePolling)) {
+        use_alt_interrupts = forcePolling != 1;
+    }
+    
     if (crs_parser.found_gpio_interrupts ||
         (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess &&
-         !PE_parse_boot_argn("-vi2c-force-polling", &checkForAltInterrupts, sizeof(checkForAltInterrupts)))) {
+         use_alt_interrupts)) {
         setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
         setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
