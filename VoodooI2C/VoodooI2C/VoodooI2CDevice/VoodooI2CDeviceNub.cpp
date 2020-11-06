@@ -32,20 +32,12 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         return false;
     }
 
-    auto matchingDict = IOService::serviceMatching("VoodooI2CPCIController");
-    auto service = IOService::waitForMatchingService(matchingDict, 100000000);
-    matchingDict->release();
+    pci_device = controller->nub->controller->physical_device.pci_device;
 
-    if (service != nullptr) {
-        if (service->getParentEntry(gIOServicePlane) != nullptr) {
-            pci_controller_entry = service->getParentEntry(gIOServicePlane);
-        } else {
-            IOLog("%s::%s Could not get parent PCI controller\n", controller_name, child->getName());
-            return false;
-        }
-    } else {
-        IOLog("%s::%s Could not get VoodooI2CPCIController instance\n", controller_name, child->getName());
-        return false;
+    if (checkKernelArg("-vi2c-force-polling")) {
+        force_polling = true;
+    } else if (pci_device) {
+        force_polling = pci_device->getProperty("force-polling") != nullptr;
     }
 
     if (getDeviceResources() != kIOReturnSuccess) {
@@ -209,26 +201,21 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
-    // Check if user wants to disable alt-interrupts
-    uint32_t forcePolling;
-    if (checkKernelArg("-vi2c-force-polling")) {
-        use_alt_interrupts = false;
-    } else if (readProperty(pci_controller_entry, "force-polling", &forcePolling)) {
-        use_alt_interrupts = forcePolling != 1;
-    }
-
-    if (crs_parser.found_gpio_interrupts ||
-        (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess &&
-         use_alt_interrupts)) {
+    if (!force_polling) {
+        if (crs_parser.found_gpio_interrupts ||
+        (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess)) {
         setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
         setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
 
         has_gpio_interrupts = true;
         gpio_pin = crs_parser.gpio_interrupts.pin_number;
         gpio_irq = crs_parser.gpio_interrupts.irq_type;
+        }
+    } else {
+        IOLog("%s::%s Forced polling mode, skipping APIC/GPIO interrupts", controller_name, getName());
     }
 
-    if (!has_apic_interrupts && !has_gpio_interrupts)
+    if (!has_apic_interrupts && !has_gpio_interrupts && !force_polling)
         IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.", controller_name, getName());
 
     return kIOReturnSuccess;

@@ -15,6 +15,7 @@
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
 #include "../../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp"
+#include "../VoodooI2CController/VoodooI2CController.hpp"
 
 #ifndef EXPORT
 #define EXPORT __attribute__((visibility("default")))
@@ -204,8 +205,8 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     bool has_apic_interrupts {false};
     bool has_gpio_interrupts {false};
     bool use_10bit_addressing {false};
-    bool use_alt_interrupts = true;
-    IORegistryEntry *pci_controller_entry { nullptr };
+    bool force_polling { true };
+    IOPCIDevice *pci_device { nullptr };
     IOWorkLoop* work_loop = nullptr;
 
     /* Check if a valid interrupt is available less than 0x2f
@@ -287,28 +288,6 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     inline bool checkKernelArg(const char *arg) {
         int val[16];
         return PE_parse_boot_argn(arg, &val, sizeof((val)));
-    }
-
-    /* Reads a device property from an IORegistryEntry instance
-     *
-     * @entry IORegistryEntry instance to read from
-     * @name Property name
-     * @value Read value
-     *
-     * @return true if read successful else false
-     */
-    template <typename T>
-    inline bool readProperty(const IORegistryEntry *entry, const char *name, T *value) {
-        auto obj = entry->getProperty(name);
-        if (obj) {
-            auto data = OSDynamicCast(OSData, obj);
-            if (data && data->getLength() == sizeof(T)) {
-                *value = *static_cast<const T*>(data->getBytesNoCopy());
-                return true;
-            }
-        }
-
-        return false;
     }
 };
 
