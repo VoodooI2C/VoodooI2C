@@ -205,7 +205,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
     bool has_apic_interrupts {false};
     bool has_gpio_interrupts {false};
     bool use_10bit_addressing {false};
-    bool force_polling { true };
+    bool force_polling { false };
     IOPCIDevice *pci_device { nullptr };
     IOWorkLoop* work_loop = nullptr;
 
