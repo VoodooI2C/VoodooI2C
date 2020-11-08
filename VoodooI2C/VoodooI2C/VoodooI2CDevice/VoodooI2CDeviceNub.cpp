@@ -32,14 +32,6 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         return false;
     }
 
-    pci_device = controller->nub->controller->physical_device.pci_device;
-
-    if (checkKernelArg("-vi2c-force-polling")) {
-        force_polling = true;
-    } else if (pci_device) {
-        force_polling = pci_device->getProperty("force-polling") != nullptr;
-    }
-
     if (getDeviceResources() != kIOReturnSuccess) {
         IOLog("%s::%s Could not get device resources\n", controller_name, child->getName());
         return false;
@@ -201,6 +193,17 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
+    IOPCIDevice *pci_device { nullptr };
+    bool force_polling { false };
+
+    pci_device = controller->nub->controller->physical_device.pci_device;
+
+    if (checkKernelArg("-vi2c-force-polling")) {
+        force_polling = true;
+    } else if (pci_device) {
+        force_polling = pci_device->getProperty("force-polling") != nullptr;
+    }
+
     if (!force_polling) {
         if (crs_parser.found_gpio_interrupts ||
         (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess)) {
@@ -212,11 +215,11 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         gpio_irq = crs_parser.gpio_interrupts.irq_type;
         }
     } else {
-        IOLog("%s::%s Forced polling mode, skipping APIC/GPIO interrupts", controller_name, getName());
+        IOLog("%s::%s Forced polling mode, skipping APIC/GPIO interrupts\n", controller_name, getName());
     }
 
     if (!has_apic_interrupts && !has_gpio_interrupts && !force_polling)
-        IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.", controller_name, getName());
+        IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.\n", controller_name, getName());
 
     return kIOReturnSuccess;
 }
