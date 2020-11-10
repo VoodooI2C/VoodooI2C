@@ -194,15 +194,11 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     }
 
     IOPCIDevice *pci_device { nullptr };
-    bool force_polling { false };
 
     pci_device = controller->nub->controller->physical_device.pci_device;
 
-    if (checkKernelArg("-vi2c-force-polling")) {
-        force_polling = true;
-    } else if (pci_device) {
-        force_polling = pci_device->getProperty("force-polling") != nullptr;
-    }
+    bool force_polling = checkKernelArg("-vi2c-force-polling");
+    force_polling = force_polling || ((pci_device != nullptr) && (pci_device->getProperty("force-polling") != nullptr));
 
     if (!force_polling) {
         if (crs_parser.found_gpio_interrupts ||
