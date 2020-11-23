@@ -15,6 +15,7 @@
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
 #include "../../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp"
+#include "../VoodooI2CController/VoodooI2CController.hpp"
 
 #ifndef EXPORT
 #define EXPORT __attribute__((visibility("default")))
@@ -275,6 +276,17 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      */
 
     IOReturn writeReadI2CGated(UInt8* write_buffer, UInt16* write_length, UInt8* read_buffer, UInt16* read_length);
+
+    /* Check if a boot-arg is present
+     *
+     * @arg boot-arg property name
+     *
+     * @return true if present else false
+     */
+    inline bool checkKernelArg(const char *arg) {
+        int val[16];
+        return PE_parse_boot_argn(arg, &val, sizeof((val)));
+    }
 };
 
 
