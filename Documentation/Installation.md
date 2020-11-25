@@ -75,7 +75,7 @@ You can think of polling mode as the "safe boot" mode of VoodooI2C. As such it i
 
 However, it is highly recommended that once your system is up and running, you should apply all the GPIO patches (except Haswell and Broadwell users) to ensure optimal performance. If you find that you cannot get your trackpad to work in interrupts mode or that interrupts mode leads to high CPU usage then it is likely you have a system with a buggy implementation of GPIO. In this case you will have to switch back to polling mode. In any case, you should still go through the troubleshooting process as outlined on the <Troubleshooting> page to make sure that you have not made a mistake.
 
-Staring from 2.5.3, VooodooI2C will try to extract GPIO pin information on compatible machine if APIC interrupt is unavailable. In case it's not working, you can force polling mode by adding `-vi2c-no-alt-interrupts` to `boot-arg` or adding `force-polling` to specific I2C controller with `Devices`-`Properties` section for Clover or `DeviceProperties` section for OpenCore.
+Staring from 2.5.3, VooodooI2C will try to extract GPIO pin information on compatible machine if APIC interrupt is unavailable. In case it's not working, you can force polling mode by adding `-vi2c-no-alt-interrupts` to `boot-arg` or adding `force-polling` to specific I2C controller in `Devices`-`Properties` section for Clover or `DeviceProperties` section for OpenCore.
 
 ### Windows Patches
 
