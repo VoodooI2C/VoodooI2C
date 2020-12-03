@@ -240,37 +240,32 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
     IOService* child;
     OSIterator* children = nub->controller->physical_device.acpi_device->getChildIterator(gIOACPIPlane);
 
-    if (children) {
-        while ((child = reinterpret_cast<IOService*>(children->getNextObject()))) {
-            IOLog("%s::%s Found I2C device: %s\n", getName(), bus_device.name, getMatchedName(child));
+    OSIterator* children = nub->controller->physical_device.acpi_device->getChildIterator(gIOACPIPlane);
 
-            VoodooI2CDeviceNub* device_nub = OSTypeAlloc(VoodooI2CDeviceNub);
+    if (!children)
+        return kIOReturnNoResources;
 
-            OSDictionary* child_properties = child->dictionaryWithProperties();
-            bool nub_initialized = true;
-            if (!device_nub ||
-                !device_nub->init(child_properties) ||
-                !device_nub->attach(this, child)) {
-                nub_initialized = false;
-            } else if (!device_nub->start(this)) {
-                device_nub->detach(this);
-                nub_initialized = false;
-            }
+    while ((child = OSDynamicCast(IOService, children->getNextObject()))) {
+        IOLog("%s::%s Found I2C device: %s\n", getName(), bus_device.name, getMatchedName(child));
 
-            OSSafeReleaseNULL(child_properties);
+        VoodooI2CDeviceNub* device_nub = OSTypeAlloc(VoodooI2CDeviceNub);
+        OSDictionary* child_properties = child->dictionaryWithProperties();
 
-            if (!nub_initialized) {
-                IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device.name, getMatchedName(child));
-                OSSafeReleaseNULL(device_nub);
-
-                continue;
-            }
-
+        if (!device_nub ||
+            !device_nub->init(child_properties) ||
+            !device_nub->attach(this, child)) {
+            IOLog("%s::%s Could not initialise nub for %s\n", getName(), bus_device.name, getMatchedName(child));
+        } else if (!device_nub->start(this)) {
+            device_nub->detach(this);
+            IOLog("%s::%s Could not start nub for %s\n", getName(), bus_device.name, getMatchedName(child));
+        } else {
             device_nubs->setObject(device_nub);
-            device_nub->release();
         }
-        children->release();
+
+        OSSafeReleaseNULL(child_properties);
+        OSSafeReleaseNULL(device_nub);
     }
+    children->release();
 
     return kIOReturnSuccess;
 }
