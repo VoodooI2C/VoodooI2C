@@ -240,8 +240,6 @@ IOReturn VoodooI2CControllerDriver::publishNubs() {
     IOService* child;
     OSIterator* children = nub->controller->physical_device.acpi_device->getChildIterator(gIOACPIPlane);
 
-    OSIterator* children = nub->controller->physical_device.acpi_device->getChildIterator(gIOACPIPlane);
-
     if (!children)
         return kIOReturnNoResources;
 
