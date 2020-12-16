@@ -581,12 +581,12 @@
 					ProjectRef = AC2DC7311F7F0E5B0071CDCA /* VoodooI2CServices.xcodeproj */;
 				},
 				{
-					ProductGroup = AC94C8392119E50400D26081 /* Products */;
-					ProjectRef = AC94C8382119E50400D26081 /* VoodooI2CSynaptics.xcodeproj */;
-				},
-				{
 					ProductGroup = ACB62EF721717B3A00DF6D8B /* Products */;
 					ProjectRef = ACB62EF621717B3A00DF6D8B /* VoodooI2CSynaptics.xcodeproj */;
+				},
+				{
+					ProductGroup = AC94C8392119E50400D26081 /* Products */;
+					ProjectRef = AC94C8382119E50400D26081 /* VoodooI2CSynaptics.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -903,10 +903,11 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"\"../Dependencies/Headers\"/**",
 					"$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources",
+					"$(PROJECT_DIR)/MacKernelSDK/Headers/**",
 				);
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
-				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
-				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
@@ -937,8 +938,8 @@
 					"$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources",
 				);
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
-				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
-				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/MacKernelSDK/Headers";
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
