@@ -33,7 +33,11 @@ jobs:
       - run: find $HOME/Library/Developer/Xcode/DerivedData -name '*.xcactivitylog' -exec cp {} $CIRCLE_ARTIFACTS/xcactivitylog \; || true
       - run:
           name: "Copy build artifacts"
-          command: cp -R build/Build/Products/Release/ $CIRCLE_ARTIFACTS
+          command: |
+            export COMMIT_HASH=${CIRCLE_SHA1:0:7}
+            cd build/Build/Products/Release
+            zip -r $CIRCLE_ARTIFACTS/VoodooI2C-$COMMIT_HASH.zip *.kext
+            zip -r $CIRCLE_ARTIFACTS/VoodooI2C-Debug-Symbols-$COMMIT_HASH.zip *.dSYM
       # Save artifacts
       - store_artifacts:
           path: /tmp/circleci-artifacts
