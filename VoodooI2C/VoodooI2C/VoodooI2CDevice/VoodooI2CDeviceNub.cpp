@@ -101,14 +101,14 @@ IOReturn VoodooI2CDeviceNub::evaluateDSM(const char *uuid, UInt32 index, OSObjec
 
 IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **result) {
     if (evaluateDSM(I2C_DSM_TP7G, DSM_SUPPORT_INDEX, result) != kIOReturnSuccess) {
-        IOLog("%s::%s Could not find suitable _DSM or XDSM method\n", controller_name, getName());
+        IOLog("%s::%s Could not find suitable _DSM or XDSM method\n", getName(), acpi_device->getName());
         return kIOReturnNotFound;
     }
 
     OSData *data = OSDynamicCast(OSData, *result);
 
     if (!data) {
-        IOLog("%s::%s Could not get valid return for available TP7G indexes\n", controller_name, getName());
+        IOLog("%s::%s Could not get valid return for available TP7G indexes\n", getName(), acpi_device->getName());
         return kIOReturnNotFound;
     }
 
@@ -117,7 +117,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     *result = nullptr;
 
     if (!(availableIndex & (1 << index))) {
-        IOLog("%s::%s TP7G index 0x%x is not supported\n", controller_name, getName(), availableIndex);
+        IOLog("%s::%s TP7G index 0x%x is not supported\n", getName(), acpi_device->getName(), availableIndex);
         return kIOReturnUnsupportedMode;
     }
 
@@ -129,7 +129,7 @@ IOReturn VoodooI2CDeviceNub::getAlternativeInterrupt(VoodooI2CACPICRSParser* crs
     OSData *data = nullptr;
     if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess ||
         !(data = OSDynamicCast(OSData, result))) {
-        IOLog("%s::%s Could not retrieve interrupts from _DSM or XDSM method\n", controller_name, getName());
+        IOLog("%s::%s Could not retrieve interrupts from _DSM or XDSM method\n", getName(), acpi_device->getName());
         OSSafeReleaseNULL(result);
         return kIOReturnNotFound;
     }
@@ -140,11 +140,11 @@ IOReturn VoodooI2CDeviceNub::getAlternativeInterrupt(VoodooI2CACPICRSParser* crs
     data->release();
 
     if (!crs_parser->found_gpio_interrupts) {
-        IOLog("%s::%s Failed to find valid interrupts from _DSM or XDSM method\n", controller_name, getName());
+        IOLog("%s::%s Failed to find valid interrupts from _DSM or XDSM method\n", getName(), acpi_device->getName());
         return kIOReturnNotFound;
     }
 
-    IOLog("%s::%s Found valid interrupts from _DSM or XDSM method\n", controller_name, getName());
+    IOLog("%s::%s Found valid interrupts from _DSM or XDSM method\n", getName(), acpi_device->getName());
     return kIOReturnSuccess;
 }
 
@@ -159,7 +159,7 @@ bool VoodooI2CDeviceNub::validateInterrupt() {
             has_apic_interrupts = true;
             return true;
         }
-        IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f)\n", controller_name, getName(), *interrupt_pin);
+        IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f)\n", getName(), acpi_device->getName(), *interrupt_pin);
     }
     return false;
 }
@@ -169,7 +169,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     OSData *data = nullptr;
     if (acpi_device->evaluateObject("_CRS", &result) != kIOReturnSuccess ||
         !(data = OSDynamicCast(OSData, result))) {
-        IOLog("%s::%s Could not find or evaluate _CRS method\n", controller_name, getName());
+        IOLog("%s::%s Could not find or evaluate _CRS method\n", getName(), acpi_device->getName());
         OSSafeReleaseNULL(result);
         return kIOReturnNotFound;
     }
@@ -189,7 +189,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
 
         setProperty("sclHz", crs_parser.i2c_info.bus_speed, 32);
     } else {
-        IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", controller_name, getName());
+        IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", getName(), acpi_device->getName());
         return kIOReturnNotFound;
     }
 
@@ -211,11 +211,11 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         gpio_irq = crs_parser.gpio_interrupts.irq_type;
         }
     } else {
-        IOLog("%s::%s Forced polling mode, skipping APIC/GPIO interrupts\n", controller_name, getName());
+        IOLog("%s::%s Forced polling mode, skipping APIC/GPIO interrupts\n", getName(), acpi_device->getName());
     }
 
     if (!has_apic_interrupts && !has_gpio_interrupts && !force_polling)
-        IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.\n", controller_name, getName());
+        IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.\n", getName(), acpi_device->getName());
 
     return kIOReturnSuccess;
 }
@@ -230,7 +230,7 @@ VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
     gpio_controller = OSDynamicCast(VoodooGPIO, matched);
 
     if (gpio_controller != NULL) {
-        IOLog("%s::Got GPIO Controller! %s\n", getName(), gpio_controller->getName());
+        IOLog("%s::%s Got GPIO Controller! %s\n", getName(), acpi_device->getName(), gpio_controller->getName());
     }
     name_match->release();
     OSSafeReleaseNULL(matched);
