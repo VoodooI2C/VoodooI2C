@@ -930,10 +930,15 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.5.2;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(PROJECT_DIR)/MacKernelSDK/Headers/**",
 					"\"../Dependencies/Headers\"/**",
 					"$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources",
 				);
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 2.5.2;
 				MODULE_NAME = com.alexandred.VoodooI2C;
@@ -956,10 +961,15 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.5.2;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(PROJECT_DIR)/MacKernelSDK/Headers/**",
 					"\"../Dependencies/Headers\"/**",
 					"$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources",
 				);
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 2.5.2;
 				MODULE_NAME = com.alexandred.VoodooI2C;
