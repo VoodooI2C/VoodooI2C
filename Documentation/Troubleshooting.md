@@ -19,7 +19,7 @@ Please provide all requested IORegs using IORegExplorer v2.1 which can be obtain
 
 If after following the installation guide you get no or buggy input you will need to prepare an archive containing the following:
 
-1. A copy of your IOReg with VoodooI2C installed.
+1. A copy of your IOReg with VoodooI2C installed (and [SSDT-I2CD](https://github.com/VoodooI2C/VoodooI2C/blob/master/Documentation/SSDT-I2CD.dsl) injected for dumping constants).
 2. A copy of your original and patched DSDT.
 3. If you are on 10.11, a copy of your `system.log` from the Console app. If you are on 10.12+, a copy of the log as outlined on the <Common Errors> page.
 4. A text file containing the following information:

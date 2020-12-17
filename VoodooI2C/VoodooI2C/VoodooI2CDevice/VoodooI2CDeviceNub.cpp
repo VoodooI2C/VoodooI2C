@@ -88,9 +88,12 @@ IOReturn VoodooI2CDeviceNub::evaluateDSM(const char *uuid, UInt32 index, OSObjec
         OSArray::withCapacity(1),
     };
 
-    ret = acpi_device->evaluateObject("_DSM", result, params, 4);
-    if (ret != kIOReturnSuccess)
-        ret = acpi_device->evaluateObject("XDSM", result, params, 4);
+    ret = acpi_device->evaluateObject("XDSM", result, params, 4);
+    if (ret != kIOReturnSuccess) {
+        ret = acpi_device->evaluateObject("_DSM", result, params, 4);
+    } else {
+        IOLog("%s::%s Warning: support for XDSM method is deprecated and will be removed in a future release, please remove related rename.\n", controller_name, getName());
+    }
 
     params[0]->release();
     params[1]->release();

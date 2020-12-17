@@ -32,16 +32,18 @@ If the number is not **at least** 4 then your system is not suitable for VoodooI
 	1. 'INT33C2' and 'INT33C3' - Haswell era
 	2. 'INT3432' and 'INT3433' - Broadwell era
 	3. 'pci8086,9d60', 'pci8086,9d61', 'pci8086,9d62' and 'pci8086,9d63' - Skylake era
-	4. 'pci8086,a160' and 'pci8086,a161' - Kaby Lake era
-	5. 'pci8086,9de8' and 'pci8086,9de9' - Cannon Lake/Whiskey Lake era
+	4. 'pci8086,a160', 'pci8086,a161', 'pci8086,a162' and 'pci8086,a163' - Kaby Lake era
+	5. 'pci8086,9de8', 'pci8086,9de9', 'pci8086,9dea' and 'pci8086,9deb' - Cannon Lake/Whiskey Lake era
 	6. 'pci8086,a368', 'pci8086,a369', 'pci8086,a36a' and 'pci8086,a36b' - Coffee Lake era
-	7. 'pci8086,2e8' and 'pci8086,2e9' - Comet Lake era
+	7. 'pci8086,2e8', 'pci8086,2e9', 'pci8086,2ea', 'pci8086,2eb',
+	   'pci8086,6e8', 'pci8086,6e9', 'pci8086,6ea' and 'pci8086,6eb' - Comet Lake era
+	8. 'pci8086,34e8', 'pci8086,34e9', 'pci8086,34ea' and 'pci8086,34eb' - Ice Lake era
 
 4. Your machine should have at least one supported I2C device. For the vast majority of users, this will be an I2C-HID device. Examples of I2C-HID devices include Precision touchpads, touchscreens and sensor hubs.
 
 5. Your hackintosh is running at least 10.10 Yosemite. VoodooI2C may work on earlier versions of macOS but we do not provide support for machines that are not running at least 10.10.
 
-6. Your hackintosh is using the Clover bootloader. Your mileage may vary with other bootloaders but we do not provide support for machines that do not use the Clover bootloader.
+6. Your hackintosh is using the Clover bootloader or the OpenCore bootloader. Your mileage may vary with other bootloaders but we do not provide support for machines that do not use the Clover bootloader.
 
 If you meet all 5 of these requirements then you may proceed with the next section of this installation guide.
 
@@ -72,6 +74,8 @@ The exact definitions of polling and interrupts are outside the scope of this gu
 You can think of polling mode as the "safe boot" mode of VoodooI2C. As such it is a suitable mode for use during the installation of macOS. Polling mode is also suitable for people who have Skylake or newer machines with buggy GPIO implementation (such as various ASUS laptops). If you wish to run VoodooI2C in polling mode, you do not need to apply any of the GPIO patches below but you must visit the <Polling Mode> page for further instructions.
 
 However, it is highly recommended that once your system is up and running, you should apply all the GPIO patches (except Haswell and Broadwell users) to ensure optimal performance. If you find that you cannot get your trackpad to work in interrupts mode or that interrupts mode leads to high CPU usage then it is likely you have a system with a buggy implementation of GPIO. In this case you will have to switch back to polling mode. In any case, you should still go through the troubleshooting process as outlined on the <Troubleshooting> page to make sure that you have not made a mistake.
+
+Staring from 2.5.3, VooodooI2C will try to extract GPIO pin information on compatible machine if APIC interrupt is unavailable. In case it's not working, you can force polling mode by adding `-vi2c-no-alt-interrupts` to `boot-arg` or adding `force-polling` to specific I2C controller in `Devices`-`Properties` section for Clover or `DeviceProperties` section for OpenCore.
 
 ### Windows Patches
 
