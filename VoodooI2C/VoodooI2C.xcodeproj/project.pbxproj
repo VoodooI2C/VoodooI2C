@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F96EB84258D41900062E8FD /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE66D8F258AC5DC003CA4AD /* libkmod.a */; };
 		6FE8F89C25290B9600318126 /* VoodooI2CPCILakeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FE8F89A25290B9600318126 /* VoodooI2CPCILakeController.cpp */; };
 		6FE8F89D25290B9600318126 /* VoodooI2CPCILakeController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 6FE8F89B25290B9600318126 /* VoodooI2CPCILakeController.hpp */; };
-		7BE66D90258AC5DC003CA4AD /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BE66D8F258AC5DC003CA4AD /* libkmod.a */; };
 		AC015C471F32345500516383 /* VoodooI2CACPIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC015C451F32345500516383 /* VoodooI2CACPIController.cpp */; };
 		AC015C481F32345500516383 /* VoodooI2CACPIController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC015C461F32345500516383 /* VoodooI2CACPIController.hpp */; };
 		AC0955751F4ED4C50052E343 /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0955731F4ED4C50052E343 /* helpers.cpp */; };
@@ -226,7 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7BE66D90258AC5DC003CA4AD /* libkmod.a in Frameworks */,
+				0F96EB84258D41900062E8FD /* libkmod.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +790,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -835,6 +836,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -846,6 +849,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -885,6 +889,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
+				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -900,22 +906,18 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.5.2;
-				"HEADER_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
-				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
-				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../MacKernelSDK/Library/x86_64",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 2.5.2;
 				MODULE_NAME = com.alexandred.VoodooI2C;
 				MODULE_VERSION = 2.4.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = kext;
 			};
 			name = Debug;
@@ -929,15 +931,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2.5.2;
-				"HEADER_SEARCH_PATHS[arch=*]" = "$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
-				KERNEL_EXTENSION_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
-				KERNEL_FRAMEWORK_HEADERS = "$(PROJECT_DIR)/../MacKernelSDK/Headers";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../MacKernelSDK/Library/x86_64",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 2.5.2;
 				MODULE_NAME = com.alexandred.VoodooI2C;
 				MODULE_VERSION = 2.4.1;
@@ -945,7 +944,6 @@
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				WRAPPER_EXTENSION = kext;
 			};
 			name = Release;
