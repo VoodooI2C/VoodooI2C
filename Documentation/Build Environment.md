@@ -30,6 +30,10 @@ git submodule update
 
 VoodooI2C relies on certain packages to aid its build and deploy process. It is not strictly necessary to have these dependencies installed and the build phases that are dependent on them can be removed from the build phases for the main VoodooI2C project. Anyone who wishes to contribute to VoodooI2C, however, must have them installed and we will not accept PRs where the build phases have been deleted (as we depend on them for continuous integration).
 
+### MacKernelSDK
+
+VoodooI2C now uses MacKernelSDK from acidanthera to build all binaries. You will need to retrieve the latest version by performing `git clone https://github.com/acidanthera/MacKernelSDK` within the root of the VoodooI2C project.
+
 ### VoodooInput
 VoodooI2C depends on VoodooInput for multitouch handling. You will need to retrieve and build the latest versions of VoodooInput by running `src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies`. Please run the command in the Git repository root, to ensure that the `VoodooInput` folder exists within the `Dependencies` folder.
 

@@ -53,7 +53,7 @@ class EXPORT VoodooI2CController : public IOService {
      * @return A pointer to this instance of VoodooI2CController
      */
 
-    virtual VoodooI2CController* probe(IOService* provider, SInt32* score);
+    VoodooI2CController* probe(IOService* provider, SInt32* score) override;
 
     /* Reads a controller register
      * @offset The offset of the register relative to the controller's base address
@@ -73,7 +73,7 @@ class EXPORT VoodooI2CController : public IOService {
      * @return *true* on successful start, *false* otherwise
      */
 
-    virtual bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* Stops the physical controller
      * @provider The provider which we have matched against
@@ -83,7 +83,7 @@ class EXPORT VoodooI2CController : public IOService {
      * stopping the associated controller nub.
      */
 
-    virtual void stop(IOService* provider);
+    void stop(IOService* provider) override;
 
     /* Writes a specified value into a controller register
      * @value The *UInt32* value to be written
@@ -133,7 +133,7 @@ class EXPORT VoodooI2CController : public IOService {
      * frees the memory allocated in <init>.
      */
 
-    virtual void free();
+    void free() override;
 
     /* Initialises <VoodooI2CController> class
      * @properties Contains the properties of the matched provider
@@ -144,7 +144,7 @@ class EXPORT VoodooI2CController : public IOService {
      * @return *true* if the successfully initialised, *false* otherwise
      */
 
-    virtual bool init(OSDictionary* properties);
+    bool init(OSDictionary* properties) override;
 
     /* Releases resources allocated in <start>
      *
@@ -165,7 +165,7 @@ class EXPORT VoodooI2CController : public IOService {
      * @return *kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise
      */
 
-    virtual IOReturn setPowerState(unsigned long whichState, IOService* whatDevice);
+    IOReturn setPowerState(unsigned long whichState, IOService* whatDevice) override;
 };
 
 #endif /* VoodooI2CController_hpp */

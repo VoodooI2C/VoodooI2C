@@ -15,4 +15,4 @@
 	url = https://github.com/VoodooI2C/VoodooI2CFTE.git
 [submodule "VoodooI2C Satellites/VoodooI2CAtmelMXT"]
 	path = VoodooI2C Satellites/VoodooI2CAtmelMXT
-	url = https://github.com/coolstar/VoodooI2CAtmelMXT
+	url = https://github.com/VoodooI2C/VoodooI2CAtmelMXT
