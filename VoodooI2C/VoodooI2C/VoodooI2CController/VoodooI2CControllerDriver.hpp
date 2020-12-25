@@ -161,6 +161,13 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
     IOReturn getBusConfig();
 
+    /* Set bus configuration values in the IORegistry.
+     *
+     * @return *kIOReturnSuccess* if setting succeeded, *kIOReturnNoMemory* on allocation failure.
+     */
+
+    IOReturn setBusConfigProperties();
+
     /* Prints an error message when the bus reports a transaction error */
 
     void handleAbortI2C();
