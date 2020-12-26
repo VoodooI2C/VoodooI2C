@@ -40,6 +40,23 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
         return kIOReturnSuccess;
 }
 
+IOReturn VoodooI2CControllerDriver::setBusConfigProperties() {
+    OSDictionary* properties = OSDictionary::withCapacity(5);
+    if (!properties)
+        return kIOReturnNoMemory;
+
+    setOSDictionaryNumber(properties, "SS_HCNT",  bus_device.acpi_config.ss_hcnt);
+    setOSDictionaryNumber(properties, "SS_LCNT",  bus_device.acpi_config.ss_lcnt);
+    setOSDictionaryNumber(properties, "FS_HCNT",  bus_device.acpi_config.fs_hcnt);
+    setOSDictionaryNumber(properties, "FS_LCNT",  bus_device.acpi_config.fs_lcnt);
+    setOSDictionaryNumber(properties, "SDA_HOLD", bus_device.acpi_config.sda_hold);
+
+    setProperty("BusConfig", properties);
+    OSSafeReleaseNULL(properties);
+
+    return kIOReturnSuccess;
+}
+
 void VoodooI2CControllerDriver::handleAbortI2C() {
     IOLog("%s::%s I2C Transaction error details\n", getName(), bus_device.name);
 
@@ -457,6 +474,8 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     } else {
         IOLog("%s::%s Got bus configuration values\n", getName(), bus_device.name);
     }
+
+    setBusConfigProperties();
 
     bus_device.functionality = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
     bus_device.bus_config = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE | DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
