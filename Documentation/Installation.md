@@ -53,7 +53,8 @@ You **must** be familiar with DSDT patching. If you do not know how to patch you
 
 You must be using the latest version of MaciASL found [here](https://bitbucket.org/RehabMan/os-x-maciasl-patchmatic/downloads/) (or an equivalent ACPI patcher). You must ensure that MaciASL's compiler version is set to the latest one. This can be done in the `iASL` tab of MaciASL's Preferences. After applying each patch, save your DSDT and restart your system.
 
-You can try SSDT hotpatch method, you need [SSDT-EC](https://github.com/acidanthera/OpenCorePkg/blob/master/Docs/AcpiSamples/Source/SSDT-EC.dsl) with SSDT-I2C-XOSI, many i2c devices activate using this method.
+You can try the basic method, which consists of using SSDT patches, to start you need "SSDT-EC" and "SSDT-I2C-XOSI", now you have to integrate them into the ACPI folder of your EFI and declare in your config.plist, after integrating any changes, save your config.plist and reboot the system.
+Many of the i2c devices will work with macos using this procedure.
 
 ### Adding the VoodooI2C DSDT Patch Repository
 
