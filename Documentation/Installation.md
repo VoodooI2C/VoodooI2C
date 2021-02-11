@@ -53,7 +53,7 @@ You **must** be familiar with DSDT patching. If you do not know how to patch you
 
 You must be using the latest version of MaciASL found [here](https://bitbucket.org/RehabMan/os-x-maciasl-patchmatic/downloads/) (or an equivalent ACPI patcher). You must ensure that MaciASL's compiler version is set to the latest one. This can be done in the `iASL` tab of MaciASL's Preferences. After applying each patch, save your DSDT and restart your system.
 
-VoodooI2C has a "quick method" to get the hardware to work, which consists of using SSDT patches and ACPI hot-patching. To start you need `SSDT-EC.dsl`[SSDT-EC](https://github.com/acidanthera/OpenCorePkg/blob/master/Docs/AcpiSamples/Source/SSDT-EC.dsl) and `SSDT-I2C-XOSI.dsl`[SSDT-I2C-XOSI](./SSDT-I2C-XOSI.dsl). You will also need to let your bootloader load the compiled AML files and apply the OSI to XOSI patch for your I2C device.
+VoodooI2C has a "quick method" to get the hardware to work, which consists of using SSDT patches and ACPI hot-patching. To start you need `SSDT-EC.dsl`[SSDT-EC](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/decompiled/SSDT-EC-LAPTOP.dsl) and `SSDT-I2C-XOSI.dsl`[SSDT-I2C-XOSI](./SSDT-I2C-XOSI.dsl). You will also need to let your bootloader load the compiled AML files and apply the OSI to XOSI patch for your I2C device.
 
 ### Adding the VoodooI2C DSDT Patch Repository
 
