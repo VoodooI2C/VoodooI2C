@@ -1,5 +1,10 @@
 /*
  * Add XOSI-I2C Device with Darwin method.
+ * OSYS value :
+ * Windows 7 = 0x07D9
+ * Windows 8 = 0x07DC (Default)
+ * Windows 8.1 = 0x07DD      
+ * Windows 10 = 0x07DF
  */
 DefinitionBlock ("", "SSDT", 2, "HACK", "I2C-XOSI", 0x00000000)
 {
