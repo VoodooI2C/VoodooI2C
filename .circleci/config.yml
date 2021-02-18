@@ -6,7 +6,7 @@ jobs:
     environment:
       CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
     macos:
-      xcode: 11.4.0
+      xcode: 11.7.0
     steps:
       # Machine Setup
       - checkout
@@ -24,9 +24,8 @@ jobs:
           name: "Download the MacKernelSDK"
           command: git clone https://github.com/acidanthera/MacKernelSDK
       - run: src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
-      - run: pip install cpplint
-      - run: pip install git+https://github.com/alexandred/cldoc.git
-      - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
+      - run: pip3 install cpplint
+      - run: pip3 install git+https://github.com/VoodooI2C/cldoc.git
       - run: git submodule init && git submodule update
       - run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -derivedDataPath build clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
@@ -50,7 +49,7 @@ jobs:
 
   deploy:
     macos:
-      xcode: 11.4.0
+      xcode: 11.7.0
     steps:
       # Machine Setup
       - checkout
