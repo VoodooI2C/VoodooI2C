@@ -24,7 +24,7 @@ jobs:
           name: "Download the MacKernelSDK"
           command: git clone https://github.com/acidanthera/MacKernelSDK
       - run: src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
-      - run: pip install cpplint
+      - run: pip3 install cpplint
       - run: pip install git+https://github.com/alexandred/cldoc.git
       - run: echo 'export PATH=~/Library/Python/2.7/bin:$PATH' >> ~/.bashrc
       - run: git submodule init && git submodule update
