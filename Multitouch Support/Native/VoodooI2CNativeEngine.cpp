@@ -20,12 +20,12 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     message.contact_count = event.contact_count;
     memset(message.transducers, 0, VOODOO_INPUT_MAX_TRANSDUCERS * sizeof(VoodooInputTransducer));
     
-    VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(0);
+    VoodooI2CDigitiserTransducer* firstTransducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(0);
 
-    if (!transducer)
+    if (!firstTransducer)
         return MultitouchReturnBreak;
     
-    if (transducer->type == kDigitiserTransducerStylus)
+    if (firstTransducer->type == kDigitiserTransducerStylus)
         stylus_check = 1;
 
     int valid_touch_count = 0;
@@ -48,7 +48,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
             valid_touch_count++;
         }
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
-        inputTransducer->isPhysicalButtonDown = transducer->physical_button.value();
+        inputTransducer->isPhysicalButtonDown = false; // it will be passed either as pressure, or as buttons on the "trackpoint" device
         
         inputTransducer->currentCoordinates.x = transducer->coordinates.x.value();
         inputTransducer->previousCoordinates.x = transducer->coordinates.x.last.value;
@@ -67,16 +67,15 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
         // Force Touch emulation
         // The button state is saved in the first transducer
-        if (((VoodooI2CDigitiserTransducer*) event.transducers->getObject(0))->physical_button.value() && isForceClickEnabled()) {
+        if (firstTransducer->physical_button.value() && isForceClickEnabled()) {
             inputTransducer->supportsPressure = true;
-            inputTransducer->isPhysicalButtonDown = 0x0;
             inputTransducer->currentCoordinates.pressure = 0xff;
             inputTransducer->currentCoordinates.width = 10;
         }
     }
     
     // set the thumb to improve 4F pinch and spread gesture and cross-screen dragging
-    if (valid_touch_count >= 4 || transducer->physical_button.value()) {
+    if (valid_touch_count >= 4 || firstTransducer->physical_button.value()) {
         // simple thumb detection: to find the lowest finger touch in the vertical direction.
         UInt32 y_max = 0;
         int thumb_index = 0;
@@ -92,6 +91,14 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
+    if (!isForceClickEnabled()) {
+        RelativePointerEvent event;
+        event.dx = 0;
+        event.dy = 0;
+        event.buttons = firstTransducer->physical_button.value();
+        event.timestamp = timestamp;
+        super::messageClient(kIOMessageVoodooTrackpointRelativePointer, voodooInputInstance, &event, sizeof(event));
+    }
     return MultitouchReturnBreak;
 }
 
