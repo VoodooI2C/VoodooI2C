@@ -24,6 +24,30 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
     External (SDS0, FieldUnitObj)
     External (SDS1, FieldUnitObj)
 
+    // Newer layout
+    // I2C Controller mode
+    External (IM00, FieldUnitObj)
+    External (IM01, FieldUnitObj)
+    External (IM02, FieldUnitObj)
+    External (IM03, FieldUnitObj)
+    External (IM04, FieldUnitObj)
+    External (IM05, FieldUnitObj)
+    // I2C Interrupt mode
+    External (TPDM, FieldUnitObj)
+    External (TPLM, FieldUnitObj)
+    // I2C Device type
+    External (TPDT, FieldUnitObj)
+    External (TPLT, FieldUnitObj)
+    // I2C Device base address
+    External (TPDB, FieldUnitObj)
+    External (TPLB, FieldUnitObj)
+    // I2C Device HID
+    External (TPDH, FieldUnitObj)
+    External (TPLH, FieldUnitObj)
+    // I2C Device Speed
+    External (TPDS, FieldUnitObj)
+    External (TPLS, FieldUnitObj)
+
     Scope (\_SB)
     {
         Device (I2CD)
@@ -159,6 +183,182 @@ DefinitionBlock ("", "SSDT", 2, "hack", "I2CD", 0x00000000)
                     Method (_ADR, 0, Serialized)
                     {
                         Return (\SDS1)
+                    }
+                }
+            }
+
+            If (CondRefOf (\IM00))
+            {
+                Device (IM00)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\IM00)
+                    }
+                }
+            }
+
+            If (CondRefOf (\IM01))
+            {
+                Device (IM01)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\IM01)
+                    }
+                }
+            }
+
+            If (CondRefOf (\IM02))
+            {
+                Device (IM02)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\IM02)
+                    }
+                }
+            }
+
+            If (CondRefOf (\IM03))
+            {
+                Device (IM03)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\IM03)
+                    }
+                }
+            }
+
+            If (CondRefOf (\IM04))
+            {
+                Device (IM04)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\IM04)
+                    }
+                }
+            }
+
+            If (CondRefOf (\IM05))
+            {
+                Device (IM05)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\IM05)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPDM))
+            {
+                Device (TPDM)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPDM)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPLM))
+            {
+                Device (TPLM)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPLM)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPDT))
+            {
+                Device (TPDT)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPDT)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPLT))
+            {
+                Device (TPLT)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPLT)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPDB))
+            {
+                Device (TPDB)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPDB)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPLB))
+            {
+                Device (TPLB)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPLB)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPDH))
+            {
+                Device (TPDH)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPDH)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPLH))
+            {
+                Device (TPLH)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPLH)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPDS))
+            {
+                Device (TPDS)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPDS)
+                    }
+                }
+            }
+
+            If (CondRefOf (\TPLS))
+            {
+                Device (TPLS)
+                {
+                    Method (_ADR, 0, Serialized)
+                    {
+                        Return (\TPLS)
                     }
                 }
             }
