@@ -12,7 +12,7 @@ You will first need to identify the ACPI ID of your I2C device. The following ar
 
 You can determine your device's ACPI ID in Windows by right clicking its entry in the Device Manager and visiting the properties tab as depicted in the following screenshot:
 
-![acpi](images/i2c_device_acpi_id.png "ACPI ID")
+![acpi](../docs/images/i2c_device_acpi_id.png "ACPI ID")
 
 
 In this example, the ACPI ID is `TPL0`. Now go through each of the following cases to see if they apply to you
@@ -21,7 +21,7 @@ In this example, the ACPI ID is `TPL0`. Now go through each of the following cas
 
 This is the easiest of steps. Open IORegExplorer and search for your ACPI ID (if it does not show up then you likely did not apply the previous Windows patch!) You should get something similar to this:
 
-![pin_situation](images/ioreg_pin_situation.png "Pin Situation")
+![pin_situation](../docs/images/ioreg_pin_situation.png "Pin Situation")
 
 If you do not have `IOInterruptSpecifiers` listed as above then you are good to go and can skip straight to the section `Installing the kext`. If you do then expand it to reveal some numbers. Write down the first two numbers in the `Value` column as `0xXX` (in the example above, `0x33`), this is your device's **hexadecimal APIC pin number**. If your hexadecimal APIC pin number is less than or equal to `0x2F` then you are good to go and can skip straight to the section `Installing the kext`. If you do not know how to compare hexadecimal numbers, just convert both numbers to decimal using any freely available online tool and compare the resulting numbers.
 
