@@ -26,7 +26,7 @@
 #define I2C_DSM_REVISION 1
 #define DSM_SUPPORT_INDEX 0
 #define HIDG_DESC_INDEX 1
-#define TP7G_GPIO_INDEX 1
+#define TP7G_FUNC_INDEX 1
 
 class VoodooI2CControllerDriver;
 
@@ -209,25 +209,33 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
 
     /* Check if a valid interrupt is available less than 0x2f
      *
-     * @return true if the interrupt can be used
+     * @return *kIOReturnSuccess* if the interrupt can be used
      */
 
-    bool validateInterrupt();
+    IOReturn validateAPICInterrupt();
 
     /* Instantiates a <VoodooI2CACPICRSParser> object to grab I2C slave properties as well as potential GPIO interrupt properties.
      *
-     * @return *kIOReturnSuccess* upon a successfull *_CRS* parse, *kIOReturnNotFound* if no I2C slave properties were found.
+     * @return *kIOReturnSuccess* if resources are collected correctly, *kIOReturnNotFound* if no I2C slave properties were found.
      */
 
     IOReturn getDeviceResources();
 
-    /* Instantiates a <VoodooI2CACPICRSParser> object to retrieve interrupts from _DSM.
+    /* Uses a <VoodooI2CACPICRSParser> object to retrieve resources from _CRS.
      * @crs_parser The parser for default _CRS
      *
-     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if no interrupts were found.
+     * @return *kIOReturnSuccess* upon a successfull *_CRS* parse, *kIOReturnNotFound* if no I2C Serial Bus declaration was found.
      */
 
-    IOReturn getAlternativeInterrupt(VoodooI2CACPICRSParser* crs_parser);
+    IOReturn parseResourcesCRS(VoodooI2CACPICRSParser& crs_parser);
+
+    /* Uses a <VoodooI2CACPICRSParser> object to retrieve resources from _DSM.
+     * @crs_parser The parser for default _CRS
+     *
+     * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if no I2C Serial Bus declaration was found.
+     */
+
+    IOReturn parseResourcesDSM(VoodooI2CACPICRSParser& crs_parser);
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
      */
