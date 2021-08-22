@@ -26,7 +26,7 @@
 #define I2C_DSM_REVISION 1
 #define DSM_SUPPORT_INDEX 0
 #define HIDG_DESC_INDEX 1
-#define TP7G_FUNC_INDEX 1
+#define TP7G_RESO_INDEX 1
 
 class VoodooI2CControllerDriver;
 
