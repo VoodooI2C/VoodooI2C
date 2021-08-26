@@ -15,8 +15,8 @@
 		AC0955751F4ED4C50052E343 /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0955731F4ED4C50052E343 /* helpers.cpp */; };
 		AC0955761F4ED4C50052E343 /* helpers.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC0955741F4ED4C50052E343 /* helpers.hpp */; };
 		AC09557A1F4ED4F60052E343 /* linuxirq.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC0955771F4ED4F60052E343 /* linuxirq.hpp */; };
-		AC09557B1F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0955781F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp */; };
-		AC09557C1F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC0955791F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp */; };
+		AC09557B1F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0955781F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.cpp */; };
+		AC09557C1F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC0955791F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.hpp */; };
 		AC0AD4581F3842800070A642 /* VoodooI2CDeviceNub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0AD4561F3842800070A642 /* VoodooI2CDeviceNub.cpp */; };
 		AC0AD4591F3842800070A642 /* VoodooI2CDeviceNub.hpp in Headers */ = {isa = PBXBuildFile; fileRef = AC0AD4571F3842800070A642 /* VoodooI2CDeviceNub.hpp */; };
 		AC0E75761F69997B002268D0 /* VoodooI2CDigitiserTransducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AC0E75741F69997B002268D0 /* VoodooI2CDigitiserTransducer.cpp */; };
@@ -167,9 +167,9 @@
 		AC0387541F5422FB00ECEDF9 /* VoodooI2CHID.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooI2CHID.xcodeproj; path = "../../VoodooI2C Satellites/VoodooI2CHID/VoodooI2CHID.xcodeproj"; sourceTree = "<group>"; };
 		AC0955731F4ED4C50052E343 /* helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = helpers.cpp; path = ../../Dependencies/helpers.cpp; sourceTree = "<group>"; };
 		AC0955741F4ED4C50052E343 /* helpers.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = helpers.hpp; path = ../../Dependencies/helpers.hpp; sourceTree = "<group>"; };
-		AC0955771F4ED4F60052E343 /* linuxirq.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = linuxirq.hpp; path = ../../Dependencies/VoodooI2CACPICRSParser/linuxirq.hpp; sourceTree = "<group>"; };
-		AC0955781F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPICRSParser.cpp; path = ../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.cpp; sourceTree = "<group>"; };
-		AC0955791F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CACPICRSParser.hpp; path = ../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp; sourceTree = "<group>"; };
+		AC0955771F4ED4F60052E343 /* linuxirq.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = linuxirq.hpp; path = ../../Dependencies/VoodooI2CACPIResourcesParser/linuxirq.hpp; sourceTree = "<group>"; };
+		AC0955781F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CACPIResourcesParser.cpp; path = ../../Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.cpp; sourceTree = "<group>"; };
+		AC0955791F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CACPIResourcesParser.hpp; path = ../../Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.hpp; sourceTree = "<group>"; };
 		AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VoodooGPIO.xcodeproj; path = ../../Dependencies/VoodooGPIO/VoodooGPIO.xcodeproj; sourceTree = "<group>"; };
 		AC0A265A1F35F7FB00122252 /* VoodooI2CControllerConstants.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = VoodooI2CControllerConstants.hpp; path = VoodooI2CController/VoodooI2CControllerConstants.hpp; sourceTree = "<group>"; };
 		AC0AD4561F3842800070A642 /* VoodooI2CDeviceNub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoodooI2CDeviceNub.cpp; path = VoodooI2CDevice/VoodooI2CDeviceNub.cpp; sourceTree = "<group>"; };
@@ -284,19 +284,19 @@
 				AC09558A1F4EE10C0052E343 /* VoodooGPIO.xcodeproj */,
 				AC0955731F4ED4C50052E343 /* helpers.cpp */,
 				AC0955741F4ED4C50052E343 /* helpers.hpp */,
-				AC0955721F4ED4AA0052E343 /* VoodooI2CACPICRSParser */,
+				AC0955721F4ED4AA0052E343 /* VoodooI2CACPIResourcesParser */,
 			);
 			name = Dependencies;
 			sourceTree = "<group>";
 		};
-		AC0955721F4ED4AA0052E343 /* VoodooI2CACPICRSParser */ = {
+		AC0955721F4ED4AA0052E343 /* VoodooI2CACPIResourcesParser */ = {
 			isa = PBXGroup;
 			children = (
 				AC0955771F4ED4F60052E343 /* linuxirq.hpp */,
-				AC0955781F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp */,
-				AC0955791F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp */,
+				AC0955781F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.cpp */,
+				AC0955791F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.hpp */,
 			);
-			name = VoodooI2CACPICRSParser;
+			name = VoodooI2CACPIResourcesParser;
 			sourceTree = "<group>";
 		};
 		AC09558B1F4EE10C0052E343 /* Products */ = {
@@ -494,7 +494,7 @@
 				AC09557A1F4ED4F60052E343 /* linuxirq.hpp in Headers */,
 				AC6268951F2F6CF1000CBF2D /* VoodooI2CController.hpp in Headers */,
 				ACF6CF121F7587E5001CAAEE /* VoodooI2CMultitouchEngine.hpp in Headers */,
-				AC09557C1F4ED4F60052E343 /* VoodooI2CACPICRSParser.hpp in Headers */,
+				AC09557C1F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -731,7 +731,7 @@
 				6FE8F89C25290B9600318126 /* VoodooI2CPCILakeController.cpp in Sources */,
 				ACF810E81F3304720031A6F5 /* VoodooI2CControllerNub.cpp in Sources */,
 				AC6268941F2F6CF1000CBF2D /* VoodooI2CController.cpp in Sources */,
-				AC09557B1F4ED4F60052E343 /* VoodooI2CACPICRSParser.cpp in Sources */,
+				AC09557B1F4ED4F60052E343 /* VoodooI2CACPIResourcesParser.cpp in Sources */,
 				AC015C471F32345500516383 /* VoodooI2CACPIController.cpp in Sources */,
 				ACF6E5871F759B5D00A0CD61 /* VoodooI2CCSGestureEngine.cpp in Sources */,
 				ACF6CF111F7587E5001CAAEE /* VoodooI2CMultitouchEngine.cpp in Sources */,

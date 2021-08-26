@@ -1,5 +1,5 @@
 //
-//  VoodooI2CACPICRSParser.hpp
+//  VoodooI2CACPIResourcesParser.hpp
 //  VoodooI2C
 //
 //  Created by CoolStar on 8/15/17.
@@ -8,8 +8,8 @@
 
 #include <stdint.h>
 
-#ifndef VoodooI2CACPICRSParser_hpp
-#define VoodooI2CACPICRSParser_hpp
+#ifndef VoodooI2CACPIResourcesParser_hpp
+#define VoodooI2CACPIResourcesParser_hpp
 
 struct i2c_info {
     bool resource_consumer;
@@ -44,7 +44,7 @@ struct gpio_io_info {
     uint16_t pin_number;
 };
 
-class VoodooI2CACPICRSParser {
+class VoodooI2CACPIResourcesParser {
 public:
     bool found_i2c;
     bool found_gpio_interrupts;
@@ -54,11 +54,11 @@ public:
     gpio_int_info gpio_interrupts;
     gpio_io_info gpio_io;
     
-    VoodooI2CACPICRSParser();
-    void parseACPICRS(uint8_t const* crs, uint32_t offset, uint32_t sz);
+    VoodooI2CACPIResourcesParser();
+    void parseACPIResources(uint8_t const* res, uint32_t offset, uint32_t sz);
 private:
-    void parseACPISerialBus(uint8_t const* crs, uint32_t offset, uint32_t sz);
-    void parseACPIGPIO(uint8_t const* crs, uint32_t offset, uint32_t sz);
+    void parseACPISerialBus(uint8_t const* res, uint32_t offset, uint32_t sz);
+    void parseACPIGPIO(uint8_t const* res, uint32_t offset, uint32_t sz);
 };
 
-#endif /* VoodooI2CACPICRSParser_hpp */
+#endif /* VoodooI2CACPIResourcesParser_hpp */

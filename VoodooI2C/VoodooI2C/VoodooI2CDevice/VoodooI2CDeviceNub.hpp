@@ -14,7 +14,7 @@
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 #include "../../../Dependencies/VoodooGPIO/VoodooGPIO/VoodooGPIO.hpp"
-#include "../../../Dependencies/VoodooI2CACPICRSParser/VoodooI2CACPICRSParser.hpp"
+#include "../../../Dependencies/VoodooI2CACPIResourcesParser/VoodooI2CACPIResourcesParser.hpp"
 #include "../VoodooI2CController/VoodooI2CController.hpp"
 
 #ifndef EXPORT
@@ -214,28 +214,28 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
 
     IOReturn validateAPICInterrupt();
 
-    /* Instantiates a <VoodooI2CACPICRSParser> object to grab I2C slave properties as well as potential GPIO interrupt properties.
+    /* Instantiates a <VoodooI2CACPIResourcesParser> object to grab I2C slave properties as well as potential GPIO interrupt properties.
      *
      * @return *kIOReturnSuccess* if resources are collected correctly, *kIOReturnNotFound* if no I2C slave properties were found.
      */
 
     IOReturn getDeviceResources();
 
-    /* Uses a <VoodooI2CACPICRSParser> object to retrieve resources from _CRS.
-     * @crs_parser The parser for default _CRS
+    /* Uses a <VoodooI2CACPIResourcesParser> object to retrieve resources from _CRS.
+     * @res_parser The parser for default _CRS
      *
      * @return *kIOReturnSuccess* upon a successfull *_CRS* parse, *kIOReturnNotFound* if no I2C Serial Bus declaration was found.
      */
 
-    IOReturn parseResourcesCRS(VoodooI2CACPICRSParser& crs_parser);
+    IOReturn parseResourcesCRS(VoodooI2CACPIResourcesParser& res_parser);
 
-    /* Uses a <VoodooI2CACPICRSParser> object to retrieve resources from _DSM.
-     * @crs_parser The parser for default _CRS
+    /* Uses a <VoodooI2CACPIResourcesParser> object to retrieve resources from _DSM.
+     * @res_parser The parser for default _DSM
      *
      * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if no I2C Serial Bus declaration was found.
      */
 
-    IOReturn parseResourcesDSM(VoodooI2CACPICRSParser& crs_parser);
+    IOReturn parseResourcesDSM(VoodooI2CACPIResourcesParser& res_parser);
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
      */
