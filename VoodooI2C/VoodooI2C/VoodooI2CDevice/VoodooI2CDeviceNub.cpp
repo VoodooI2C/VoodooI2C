@@ -156,7 +156,7 @@ IOReturn VoodooI2CDeviceNub::parseResourcesCRS(VoodooI2CACPIResourcesParser& res
 IOReturn VoodooI2CDeviceNub::parseResourcesDSM(VoodooI2CACPIResourcesParser& res_parser) {
     OSObject *result = nullptr;
     OSData *data = nullptr;
-    if (getDeviceResourcesDSM(TP7G_RESO_INDEX, &result) != kIOReturnSuccess ||
+    if (getDeviceResourcesDSM(TP7G_RESOURCES_INDEX, &result) != kIOReturnSuccess ||
         !(data = OSDynamicCast(OSData, result))) {
         IOLog("%s::%s Could not retrieve resources from _DSM or XDSM method\n", getName(), acpi_device->getName());
         OSSafeReleaseNULL(result);
