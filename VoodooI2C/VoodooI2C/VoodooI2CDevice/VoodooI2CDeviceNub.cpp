@@ -189,7 +189,7 @@ IOReturn VoodooI2CDeviceNub::validateAPICInterrupt() {
 }
 
 IOReturn VoodooI2CDeviceNub::getDeviceResources() {
-    VoodooI2CACPIResourcesParser crs_parser, dsm_parser;
+    VoodooI2CACPIResourcesParser crs_parser, dsm_parser, resource_parser;
 
     parseResourcesCRS(crs_parser);
     parseResourcesDSM(dsm_parser);
@@ -199,18 +199,22 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnNotFound;
     }
 
+    bool use_crs_resources = true;
+
     if (!crs_parser.found_i2c || (dsm_parser.found_i2c && dsm_parser.found_gpio_interrupts)) {
         IOLog("%s::%s Prefer resources from _DSM or XDSM method\n", getName(), acpi_device->getName());
-        crs_parser = dsm_parser;
+        use_crs_resources = false;
     }
 
-    use_10bit_addressing = crs_parser.i2c_info.address_mode_10Bit;
+    resource_parser = use_crs_resources ? crs_parser : dsm_parser;
+
+    use_10bit_addressing = resource_parser.i2c_info.address_mode_10Bit;
     setProperty("addrWidth", use_10bit_addressing ? 10 : 7, 8);
 
-    i2c_address = crs_parser.i2c_info.address;
+    i2c_address = resource_parser.i2c_info.address;
     setProperty("i2cAddress", i2c_address, 16);
 
-    setProperty("sclHz", crs_parser.i2c_info.bus_speed, 32);
+    setProperty("sclHz", resource_parser.i2c_info.bus_speed, 32);
 
     // There is actually no way to avoid APIC interrupt if it is valid
     if (validateAPICInterrupt() == kIOReturnSuccess)
@@ -228,15 +232,15 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
         return kIOReturnSuccess;
     }
 
-    if (crs_parser.found_gpio_interrupts) {
+    if (resource_parser.found_gpio_interrupts) {
         IOLog("%s::%s Found valid GPIO interrupts\n", getName(), acpi_device->getName());
 
-        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
-        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
+        setProperty("gpioPin", resource_parser.gpio_interrupts.pin_number, 16);
+        setProperty("gpioIRQ", resource_parser.gpio_interrupts.irq_type, 16);
 
         has_gpio_interrupts = true;
-        gpio_pin = crs_parser.gpio_interrupts.pin_number;
-        gpio_irq = crs_parser.gpio_interrupts.irq_type;
+        gpio_pin = resource_parser.gpio_interrupts.pin_number;
+        gpio_irq = resource_parser.gpio_interrupts.irq_type;
     }
 
     if (!has_apic_interrupts && !has_gpio_interrupts)
