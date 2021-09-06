@@ -181,6 +181,7 @@ IOReturn VoodooI2CDeviceNub::validateAPICInterrupt() {
         (interrupt_pin = reinterpret_cast<const UInt16*>(interrupt_data->getBytesNoCopy(0, 1)))) {
         if (*interrupt_pin <= 0x2f) {
             has_apic_interrupts = true;
+            IOLog("%s::%s Found valid APIC interrupt pin (0x%x)\n", getName(), acpi_device->getName(), *interrupt_pin);
             return kIOReturnSuccess;
         }
         IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f)\n", getName(), acpi_device->getName(), *interrupt_pin);
