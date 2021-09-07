@@ -122,58 +122,18 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     }
 
     UInt8 availableIndex = *(reinterpret_cast<UInt8 const*>(data->getBytesNoCopy()));
-    data->release();
+    OSSafeReleaseNULL(data);
     *result = nullptr;
 
     if (!(availableIndex & (1 << index))) {
-        IOLog("%s::%s TP7G index 0x%x is not supported\n", getName(), acpi_device->getName(), availableIndex);
+        IOLog("%s::%s Returned index 0x%x from _DSM or XDSM method is not supported\n", getName(), acpi_device->getName(), availableIndex);
         return kIOReturnUnsupportedMode;
     }
 
     return evaluateDSM(I2C_DSM_TP7G, index, result);
 }
 
-IOReturn VoodooI2CDeviceNub::getAlternativeInterrupt(VoodooI2CACPICRSParser* crs_parser) {
-    OSObject *result = nullptr;
-    OSData *data = nullptr;
-    if (getDeviceResourcesDSM(TP7G_GPIO_INDEX, &result) != kIOReturnSuccess ||
-        !(data = OSDynamicCast(OSData, result))) {
-        IOLog("%s::%s Could not retrieve interrupts from _DSM or XDSM method\n", getName(), acpi_device->getName());
-        OSSafeReleaseNULL(result);
-        return kIOReturnNotFound;
-    }
-
-    uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
-    crs_parser->parseACPICRS(crs, 0, data->getLength());
-
-    data->release();
-
-    if (!crs_parser->found_gpio_interrupts) {
-        IOLog("%s::%s Failed to find valid interrupts from _DSM or XDSM method\n", getName(), acpi_device->getName());
-        return kIOReturnNotFound;
-    }
-
-    IOLog("%s::%s Found valid interrupts from _DSM or XDSM method\n", getName(), acpi_device->getName());
-    return kIOReturnSuccess;
-}
-
-bool VoodooI2CDeviceNub::validateInterrupt() {
-    OSArray* interrupt_array;
-    OSData* interrupt_data;
-    const UInt16* interrupt_pin;
-    if ((interrupt_array = OSDynamicCast(OSArray, acpi_device->getProperty(gIOInterruptSpecifiersKey))) &&
-        (interrupt_data = OSDynamicCast(OSData, interrupt_array->getObject(0))) &&
-        (interrupt_pin = reinterpret_cast<const UInt16*>(interrupt_data->getBytesNoCopy(0, 1)))) {
-        if (*interrupt_pin <= 0x2f) {
-            has_apic_interrupts = true;
-            return true;
-        }
-        IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f)\n", getName(), acpi_device->getName(), *interrupt_pin);
-    }
-    return false;
-}
-
-IOReturn VoodooI2CDeviceNub::getDeviceResources() {
+IOReturn VoodooI2CDeviceNub::parseResourcesCRS(VoodooI2CACPIResourcesParser& res_parser) {
     OSObject *result = nullptr;
     OSData *data = nullptr;
     if (acpi_device->evaluateObject("_CRS", &result) != kIOReturnSuccess ||
@@ -184,23 +144,82 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     }
 
     uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
-    VoodooI2CACPICRSParser crs_parser;
-    crs_parser.parseACPICRS(crs, 0, data->getLength());
+    res_parser.parseACPIResources(crs, 0, data->getLength());
 
-    data->release();
+    OSSafeReleaseNULL(data);
 
-    if (crs_parser.found_i2c) {
-        use_10bit_addressing = crs_parser.i2c_info.address_mode_10Bit;
-        setProperty("addrWidth", use_10bit_addressing ? 10 : 7, 8);
+    IOLog("%s::%s Found valid resources from _CRS method\n", getName(), acpi_device->getName());
 
-        i2c_address = crs_parser.i2c_info.address;
-        setProperty("i2cAddress", i2c_address, 16);
+    return kIOReturnSuccess;
+}
 
-        setProperty("sclHz", crs_parser.i2c_info.bus_speed, 32);
-    } else {
+IOReturn VoodooI2CDeviceNub::parseResourcesDSM(VoodooI2CACPIResourcesParser& res_parser) {
+    OSObject *result = nullptr;
+    OSData *data = nullptr;
+    if (getDeviceResourcesDSM(TP7G_RESOURCES_INDEX, &result) != kIOReturnSuccess ||
+        !(data = OSDynamicCast(OSData, result))) {
+        IOLog("%s::%s Could not retrieve resources from _DSM or XDSM method\n", getName(), acpi_device->getName());
+        OSSafeReleaseNULL(result);
+        return kIOReturnNotFound;
+    }
+
+    uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
+    res_parser.parseACPIResources(crs, 0, data->getLength());
+
+    OSSafeReleaseNULL(data);
+
+    IOLog("%s::%s Found valid resources from _DSM or XDSM method\n", getName(), acpi_device->getName());
+    return kIOReturnSuccess;
+}
+
+IOReturn VoodooI2CDeviceNub::validateAPICInterrupt() {
+    OSArray* interrupt_array;
+    OSData* interrupt_data;
+    const UInt16* interrupt_pin;
+    if ((interrupt_array = OSDynamicCast(OSArray, acpi_device->getProperty(gIOInterruptSpecifiersKey))) &&
+        (interrupt_data = OSDynamicCast(OSData, interrupt_array->getObject(0))) &&
+        (interrupt_pin = reinterpret_cast<const UInt16*>(interrupt_data->getBytesNoCopy(0, 1)))) {
+        if (*interrupt_pin <= 0x2f) {
+            has_apic_interrupts = true;
+            IOLog("%s::%s Found valid APIC interrupt pin (0x%x)\n", getName(), acpi_device->getName(), *interrupt_pin);
+            return kIOReturnSuccess;
+        }
+        IOLog("%s::%s Warning: Incompatible APIC interrupt pin (0x%x > 0x2f)\n", getName(), acpi_device->getName(), *interrupt_pin);
+    }
+    return kIOReturnUnsupported;
+}
+
+IOReturn VoodooI2CDeviceNub::getDeviceResources() {
+    VoodooI2CACPIResourcesParser crs_parser, dsm_parser, resource_parser;
+
+    parseResourcesCRS(crs_parser);
+    parseResourcesDSM(dsm_parser);
+
+    if (!crs_parser.found_i2c && !dsm_parser.found_i2c) {
         IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", getName(), acpi_device->getName());
         return kIOReturnNotFound;
     }
+
+    bool use_crs_resources = true;
+
+    if (!crs_parser.found_i2c || (dsm_parser.found_i2c && dsm_parser.found_gpio_interrupts)) {
+        IOLog("%s::%s Prefer resources from _DSM or XDSM method\n", getName(), acpi_device->getName());
+        use_crs_resources = false;
+    }
+
+    resource_parser = use_crs_resources ? crs_parser : dsm_parser;
+
+    use_10bit_addressing = resource_parser.i2c_info.address_mode_10Bit;
+    setProperty("addrWidth", use_10bit_addressing ? 10 : 7, 8);
+
+    i2c_address = resource_parser.i2c_info.address;
+    setProperty("i2cAddress", i2c_address, 16);
+
+    setProperty("sclHz", resource_parser.i2c_info.bus_speed, 32);
+
+    // There is actually no way to avoid APIC interrupt if it is valid
+    if (validateAPICInterrupt() == kIOReturnSuccess)
+        return kIOReturnSuccess;
 
     IOPCIDevice *pci_device { nullptr };
 
@@ -209,21 +228,23 @@ IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     bool force_polling = checkKernelArg("-vi2c-force-polling");
     force_polling = force_polling || ((pci_device != nullptr) && (pci_device->getProperty("force-polling") != nullptr));
 
-    if (!force_polling) {
-        if (crs_parser.found_gpio_interrupts ||
-        (!validateInterrupt() && getAlternativeInterrupt(&crs_parser) == kIOReturnSuccess)) {
-        setProperty("gpioPin", crs_parser.gpio_interrupts.pin_number, 16);
-        setProperty("gpioIRQ", crs_parser.gpio_interrupts.irq_type, 16);
-
-        has_gpio_interrupts = true;
-        gpio_pin = crs_parser.gpio_interrupts.pin_number;
-        gpio_irq = crs_parser.gpio_interrupts.irq_type;
-        }
-    } else {
-        IOLog("%s::%s Forced polling mode, skipping APIC/GPIO interrupts\n", getName(), acpi_device->getName());
+    if (force_polling) {
+        IOLog("%s::%s Forced polling mode, skipping GPIO interrupts\n", getName(), acpi_device->getName());
+        return kIOReturnSuccess;
     }
 
-    if (!has_apic_interrupts && !has_gpio_interrupts && !force_polling)
+    if (resource_parser.found_gpio_interrupts) {
+        IOLog("%s::%s Found valid GPIO interrupts\n", getName(), acpi_device->getName());
+
+        setProperty("gpioPin", resource_parser.gpio_interrupts.pin_number, 16);
+        setProperty("gpioIRQ", resource_parser.gpio_interrupts.irq_type, 16);
+
+        has_gpio_interrupts = true;
+        gpio_pin = resource_parser.gpio_interrupts.pin_number;
+        gpio_irq = resource_parser.gpio_interrupts.irq_type;
+    }
+
+    if (!has_apic_interrupts && !has_gpio_interrupts)
         IOLog("%s::%s Warning: Could not find any APIC nor GPIO interrupts. Your chosen satellite will run in polling mode if implemented.\n", getName(), acpi_device->getName());
 
     return kIOReturnSuccess;
