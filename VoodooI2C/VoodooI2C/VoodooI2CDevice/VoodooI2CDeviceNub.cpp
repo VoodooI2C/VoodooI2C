@@ -133,7 +133,7 @@ IOReturn VoodooI2CDeviceNub::getDeviceResourcesDSM(UInt32 index, OSObject **resu
     return evaluateDSM(I2C_DSM_TP7G, index, result);
 }
 
-IOReturn VoodooI2CDeviceNub::parseResourcesCRS(VoodooI2CACPIResourcesParser& res_parser) {
+IOReturn VoodooI2CDeviceNub::parseResourcesCRS(VoodooI2CACPIResourcesParser* res_parser) {
     OSObject *result = nullptr;
     OSData *data = nullptr;
     if (acpi_device->evaluateObject("_CRS", &result) != kIOReturnSuccess ||
@@ -144,7 +144,7 @@ IOReturn VoodooI2CDeviceNub::parseResourcesCRS(VoodooI2CACPIResourcesParser& res
     }
 
     uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
-    res_parser.parseACPIResources(crs, 0, data->getLength());
+    res_parser->parseACPIResources(crs, 0, data->getLength());
 
     OSSafeReleaseNULL(data);
 
@@ -153,7 +153,7 @@ IOReturn VoodooI2CDeviceNub::parseResourcesCRS(VoodooI2CACPIResourcesParser& res
     return kIOReturnSuccess;
 }
 
-IOReturn VoodooI2CDeviceNub::parseResourcesDSM(VoodooI2CACPIResourcesParser& res_parser) {
+IOReturn VoodooI2CDeviceNub::parseResourcesDSM(VoodooI2CACPIResourcesParser* res_parser) {
     OSObject *result = nullptr;
     OSData *data = nullptr;
     if (getDeviceResourcesDSM(TP7G_RESOURCES_INDEX, &result) != kIOReturnSuccess ||
@@ -164,7 +164,7 @@ IOReturn VoodooI2CDeviceNub::parseResourcesDSM(VoodooI2CACPIResourcesParser& res
     }
 
     uint8_t const* crs = reinterpret_cast<uint8_t const*>(data->getBytesNoCopy());
-    res_parser.parseACPIResources(crs, 0, data->getLength());
+    res_parser->parseACPIResources(crs, 0, data->getLength());
 
     OSSafeReleaseNULL(data);
 
@@ -192,8 +192,8 @@ IOReturn VoodooI2CDeviceNub::validateAPICInterrupt() {
 IOReturn VoodooI2CDeviceNub::getDeviceResources() {
     VoodooI2CACPIResourcesParser crs_parser, dsm_parser, resource_parser;
 
-    parseResourcesCRS(crs_parser);
-    parseResourcesDSM(dsm_parser);
+    parseResourcesCRS(&crs_parser);
+    parseResourcesDSM(&dsm_parser);
 
     if (!crs_parser.found_i2c && !dsm_parser.found_i2c) {
         IOLog("%s::%s Could not find an I2C Serial Bus declaration\n", getName(), acpi_device->getName());
