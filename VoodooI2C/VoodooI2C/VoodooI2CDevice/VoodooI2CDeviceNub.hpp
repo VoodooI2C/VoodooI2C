@@ -227,7 +227,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      * @return *kIOReturnSuccess* upon a successfull *_CRS* parse, *kIOReturnNotFound* if no I2C Serial Bus declaration was found.
      */
 
-    IOReturn parseResourcesCRS(VoodooI2CACPIResourcesParser& res_parser);
+    IOReturn parseResourcesCRS(VoodooI2CACPIResourcesParser* res_parser);
 
     /* Uses a <VoodooI2CACPIResourcesParser> object to retrieve resources from _DSM.
      * @res_parser The parser for default _DSM
@@ -235,7 +235,7 @@ class EXPORT VoodooI2CDeviceNub : public IOService {
      * @return *kIOReturnSuccess* upon a successfull *_DSM*(*XDSM*) parse, *kIOReturnNotFound* if no I2C Serial Bus declaration was found.
      */
 
-    IOReturn parseResourcesDSM(VoodooI2CACPIResourcesParser& res_parser);
+    IOReturn parseResourcesDSM(VoodooI2CACPIResourcesParser* res_parser);
 
     /* Searches the IOService plane to find a <VoodooGPIO> controller object.
      */
