@@ -466,11 +466,6 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
 
     if (getBusConfig() != kIOReturnSuccess) {
         IOLog("%s::%s Warning: Error getting bus config, using defaults where necessary\n", getName(), bus_device.name);
-        bus_device.acpi_config.ss_hcnt = 0x01b0;
-        bus_device.acpi_config.fs_hcnt = 0x48;
-        bus_device.acpi_config.ss_lcnt = 0x01fb;
-        bus_device.acpi_config.fs_lcnt = 0xa0;
-        bus_device.acpi_config.sda_hold = 0x9;
     } else {
         IOLog("%s::%s Got bus configuration values\n", getName(), bus_device.name);
     }
