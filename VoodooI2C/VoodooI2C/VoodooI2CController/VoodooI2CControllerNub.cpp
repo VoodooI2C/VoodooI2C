@@ -14,7 +14,7 @@ OSDefineMetaClassAndStructors(VoodooI2CControllerNub, IOService);
 
 bool VoodooI2CControllerNub::attach(IOService* provider) {
     if (!super::attach(provider)) {
-        IOLog("%s super::attach failed", getName());
+        IOLog("%s super::attach failed\n", getName());
     }
 
     controller = OSDynamicCast(VoodooI2CController, provider);

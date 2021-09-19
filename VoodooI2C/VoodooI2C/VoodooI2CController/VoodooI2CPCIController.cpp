@@ -78,7 +78,7 @@ bool VoodooI2CPCIController::start(IOService* provider) {
     physical_device.pci_device = OSDynamicCast(IOPCIDevice, provider);
 
     if (getACPIDevice() != kIOReturnSuccess) {
-        IOLog("%s::%s Could not get ACPI device for PCI provider", getName(), physical_device.name);
+        IOLog("%s::%s Could not get ACPI device for PCI provider\n", getName(), physical_device.name);
         return false;
     }
 
