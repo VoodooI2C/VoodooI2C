@@ -27,11 +27,11 @@ typedef struct {
 } VoodooI2CControllerBusMessage;
 
 typedef struct {
-    UInt32 ss_hcnt = 0x01b0;
-    UInt32 fs_hcnt = 0x48;
-    UInt32 ss_lcnt = 0x01fb;
-    UInt32 fs_lcnt = 0xa0;
-    UInt32 sda_hold = 0x9;
+    UInt32 ss_hcnt;
+    UInt32 fs_hcnt;
+    UInt32 ss_lcnt;
+    UInt32 fs_lcnt;
+    UInt32 sda_hold;
 } VoodooI2CControllerBusConfig;
 
 typedef struct {
