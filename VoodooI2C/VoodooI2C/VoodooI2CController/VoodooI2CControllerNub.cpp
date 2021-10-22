@@ -47,7 +47,7 @@ IOReturn VoodooI2CControllerNub::getACPIParams(const char* method, UInt32* hcnt,
         OSArray* values = OSDynamicCast(OSArray, object);
         if (!values) {
             IOLog("%s::%s %s not implemented in ACPI tables\n", getName(), name, method);
-            return kIOReturnNotFound;
+            goto exit;
         }
 
         OSNumber *hcntNum = OSDynamicCast(OSNumber, values->getObject(0));
@@ -72,7 +72,7 @@ IOReturn VoodooI2CControllerNub::getACPIParams(const char* method, UInt32* hcnt,
 
     } else {
         IOLog("%s::%s %s not implemented in ACPI tables\n", getName(), name, method);
-        return kIOReturnNotFound;
+        goto exit;
     }
 
     OSSafeReleaseNULL(object);
