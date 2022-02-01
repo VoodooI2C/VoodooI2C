@@ -19,8 +19,8 @@
 OSDefineMetaClassAndStructors(VoodooI2CDeviceNub, IOService);
 
 bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
-    const char *interruptMode;
-    
+    const char *interruptMode = nullptr;
+
     if (!super::attach(provider))
         return false;
 
@@ -55,7 +55,7 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
 
         // Give the GPIO controller some time to load
         IOSleep(500);
-        
+
         interruptMode = "GPIO";
     } else if (has_apic_interrupts) {
         interruptMode = "APIC";
