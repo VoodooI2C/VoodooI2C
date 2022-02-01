@@ -19,6 +19,8 @@
 OSDefineMetaClassAndStructors(VoodooI2CDeviceNub, IOService);
 
 bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
+    char const *interruptMode = "Polling";
+    
     if (!super::attach(provider))
         return false;
 
@@ -44,6 +46,7 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
     }
 
     if (has_gpio_interrupts) {
+        interruptMode = "GPIO";
         gpio_controller = getGPIOController();
 
         if (!gpio_controller) {
@@ -54,8 +57,11 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
         // Give the GPIO controller some time to load
 
         IOSleep(500);
+    } else if (has_apic_interrupts) {
+        interruptMode = "APIC";
     }
 
+    setProperty("Interrupt Mode", interruptMode);
     setName(child->getName());
 
     return true;
