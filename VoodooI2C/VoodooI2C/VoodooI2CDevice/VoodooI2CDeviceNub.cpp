@@ -55,7 +55,6 @@ bool VoodooI2CDeviceNub::attach(IOService* provider, IOService* child) {
 
         // Give the GPIO controller some time to load
         IOSleep(500);
-
         interruptMode = "GPIO";
     } else if (has_apic_interrupts) {
         interruptMode = "APIC";
