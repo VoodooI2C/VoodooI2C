@@ -5,7 +5,7 @@
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
 
-#include "VoodooI2CController.hpp"
+#include "./VoodooI2CController.hpp"
 #include "./VoodooI2CControllerNub.hpp"
 
 // Log only if current thread is interruptible, otherwise we will get a panic.

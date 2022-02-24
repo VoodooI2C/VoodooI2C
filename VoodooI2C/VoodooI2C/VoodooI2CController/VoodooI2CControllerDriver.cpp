@@ -7,7 +7,7 @@
 //
 #include <libkern/OSDebug.h>
 
-#include "VoodooI2CControllerDriver.hpp"
+#include "./VoodooI2CControllerDriver.hpp"
 #include "./VoodooI2CController.hpp"
 
 #define readRegister(X) nub->readRegister(X)
