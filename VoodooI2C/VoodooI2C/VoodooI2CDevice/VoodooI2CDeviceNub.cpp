@@ -7,7 +7,7 @@
 //
 
 #include "../VoodooI2CController/VoodooI2CControllerDriver.hpp"
-#include "VoodooI2CDeviceNub.hpp"
+#include "./VoodooI2CDeviceNub.hpp"
 
 #include <Availability.h>
 
