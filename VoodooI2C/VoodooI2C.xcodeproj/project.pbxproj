@@ -697,7 +697,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cpplint --recursive --filter=-build/header_guard,-whitespace/line_length,-runtime/int ./\n";
+			shellScript = "cpplint --recursive --filter=-build/include_subdir,-build/header_guard,-whitespace/line_length,-runtime/int ./\n";
 		};
 		ACA4A00F21E25F3500A91B61 /* Generate Documentation */ = {
 			isa = PBXShellScriptBuildPhase;
