@@ -14,8 +14,8 @@
 #include <IOKit/IOService.h>
 #include <IOKit/acpi/IOACPIPlatformDevice.h>
 
-#include "VoodooI2CControllerConstants.hpp"
-#include "VoodooI2CControllerNub.hpp"
+#include "./VoodooI2CControllerConstants.hpp"
+#include "./VoodooI2CControllerNub.hpp"
 #include "../VoodooI2CDevice/VoodooI2CDeviceNub.hpp"
 #include "../../../Dependencies/helpers.hpp"
 

@@ -9,7 +9,7 @@
 #ifndef VoodooI2CPCILakeController_hpp
 #define VoodooI2CPCILakeController_hpp
 
-#include "VoodooI2CPCIController.hpp"
+#include "./VoodooI2CPCIController.hpp"
 
 /* Override power management for Comet Lake and newer platforms
  *

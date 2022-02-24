@@ -9,7 +9,7 @@
 #ifndef VoodooI2CACPIController_hpp
 #define VoodooI2CACPIController_hpp
 
-#include "VoodooI2CController.hpp"
+#include "./VoodooI2CController.hpp"
 
 /* Implements an ACPI Intel LPSS Designware I2C Controller
  *

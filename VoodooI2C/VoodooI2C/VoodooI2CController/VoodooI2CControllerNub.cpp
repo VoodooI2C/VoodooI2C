@@ -6,8 +6,8 @@
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
 
-#include "VoodooI2CController.hpp"
-#include "VoodooI2CControllerNub.hpp"
+#include "./VoodooI2CController.hpp"
+#include "./VoodooI2CControllerNub.hpp"
 
 #define super IOService
 OSDefineMetaClassAndStructors(VoodooI2CControllerNub, IOService);
