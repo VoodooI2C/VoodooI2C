@@ -6,7 +6,7 @@
 //  Copyright © 2017 Alexandre Daoud. All rights reserved.
 //
 
-#include "./VoodooI2CACPIController.hpp"
+#include "VoodooI2CACPIController.hpp"
 
 #define super VoodooI2CController
 OSDefineMetaClassAndStructors(VoodooI2CACPIController, VoodooI2CController);

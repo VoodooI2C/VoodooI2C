@@ -6,7 +6,7 @@
 //  Copyright © 2020 Alexandre Daoud. All rights reserved.
 //
 
-#include "./VoodooI2CPCILakeController.hpp"
+#include "VoodooI2CPCILakeController.hpp"
 
 OSDefineMetaClassAndStructors(VoodooI2CPCILakeController, VoodooI2CPCIController);
 
