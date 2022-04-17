@@ -27,7 +27,7 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     VoodooI2CMultitouchInterface* parentProvider;
     IOService* voodooInputInstance;
 
-    bool lastIsForceClickEnabled = true;
+    bool lastIsForceClickEnabled = false;
     AbsoluteTime lastForceClickPropertyUpdateTime;
 
     bool isForceClickEnabled();

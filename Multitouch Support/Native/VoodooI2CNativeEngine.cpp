@@ -48,7 +48,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
             valid_touch_count++;
         }
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
-        inputTransducer->isPhysicalButtonDown = false; // it will be passed either as pressure, or as buttons on the "trackpoint" device
+        inputTransducer->isPhysicalButtonDown = !transducer->has_secondary_button && transducer->physical_button.value(); // if it has secondary button, then it will be passed as buttons on the "trackpoint" device
         
         inputTransducer->currentCoordinates.x = transducer->coordinates.x.value();
         inputTransducer->previousCoordinates.x = transducer->coordinates.x.last.value;
@@ -67,8 +67,10 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
         // Force Touch emulation
         // The button state is saved in the first transducer
-        if (firstTransducer->physical_button.value() && isForceClickEnabled()) {
+        // Disable Force Touch emulation for two-button trackpads
+        if (!firstTransducer->has_secondary_button && firstTransducer->physical_button.value() && isForceClickEnabled()) {
             inputTransducer->supportsPressure = true;
+            inputTransducer->isPhysicalButtonDown = false;
             inputTransducer->currentCoordinates.pressure = 0xff;
             inputTransducer->currentCoordinates.width = 10;
         }
@@ -91,7 +93,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
-    if (!isForceClickEnabled()) {
+    if (firstTransducer->has_secondary_button) {
         RelativePointerEvent event;
         event.dx = 0;
         event.dy = 0;
@@ -111,7 +113,7 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     if (!parentProvider) {
         return false;
     }
-
+    
     voodooInputInstance = NULL;
     
     setProperty(VOODOO_INPUT_LOGICAL_MAX_X_KEY, parentProvider->logical_max_x, 32);
@@ -137,7 +139,7 @@ bool VoodooI2CNativeEngine::isForceClickEnabled() {
         lastForceClickPropertyUpdateTime = now_abs;
         return lastIsForceClickEnabled;
     }
-
+    
     // Blocking reading here takes about 10 microseconds
     OSDictionary* dict = OSDynamicCast(OSDictionary, this->getProperty("MultitouchPreferences", gIOServicePlane, kIORegistryIterateRecursively));
     if (!dict) {
@@ -145,6 +147,24 @@ bool VoodooI2CNativeEngine::isForceClickEnabled() {
     }
     if (OSCollectionIterator* i = OSCollectionIterator::withCollection(dict)) {
         while (OSSymbol* key = OSDynamicCast(OSSymbol, i->getNextObject())) {
+            // If tap to click (property "Clicking") is disabled,
+            // then we should forbid force clicking,
+            // because it makes impossible to perform a non-force click
+            if (key->isEqualTo("Clicking")) {
+                OSBoolean *boolValue;
+                OSNumber *numValue;
+                if ((boolValue = OSDynamicCast(OSBoolean, dict->getObject(key))) != NULL) {
+                    if (!boolValue->getValue()) {
+                        lastIsForceClickEnabled = FALSE;
+                        break;
+                    }
+                }
+                // is it needed? in default properties it's number, not boolean
+                else if ((numValue = OSDynamicCast(OSNumber, dict->getObject(key))) != NULL && !numValue->unsigned64BitValue()) {
+                    lastIsForceClickEnabled = FALSE;
+                    break;
+                }
+            }
             // System -> Preferences -> Trackpad -> Force Click and haptic feedback
             // ForceSuppressed
             if (key->isEqualTo("ForceSuppressed")) {
