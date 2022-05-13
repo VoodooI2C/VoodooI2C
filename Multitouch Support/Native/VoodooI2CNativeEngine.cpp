@@ -114,7 +114,7 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
         return false;
     }
     
-    voodooInputInstance = NULL;
+    voodooInputInstance = nullptr;
     
     setProperty(VOODOO_INPUT_LOGICAL_MAX_X_KEY, parentProvider->logical_max_x, 32);
     setProperty(VOODOO_INPUT_LOGICAL_MAX_Y_KEY, parentProvider->logical_max_y, 32);
@@ -153,15 +153,15 @@ bool VoodooI2CNativeEngine::isForceClickEnabled() {
             if (key->isEqualTo("Clicking")) {
                 OSBoolean *boolValue;
                 OSNumber *numValue;
-                if ((boolValue = OSDynamicCast(OSBoolean, dict->getObject(key))) != NULL) {
+                if ((boolValue = OSDynamicCast(OSBoolean, dict->getObject(key))) != nullptr) {
                     if (!boolValue->getValue()) {
-                        lastIsForceClickEnabled = FALSE;
+                        lastIsForceClickEnabled = false;
                         break;
                     }
                 }
                 // is it needed? in default properties it's number, not boolean
-                else if ((numValue = OSDynamicCast(OSNumber, dict->getObject(key))) != NULL && !numValue->unsigned64BitValue()) {
-                    lastIsForceClickEnabled = FALSE;
+                else if ((numValue = OSDynamicCast(OSNumber, dict->getObject(key))) != nullptr && !numValue->unsigned64BitValue()) {
+                    lastIsForceClickEnabled = false;
                     break;
                 }
             }
@@ -170,7 +170,7 @@ bool VoodooI2CNativeEngine::isForceClickEnabled() {
             if (key->isEqualTo("ForceSuppressed")) {
                 OSBoolean* value = OSDynamicCast(OSBoolean, dict->getObject(key));
 
-                if (value != NULL) {
+                if (value != nullptr) {
                     lastIsForceClickEnabled = !value->getValue();
                 }
             }
@@ -204,7 +204,7 @@ bool VoodooI2CNativeEngine::handleOpen(IOService *forClient, IOOptionBits option
 }
 
 bool VoodooI2CNativeEngine::handleIsOpen(const IOService *forClient) const {
-    return voodooInputInstance != NULL && forClient == voodooInputInstance;
+    return voodooInputInstance != nullptr && forClient == voodooInputInstance;
 }
 
 void VoodooI2CNativeEngine::handleClose(IOService *forClient, IOOptionBits options) {
