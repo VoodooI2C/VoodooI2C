@@ -90,6 +90,7 @@ class EXPORT VoodooI2CDigitiserTransducer : public OSObject {
     
 public:
     DigitiserTransducerButtonState physical_button;
+    bool has_secondary_button = false;
     
     DigitiserTransducerCoordinates coordinates;
     DigitiserTransducerCoordinates last_coordinates;
