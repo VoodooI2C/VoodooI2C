@@ -106,6 +106,13 @@ class EXPORT VoodooI2CMultitouchInterface : public IOService {
 
     void stop(IOService* provider) override;
 
+    /* Notification that a provider will be terminated, this method is present to prevent crashes on macOS 13.0+
+     *
+     * @return *true*
+     */
+
+    bool willTerminate(IOService* provider, IOOptionBits options) override;
+
  private:
     OSOrderedSet* engines;
 };

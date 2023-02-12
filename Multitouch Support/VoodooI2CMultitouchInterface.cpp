@@ -92,3 +92,7 @@ void VoodooI2CMultitouchInterface::stop(IOService* provider) {
 
     super::stop(provider);
 }
+
+bool VoodooI2CMultitouchInterface::willTerminate(IOService *provider, IOOptionBits options) {
+    return super::willTerminate(provider, options);
+}
