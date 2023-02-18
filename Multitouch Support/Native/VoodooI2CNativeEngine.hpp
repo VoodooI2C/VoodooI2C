@@ -39,6 +39,7 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     bool handleIsOpen(const IOService *forClient) const override;
     void handleClose(IOService *forClient, IOOptionBits options) override;
     void onPropertyChange() override;
+    bool willTerminate(IOService* provider, IOOptionBits options) override;
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
  private:
