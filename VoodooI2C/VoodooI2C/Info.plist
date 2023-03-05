@@ -481,6 +481,10 @@
 			<string>VoodooI2CACPIController</string>
 			<key>IONameMatch</key>
 			<array>
+				<string>AMD0010</string>
+				<string>AMDI0010</string>
+				<string>AMDI0019</string>
+				<string>AMDI0510</string>
 				<string>INT33C2</string>
 				<string>INT33C3</string>
 				<string>INT3432</string>
