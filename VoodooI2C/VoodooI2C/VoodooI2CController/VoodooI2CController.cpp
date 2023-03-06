@@ -59,6 +59,7 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 IOReturn VoodooI2CController::publishNub() {
     IOLog("%s::%s Publishing nub\n", getName(), physical_device.name);
     nub = OSTypeAlloc(VoodooI2CControllerNub);
+
     if (!nub || !nub->init()) {
         IOLog("%s::%s Could not initialise nub\n", getName(), physical_device.name);
         goto exit;
