@@ -106,7 +106,7 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
     enabled = readRegister(DW_IC_ENABLE);
     status = readRegister(DW_IC_RAW_INTR_STAT);
 
-    if (!enabled || !(status &~DW_IC_INTR_ACTIVITY))
+    if (!enabled || !(status &~DW_IC_INTR_ACTIVITY) || status == 0xFFFFFFFF)
         goto exit;
 
     status = readClearInterruptBits();
