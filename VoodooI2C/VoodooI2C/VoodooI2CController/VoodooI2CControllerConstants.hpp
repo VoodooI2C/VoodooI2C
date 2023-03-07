@@ -143,6 +143,6 @@ DW_IC_TX_ABRT_GCALL_NOACK)
 
 #define DW_IC_STATUS_ACTIVITY 0x1
 
-#define DW_IC_CON_BUS_CLEAR_CTRL		BIT(11)
+#define DW_IC_CON_BUS_CLEAR_CTRL BIT(11)
 
 #endif /* VoodooI2CControllerConstants_h */

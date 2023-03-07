@@ -575,7 +575,9 @@ IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
 }
 
 inline void VoodooI2CControllerDriver::toggleClockGating(VoodooI2CState enabled) {
-    writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
+    if (strncmp(nub->controller->physical_device.name, "AMD", sizeof("AMD"))) {
+        writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
+    }
 }
 
 void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {
