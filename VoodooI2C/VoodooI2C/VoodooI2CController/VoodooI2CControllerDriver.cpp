@@ -492,6 +492,17 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     bus_device.functionality = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
     bus_device.bus_config = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE | DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
 
+    /*
+	 * On AMD platforms BIOS advertises the bus clear feature
+	 * and enables the SCL/SDA stuck low. SMU FW does the
+	 * bus recovery process. Driver should not ignore this BIOS
+	 * advertisement of bus clear feature.
+	 */
+    if (readRegister(DW_IC_CON) & DW_IC_CON_BUS_CLEAR_CTRL) {
+        IOLog("%s::%s Bus clear is enabled", getName(), bus_device.name);
+        bus_device.bus_config |= DW_IC_CON_BUS_CLEAR_CTRL;
+    }
+
     if (initialiseBus() != kIOReturnSuccess) {
         IOLog("%s::%s Could not initialise bus\n", getName(), bus_device.name);
         return false;
