@@ -419,6 +419,9 @@ void VoodooI2CControllerDriver::requestTransferI2C() {
 
     toggleBusState(kVoodooI2CStateOn);
 
+    /* Dummy read to avoid the register getting stuck on Bay Trail */
+    readRegister(DW_IC_ENABLE_STATUS);
+
     toggleInterrupts(kVoodooI2CStateOn);
 }
 
