@@ -37,8 +37,32 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     if (nub->getACPIParams((const char*)"FMCN", &bus_device.acpi_config.fs_hcnt, &bus_device.acpi_config.fs_lcnt, &bus_device.acpi_config.sda_hold) != kIOReturnSuccess) {
         bus_device.acpi_config.fs_hcnt = 0x48;
         bus_device.acpi_config.fs_lcnt = 0xa0;
-        bus_device.acpi_config.sda_hold = 0x9;
         error = true;
+    }
+
+    if (readRegister(DW_IC_COMP_VERSION) >= DW_IC_SDA_HOLD_MIN_VERS) {
+        if (!bus_device.acpi_config.sda_hold) {
+            bus_device.acpi_config.sda_hold = readRegister(DW_IC_SDA_HOLD);
+        }
+
+        /*
+        * Workaround for avoiding TX arbitration lost in case I2C
+        * slave pulls SDA down "too quickly" after falling edge of
+        * SCL by enabling non-zero SDA RX hold. Specification says it
+        * extends incoming SDA low to high transition while SCL is
+        * high but it appears to help also above issue.
+        */
+        if (!(bus_device.acpi_config.sda_hold & DW_IC_SDA_HOLD_RX_MASK)) {
+            bus_device.acpi_config.sda_hold |= 1 << DW_IC_SDA_HOLD_RX_SHIFT;
+        }
+
+        writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
+    } else {
+        IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
+    }
+
+    if (bus_device.acpi_config.sda_hold) {
+        writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
     }
 
     if (error)
@@ -159,14 +183,6 @@ IOReturn VoodooI2CControllerDriver::initialiseBus() {
     writeRegister(bus_device.acpi_config.ss_lcnt, DW_IC_SS_SCL_LCNT);
     writeRegister(bus_device.acpi_config.fs_hcnt, DW_IC_FS_SCL_HCNT);
     writeRegister(bus_device.acpi_config.fs_lcnt, DW_IC_FS_SCL_LCNT);
-
-    UInt32 reg = readRegister(DW_IC_COMP_VERSION);
-
-    if  (reg >= DW_IC_SDA_HOLD_MIN_VERS)
-        writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
-    else
-        IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
-
     writeRegister(bus_device.transaction_fifo_depth / 2, DW_IC_TX_TL);
     writeRegister(0, DW_IC_RX_TL);
     writeRegister(bus_device.bus_config, DW_IC_CON);

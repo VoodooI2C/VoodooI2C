@@ -60,7 +60,7 @@ typedef struct {
 
 class VoodooI2CController;
 
-/* Implements a driver for the Intel LPSS Designware I2C Controller which attaches to a <VoodooI2CControllerNub> object
+/* Implements a driver for the Designware I2C Controller which attaches to a <VoodooI2CControllerNub> object
  *
  * The members of this class are responsible for interfacing with the I2C bus and implementing the I2C protocol. The driver also
  * publishes nubs for each I2C slave device attached to the bus it drives.
@@ -247,7 +247,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     /* Toggle the bus's enabled state
      * @param enabled The power state the bus is expected to enter represented by either
      *  *kVoodooI2CStateOn* or *kVoodooI2CStateOff*
-     
+
      @return *kIOReturnSuccess* on successful state toggle, *kIOReturnTimeout* otherwise
      */
 
@@ -267,7 +267,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     /* Toggle the interrupts' enabled state
      * @param enabled The state the interrupts are expected to enter represented by either
      *  *kVoodooI2CStateOn* or *kVoodooI2CStateOff*
-     
+
      @return *kIOReturnSuccess* on successful state toggle, *kIOReturnTimeout* otherwise
      */
 
@@ -276,7 +276,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     /* Attempts an I2C transfer routine
      * @messages The messages to be transferred
      * @number   The number of messages
-     
+
      @return returns kIOReturnSuccess on successful
      */
 

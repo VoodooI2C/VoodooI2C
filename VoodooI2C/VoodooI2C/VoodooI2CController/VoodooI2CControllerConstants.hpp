@@ -145,4 +145,7 @@ DW_IC_TX_ABRT_GCALL_NOACK)
 
 #define DW_IC_CON_BUS_CLEAR_CTRL BIT(11)
 
+#define DW_IC_SDA_HOLD_RX_SHIFT 16
+#define DW_IC_SDA_HOLD_RX_MASK  GENMASK(23, 16)
+
 #endif /* VoodooI2CControllerConstants_h */

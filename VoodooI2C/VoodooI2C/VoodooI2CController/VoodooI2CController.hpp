@@ -30,10 +30,10 @@ typedef struct {
 
 class VoodooI2CControllerNub;
 
-/* Implements an Intel LPSS Designware I2C Controller
+/* Implements a Designware I2C Controller
  *
  * This is the base class from which all implementations of a physical
- * Intel LPSS Designware I2C Controller should inherit from. The members of this class
+ * Designware I2C Controller should inherit from. The members of this class
  * are responsible for low-level interfacing with the physical hardware. For the driver implementing
  * the properiety Designware I2C controller interface, see <VoodooI2CControllerDriver>.
  */

@@ -11,7 +11,7 @@
 
 #include "VoodooI2CController.hpp"
 
-/* Implements an ACPI Intel LPSS Designware I2C Controller
+/* Implements an ACPI Designware I2C Controller
  *
  * The members of this class are responsible for low-level interfacing with the physical ACPI hardware.
  */
