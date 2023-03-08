@@ -62,14 +62,8 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
         if (!(bus_device.acpi_config.sda_hold & DW_IC_SDA_HOLD_RX_MASK)) {
             bus_device.acpi_config.sda_hold |= 1 << DW_IC_SDA_HOLD_RX_SHIFT;
         }
-
-        writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
     } else {
         IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
-    }
-
-    if (bus_device.acpi_config.sda_hold) {
-        writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
     }
 
     if (error)
@@ -190,6 +184,9 @@ IOReturn VoodooI2CControllerDriver::initialiseBus() {
     writeRegister(bus_device.acpi_config.ss_lcnt, DW_IC_SS_SCL_LCNT);
     writeRegister(bus_device.acpi_config.fs_hcnt, DW_IC_FS_SCL_HCNT);
     writeRegister(bus_device.acpi_config.fs_lcnt, DW_IC_FS_SCL_LCNT);
+    if (bus_device.acpi_config.sda_hold) {
+        writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
+    }
     writeRegister(bus_device.transaction_fifo_depth / 2, DW_IC_TX_TL);
     writeRegister(0, DW_IC_RX_TL);
     writeRegister(bus_device.bus_config, DW_IC_CON);
