@@ -105,7 +105,7 @@ DW_IC_INTR_START_DET)
 #define I2C_M_RD 0x0001
 #define I2C_M_RECV_LEN 0x0400
 
-#define DW_IC_TAR_10BITADDR_MASTER BIT(12);
+#define DW_IC_TAR_10BITADDR_MASTER BIT(12)
 
 #define BIT(nr)                 (1UL << (nr))
 

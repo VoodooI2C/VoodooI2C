@@ -30,12 +30,12 @@ typedef struct {
 
 class VoodooI2CControllerNub;
 
-/* Implements a Designware I2C Controller
+/* Implements a Synopsys DesignWare I2C Controller
  *
  * This is the base class from which all implementations of a physical
- * Designware I2C Controller should inherit from. The members of this class
+ * Synopsys DesignWare I2C Controller should inherit from. The members of this class
  * are responsible for low-level interfacing with the physical hardware. For the driver implementing
- * the properiety Designware I2C controller interface, see <VoodooI2CControllerDriver>.
+ * the properiety Synopsys DesignWare I2C controller interface, see <VoodooI2CControllerDriver>.
  */
 class EXPORT VoodooI2CController : public IOService {
   OSDeclareDefaultStructors(VoodooI2CController);
