@@ -32,14 +32,14 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
                 || !strncmp(nub->controller->physical_device.name, "INT345D", sizeof("INT345D"));
 
     if (nub->getACPIParams((const char*)"SSCN", &bus_device.acpi_config.ss_hcnt, &bus_device.acpi_config.ss_lcnt, NULL) != kIOReturnSuccess) {
-        bus_device.acpi_config.ss_hcnt = is_sunrise_point ? 0x01b0 : 0x03F2;
-        bus_device.acpi_config.ss_lcnt = is_sunrise_point ? 0x01fb : 0x043D;
+        bus_device.acpi_config.ss_hcnt = is_sunrise_point ? 0x01B0 : 0x03F2;
+        bus_device.acpi_config.ss_lcnt = is_sunrise_point ? 0x01FB : 0x043D;
         error = true;
     }
 
     if (nub->getACPIParams((const char*)"FMCN", &bus_device.acpi_config.fs_hcnt, &bus_device.acpi_config.fs_lcnt, &bus_device.acpi_config.sda_hold) != kIOReturnSuccess) {
         bus_device.acpi_config.fs_hcnt = is_sunrise_point ? 0x48 : 0x0101;
-        bus_device.acpi_config.fs_lcnt = is_sunrise_point ? 0xa0 : 0x012C;
+        bus_device.acpi_config.fs_lcnt = is_sunrise_point ? 0xA0 : 0x012C;
         error = true;
     }
 
@@ -157,7 +157,7 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
         transferMessageToBus();
 
 wakeup:
-    if ((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device.message_error) {
+    if (((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device.message_error) && (bus_device.receive_outstanding == 0)) {
         command_gate->commandWakeup(&bus_device.command_complete);
     } else if (nub->getProperty("AccessIntrMaskWorkaround")) {
         /* Workaround to trigger pending interrupt */
@@ -340,7 +340,7 @@ UInt32 VoodooI2CControllerDriver::readClearInterruptBits() {
         readRegister(DW_IC_CLR_RX_DONE);
     if (stat & DW_IC_INTR_ACTIVITY)
         readRegister(DW_IC_CLR_ACTIVITY);
-    if (stat & DW_IC_INTR_STOP_DET)
+    if ((stat & DW_IC_INTR_STOP_DET) && ((bus_device.receive_outstanding == 0) || (stat & DW_IC_INTR_RX_FULL)))
         readRegister(DW_IC_CLR_STOP_DET);
     if (stat & DW_IC_INTR_START_DET)
         readRegister(DW_IC_CLR_START_DET);
