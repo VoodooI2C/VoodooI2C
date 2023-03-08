@@ -139,6 +139,7 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
     if (status & DW_IC_INTR_TX_ABRT) {
         bus_device.command_error |= DW_IC_ERR_TX_ABRT;
         bus_device.status = STATUS_IDLE;
+        bus_device.receive_outstanding = 0;
 
         writeRegister(0, DW_IC_INTR_MASK);
         goto wakeup;
