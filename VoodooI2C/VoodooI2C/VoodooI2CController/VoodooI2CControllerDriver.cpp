@@ -28,21 +28,28 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     bus_device.transaction_fifo_depth = 32;
     bus_device.receive_fifo_depth = 32;
 
+    bool is_sunrise_point = !strncmp(nub->controller->physical_device.name, "INT344B", sizeof("INT344B"))
+                || !strncmp(nub->controller->physical_device.name, "INT345D", sizeof("INT345D"));
+
     if (nub->getACPIParams((const char*)"SSCN", &bus_device.acpi_config.ss_hcnt, &bus_device.acpi_config.ss_lcnt, NULL) != kIOReturnSuccess) {
-        bus_device.acpi_config.ss_hcnt = 0x01b0;
-        bus_device.acpi_config.ss_lcnt = 0x01fb;
+        bus_device.acpi_config.ss_hcnt = is_sunrise_point ? 0x01b0 : 0x03F2;
+        bus_device.acpi_config.ss_lcnt = is_sunrise_point ? 0x01fb : 0x043D;
         error = true;
     }
 
     if (nub->getACPIParams((const char*)"FMCN", &bus_device.acpi_config.fs_hcnt, &bus_device.acpi_config.fs_lcnt, &bus_device.acpi_config.sda_hold) != kIOReturnSuccess) {
-        bus_device.acpi_config.fs_hcnt = 0x48;
-        bus_device.acpi_config.fs_lcnt = 0xa0;
+        bus_device.acpi_config.fs_hcnt = is_sunrise_point ? 0x48 : 0x0101;
+        bus_device.acpi_config.fs_lcnt = is_sunrise_point ? 0xa0 : 0x012C;
         error = true;
     }
 
     if (readRegister(DW_IC_COMP_VERSION) >= DW_IC_SDA_HOLD_MIN_VERS) {
         if (!bus_device.acpi_config.sda_hold) {
             bus_device.acpi_config.sda_hold = readRegister(DW_IC_SDA_HOLD);
+        }
+
+        if (!bus_device.acpi_config.sda_hold) {
+            bus_device.acpi_config.sda_hold = is_sunrise_point ? 0x1E : 0x62;
         }
 
         /*
