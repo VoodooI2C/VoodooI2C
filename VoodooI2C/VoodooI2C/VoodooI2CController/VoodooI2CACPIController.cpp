@@ -54,6 +54,12 @@ bool VoodooI2CACPIController::start(IOService* provider) {
 
     physical_device.acpi_device = OSDynamicCast(IOACPIPlatformDevice, provider);
 
+    OSBoolean *access_intr_mask_workaround  = OSDynamicCast(OSBoolean, this->getProperty("AccessIntrMaskWorkaround"));
+    if (access_intr_mask_workaround) {
+        physical_device.access_intr_mask_workaround = access_intr_mask_workaround->getValue();
+        IOLog("%s::%s AccessIntrMaskWorkaround: %d\n", getName(), physical_device.name, physical_device.access_intr_mask_workaround);
+    }
+
     setACPIPowerState(kVoodooI2CStateOn);
 
     if (mapMemory() != kIOReturnSuccess) {

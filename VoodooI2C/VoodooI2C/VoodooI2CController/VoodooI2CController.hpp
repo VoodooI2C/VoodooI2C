@@ -26,6 +26,7 @@ typedef struct {
     IOPCIDevice* pci_device;
     IOMemoryMap* mmap;
     IOService* provider;
+    bool access_intr_mask_workaround = false;
 } VoodooI2CControllerPhysicalDevice;
 
 class VoodooI2CControllerNub;

@@ -154,7 +154,7 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
 wakeup:
     if (((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device.message_error) && (bus_device.receive_outstanding == 0)) {
         command_gate->commandWakeup(&bus_device.command_complete);
-    } else if (nub->getProperty("AccessIntrMaskWorkaround")) {
+    } else if (nub->controller->physical_device.access_intr_mask_workaround) {
         /* Workaround to trigger pending interrupt */
         status = readRegister(DW_IC_INTR_MASK);
         writeRegister(0, DW_IC_INTR_MASK);
@@ -473,8 +473,6 @@ IOReturn VoodooI2CControllerDriver::setPowerState(unsigned long whichState, IOSe
     return kIOPMAckImplied;
 }
 
-constexpr const char *ACCESS_INTR_MASK_WORKAROUND_NAMES[] = {"AMD0010", "AMDI0010", "AMDI0019"};
-
 bool VoodooI2CControllerDriver::start(IOService* provider) {
     if (!super::start(provider))
         return false;
@@ -540,13 +538,6 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     registerService();
 
     publishNubs();
-
-    for (auto &name : ACCESS_INTR_MASK_WORKAROUND_NAMES) {
-        if (!strcmp(nub->controller->physical_device.name, name)) {
-            nub->setProperty("AccessIntrMaskWorkaround", kOSBooleanTrue);
-            break;
-        }
-    }
 
     return true;
 exit:
