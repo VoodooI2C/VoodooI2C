@@ -145,6 +145,12 @@ DW_IC_TX_ABRT_GCALL_NOACK)
 
 #define DW_IC_CON_BUS_CLEAR_CTRL BIT(11)
 
+#if defined(__LP64__) && __LP64__
+#define BITS_PER_LONG 64
+#else
+#define BITS_PER_LONG 32
+#endif
+
 #define GENMASK(h, l) \
 (((~0UL) << (l)) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
 
