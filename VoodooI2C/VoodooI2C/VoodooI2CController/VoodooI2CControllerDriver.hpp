@@ -55,7 +55,7 @@ typedef struct {
     UInt status;
     UInt32 transaction_buffer_length;
     UInt8* transaction_buffer;
-    UInt transaction_fifo_depth;
+    UInt32 transaction_fifo_depth;
 } VoodooI2CControllerBusDevice;
 
 class VoodooI2CController;
