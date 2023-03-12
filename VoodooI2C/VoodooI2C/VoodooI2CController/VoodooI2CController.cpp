@@ -93,7 +93,7 @@ UInt32 VoodooI2CController::readRegister(int offset) {
             TryLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
         }
      } else {
-        TryLog("%s::%s readRegister at offset 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+        TryLog("%s::%s readRegister at offset 0x%x failed since memory was not mapped\n", getName(), physical_device.name, offset);
      }
      return 0;
 }
@@ -163,6 +163,6 @@ void VoodooI2CController::writeRegister(UInt32 value, int offset) {
             TryLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
         }
     } else {
-        TryLog("%s::%s writeRegister at 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+        TryLog("%s::%s writeRegister at 0x%x failed since memory was not mapped\n", getName(), physical_device.name, offset);
     }
 }
