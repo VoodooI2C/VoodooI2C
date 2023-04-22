@@ -289,7 +289,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
 
     /*
      * Sleep timeout to prevent the caller from deadlock :
-     *   10ms is required, for example, when reading the HID descriptor at the first time.
+     *   10ms is required, for example, when reading the HID descriptor for the first time.
      *   Timeout is set to 100ms (10ms x 10 times)
      */
     nanoseconds_to_absolutetime(1000000000, &abstime);
@@ -303,7 +303,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     }
 
     /*
-     * We must disable the adapter before returning and signaling the end
+     * We must disable the adapter before returning and signalling the end
      * of the current transfer. Otherwise the hardware might continue
      * generating interrupts which in turn causes a race condition with
      * the following transfer.  Needs some more investigation if the
@@ -481,12 +481,18 @@ void VoodooI2CControllerDriver::releaseResources() {
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
     VoodooI2CControllerBusMessage *messages = bus_device.messages;
-    UInt32 i2c_configuration, i2c_target = 0;
+    UInt32 i2c_configuration, i2c_target = 0, orig;
 
-    toggleBusState(kVoodooI2CStateOff);
+    if (nub->controller->physical_device.access_intr_mask_workaround) {
+        // Linux code works with black magic, on macOS with AMD I2C turning off the adapter
+        // and rewriting the bus settings is required
+        initialiseBus();
+    } else {
+        toggleBusState(kVoodooI2CStateOff);
+    }
 
     /* if the slave address is ten bit address, enable 10BITADDR */
-    i2c_configuration = readRegister(DW_IC_CON);
+    orig = i2c_configuration = readRegister(DW_IC_CON);
     if (messages[bus_device.message_write_index].flags & I2C_M_TEN) {
         i2c_configuration |= DW_IC_CON_10BITADDR_MASTER;
         /*
@@ -500,7 +506,8 @@ void VoodooI2CControllerDriver::requestTransferI2C() {
         i2c_configuration &= ~DW_IC_CON_10BITADDR_MASTER;
     }
 
-    writeRegister(i2c_configuration, DW_IC_CON);
+    if (i2c_configuration != orig)
+        writeRegister(i2c_configuration, DW_IC_CON);
 
     /*
      * Set the slave (target) address and enable 10-bit addressing mode

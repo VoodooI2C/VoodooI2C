@@ -25,7 +25,7 @@ class VoodooI2CController;
 /* Implements a controller nub to which an instance of <VoodooI2CControllerDriver> may attach
  *
  * The members of this class are responsible for acting as a middle-man between the physical 
- * device and the I2C bus iself.
+ * device and the I2C bus itself.
  */
 class EXPORT VoodooI2CControllerNub : public IOService {
     OSDeclareDefaultStructors(VoodooI2CControllerNub);
@@ -40,7 +40,7 @@ class EXPORT VoodooI2CControllerNub : public IOService {
      * This function attaches the nub to the physical controller so that it appears as a child entry
      * in the IOService plane.
      *
-     * @return *true* on succesful attach, *false* otherwise
+     * @return *true* on successful attach, *false* otherwise
      */
 
     bool attach(IOService* provider) override;

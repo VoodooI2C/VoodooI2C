@@ -22,7 +22,7 @@ class EXPORT VoodooI2CACPIController : public VoodooI2CController {
  private:
     /* @inherit */
 
-    IOReturn setPowerState(unsigned long whichState, IOService * whatDevice);
+    IOReturn setPowerState(unsigned long whichState, IOService * whatDevice) override;
 
     /* Instructs the controller to enter a specific power state by evaluating the ACPI power state methods
      * @enabled The power state the device is expected to enter represented by either <kVoodooI2CStateOn> or
@@ -35,11 +35,11 @@ class EXPORT VoodooI2CACPIController : public VoodooI2CController {
 
     /* @inherit */
 
-    bool start(IOService* provider);
+    bool start(IOService* provider) override;
 
     /* @inherit */
 
-    void stop(IOService* provider);
+    void stop(IOService* provider) override;
 };
 
 #endif /* VoodooI2CACPIController_hpp */

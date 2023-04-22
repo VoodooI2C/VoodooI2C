@@ -36,7 +36,7 @@ class VoodooI2CControllerNub;
  * This is the base class from which all implementations of a physical
  * Synopsys DesignWare I2C Controller should inherit from. The members of this class
  * are responsible for low-level interfacing with the physical hardware. For the driver implementing
- * the properiety Synopsys DesignWare I2C controller interface, see <VoodooI2CControllerDriver>.
+ * the proprietary Synopsys DesignWare I2C controller interface, see <VoodooI2CControllerDriver>.
  */
 class EXPORT VoodooI2CController : public IOService {
   OSDeclareDefaultStructors(VoodooI2CController);
@@ -163,7 +163,7 @@ class EXPORT VoodooI2CController : public IOService {
      * This function is called by the operating system's power management services
      * to instruct the controller to enter a certain power state.
      *
-     * @return *kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise
+     * @return *kIOPMAckImplied* on successful state change, *kIOReturnError* otherwise
      */
 
     IOReturn setPowerState(unsigned long whichState, IOService* whatDevice) override;
