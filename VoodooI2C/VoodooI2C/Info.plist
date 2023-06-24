@@ -491,6 +491,25 @@
 			<key>IOProviderClass</key>
 			<string>IOService</string>
 		</dict>
+		<key>VoodooI2CACPIControllerAMD</key>
+		<dict>
+			<key>AccessIntrMaskWorkaround</key>
+			<true/>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CACPIController</string>
+			<key>IONameMatch</key>
+			<array>
+				<string>AMD0010</string>
+				<string>AMDI0010</string>
+				<string>AMDI0510</string>
+			</array>
+			<key>IOProbeScore</key>
+			<integer>9999</integer>
+			<key>IOProviderClass</key>
+			<string>IOService</string>
+		</dict>
 		<key>VoodooI2CControllerDriver</key>
 		<dict>
 			<key>CFBundleIdentifier</key>

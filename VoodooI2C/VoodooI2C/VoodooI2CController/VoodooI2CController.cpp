@@ -59,6 +59,7 @@ VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* sco
 IOReturn VoodooI2CController::publishNub() {
     IOLog("%s::%s Publishing nub\n", getName(), physical_device.name);
     nub = OSTypeAlloc(VoodooI2CControllerNub);
+
     if (!nub || !nub->init()) {
         IOLog("%s::%s Could not initialise nub\n", getName(), physical_device.name);
         goto exit;
@@ -85,13 +86,14 @@ exit:
 
 UInt32 VoodooI2CController::readRegister(int offset) {
     if (physical_device.mmap != 0) {
-         IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
-         if (address != 0)
-             return *(const volatile UInt32 *)(address + offset);
-         else
-             TryLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+        IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
+        if (address != 0) {
+            return *(volatile UInt32 *)(address + offset);
+        } else {
+            TryLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+        }
      } else {
-         TryLog("%s::%s readRegister at offset 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+        TryLog("%s::%s readRegister at offset 0x%x failed since memory was not mapped\n", getName(), physical_device.name, offset);
      }
      return 0;
 }
@@ -155,11 +157,12 @@ void VoodooI2CController::stop(IOService* provider) {
 void VoodooI2CController::writeRegister(UInt32 value, int offset) {
     if (physical_device.mmap != 0) {
         IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
-        if (address != 0)
+        if (address != 0) {
             *(volatile UInt32 *)(address + offset) = value;
-        else
+        } else {
             TryLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
+        }
     } else {
-        TryLog("%s::%s writeRegister at 0x%x failed since mamory was not mapped\n", getName(), physical_device.name, offset);
+        TryLog("%s::%s writeRegister at 0x%x failed since memory was not mapped\n", getName(), physical_device.name, offset);
     }
 }

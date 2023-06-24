@@ -55,12 +55,12 @@ typedef struct {
     UInt status;
     UInt32 transaction_buffer_length;
     UInt8* transaction_buffer;
-    UInt transaction_fifo_depth;
+    UInt32 transaction_fifo_depth;
 } VoodooI2CControllerBusDevice;
 
 class VoodooI2CController;
 
-/* Implements a driver for the Intel LPSS Designware I2C Controller which attaches to a <VoodooI2CControllerNub> object
+/* Implements a driver for the Synopsys DesignWare I2C Controller which attaches to a <VoodooI2CControllerNub> object
  *
  * The members of this class are responsible for interfacing with the I2C bus and implementing the I2C protocol. The driver also
  * publishes nubs for each I2C slave device attached to the bus it drives.
@@ -101,7 +101,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
      * @score    Probe score as specified in the matched personality
      *
      * This function probes the controller to determine if this driver is suitable to
-     * drive it. This is done by quering the *DW_IC_COMP_TYPE* register. We consider the
+     * drive it. This is done by querying the *DW_IC_COMP_TYPE* register. We consider the
      * probe successful if the value returned is *DW_IC_COMP_TYPE_VALUE*. Note that
      * Linux implements other accepted returned values (which involve modifying the output
      * of <VoodooI2CControllerNub::readRegister>) but we do not implement them as we have yet
@@ -208,7 +208,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
     /* Determines what type of interrupt has fired
      *
-     * @return *DW_IC_INT* satus code
+     * @return *DW_IC_INT* status code
      */
 
     UInt32 readClearInterruptBits();
@@ -239,7 +239,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
      * This function is called by the operating system's power management services
      * to instruct the bus to enter a certain power state.
      *
-     * @return *kIOPMAckImplied* on succesful state change, *kIOReturnError* otherwise
+     * @return *kIOPMAckImplied* on successful state change, *kIOReturnError* otherwise
      */
 
     IOReturn setPowerState(unsigned long whichState, IOService* whatDevice) override;
@@ -247,7 +247,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     /* Toggle the bus's enabled state
      * @param enabled The power state the bus is expected to enter represented by either
      *  *kVoodooI2CStateOn* or *kVoodooI2CStateOff*
-     
+
      @return *kIOReturnSuccess* on successful state toggle, *kIOReturnTimeout* otherwise
      */
 
@@ -267,7 +267,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     /* Toggle the interrupts' enabled state
      * @param enabled The state the interrupts are expected to enter represented by either
      *  *kVoodooI2CStateOn* or *kVoodooI2CStateOff*
-     
+
      @return *kIOReturnSuccess* on successful state toggle, *kIOReturnTimeout* otherwise
      */
 
@@ -276,7 +276,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     /* Attempts an I2C transfer routine
      * @messages The messages to be transferred
      * @number   The number of messages
-     
+
      @return returns kIOReturnSuccess on successful
      */
 
@@ -288,7 +288,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
     /* Waits for the bus not to be busy
      *
-     * This function spins the current thread by a hardocded amount using *IODelay* until the bus states that it is
+     * This function spins the current thread by a hardcoded amount using *IODelay* until the bus states that it is
      * ready.
      *
      * @return *kIOReturnSuccess* on success, *kIOReturnTimeout* otherwise
@@ -305,7 +305,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
      */
     IOReturn startI2CInterrupt();
 
-    /* Disable and unregister the interrupt for I2C bus
+    /* Disable and deregister the interrupt for I2C bus
      *
      * Note: Do NOT call this function in direct interrupt context.
      *

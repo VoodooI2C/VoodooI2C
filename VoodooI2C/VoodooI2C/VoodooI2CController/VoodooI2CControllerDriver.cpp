@@ -22,23 +22,120 @@ void VoodooI2CControllerDriver::free() {
     super::free();
 }
 
+constexpr uint64_t KILO = 1000;
+constexpr uint64_t MICRO = 1000000;
+
+#define do_div(n, base)                                                        \
+  ({                                                                           \
+    uint32_t __base = (base);                                                  \
+    uint32_t __rem;                                                            \
+    __rem = ((uint64_t)(n)) % __base;                                          \
+    (n) = ((uint64_t)(n)) / __base;                                            \
+    __rem;                                                                     \
+  })
+
+/*
+ * Same as above but for u64 dividends. divisor must be a 32-bit
+ * number.
+ */
+#define DIV_ROUND_CLOSEST_ULL(x, divisor)                                      \
+  ({                                                                           \
+    __decltype(divisor) __d = divisor;                                         \
+    unsigned long long _tmp = (x) + (__d) / 2;                                 \
+    do_div(_tmp, __d);                                                         \
+    _tmp;                                                                      \
+  })
+
+static inline SInt64 div_s64_rem(SInt64 dividend, SInt32 divisor,
+                                 SInt32 *remainder) {
+    *remainder = dividend % divisor;
+    return dividend / divisor;
+}
+
+static inline SInt64 div_s64(SInt64 dividend, SInt32 divisor) {
+    SInt32 remainder;
+    return div_s64_rem(dividend, divisor, &remainder);
+}
+
+#define DIV_S64_ROUND_CLOSEST(dividend, divisor)                               \
+  ({                                                                           \
+    SInt64 __x = (dividend);                                                   \
+    SInt32 __d = (divisor);                                                    \
+    ((__x > 0) == (__d > 0)) ? div_s64((__x + (__d / 2)), __d)                 \
+                             : div_s64((__x - (__d / 2)), __d);                \
+  })
+
+static UInt32 getClkRateFor(const char *name) {
+    if (!strncmp(name, "AMD0010", sizeof("AMD0010"))) {
+        return 133000000 / KILO;
+    } else if (!strncmp(name, "AMDI0010", sizeof("AMDI0010")) || !strncmp(name, "AMDI0019", sizeof("AMDI0019"))) {
+        return 150000000 / KILO;
+    } else {
+        return 0;
+    }
+}
+
 IOReturn VoodooI2CControllerDriver::getBusConfig() {
     bool error = false;
 
-    bus_device.transaction_fifo_depth = 32;
-    bus_device.receive_fifo_depth = 32;
+    auto param = readRegister(DW_IC_COMP_PARAM_1);
+    auto tx_fifo_depth = ((param >> 16) & 0xff) + 1;
+    auto rx_fifo_depth = ((param >> 8)  & 0xff) + 1;
+    bus_device.transaction_fifo_depth = tx_fifo_depth;
+    bus_device.receive_fifo_depth = rx_fifo_depth;
+
+    auto i2c_clk = getClkRateFor(nub->controller->physical_device.name);
+
+    bool is_sunrise_point = !strncmp(nub->controller->physical_device.name, "INT344B", sizeof("INT344B"))
+            || !strncmp(nub->controller->physical_device.name, "INT345D", sizeof("INT345D"));
 
     if (nub->getACPIParams((const char*)"SSCN", &bus_device.acpi_config.ss_hcnt, &bus_device.acpi_config.ss_lcnt, NULL) != kIOReturnSuccess) {
-        bus_device.acpi_config.ss_hcnt = 0x01b0;
-        bus_device.acpi_config.ss_lcnt = 0x01fb;
-        error = true;
+        if (i2c_clk) {
+            bus_device.acpi_config.ss_hcnt = (UInt32)DIV_ROUND_CLOSEST_ULL((UInt64)i2c_clk * (4000 + 300), MICRO) - 3;
+            bus_device.acpi_config.ss_lcnt = (UInt32)DIV_ROUND_CLOSEST_ULL((UInt64)i2c_clk * (4700 + 300), MICRO) - 1;
+        } else {
+            bus_device.acpi_config.ss_hcnt = is_sunrise_point ? 0x01B0 : 0x03F2;
+            bus_device.acpi_config.ss_lcnt = is_sunrise_point ? 0x01FB : 0x043D;
+            error = true;
+        }
     }
 
     if (nub->getACPIParams((const char*)"FMCN", &bus_device.acpi_config.fs_hcnt, &bus_device.acpi_config.fs_lcnt, &bus_device.acpi_config.sda_hold) != kIOReturnSuccess) {
-        bus_device.acpi_config.fs_hcnt = 0x48;
-        bus_device.acpi_config.fs_lcnt = 0xa0;
-        bus_device.acpi_config.sda_hold = 0x9;
-        error = true;
+        if (i2c_clk) {
+            bus_device.acpi_config.fs_hcnt = (UInt32)DIV_ROUND_CLOSEST_ULL((UInt64)i2c_clk * (600 + 300), MICRO) - 3;
+            bus_device.acpi_config.fs_lcnt = (UInt32)DIV_ROUND_CLOSEST_ULL((UInt64)i2c_clk * (1300 + 300), MICRO) - 1;
+        } else {
+            bus_device.acpi_config.fs_hcnt = is_sunrise_point ? 0x48 : 0x0101;
+            bus_device.acpi_config.fs_lcnt = is_sunrise_point ? 0xA0 : 0x012C;
+            error = true;
+        }
+    }
+
+    if (readRegister(DW_IC_COMP_VERSION) >= DW_IC_SDA_HOLD_MIN_VERS) {
+        if (i2c_clk) {
+            bus_device.acpi_config.sda_hold = (UInt32)DIV_S64_ROUND_CLOSEST((SInt64)i2c_clk * 300, MICRO);
+        }
+
+        if (!bus_device.acpi_config.sda_hold) {
+            bus_device.acpi_config.sda_hold = readRegister(DW_IC_SDA_HOLD);
+        }
+
+        if (!bus_device.acpi_config.sda_hold) {
+            bus_device.acpi_config.sda_hold = is_sunrise_point ? 0x1E : 0x62;
+        }
+
+        /*
+        * Workaround for avoiding TX arbitration lost in case I2C
+        * slave pulls SDA down "too quickly" after falling edge of
+        * SCL by enabling non-zero SDA RX hold. Specification says it
+        * extends incoming SDA low to high transition while SCL is
+        * high but it appears to help also above issue.
+        */
+        if (!(bus_device.acpi_config.sda_hold & DW_IC_SDA_HOLD_RX_MASK)) {
+            bus_device.acpi_config.sda_hold |= 1 << DW_IC_SDA_HOLD_RX_SHIFT;
+        }
+    } else {
+        IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
     }
 
     if (error)
@@ -106,7 +203,7 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
     enabled = readRegister(DW_IC_ENABLE);
     status = readRegister(DW_IC_RAW_INTR_STAT);
 
-    if (!enabled || !(status &~DW_IC_INTR_ACTIVITY))
+    if (!enabled || !(status &~DW_IC_INTR_ACTIVITY) || status == 0xFFFFFFFF)
         goto exit;
 
     status = readClearInterruptBits();
@@ -114,6 +211,7 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
     if (status & DW_IC_INTR_TX_ABRT) {
         bus_device.command_error |= DW_IC_ERR_TX_ABRT;
         bus_device.status = STATUS_IDLE;
+        bus_device.receive_outstanding = 0;
 
         writeRegister(0, DW_IC_INTR_MASK);
         goto wakeup;
@@ -126,8 +224,13 @@ void VoodooI2CControllerDriver::handleInterrupt(OSObject* target, void* refCon, 
         transferMessageToBus();
 
 wakeup:
-    if ((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device.message_error) {
+    if (((status & (DW_IC_INTR_TX_ABRT | DW_IC_INTR_STOP_DET)) || bus_device.message_error) && (bus_device.receive_outstanding == 0)) {
         command_gate->commandWakeup(&bus_device.command_complete);
+    } else if (nub->controller->physical_device.access_intr_mask_workaround) {
+        /* Workaround to trigger pending interrupt */
+        status = readRegister(DW_IC_INTR_MASK);
+        writeRegister(0, DW_IC_INTR_MASK);
+        writeRegister(status, DW_IC_INTR_MASK);
     }
 
 exit:
@@ -154,14 +257,9 @@ IOReturn VoodooI2CControllerDriver::initialiseBus() {
     writeRegister(bus_device.acpi_config.ss_lcnt, DW_IC_SS_SCL_LCNT);
     writeRegister(bus_device.acpi_config.fs_hcnt, DW_IC_FS_SCL_HCNT);
     writeRegister(bus_device.acpi_config.fs_lcnt, DW_IC_FS_SCL_LCNT);
-
-    UInt32 reg = readRegister(DW_IC_COMP_VERSION);
-
-    if  (reg >= DW_IC_SDA_HOLD_MIN_VERS)
+    if (bus_device.acpi_config.sda_hold) {
         writeRegister(bus_device.acpi_config.sda_hold, DW_IC_SDA_HOLD);
-    else
-        IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
-
+    }
     writeRegister(bus_device.transaction_fifo_depth / 2, DW_IC_TX_TL);
     writeRegister(0, DW_IC_RX_TL);
     writeRegister(bus_device.bus_config, DW_IC_CON);
@@ -191,7 +289,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
 
     /*
      * Sleep timeout to prevent the caller from deadlock :
-     *   10ms is required, for example, when reading the HID descriptor at the first time.
+     *   10ms is required, for example, when reading the HID descriptor for the first time.
      *   Timeout is set to 100ms (10ms x 10 times)
      */
     nanoseconds_to_absolutetime(1000000000, &abstime);
@@ -205,7 +303,7 @@ IOReturn VoodooI2CControllerDriver::prepareTransferI2C(VoodooI2CControllerBusMes
     }
 
     /*
-     * We must disable the adapter before returning and signaling the end
+     * We must disable the adapter before returning and signalling the end
      * of the current transfer. Otherwise the hardware might continue
      * generating interrupts which in turn causes a race condition with
      * the following transfer.  Needs some more investigation if the
@@ -312,7 +410,7 @@ UInt32 VoodooI2CControllerDriver::readClearInterruptBits() {
         readRegister(DW_IC_CLR_RX_DONE);
     if (stat & DW_IC_INTR_ACTIVITY)
         readRegister(DW_IC_CLR_ACTIVITY);
-    if (stat & DW_IC_INTR_STOP_DET)
+    if ((stat & DW_IC_INTR_STOP_DET) && ((bus_device.receive_outstanding == 0) || (stat & DW_IC_INTR_RX_FULL)))
         readRegister(DW_IC_CLR_STOP_DET);
     if (stat & DW_IC_INTR_START_DET)
         readRegister(DW_IC_CLR_START_DET);
@@ -383,12 +481,18 @@ void VoodooI2CControllerDriver::releaseResources() {
 
 void VoodooI2CControllerDriver::requestTransferI2C() {
     VoodooI2CControllerBusMessage *messages = bus_device.messages;
-    UInt32 i2c_configuration, i2c_target = 0;
+    UInt32 i2c_configuration, i2c_target = 0, orig;
 
-    toggleBusState(kVoodooI2CStateOff);
+    if (nub->controller->physical_device.access_intr_mask_workaround) {
+        // Linux code works with black magic, on macOS with AMD I2C turning off the adapter
+        // and rewriting the bus settings is required
+        initialiseBus();
+    } else {
+        toggleBusState(kVoodooI2CStateOff);
+    }
 
     /* if the slave address is ten bit address, enable 10BITADDR */
-    i2c_configuration = readRegister(DW_IC_CON);
+    orig = i2c_configuration = readRegister(DW_IC_CON);
     if (messages[bus_device.message_write_index].flags & I2C_M_TEN) {
         i2c_configuration |= DW_IC_CON_10BITADDR_MASTER;
         /*
@@ -402,7 +506,8 @@ void VoodooI2CControllerDriver::requestTransferI2C() {
         i2c_configuration &= ~DW_IC_CON_10BITADDR_MASTER;
     }
 
-    writeRegister(i2c_configuration, DW_IC_CON);
+    if (i2c_configuration != orig)
+        writeRegister(i2c_configuration, DW_IC_CON);
 
     /*
      * Set the slave (target) address and enable 10-bit addressing mode
@@ -413,6 +518,9 @@ void VoodooI2CControllerDriver::requestTransferI2C() {
     toggleInterrupts(kVoodooI2CStateOff);
 
     toggleBusState(kVoodooI2CStateOn);
+
+    /* Dummy read to avoid the register getting stuck on Bay Trail */
+    readRegister(DW_IC_ENABLE_STATUS);
 
     toggleInterrupts(kVoodooI2CStateOn);
 }
@@ -482,6 +590,17 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     bus_device.functionality = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK;
     bus_device.bus_config = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE | DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
 
+    /*
+     * On AMD platforms BIOS advertises the bus clear feature
+     * and enables the SCL/SDA stuck low. SMU FW does the
+     * bus recovery process. Driver should not ignore this BIOS
+     * advertisement of bus clear feature.
+     */
+    if (readRegister(DW_IC_CON) & DW_IC_CON_BUS_CLEAR_CTRL) {
+        IOLog("%s::%s Bus clear is enabled", getName(), bus_device.name);
+        bus_device.bus_config |= DW_IC_CON_BUS_CLEAR_CTRL;
+    }
+
     if (initialiseBus() != kIOReturnSuccess) {
         IOLog("%s::%s Could not initialise bus\n", getName(), bus_device.name);
         return false;
@@ -547,7 +666,10 @@ IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
 }
 
 inline void VoodooI2CControllerDriver::toggleClockGating(VoodooI2CState enabled) {
-    writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
+    const char *name = nub->controller->physical_device.name;
+    if (name[0] == 'A' && name[1] == 'M' && name[2] == 'D') {
+        writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
+    }
 }
 
 void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {
