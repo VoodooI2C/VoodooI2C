@@ -1,0 +1,33 @@
+name: Xcode - Build and Analyze
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: Build and analyse default scheme using xcodebuild command
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: download mackernelsdk
+        run: git clone https://github.com/acidanthera/MacKernelSDK
+        
+      - run: src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
+      - run: pip3 install cpplint
+      - run: pip3 install git+https://github.com/newperson1746/cldoc-fix.git
+      - run: git submodule init && git submodule update
+      
+      - name: xcodebuild
+        run: xcodebuild -workspace "VoodooI2C.xcworkspace" -scheme "VoodooI2C" -derivedDataPath build clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+      - name: Upload to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Artifacts
+          path: build/Build/Products/Release
