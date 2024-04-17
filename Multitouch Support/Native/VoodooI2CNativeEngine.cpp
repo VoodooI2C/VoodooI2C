@@ -30,6 +30,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
 
     int valid_touch_count = 0;
 
+    IOLog("I2C Contact Count: %d\n", event.contact_count);
     for (int i = 0; i < event.contact_count; i++) {
         VoodooI2CDigitiserTransducer* transducer = (VoodooI2CDigitiserTransducer*) event.transducers->getObject(i+stylus_check);
         VoodooInputTransducer* inputTransducer = &message.transducers[i];
@@ -47,6 +48,11 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         if (inputTransducer->isValid) {
             valid_touch_count++;
         }
+        
+        if (!transducer->confidence.value()) {
+            inputTransducer->fingerType = static_cast<MT2FingerType>(6);
+        }
+        
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
         inputTransducer->isPhysicalButtonDown = !transducer->has_secondary_button && transducer->physical_button.value(); // if it has secondary button, then it will be passed as buttons on the "trackpoint" device
         
@@ -74,6 +80,8 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
             inputTransducer->currentCoordinates.pressure = 0xff;
             inputTransducer->currentCoordinates.width = 10;
         }
+        
+        IOLog("I2C [%i] - Valid: %d - Confidence: %d - Tip Switch: %d\n", i, transducer->is_valid, transducer->confidence.value(), transducer->tip_switch.value());
     }
     
     // set the thumb to improve 4F pinch and spread gesture and cross-screen dragging
