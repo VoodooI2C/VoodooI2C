@@ -101,6 +101,7 @@ public:
     DigitiserTransducerAziAltiOrentation azi_alti_orientation;
     DigitiserTransducerTiltOrientation tilt_orientation;
     
+    DigitiserTransducerButtonState confidence;
     DigitiserTransducerButtonState tip_switch;
     TimeTrackedValue tip_pressure;
     
