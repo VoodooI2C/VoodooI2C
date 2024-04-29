@@ -49,7 +49,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         }
         
         if (!transducer->confidence.value()) {
-            inputTransducer->fingerType = static_cast<MT2FingerType>(6);
+            inputTransducer->fingerType = kMT2FingerTypePalm;
         }
         
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
