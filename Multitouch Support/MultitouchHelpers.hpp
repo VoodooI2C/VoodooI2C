@@ -12,10 +12,15 @@
 #include <IOKit/IOLib.h>
 #include <IOKit/IOService.h>
 
-typedef struct {
+struct VoodooI2CMultitouchEvent {
     UInt8 contact_count;
     OSArray* transducers;
-} VoodooI2CMultitouchEvent;
+};
+
+struct VoodooI2CTrackpointEvent {
+    UInt8 dx, dy;
+    UInt8 buttons;
+};
 
 typedef UInt32 MultitouchReturn;
 
