@@ -18,7 +18,7 @@ typedef struct {
 } VoodooI2CMultitouchEvent;
 
 typedef struct {
-    UInt8 dx, dy;
+    SInt32 dx, dy;
     UInt8 buttons;
 } VoodooI2CTrackpointEvent;
 
