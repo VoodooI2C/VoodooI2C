@@ -46,9 +46,9 @@ jobs:
         echo "sha_short=$(git rev-parse --short=8 ${{ github.sha }})" >> $GITHUB_OUTPUT
 
     - name: Build Debug VoodooI2C
-      run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -configuration Debug
+      run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -jobs 1 -configuration Debug
     - name: Build Release VoodooI2C
-      run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -configuration Release
+      run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -jobs 1 -configuration Release
 
     - uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'release'
