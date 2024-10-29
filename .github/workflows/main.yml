@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+env:
+  PROJECT_TYPE: KEXT
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    env:
+      JOB_TYPE: BUILD
+    steps:
+    - name: Checkout VoodooI2C
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+    - name: Checkout MacKernelSDK
+      uses: actions/checkout@v4
+      with:
+        repository: acidanthera/MacKernelSDK
+        path: MacKernelSDK
+    - name: CI Bootstrap
+      run: |
+        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/ocbuild/master/ci-bootstrap.sh) && eval "$src" || exit 1
+
+    - name: VoodooInput Bootstrap
+      run: |
+        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip3 install cpplint
+    - run: pip3 install git+https://github.com/VoodooI2C/cldoc.git
+
+    - name: Get Commit SHA
+      id: vars
+      run: |
+        echo "sha_short=$(git rev-parse --short=8 ${{ github.sha }})" >> $GITHUB_OUTPUT
+
+    - name: Build Debug VoodooI2C
+      run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -configuration Debug
+    - name: Build Release VoodooI2C
+      run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -configuration Release
+
+    - uses: svenstaro/upload-release-action@v2
+      if: github.event_name == 'release'
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/Build/Products/*/*.zip
+        tag: ${{ github.ref }}
+        file_glob: true
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: VoodooI2C-${{ steps.vars.outputs.sha_short }}
+        path: build/Build/Products/*/*.zip
