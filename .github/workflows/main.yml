@@ -38,7 +38,7 @@ jobs:
       with:
         python-version: '3.8'
     - run: pip3 install cpplint
-    - run: pip3 install git+https://github.com/VoodooI2C/cldoc.git
+    - run: pip3 install "git+https://github.com/1Revenger1/cldoc.git@patch-1"
 
     - name: Get Commit SHA
       id: vars
