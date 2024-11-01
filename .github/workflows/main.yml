@@ -12,7 +12,7 @@ env:
 
 jobs:
   build:
-    name: Build
+    name: Kext Build
     runs-on: macos-latest
     env:
       JOB_TYPE: BUILD
@@ -50,6 +50,16 @@ jobs:
     - name: Build Release VoodooI2C
       run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -jobs 1 -configuration Release
 
+    - name: Generate Release Description
+      id: gen_desc
+      run: |
+        LAST_TEN_COMMITS=$(git log `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --oneline --format=" - %s" | head -10)
+        NEW_LINES=$'\n\n\n'
+        NUM_COMMITS="$(git rev-list `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --count)"
+        echo "Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows ${NEW_LINES} ${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
+
+    - run: echo ${{ steps.gen_desc.outputs }}
+
     - uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'release'
       with:
@@ -57,8 +67,60 @@ jobs:
         file: build/Build/Products/*/*.zip
         tag: ${{ github.ref }}
         file_glob: true
+        body: ${{ steps.gen_desc.outputs }}
 
     - uses: actions/upload-artifact@v4
       with:
         name: VoodooI2C-${{ steps.vars.outputs.sha_short }}
         path: build/Build/Products/*/*.zip
+
+  docs:
+    name: Docs
+    runs-on: macos-latest
+    steps:
+    - name: Checkout VoodooI2C
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+    - name: Checkout MacKernelSDK
+      uses: actions/checkout@v4
+      with:
+        repository: acidanthera/MacKernelSDK
+        path: MacKernelSDK
+    - name: Build Documentation
+      run: scripts/build_docs.sh
+    
+      # TODO!!!!
+    - name: Package Documentation
+      run: zip -r Docs.zip ./docs/*
+    - uses: actions/upload-artifact@v4
+      with:
+        name: VoodooI2C-Docs
+        path: Docs.zip
+    - name: Update Documentation
+      if: github.event_name == 'release'
+      run: |
+        mkdir docrepo
+        cp -R docs/* docrepo/
+        cd docrepo
+        git init .
+        git remote add origin https://$DOCUMENTATION_TOKEN@github.com/VoodooI2C/VoodooI2C.github.io.git
+        git add .
+        git commit -m "add documentation"
+        git push -f --set-upstream origin master
+  
+  lint:
+    name: Lint
+    runs-on: macos-latest
+    steps:
+      - name: Checkout VoodooI2C
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      - name: Checkout MacKernelSDK
+        uses: actions/checkout@v4
+        with:
+          repository: acidanthera/MacKernelSDK
+          path: MacKernelSDK
+      - name: Run Lint
+        run: scripts/run_lint.sh
