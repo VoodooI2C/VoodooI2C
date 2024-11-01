@@ -33,7 +33,7 @@ jobs:
         src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
 
     - name: Fetch tags
-      run: git fetch --tags
+      run: git fetch --tags --recurse-submodules=no
 
     - name: Get Commit SHA
       id: vars
