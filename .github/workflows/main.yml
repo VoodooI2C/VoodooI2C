@@ -19,7 +19,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-        fetch-tags: true
     - name: Checkout MacKernelSDK
       uses: actions/checkout@v4
       with:
@@ -32,6 +31,9 @@ jobs:
     - name: VoodooInput Bootstrap
       run: |
         src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
+
+    - name: Fetch tags
+      run: git fetch --tags
 
     - name: Get Commit SHA
       id: vars
