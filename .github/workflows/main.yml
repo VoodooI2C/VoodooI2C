@@ -43,14 +43,13 @@ jobs:
       run: xcodebuild -workspace VoodooI2C.xcworkspace -scheme VoodooI2C -derivedDataPath build -jobs 1 -configuration Release
 
     - name: Generate Release Description
+      if: github.ref_type == 'tag'
       id: gen_desc
       run: |
-        LAST_TEN_COMMITS=$(git log --oneline --pretty=format:"%h - %s (%an)" $(git describe --tags --abbrev=0 @^)..@ | head -10)
+        LAST_TEN_COMMITS=$(git log --oneline --pretty=format:"%h - %s (%an)" $(git describe --tags --abbrev=0 @^)..@ -n)
         NEW_LINES=$'\n\n\n'
-        NUM_COMMITS="$(git rev-list `git describe --tags $(git describe --tags --abbrev=0 @^)..@ --count)"
+        NUM_COMMITS="$(git rev-list $(git describe --tags --abbrev=0 @^)..@ --count)"
         echo "desc=Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows ${NEW_LINES} ${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
-
-    - run: echo ${{ steps.gen_desc.outputs.desc }}
 
     - uses: svenstaro/upload-release-action@v2
       if: github.ref_type == 'tag'
