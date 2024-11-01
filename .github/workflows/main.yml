@@ -88,6 +88,10 @@ jobs:
         cache: 'pip'
     - name: Install python dependencies
       run: pip3 install -r requirements.txt
+
+    - name: VoodooInput Bootstrap
+      run: |
+        src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
     
     - name: Build Documentation
       run: ./scripts/build_doc.sh
