@@ -34,12 +34,6 @@ jobs:
       run: |
         src=$(/usr/bin/curl -Lfs https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) && eval "$src" && mv VoodooInput Dependencies
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.8'
-    - run: pip3 install cpplint
-    - run: pip3 install "git+https://github.com/1Revenger1/cldoc.git@patch-1"
-
     - name: Get Commit SHA
       id: vars
       run: |
@@ -56,9 +50,9 @@ jobs:
         LAST_TEN_COMMITS=$(git log `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --oneline --format=" - %s" | head -10)
         NEW_LINES=$'\n\n\n'
         NUM_COMMITS="$(git rev-list `git describe --tags $(git rev-list --tags --max-count=1)`..HEAD --count)"
-        echo "Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows ${NEW_LINES} ${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
+        echo "desc=Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows ${NEW_LINES} ${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
 
-    - run: echo ${{ steps.gen_desc.outputs }}
+    - run: echo ${{ steps.gen_desc.outputs.desc }}
 
     - uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'release'
@@ -67,7 +61,7 @@ jobs:
         file: build/Build/Products/*/*.zip
         tag: ${{ github.ref }}
         file_glob: true
-        body: ${{ steps.gen_desc.outputs }}
+        body: ${{ steps.gen_desc.outputs.desc }}
 
     - uses: actions/upload-artifact@v4
       with:
@@ -87,9 +81,17 @@ jobs:
       with:
         repository: acidanthera/MacKernelSDK
         path: MacKernelSDK
-    - name: Build Documentation
-      run: scripts/build_docs.sh
     
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+    - name: Install python dependencies
+      run: pip3 install requirements.txt
+    
+    - name: Build Documentation
+      run: ./scripts/build_docs.sh
+
       # TODO!!!!
     - name: Package Documentation
       run: zip -r Docs.zip ./docs/*
@@ -122,5 +124,12 @@ jobs:
         with:
           repository: acidanthera/MacKernelSDK
           path: MacKernelSDK
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install python dependencies
+        run: pip3 install requirements.txt
       - name: Run Lint
-        run: scripts/run_lint.sh
+        run: ./scripts/run_lint.sh
