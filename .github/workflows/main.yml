@@ -4,8 +4,6 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-  release:
-    types: [published]
 
 env:
   PROJECT_TYPE: KEXT
@@ -55,7 +53,7 @@ jobs:
     - run: echo ${{ steps.gen_desc.outputs.desc }}
 
     - uses: svenstaro/upload-release-action@v2
-      if: github.event_name == 'release'
+      if: github.ref_type == 'tag'
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: build/Build/Products/*/*.zip
@@ -96,24 +94,13 @@ jobs:
     - name: Build Documentation
       run: ./scripts/build_doc.sh
 
-      # TODO!!!!
+      # TODO!!!! Upload to github pages
     - name: Package Documentation
       run: zip -r Docs.zip ./docs/*
     - uses: actions/upload-artifact@v4
       with:
         name: VoodooI2C-Docs
         path: Docs.zip
-    - name: Update Documentation
-      if: github.event_name == 'release'
-      run: |
-        mkdir docrepo
-        cp -R docs/* docrepo/
-        cd docrepo
-        git init .
-        git remote add origin https://$DOCUMENTATION_TOKEN@github.com/VoodooI2C/VoodooI2C.github.io.git
-        git add .
-        git commit -m "add documentation"
-        git push -f --set-upstream origin master
   
   lint:
     name: Lint
