@@ -87,7 +87,7 @@ jobs:
         python-version: '3.12'
         cache: 'pip'
     - name: Install python dependencies
-      run: pip3 install requirements.txt
+      run: pip3 install -r requirements.txt
     
     - name: Build Documentation
       run: ./scripts/build_docs.sh
@@ -130,6 +130,6 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
       - name: Install python dependencies
-        run: pip3 install requirements.txt
+        run: pip3 install -r requirements.txt
       - name: Run Lint
         run: ./scripts/run_lint.sh
