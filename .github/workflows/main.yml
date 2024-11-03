@@ -70,8 +70,9 @@ jobs:
         tag: ${{ github.ref }}
         file_glob: true
         overwrite: true
-        body: ${{ steps.gen_desc.outputs.desc }}
         file: build/Build/Products/*/*.zip
+        body: |
+          ${{ steps.gen_desc.outputs.desc }}
 
     - uses: actions/upload-artifact@v4
       with:
