@@ -57,8 +57,6 @@ jobs:
         NUM_COMMITS="$(git rev-list ${LAST_TAG}..@ --count)"
         echo "Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows${NEW_LINES}${LAST_TEN_COMMITS}" >> ./changelog.md
 
-    - run: cat ./changelog.md
-      if: github.event_name == 'release'
     - uses: softprops/action-gh-release@v2
       if: github.event_name == 'release'
       with:
@@ -98,13 +96,26 @@ jobs:
     - name: Build Documentation
       run: ./scripts/build_doc.sh
 
-      # TODO!!!! Upload to github pages
     - name: Package Documentation
       run: zip -r Docs.zip ./docs/*
     - uses: actions/upload-artifact@v4
       with:
         name: VoodooI2C-Docs
         path: Docs.zip
+
+    - name: Upload Docs to Github Pages
+      if: github.event_name == 'release' && ${{ github.event.repository.full_name }} == 'VoodooI2C/VoodooI2C/'
+      working-directory: ./docs
+      env:
+        DOCUMENTATION_TOKEN: ${{ secrets.DOCUMENTATION_TOKEN }}
+        USERNAME: github-actions[bot]
+      run: |
+        git init .
+        git config user.name "$USERNAME"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add -A
+        git commit -m "${{ github.ref_name}} Documentation"
+        git push -f https://$USERNAME:$DOCUMENTATION_TOKEN@github.com/VoodooI2C/VoodooI2C.github.io.git master
   
   lint:
     name: Lint
