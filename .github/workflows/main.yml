@@ -54,8 +54,8 @@ jobs:
         LAST_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)
         LAST_TEN_COMMITS=$(git log --oneline --pretty=format:"%h - %s (%an)" ${LAST_TAG}..@ -n 10)
         NEW_LINES=$'\n\n\n'
-        NUM_COMMITS="$(git rev-list $(git describe --tags ${LAST_TAG}..@ --count)"
-        echo "desc=Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows ${NEW_LINES} ${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
+        NUM_COMMITS="$(git rev-list ${LAST_TAG}..@ --count)"
+        echo "desc=Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows${NEW_LINES}${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
 
     - uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'release'
