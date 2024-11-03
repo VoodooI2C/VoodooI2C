@@ -1,0 +1,2 @@
+cpplint
+cldoc @ git+https://github.com/VoodooI2C/cldoc.git
