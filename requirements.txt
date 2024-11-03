@@ -1,2 +1,2 @@
 cpplint
-cldoc @ git+https://github.com/1Revenger1/cldoc.git@master
+cldoc @ git+https://github.com/VoodooI2C/cldoc.git
