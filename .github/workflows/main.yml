@@ -104,7 +104,7 @@ jobs:
         path: Docs.zip
 
     - name: Upload Docs to Github Pages
-      if: github.event_name == 'release' && ${{ github.event.repository.full_name }} == 'VoodooI2C/VoodooI2C'
+      if: ${{ (github.event_name == 'release') && (github.event.repository.full_name == 'VoodooI2C/VoodooI2C') }}
       working-directory: ./docs
       env:
         DOCUMENTATION_TOKEN: ${{ secrets.DOCUMENTATION_TOKEN }}
