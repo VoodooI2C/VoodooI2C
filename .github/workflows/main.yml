@@ -57,6 +57,7 @@ jobs:
         NUM_COMMITS="$(git rev-list ${LAST_TAG}..@ --count)"
         echo "desc=Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows${NEW_LINES}${LAST_TEN_COMMITS}" >> GITHUB_OUTPUTS
 
+    - run: echo ${{ steps.gen_desc.outputs.desc }}
     - uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'release'
       with:
