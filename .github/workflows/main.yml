@@ -63,14 +63,11 @@ jobs:
         } >> "$GITHUB_ENV"
 
     - run: echo ${{ steps.gen_desc.outputs.desc }}
-    - uses: svenstaro/upload-release-action@v2
+      if: github.event_name == 'release'
+    - uses: softprops/action-gh-release@v2
       if: github.event_name == 'release'
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ github.ref }}
-        file_glob: true
-        overwrite: true
-        file: build/Build/Products/*/*.zip
+        files: build/Build/Products/*/*.zip
         body: |
           ${{ steps.gen_desc.outputs.desc }}
 
