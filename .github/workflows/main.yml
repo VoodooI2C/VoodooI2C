@@ -21,6 +21,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
+        fetch-depth: 500
     - name: Checkout MacKernelSDK
       uses: actions/checkout@v4
       with:
@@ -57,7 +58,7 @@ jobs:
         NUM_COMMITS="$(git rev-list ${LAST_TAG}..@ --count)"
         {
           echo 'desc<<EOF'
-          echo "desc=Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows${NEW_LINES}${LAST_TEN_COMMITS}"
+          echo "Since the last release there have been ${NUM_COMMITS} commit(s). The descriptions for the first (at most) 10 of these are as follows${NEW_LINES}${LAST_TEN_COMMITS}"
           echo EOF
         } >> "$GITHUB_ENV"
 
