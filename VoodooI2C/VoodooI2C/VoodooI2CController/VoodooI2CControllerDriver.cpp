@@ -29,8 +29,8 @@ constexpr uint64_t MICRO = 1000000;
   ({                                                                           \
     uint32_t __base = (base);                                                  \
     uint32_t __rem;                                                            \
-    __rem = ((uint64_t)(n)) % __base;                                          \
-    (n) = ((uint64_t)(n)) / __base;                                            \
+    __rem = (static_cast<uint64_t>(n)) % __base;                               \
+    (n) = (static_cast<uint64_t>(n)) / __base;                                 \
     __rem;                                                                     \
   })
 
