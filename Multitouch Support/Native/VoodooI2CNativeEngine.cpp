@@ -47,6 +47,11 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         if (inputTransducer->isValid) {
             valid_touch_count++;
         }
+        
+        if (!transducer->confidence.value()) {
+            inputTransducer->fingerType = kMT2FingerTypePalm;
+        }
+        
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
         inputTransducer->isPhysicalButtonDown = !transducer->has_secondary_button && transducer->physical_button.value(); // if it has secondary button, then it will be passed as buttons on the "trackpoint" device
         

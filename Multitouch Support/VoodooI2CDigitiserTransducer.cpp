@@ -41,6 +41,9 @@ VoodooI2CDigitiserTransducer* VoodooI2CDigitiserTransducer::transducer(Digitiser
     transducer->collection  = digitizer_collection;
     transducer->in_range    = false;
 
+    // Set Confidence bit for satellites which do not implement contact rejection yet
+    transducer->confidence.update(1, 0);
+
 exit:
     return transducer;
 }
