@@ -842,16 +842,16 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2.8;
+				CURRENT_PROJECT_VERSION = 2.9.1;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../MacKernelSDK/Library/x86_64",
 				);
-				MARKETING_VERSION = 2.8;
+				MARKETING_VERSION = 2.9.1;
 				MODULE_NAME = com.alexandred.VoodooI2C;
-				MODULE_VERSION = 2.8;
+				MODULE_VERSION = 2.9.1;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -867,16 +867,16 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2.8;
+				CURRENT_PROJECT_VERSION = 2.9.1;
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../Dependencies/VoodooInput/Debug/VoodooInput.kext/Contents/Resources";
 				INFOPLIST_FILE = VoodooI2C/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../MacKernelSDK/Library/x86_64",
 				);
-				MARKETING_VERSION = 2.8;
+				MARKETING_VERSION = 2.9.1;
 				MODULE_NAME = com.alexandred.VoodooI2C;
-				MODULE_VERSION = 2.8;
+				MODULE_VERSION = 2.9.1;
 				ONLY_ACTIVE_ARCH = YES;
 				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-Wno-inconsistent-missing-override";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexandred.VoodooI2C;
