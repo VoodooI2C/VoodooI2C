@@ -17,6 +17,11 @@ typedef struct {
     OSArray* transducers;
 } VoodooI2CMultitouchEvent;
 
+typedef struct {
+    SInt32 dx, dy;
+    UInt8 buttons;
+} VoodooI2CTrackpointEvent;
+
 typedef UInt32 MultitouchReturn;
 
 #define MultitouchReturnContinue 0x0

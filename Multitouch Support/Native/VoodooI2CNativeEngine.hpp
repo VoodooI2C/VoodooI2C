@@ -42,6 +42,7 @@ class EXPORT VoodooI2CNativeEngine : public VoodooI2CMultitouchEngine {
     bool willTerminate(IOService* provider, IOOptionBits options) override;
     
     MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
+    MultitouchReturn handleTrackpointReport(VoodooI2CTrackpointEvent event, AbsoluteTime timestamp);
  private:
     int stylus_check = 0;
 };
