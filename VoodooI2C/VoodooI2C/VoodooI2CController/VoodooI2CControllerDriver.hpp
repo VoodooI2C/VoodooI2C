@@ -149,7 +149,7 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     IOWorkLoop* work_loop = nullptr;
     IOLock* i2c_bus_lock = nullptr;
     bool is_interrupt_registered = false;
-    
+
     /* Request a 32-bit value property from this service or any parent in the
      * IOService tree.
      * @key Property name to lookup in IOService tree.

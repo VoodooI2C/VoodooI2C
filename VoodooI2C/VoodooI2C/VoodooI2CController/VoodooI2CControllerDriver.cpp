@@ -93,9 +93,9 @@ UInt32 VoodooI2CControllerDriver::getNumProperty(const char *key) {
         IOLog("%s::%s Failed to get property %s\n", getName(), bus_device.name, key);
         return 0;
     }
-    
+
     return prop->unsigned32BitValue();
-};
+}
 
 IOReturn VoodooI2CControllerDriver::getBusConfig() {
     UInt32 sdaFallNs, sclFallNs;
@@ -106,30 +106,30 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     auto rx_fifo_depth = ((param >> 8)  & 0xff) + 1;
     bus_device.transaction_fifo_depth = tx_fifo_depth;
     bus_device.receive_fifo_depth = rx_fifo_depth;
-    
+
     memset(&bus_device.acpi_config, 0, sizeof(bus_device.acpi_config));
-    
+
     UInt32 clkKHz = getNumProperty(kI2CPropClkKey) / 1000;
     if (!clkKHz) {
         IOLog("%s::%s Failed to find clock!\n", getName(), bus_device.name);
         return kIOReturnError;
     }
-    
+
     // Grab controller defaults
     bus_device.acpi_config.sda_hold = getNumProperty(kI2CPropSdaHoldKey);
     bus_device.acpi_config.ss_hcnt = getNumProperty(kI2CPropSsHCntKey);
     bus_device.acpi_config.ss_lcnt = getNumProperty(kI2CPropSsLCntKey);
     bus_device.acpi_config.fs_hcnt = getNumProperty(kI2CPropFsHCntKey);
     bus_device.acpi_config.fs_lcnt = getNumProperty(kI2CPropFsLCntKey);
-    
-    sdaFallNs = getNumProperty(kI2CPropSdaFallNsKey) ?: 300; // 0.3us default
-    sclFallNs = getNumProperty(kI2CPropSclFallNsKey) ?: 300; // 0.3us default
+
+    sdaFallNs = getNumProperty(kI2CPropSdaFallNsKey) ?: 300;  // 0.3us default
+    sclFallNs = getNumProperty(kI2CPropSclFallNsKey) ?: 300;  // 0.3us default
 
     if (!bus_device.acpi_config.sda_hold) {
         UInt32 sdaHoldNs = getNumProperty(kI2CPropSdaHoldNsKey);
         bus_device.acpi_config.sda_hold = (UInt32) DIV_ROUND_CLOSEST_ULL((UInt64) clkKHz * sdaHoldNs, MICRO);
     }
-    
+
     // Grab higher priority ACPI configuration
     if (nub->getACPIParams((const char*)"SSCN",
                            &bus_device.acpi_config.ss_hcnt,
@@ -144,23 +144,23 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
                            &bus_device.acpi_config.sda_hold) != kIOReturnSuccess) {
         error = true;
     }
-    
+
     // Derive any values not filled in by defaults
     if (!bus_device.acpi_config.ss_hcnt || !bus_device.acpi_config.ss_lcnt) {
-        bus_device.acpi_config.ss_hcnt = vi2c_scl_hcnt(clkKHz, 4000, sdaFallNs); // tHigh = 4us
-        bus_device.acpi_config.ss_lcnt = vi2c_scl_lcnt(clkKHz, 4700, sclFallNs); // tLow = 4.7us
+        bus_device.acpi_config.ss_hcnt = vi2c_scl_hcnt(clkKHz, 4000, sdaFallNs);  // tHigh = 4us
+        bus_device.acpi_config.ss_lcnt = vi2c_scl_lcnt(clkKHz, 4700, sclFallNs);  // tLow = 4.7us
     }
-    
+
     if (!bus_device.acpi_config.fs_hcnt || !bus_device.acpi_config.fs_lcnt) {
-        bus_device.acpi_config.fs_hcnt = vi2c_scl_hcnt(clkKHz, 600, sdaFallNs); // tHigh = 0.6us
-        bus_device.acpi_config.fs_lcnt = vi2c_scl_lcnt(clkKHz, 1300, sclFallNs); // tLow = 1.3us
+        bus_device.acpi_config.fs_hcnt = vi2c_scl_hcnt(clkKHz, 600, sdaFallNs);   // tHigh = 0.6us
+        bus_device.acpi_config.fs_lcnt = vi2c_scl_lcnt(clkKHz, 1300, sclFallNs);  // tLow = 1.3us
     }
 
     if (readRegister(DW_IC_COMP_VERSION) >= DW_IC_SDA_HOLD_MIN_VERS) {
         if (!bus_device.acpi_config.sda_hold) {
             bus_device.acpi_config.sda_hold = readRegister(DW_IC_SDA_HOLD);
         }
-        
+
         /*
         * Workaround for avoiding TX arbitration lost in case I2C
         * slave pulls SDA down "too quickly" after falling edge of
@@ -174,7 +174,7 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     } else {
         IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
     }
-    
+
     return error ? kIOReturnNotFound : kIOReturnSuccess;
 }
 
