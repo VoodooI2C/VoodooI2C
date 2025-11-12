@@ -26,7 +26,7 @@
 #define kI2CPropSdaHoldNsKey            "I2CSdaHoldTimeNs"
 #define kI2CPropSdaHoldKey              "I2CSdaHoldTime" // Units: NS * Clk / 1e6
 #define kI2CPropSdaFallNsKey            "I2CSdaFallingTimeNs"
-#define kI2CPropSdlFallNsKey            "I2CSclFallingTimeNs"
+#define kI2CPropSclFallNsKey            "I2CSclFallingTimeNs"
 
 #define kI2CPropSsHCntKey               "I2CSsHighCount"
 #define kI2CPropSsLCntKey               "I2CSsLowCount"

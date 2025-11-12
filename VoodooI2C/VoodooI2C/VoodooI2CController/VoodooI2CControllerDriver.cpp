@@ -98,6 +98,7 @@ UInt32 VoodooI2CControllerDriver::getNumProperty(const char *key) {
 };
 
 IOReturn VoodooI2CControllerDriver::getBusConfig() {
+    UInt32 sdaFallNs, sclFallNs;
     bool error = false;
 
     auto param = readRegister(DW_IC_COMP_PARAM_1);
@@ -108,8 +109,8 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     
     memset(&bus_device.acpi_config, 0, sizeof(bus_device.acpi_config));
     
-    UInt32 clk = getNumProperty(kI2CPropClkKey);
-    if (!clk) {
+    UInt32 clkKHz = getNumProperty(kI2CPropClkKey) / 1000;
+    if (!clkKHz) {
         IOLog("%s::%s Failed to find clock!\n", getName(), bus_device.name);
         return kIOReturnError;
     }
@@ -120,10 +121,13 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     bus_device.acpi_config.ss_lcnt = getNumProperty(kI2CPropSsLCntKey);
     bus_device.acpi_config.fs_hcnt = getNumProperty(kI2CPropFsHCntKey);
     bus_device.acpi_config.fs_lcnt = getNumProperty(kI2CPropFsLCntKey);
+    
+    sdaFallNs = getNumProperty(kI2CPropSdaFallNsKey) ?: 300; // 0.3us default
+    sclFallNs = getNumProperty(kI2CPropSclFallNsKey) ?: 300; // 0.3us default
 
     if (!bus_device.acpi_config.sda_hold) {
-        UInt32 sdaHoldNs = getNumProperty(kI2CPropSdaHoldNsKey) ?: 300; // 0.3us default
-        bus_device.acpi_config.sda_hold = (UInt32) DIV_ROUND_CLOSEST_ULL((UInt64) clk * sdaHoldNs, MICRO);
+        UInt32 sdaHoldNs = getNumProperty(kI2CPropSdaHoldNsKey);
+        bus_device.acpi_config.sda_hold = (UInt32) DIV_ROUND_CLOSEST_ULL((UInt64) clkKHz * sdaHoldNs, MICRO);
     }
     
     // Grab higher priority ACPI configuration
@@ -143,16 +147,20 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     
     // Derive any values not filled in by defaults
     if (!bus_device.acpi_config.ss_hcnt || !bus_device.acpi_config.ss_lcnt) {
-        bus_device.acpi_config.ss_hcnt = vi2c_scl_hcnt(clk, 4000, 300); // tHigh = 4us, tFall = 0.3us
-        bus_device.acpi_config.ss_lcnt = vi2c_scl_lcnt(clk, 4700, 300); // tLow = 4.7us, tFall = 0.3us
+        bus_device.acpi_config.ss_hcnt = vi2c_scl_hcnt(clkKHz, 4000, sdaFallNs); // tHigh = 4us
+        bus_device.acpi_config.ss_lcnt = vi2c_scl_lcnt(clkKHz, 4700, sclFallNs); // tLow = 4.7us
     }
     
     if (!bus_device.acpi_config.fs_hcnt || !bus_device.acpi_config.fs_lcnt) {
-        bus_device.acpi_config.fs_hcnt = vi2c_scl_hcnt(clk, 600, 300); // tHigh = 0.6us, tFall = 0.3us
-        bus_device.acpi_config.fs_lcnt = vi2c_scl_lcnt(clk, 1300, 300); // tLow = 1.3us, tFall = 0.3us
+        bus_device.acpi_config.fs_hcnt = vi2c_scl_hcnt(clkKHz, 600, sdaFallNs); // tHigh = 0.6us
+        bus_device.acpi_config.fs_lcnt = vi2c_scl_lcnt(clkKHz, 1300, sclFallNs); // tLow = 1.3us
     }
 
     if (readRegister(DW_IC_COMP_VERSION) >= DW_IC_SDA_HOLD_MIN_VERS) {
+        if (!bus_device.acpi_config.sda_hold) {
+            bus_device.acpi_config.sda_hold = readRegister(DW_IC_SDA_HOLD);
+        }
+        
         /*
         * Workaround for avoiding TX arbitration lost in case I2C
         * slave pulls SDA down "too quickly" after falling edge of
