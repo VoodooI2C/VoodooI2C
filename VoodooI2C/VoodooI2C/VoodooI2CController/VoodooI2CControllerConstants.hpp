@@ -9,7 +9,31 @@
 #ifndef VoodooI2CControllerConstants_h
 #define VoodooI2CControllerConstants_h
 
-#define LPSS_PRIVATE_CLOCK_GATING              0x800
+/*
+ * Properties that can be specified in an I2C Controller IOKit personality.
+ * At the very least, the clock frequency should be specified so that
+ * the rest of the values below may be derived from them.
+ *
+ * For adding new I2C controller personalities, reference the below in Linux:
+ * Intel Skylake+: /drivers/mfd/intel-plss-pci.c
+ * Intel Broadwell-: /drivers/i2c/busses/i2c-designware-pcidrv.c
+ *                   /drivers/acpi/x86/plss.c
+ * AMD: /drivers/i2c/busses/i2c-designware-platdrv.c
+ *      /drivers/acpi/acpi_apd.c
+ *      /drivers/i2c/busses/i2c-designware-pcidrv.c * Some Navi devices only
+ */
+#define kI2CPropClkKey                  "I2CClkRate"
+#define kI2CPropSdaHoldNsKey            "I2CSdaHoldTimeNs"
+#define kI2CPropSdaHoldKey              "I2CSdaHoldTime" // Units: NS * Clk / 1e6
+#define kI2CPropSdaFallNsKey            "I2CSdaFallingTimeNs"
+#define kI2CPropSdlFallNsKey            "I2CSclFallingTimeNs"
+
+#define kI2CPropSsHCntKey               "I2CSsHighCount"
+#define kI2CPropSsLCntKey               "I2CSsLowCount"
+#define kI2CPropFsHCntKey               "I2CFsHighCount"
+#define kI2CPropFsLCntKey               "I2CFsLowCount"
+
+#define LPSS_PRIVATE_CLOCK_GATING       0x800
 
 #define DW_IC_CON_MASTER                0x1
 #define DW_IC_CON_SPEED_STD             0x2

@@ -149,6 +149,14 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
     IOWorkLoop* work_loop = nullptr;
     IOLock* i2c_bus_lock = nullptr;
     bool is_interrupt_registered = false;
+    
+    /* Request a 64-bit value property from this service or any parent in the
+     * IOService tree.
+     * @key Property name to lookup in IOService tree.
+     *
+     * @return Property value on success, 0 on failure.
+     */
+    UInt32 getNumProperty(const char *key);
 
     /* Requests the nub to fetch bus configuration values from the ACPI tables
      *
