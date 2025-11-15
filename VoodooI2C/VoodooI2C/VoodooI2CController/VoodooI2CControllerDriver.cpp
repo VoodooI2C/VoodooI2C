@@ -99,7 +99,6 @@ UInt32 VoodooI2CControllerDriver::getNumProperty(const char *key) {
 
 IOReturn VoodooI2CControllerDriver::getBusConfig() {
     UInt32 sdaFallNs, sclFallNs;
-    bool error = false;
 
     auto param = readRegister(DW_IC_COMP_PARAM_1);
     auto tx_fifo_depth = ((param >> 16) & 0xff) + 1;
@@ -111,7 +110,7 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
 
     UInt32 clkKHz = getNumProperty(kI2CPropClkKey) / 1000;
     if (!clkKHz) {
-        IOLog("%s::%s Failed to find clock!\n", getName(), bus_device.name);
+        IOLog("%s::%s Failed to find clock (I2CClkRate)!\n", getName(), bus_device.name);
         return kIOReturnError;
     }
 
@@ -131,21 +130,17 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
     }
 
     // Grab higher priority ACPI configuration
-    if (nub->getACPIParams((const char*)"SSCN",
-                           &bus_device.acpi_config.ss_hcnt,
-                           &bus_device.acpi_config.ss_lcnt,
-                           NULL) != kIOReturnSuccess) {
-        error = true;
-    }
+    (void) nub->getACPIParams((const char*)"SSCN",
+                              &bus_device.acpi_config.ss_hcnt,
+                              &bus_device.acpi_config.ss_lcnt,
+                              NULL);
 
-    if (nub->getACPIParams((const char*)"FMCN",
-                           &bus_device.acpi_config.fs_hcnt,
-                           &bus_device.acpi_config.fs_lcnt,
-                           &bus_device.acpi_config.sda_hold) != kIOReturnSuccess) {
-        error = true;
-    }
+    (void) nub->getACPIParams((const char*)"FMCN",
+                              &bus_device.acpi_config.fs_hcnt,
+                              &bus_device.acpi_config.fs_lcnt,
+                              &bus_device.acpi_config.sda_hold);
 
-    // Derive any values not filled in by defaults
+    // Derive any values not filled in by defaults/acpi
     if (!bus_device.acpi_config.ss_hcnt || !bus_device.acpi_config.ss_lcnt) {
         bus_device.acpi_config.ss_hcnt = vi2c_scl_hcnt(clkKHz, 4000, sdaFallNs);  // tHigh = 4us
         bus_device.acpi_config.ss_lcnt = vi2c_scl_lcnt(clkKHz, 4700, sclFallNs);  // tLow = 4.7us
@@ -175,7 +170,7 @@ IOReturn VoodooI2CControllerDriver::getBusConfig() {
         IOLog("%s::%s Warning: hardware too old to adjust SDA hold time\n", getName(), bus_device.name);
     }
 
-    return error ? kIOReturnNotFound : kIOReturnSuccess;
+    return kIOReturnSuccess;
 }
 
 IOReturn VoodooI2CControllerDriver::setBusConfigProperties() {
@@ -613,11 +608,10 @@ bool VoodooI2CControllerDriver::start(IOService* provider) {
     nub->joinPMtree(this);
     registerPowerDriver(this, VoodooI2CIOPMPowerStates, kVoodooI2CIOPMNumberPowerStates);
 
-    if (getBusConfig() != kIOReturnSuccess) {
-        IOLog("%s::%s Warning: Error getting bus config, using defaults where necessary\n", getName(), bus_device.name);
-    } else {
-        IOLog("%s::%s Got bus configuration values\n", getName(), bus_device.name);
-    }
+    if (getBusConfig() != kIOReturnSuccess)
+        goto exit;
+
+    IOLog("%s::%s Got bus configuration values\n", getName(), bus_device.name);
 
     setBusConfigProperties();
 
