@@ -15,12 +15,13 @@
  * the rest of the values below may be derived from them.
  *
  * For adding new I2C controller personalities, reference the below in Linux:
- * Intel Skylake+: /drivers/mfd/intel-plss-pci.c
+ * Intel Skylake+: /drivers/mfd/intel-lpss-pci.c (PCI)
+ *                 /drivers/mfd/intel-lpss-acpi.c (ACPI)
  * Intel Broadwell-: /drivers/i2c/busses/i2c-designware-pcidrv.c
- *                   /drivers/acpi/x86/plss.c
+ *                   /drivers/acpi/x86/lpss.c
  * AMD: /drivers/i2c/busses/i2c-designware-platdrv.c
  *      /drivers/acpi/acpi_apd.c
- *      /drivers/i2c/busses/i2c-designware-pcidrv.c * Some Navi devices only
+ *      /drivers/i2c/busses/i2c-designware-pcidrv.c (Some Navi devices only)
  */
 #define kI2CPropClkKey                  "I2CClkRate"
 #define kI2CPropSdaHoldNsKey            "I2CSdaHoldTimeNs"
