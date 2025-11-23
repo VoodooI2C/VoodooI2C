@@ -682,7 +682,6 @@ IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
         writeRegister(enabled, DW_IC_ENABLE);
 
         if ((readRegister(DW_IC_ENABLE_STATUS) & 1) == enabled) {
-            toggleClockGating(enabled);
             return kIOReturnSuccess;
         }
 
@@ -691,13 +690,6 @@ IOReturn VoodooI2CControllerDriver::toggleBusState(VoodooI2CState enabled) {
 
     IOLog("%s::%s Timed out waiting for bus to change state\n", getName(), bus_device.name);
     return kIOReturnTimeout;
-}
-
-inline void VoodooI2CControllerDriver::toggleClockGating(VoodooI2CState enabled) {
-    const char *name = nub->controller->physical_device.name;
-    if (name[0] == 'A' && name[1] == 'M' && name[2] == 'D') {
-        writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
-    }
 }
 
 void VoodooI2CControllerDriver::toggleInterrupts(VoodooI2CState enabled) {

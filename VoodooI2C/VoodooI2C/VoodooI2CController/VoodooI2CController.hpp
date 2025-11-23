@@ -19,15 +19,16 @@
 #define kACPIDevicePathKey "acpi-path"
 #endif
 
-typedef struct {
+struct VoodooI2CControllerPhysicalDevice {
     IOACPIPlatformDevice* acpi_device;
     bool awake = true;
     const char* name;
     IOPCIDevice* pci_device;
     IOMemoryMap* mmap;
+    IOVirtualAddress mem = 0;
     IOService* provider;
     bool access_intr_mask_workaround = false;
-} VoodooI2CControllerPhysicalDevice;
+};
 
 class VoodooI2CControllerNub;
 
@@ -97,22 +98,6 @@ class EXPORT VoodooI2CController : public IOService {
     VoodooI2CControllerPhysicalDevice physical_device;
 
  protected:
-    /* Maps the controller's memory to a virtual address
-     *
-     * @return *KIOReturnSuccess* on successful mapping, *kIOReturnDeviceError*
-     *  otherwise
-     */
-
-    IOReturn mapMemory();
-
-    /* Releases the controller's mapped memory
-      *
-      * @return *KIOReturnSuccess* on successful releasing, *kIOReturnDeviceError*
-      *  otherwise
-      */
-
-    IOReturn unmapMemory();
-
     /* Publishes a <VoodooI2CControllerNub> entry into the IORegistry for matching
      *
      * This function instantiates a new <VoodooI2CControllerNub> object and attaches it

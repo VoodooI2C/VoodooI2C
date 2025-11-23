@@ -49,14 +49,11 @@ IOReturn VoodooI2CPCIController::setPowerState(unsigned long whichState, IOServi
     if (whichState == 0) {  // index of kIOPMPowerOff state in VoodooI2CIOPMPowerStates
         if (physical_device.awake) {
             physical_device.awake = false;
-            unmapMemory();
             IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
         }
     } else {
         if (!physical_device.awake) {
             configurePCI();
-            if (mapMemory() != kIOReturnSuccess)
-                IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
             skylakeLPSSResetHack();
 
             physical_device.awake = true;
@@ -71,24 +68,32 @@ void VoodooI2CPCIController::skylakeLPSSResetHack() {
 }
 
 bool VoodooI2CPCIController::start(IOService* provider) {
+    IOPCIDevice *pci;
+
     if (!super::start(provider)) {
         return false;
     }
 
-    physical_device.pci_device = OSDynamicCast(IOPCIDevice, provider);
+    pci = OSDynamicCast(IOPCIDevice, provider);
+    if (!pci) {
+        return false;
+    }
 
     if (getACPIDevice() != kIOReturnSuccess) {
         IOLog("%s::%s Could not get ACPI device for PCI provider\n", getName(), physical_device.name);
         return false;
     }
 
-    configurePCI();
-
-    if (mapMemory() != kIOReturnSuccess) {
+    physical_device.pci_device = pci;
+    physical_device.mmap = pci->mapDeviceMemoryWithRegister(kIOPCIConfigBaseAddress0);
+    if (!physical_device.mmap) {
         IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
         return false;
     }
 
+    physical_device.mem = physical_device.mmap->getVirtualAddress();
+
+    configurePCI();
     skylakeLPSSResetHack();
 
     if (publishNub() != kIOReturnSuccess) {
@@ -102,6 +107,8 @@ bool VoodooI2CPCIController::start(IOService* provider) {
 }
 
 void VoodooI2CPCIController::stop(IOService* provider) {
+    physical_device.mem = 0;
+    OSSafeReleaseNULL(physical_device.mmap);
     OSSafeReleaseNULL(physical_device.acpi_device);
     super::stop(provider);
 }

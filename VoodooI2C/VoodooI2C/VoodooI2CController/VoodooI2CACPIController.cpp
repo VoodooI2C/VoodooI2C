@@ -31,15 +31,12 @@ IOReturn VoodooI2CACPIController::setPowerState(unsigned long whichState, IOServ
     if (whichState == 0) {  // index of kIOPMPowerOff state in VoodooI2CIOPMPowerStates
         if (physical_device.awake) {
             physical_device.awake = false;
-            unmapMemory();
             setACPIPowerState(kVoodooI2CStateOff);
             IOLog("%s::%s Going to sleep\n", getName(), physical_device.name);
         }
     } else {
         if (!physical_device.awake) {
             setACPIPowerState(kVoodooI2CStateOn);
-            if (mapMemory() != kIOReturnSuccess)
-                IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
             physical_device.awake = true;
             IOLog("%s::%s Woke up\n", getName(), physical_device.name);
         }
@@ -62,10 +59,13 @@ bool VoodooI2CACPIController::start(IOService* provider) {
 
     setACPIPowerState(kVoodooI2CStateOn);
 
-    if (mapMemory() != kIOReturnSuccess) {
+    physical_device.mmap = provider->mapDeviceMemoryWithIndex(0);
+    if (!physical_device.mmap) {
         IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
         return false;
     }
+
+    physical_device.mem = physical_device.mmap->getVirtualAddress();
 
     if (publishNub() != kIOReturnSuccess) {
         IOLog("%s::%s Could not publish nub\n", getName(), physical_device.name);
@@ -78,6 +78,9 @@ bool VoodooI2CACPIController::start(IOService* provider) {
 }
 
 void VoodooI2CACPIController::stop(IOService* provider) {
+    physical_device.mem = 0;
+    OSSafeReleaseNULL(physical_device.mmap);
+
     setACPIPowerState(kVoodooI2CStateOff);
 
     super::stop(provider);

@@ -20,10 +20,6 @@ class EXPORT VoodooI2CACPIController : public VoodooI2CController {
     OSDeclareDefaultStructors(VoodooI2CACPIController);
 
  private:
-    /* @inherit */
-
-    IOReturn setPowerState(unsigned long whichState, IOService * whatDevice) override;
-
     /* Instructs the controller to enter a specific power state by evaluating the ACPI power state methods
      * @enabled The power state the device is expected to enter represented by either <kVoodooI2CStateOn> or
      *  <kVoodooI2CStateOff>
@@ -32,6 +28,11 @@ class EXPORT VoodooI2CACPIController : public VoodooI2CController {
      */
 
     IOReturn setACPIPowerState(VoodooI2CState enabled);
+
+ protected:
+    /* @inherit */
+
+    IOReturn setPowerState(unsigned long whichState, IOService * whatDevice) override;
 
     /* @inherit */
 

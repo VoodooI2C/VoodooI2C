@@ -35,21 +35,6 @@ bool VoodooI2CController::init(OSDictionary* properties) {
     return true;
 }
 
-IOReturn VoodooI2CController::mapMemory() {
-    if (physical_device.provider->getDeviceMemoryCount() == 0) {
-        return kIOReturnDeviceError;
-    } else {
-        physical_device.mmap = physical_device.provider->mapDeviceMemoryWithIndex(0);
-        if (!physical_device.mmap) return kIOReturnDeviceError;
-        return kIOReturnSuccess;
-    }
-}
-
-IOReturn VoodooI2CController::unmapMemory() {
-    OSSafeReleaseNULL(physical_device.mmap);
-    return kIOReturnSuccess;
-}
-
 VoodooI2CController* VoodooI2CController::probe(IOService* provider, SInt32* score) {
     if (!super::probe(provider, score)) {
         if (debug_logging)
@@ -89,16 +74,12 @@ exit:
 }
 
 UInt32 VoodooI2CController::readRegister(int offset) {
-    if (physical_device.mmap != 0) {
-        IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
-        if (address != 0) {
-            return *(volatile UInt32 *)(address + offset);
-        } else {
-            TryLog("%s::%s readRegister at offset 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
-        }
-     } else {
-        TryLog("%s::%s readRegister at offset 0x%x failed since memory was not mapped\n", getName(), physical_device.name, offset);
+    if (physical_device.mem != 0) {
+        return *(volatile UInt32 *)(physical_device.mem + offset);
      }
+
+    TryLog("%s::%s readRegister at offset 0x%x failed since memory was not mapped\n",
+           getName(), physical_device.name, offset);
      return 0;
 }
 
@@ -159,14 +140,10 @@ void VoodooI2CController::stop(IOService* provider) {
 }
 
 void VoodooI2CController::writeRegister(UInt32 value, int offset) {
-    if (physical_device.mmap != 0) {
-        IOVirtualAddress address = physical_device.mmap->getVirtualAddress();
-        if (address != 0) {
-            *(volatile UInt32 *)(address + offset) = value;
-        } else {
-            TryLog("%s::%s writeRegister at 0x%x failed to get a virtual address\n", getName(), physical_device.name, offset);
-        }
+    if (physical_device.mem != 0) {
+        *(volatile UInt32 *)(physical_device.mem + offset) = value;
     } else {
-        TryLog("%s::%s writeRegister at 0x%x failed since memory was not mapped\n", getName(), physical_device.name, offset);
+        TryLog("%s::%s writeRegister at 0x%x failed since memory was not mapped\n",
+               getName(), physical_device.name, offset);
     }
 }
