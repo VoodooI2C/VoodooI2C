@@ -15,7 +15,7 @@ void VoodooI2CPCIController::configurePCI() {
     auto pci_device = physical_device.pci_device;
     IOByteCount offset;
     UInt32 reg;
-    
+
     /*
      * Make sure I2C Controller is in D0 power state. Some 10th gen firmwares
      * leave the controller disabled and macOS does not set the power state on
@@ -28,7 +28,7 @@ void VoodooI2CPCIController::configurePCI() {
         reg = (reg & ~kPCIPMCSPowerStateMask) | kPCIPMCSPowerStateD0;
         pci_device->extendedConfigWrite32(offset + 4, reg);
     }
-    
+
     pci_device->enablePCIPowerManagement(kPCIPMCSPowerStateD3);
     pci_device->setBusMasterEnable(true);
     pci_device->setMemoryEnable(true);
