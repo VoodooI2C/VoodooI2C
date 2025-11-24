@@ -79,12 +79,12 @@ bool VoodooI2CPCIController::start(IOService* provider) {
         return false;
     }
 
+    physical_device.pci_device = pci; 
     if (getACPIDevice() != kIOReturnSuccess) {
         IOLog("%s::%s Could not get ACPI device for PCI provider\n", getName(), physical_device.name);
         return false;
     }
 
-    physical_device.pci_device = pci;
     physical_device.mmap = pci->mapDeviceMemoryWithRegister(kIOPCIConfigBaseAddress0);
     if (!physical_device.mmap) {
         IOLog("%s::%s Could not map memory\n", getName(), physical_device.name);
