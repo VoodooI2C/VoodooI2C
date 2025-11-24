@@ -569,7 +569,7 @@
 			<key>CFBundleIdentifier</key>
 			<string>com.alexandred.VoodooI2C</string>
 			<key>IOClass</key>
-			<string>VoodooI2CPCILakeController</string>
+			<string>VoodooI2CPCIController</string>
 			<key>IOPCIMatch</key>
 			<string>0x34e88086&amp;0xFFFCFFFF</string>
 			<key>IOProbeScore</key>
