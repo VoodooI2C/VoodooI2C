@@ -15,8 +15,10 @@ OSDefineMetaClassAndStructors(VoodooI2CACPIController, VoodooI2CController);
 #define LPSS_PRIVATE_CLOCK_GATING       0x800
 
 void VoodooI2CACPIController::setClkGating(VoodooI2CState enabled) {
-    if (legacy_intel_lpss)
-        writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
+    if (!legacy_intel_lpss)
+        return;
+
+    writeRegister(enabled, LPSS_PRIVATE_CLOCK_GATING);
 }
 
 IOReturn VoodooI2CACPIController::setACPIPowerState(VoodooI2CState enabled) {
