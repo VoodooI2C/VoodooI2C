@@ -269,17 +269,6 @@ class EXPORT VoodooI2CControllerDriver : public IOService {
 
     IOReturn toggleBusState(VoodooI2CState enabled);
 
-    /* Toggle clock gating to save power
-     * @enabled The state the clock gate is expected to enter represented by either
-     *  *kVoodooI2CStateOn* or *kVoodooI2CStateOff*
-     *
-     * Clock gating is a method by which power consumption by a particular circuit is reduced. We need to disable the
-     * I2C controller's clock gate in order to be able to receive messages from the bus. We re-enable it when we aren't
-     * waiting for a message to save power.
-     */
-
-    inline void toggleClockGating(VoodooI2CState enabled);
-
     /* Toggle the interrupts' enabled state
      * @param enabled The state the interrupts are expected to enter represented by either
      *  *kVoodooI2CStateOn* or *kVoodooI2CStateOff*
