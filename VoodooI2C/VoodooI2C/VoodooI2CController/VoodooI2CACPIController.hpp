@@ -20,9 +20,18 @@ class EXPORT VoodooI2CACPIController : public VoodooI2CController {
     OSDeclareDefaultStructors(VoodooI2CACPIController);
 
  private:
+    bool legacy_intel_lpss {false};
+
     /* @inherit */
 
     IOReturn setPowerState(unsigned long whichState, IOService * whatDevice) override;
+
+    /* Gates/ungates the I2C controller clock on Lynxpoint/Broadwell I2C controllers
+     * @enabled The power state the device is expected to enter represented by either <kVoodooI2CStateOn> or
+     *  <kVoodooI2CStateOff>
+     */
+
+    void setClkGating(VoodooI2CState enabled);
 
     /* Instructs the controller to enter a specific power state by evaluating the ACPI power state methods
      * @enabled The power state the device is expected to enter represented by either <kVoodooI2CStateOn> or

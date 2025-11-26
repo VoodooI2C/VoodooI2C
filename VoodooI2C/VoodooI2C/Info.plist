@@ -427,6 +427,8 @@
 		</dict>
 		<key>VoodooI2CACPIIntelLpssController</key>
 		<dict>
+			<key>I2CLegacyIntelLpss</key>
+			<true/>
 			<key>I2CSsHighCount</key>
 			<integer>432</integer>
 			<key>I2CSsLowCount</key>
