@@ -26,6 +26,9 @@ The following Intel I2C controllers are fully supported:
 6. `pci8086,a368`, `pci8086,a369`, `pci8086,a36a` and `pci8086,a36b` - Coffee Lake era
 7. `pci8086,2e8`, `pci8086,2e9`, `pci8086,2ea`, `pci8086,2eb`, `pci8086,6e8`, `pci8086,6e9`, `pci8086,6ea` and `pci8086,6eb`- Comet Lake era
 8. `pci8086,34e8`, `pci8086,34e9`, `pci8086,34ea` and `pci8086,34eb` - Ice Lake era
+9. `pci8086,a0e8`, `pci8086,a0e9`, `pci8086,a0ea`, `pci8086,a0eb`, `pci8086,43e8`, `pci8086,43e9`, `pci8086,43ea` and `pci8086,43eb` - Tiger Lake era
+10. `pci8086,51e8`, `pci8086,51e9`, `pci8086,51ea`, `pci8086,51eb`, `pci8086,7acc`, `pci8086,7acd`, `pci8086,7ace`, `pci8086,7acf`, `pci8086,54e8`, `pci8086,54e9`, `pci8086,54ea` and `pci8086,54eb` - Alder Lake era
+11. `pci8086,7a4c`, `pci8086,7a4d`, `pci8086,7a4e` and `pci8086,7a4f` - Raptor Lake era
 
 The following device classes are fully supported:
 
