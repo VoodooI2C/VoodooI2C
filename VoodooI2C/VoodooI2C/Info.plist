@@ -579,6 +579,86 @@
 			<key>IOProviderClass</key>
 			<string>IOPCIDevice</string>
 		</dict>
+		<key>VoodooI2CPCITigerLakeLPController</key>
+		<dict>
+			<key>I2CClkRate</key>
+			<integer>120000000</integer>
+			<key>I2CSdaHoldTimeNs</key>
+			<integer>230</integer>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CPCIController</string>
+			<key>IOPCIMatch</key>
+			<string>0xa0e88086&amp;0xFFFCFFFF</string>
+			<key>IOProbeScore</key>
+			<integer>9999</integer>
+			<key>IOProviderClass</key>
+			<string>IOPCIDevice</string>
+		</dict>
+		<key>VoodooI2CPCITigerLakeHController</key>
+		<dict>
+			<key>I2CClkRate</key>
+			<integer>133000000</integer>
+			<key>I2CSdaHoldTimeNs</key>
+			<integer>42</integer>
+			<key>I2CSdaFallingTimeNs</key>
+			<integer>171</integer>
+			<key>I2CSclFallingTimeNs</key>
+			<integer>208</integer>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CPCIController</string>
+			<key>IOPCIMatch</key>
+			<string>0x43e88086&amp;0xFFFCFFFF</string>
+			<key>IOProbeScore</key>
+			<integer>9999</integer>
+			<key>IOProviderClass</key>
+			<string>IOPCIDevice</string>
+		</dict>
+		<key>VoodooI2CPCIAlderLakeController</key>
+		<dict>
+			<key>I2CClkRate</key>
+			<integer>133000000</integer>
+			<key>I2CSdaHoldTimeNs</key>
+			<integer>42</integer>
+			<key>I2CSdaFallingTimeNs</key>
+			<integer>171</integer>
+			<key>I2CSclFallingTimeNs</key>
+			<integer>208</integer>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CPCIController</string>
+			<key>IOPCIMatch</key>
+			<string>0x51e88086&amp;0xFFFCFFFF 0x7acc8086&amp;0xFFFCFFFF 0x54e88086&amp;0xFFFCFFFF</string>
+			<key>IOProbeScore</key>
+			<integer>9999</integer>
+			<key>IOProviderClass</key>
+			<string>IOPCIDevice</string>
+		</dict>
+		<key>VoodooI2CPCIRaptorLakeController</key>
+		<dict>
+			<key>I2CClkRate</key>
+			<integer>133000000</integer>
+			<key>I2CSdaHoldTimeNs</key>
+			<integer>42</integer>
+			<key>I2CSdaFallingTimeNs</key>
+			<integer>171</integer>
+			<key>I2CSclFallingTimeNs</key>
+			<integer>208</integer>
+			<key>CFBundleIdentifier</key>
+			<string>com.alexandred.VoodooI2C</string>
+			<key>IOClass</key>
+			<string>VoodooI2CPCIController</string>
+			<key>IOPCIMatch</key>
+			<string>0x7a4c8086&amp;0xFFFCFFFF</string>
+			<key>IOProbeScore</key>
+			<integer>9999</integer>
+			<key>IOProviderClass</key>
+			<string>IOPCIDevice</string>
+		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2020 Alexandre Daoud. All rights reserved.</string>
