@@ -33,6 +33,11 @@ MultitouchReturn VoodooI2CMultitouchEngine::handleInterruptReport(VoodooI2CMulti
     return MultitouchReturnContinue;
 }
 
+MultitouchReturn VoodooI2CMultitouchEngine::handleTrackpointReport(VoodooI2CTrackpointEvent event, AbsoluteTime timestamp) {
+    IOLog("Trackpoint dx: %d, dy: %d, buttons: 0x%x", event.dx, event.dy, event.buttons);
+    return MultitouchReturnContinue;
+}
+
 bool VoodooI2CMultitouchEngine::willTerminate(IOService* provider, IOOptionBits options) {
     if (provider->isOpen(this))
         provider->close(this);
