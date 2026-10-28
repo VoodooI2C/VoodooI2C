@@ -53,7 +53,13 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         }
         
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
-        inputTransducer->isPhysicalButtonDown = !transducer->has_secondary_button && transducer->physical_button.value(); // if it has secondary button, then it will be passed as buttons on the "trackpoint" device
+        // Deliver the primary (left) physical button as the Magic Trackpad's
+        // physical button in the multitouch report. macOS then applies its own
+        // native "secondary click in corner" detection based on the finger
+        // position, so clickpads work without any hardcoded thresholds here.
+        // (A genuine secondary/right button is still forwarded through the
+        // trackpoint device below, so it is not double-reported.)
+        inputTransducer->isPhysicalButtonDown = (transducer->physical_button.value() & 0x1) != 0;
         
         inputTransducer->currentCoordinates.x = transducer->coordinates.x.value();
         inputTransducer->previousCoordinates.x = transducer->coordinates.x.last.value;
@@ -99,12 +105,19 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
     if (firstTransducer->has_secondary_button) {
-        RelativePointerEvent event;
-        event.dx = 0;
-        event.dy = 0;
-        event.buttons = firstTransducer->physical_button.value();
-        event.timestamp = timestamp;
-        super::messageClient(kIOMessageVoodooTrackpointRelativePointer, voodooInputInstance, &event, sizeof(event));
+        // Only the genuine secondary (right) button is forwarded through the
+        // trackpoint device. The primary (left) button is already reported as
+        // the Magic Trackpad physical button above, so macOS can apply its
+        // native corner-based secondary click.
+        UInt16 secondary = firstTransducer->physical_button.value() & 0x2;
+        if (secondary) {
+            RelativePointerEvent event;
+            event.dx = 0;
+            event.dy = 0;
+            event.buttons = secondary;
+            event.timestamp = timestamp;
+            super::messageClient(kIOMessageVoodooTrackpointRelativePointer, voodooInputInstance, &event, sizeof(event));
+        }
     }
     return MultitouchReturnBreak;
 }
