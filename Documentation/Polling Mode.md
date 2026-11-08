@@ -19,4 +19,38 @@ Polling mode may sometimes require some minor modifications to your DSDT. This i
 
 Using the <GPIO Pinning> guide, determine your device's ACPI ID. In the example from that guide, the ACPI ID is `TPL0`.
 
-Navigate to your device's entry in your DSDT. Find its `_CRS` method. You must ensure that all the `Return` statements are of the form `Return (ConcatenateResTemplate (SBFB, SBFI))` or `Return (SBFB)`. In other words, there should be no mention of `SBFG` in the `_CRS` method. 
+Navigate to your device's entry in your DSDT. Find its `_CRS` method. You must ensure that all the `Return` statements are of the form `Return (ConcatenateResTemplate (SBFB, SBFI))` or `Return (SBFB)`. In other words, there should be no mention of `SBFG` in the `_CRS` method.
+
+## Forcing Polling Mode via Boot Argument or Device Property
+
+Starting from version 2.5.3, VoodooI2C allows you to force polling mode directly through boot arguments or device properties, without requiring manual DSDT modifications.
+
+### 1. Boot Argument: `-vi2c-force-polling`
+
+Add `-vi2c-force-polling` to your bootloader's boot arguments (`boot-args` in OpenCore under `NVRAM -> Add -> 7C436110-AB2A-4BBB-A880-FE41995C9F82`, or `Arguments` in Clover).
+
+When this boot argument is present, VoodooI2C skips GPIO interrupt registration and forces matching satellite drivers (such as `VoodooI2CHID`) to run in polling mode:
+
+```text
+-vi2c-force-polling
+```
+
+This is especially helpful for modern platforms (such as Alder Lake and newer) or systems where GPIO interrupts are problematic.
+
+### 2. Device Property: `force-polling`
+
+If you have multiple I2C controllers and only wish to force polling mode on a specific controller, you can inject the `force-polling` property on that specific I2C PCI controller:
+
+- **OpenCore:** Add under `DeviceProperties -> Add` targeting the I2C PCI controller path.
+- **Clover:** Add under `Devices -> Properties`.
+
+| Property | Type | Value |
+| --- | --- | --- |
+| `force-polling` | `DATA` / `BOOLEAN` | `01000000` / `1` |
+
+When forced polling is active, `VoodooI2CDeviceNub` will log the following in the kernel log:
+
+```text
+VoodooI2CDeviceNub::Forced polling mode, skipping GPIO interrupts
+```
+ 
