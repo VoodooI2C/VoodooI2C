@@ -53,7 +53,7 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
         }
         
         inputTransducer->isTransducerActive = transducer->tip_switch.value();
-        inputTransducer->isPhysicalButtonDown = !transducer->has_secondary_button && transducer->physical_button.value(); // if it has secondary button, then it will be passed as buttons on the "trackpoint" device
+        inputTransducer->isPhysicalButtonDown = (transducer->physical_button.value() & 0x1) != 0;
         
         inputTransducer->currentCoordinates.x = transducer->coordinates.x.value();
         inputTransducer->previousCoordinates.x = transducer->coordinates.x.last.value;
@@ -99,12 +99,12 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     super::messageClient(kIOMessageVoodooInputMessage, voodooInputInstance, &message, sizeof(VoodooInputEvent));
     
     if (firstTransducer->has_secondary_button) {
-        RelativePointerEvent event;
-        event.dx = 0;
-        event.dy = 0;
-        event.buttons = firstTransducer->physical_button.value();
-        event.timestamp = timestamp;
-        super::messageClient(kIOMessageVoodooTrackpointRelativePointer, voodooInputInstance, &event, sizeof(event));
+        RelativePointerEvent buttonEvent;
+        buttonEvent.dx = 0;
+        buttonEvent.dy = 0;
+        buttonEvent.buttons = event.external_buttons;
+        buttonEvent.timestamp = timestamp;
+        super::messageClient(kIOMessageVoodooTrackpointRelativePointer, voodooInputInstance, &buttonEvent, sizeof(buttonEvent));
     }
     return MultitouchReturnBreak;
 }
