@@ -109,6 +109,18 @@ MultitouchReturn VoodooI2CNativeEngine::handleInterruptReport(VoodooI2CMultitouc
     return MultitouchReturnBreak;
 }
 
+MultitouchReturn VoodooI2CNativeEngine::handleTrackpointReport(VoodooI2CTrackpointEvent event, AbsoluteTime timestamp) {
+    TrackpointReport vt_event;
+    
+    vt_event.dx = event.dx;
+    vt_event.dy = event.dy;
+    vt_event.buttons = event.buttons;
+    vt_event.timestamp = timestamp;
+    super::messageClient(kIOMessageVoodooTrackpointMessage, voodooInputInstance, &event, sizeof(event));
+    
+    return MultitouchReturnBreak;
+}
+
 bool VoodooI2CNativeEngine::start(IOService* provider) {
     if (!super::start(provider))
         return false;
@@ -126,8 +138,16 @@ bool VoodooI2CNativeEngine::start(IOService* provider) {
     
     setProperty(VOODOO_INPUT_PHYSICAL_MAX_X_KEY, parentProvider->physical_max_x, 32);
     setProperty(VOODOO_INPUT_PHYSICAL_MAX_Y_KEY, parentProvider->physical_max_y, 32);
-
+    
     setProperty("VoodooInputSupported", kOSBooleanTrue);
+    
+    OSDictionary* dict = OSDictionary::withCapacity(0);
+    OSNumber* tmp = OSNumber::withNumber(3, 32);
+    dict->setObject(VOODOO_TRACKPOINT_BTN_CNT, tmp);
+    setProperty(VOODOO_TRACKPOINT_KEY, dict);
+    
+    OSSafeReleaseNULL(tmp);
+    OSSafeReleaseNULL(dict);
     
     stylus_check = 0;
 
