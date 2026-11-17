@@ -265,7 +265,12 @@ VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
     OSDictionary* name_match = IOService::serviceMatching("VoodooGPIO");
 
     IOService* matched = waitForMatchingService(name_match, 1000000000);
-    gpio_controller = OSDynamicCast(VoodooGPIO, matched);
+    // Avoid referencing the VoodooGPIO::metaClass symbol directly. In a
+    // cross-kext dynamic lookup the linker can end up binding it to an
+    // invalid address (observed as a page fault on GPI0/INTC1055 systems).
+    // metaCast by class name uses the OSMetaClass registry instead.
+    if (matched != NULL)
+        gpio_controller = static_cast<VoodooGPIO *>(matched->metaCast("VoodooGPIO"));
 
     if (gpio_controller != NULL) {
         IOLog("%s::%s Got GPIO Controller! %s\n", getName(), acpi_device->getName(), gpio_controller->getName());
