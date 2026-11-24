@@ -57,6 +57,15 @@ class EXPORT VoodooI2CMultitouchInterface : public IOService {
      */
 
     void handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
+    
+    /* Forwards a trackpoint event to the attached multitouch engines
+     * @event The event to forward
+     * @timestamp The timestamp of the event
+     *
+     * Multitouch engines with a higher <VoodooI2CMultitouchEngine::getScore` are given higher priority.
+     */
+    
+    void handleTrackpointReport(VoodooI2CTrackpointEvent event, AbsoluteTime timestamp);
 
     /* Controls the open behavior of <VoodooI2CMultitouchInterface>
      * @forClient An instance of <VoodooI2CMultitouchEngine> that wishes to be a client

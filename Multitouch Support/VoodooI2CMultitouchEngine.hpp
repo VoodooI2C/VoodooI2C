@@ -40,6 +40,15 @@ class EXPORT VoodooI2CMultitouchEngine : public IOService {
      */
 
     virtual MultitouchReturn handleInterruptReport(VoodooI2CMultitouchEvent event, AbsoluteTime timestamp);
+    
+    /* Intended to be overwritten by an inherited class to handle a trackpoint event
+     * @event The event to be handled
+     * @timestamp The event's timestamp
+     *
+     * @return *MultitouchContinue* if the next engine in line should also be allowed to process the event, *MultitouchBreak* if this is the last engine that should be allowed to process the event
+     */
+    
+    virtual MultitouchReturn handleTrackpointReport(VoodooI2CTrackpointEvent event, AbsoluteTime timestamp);
 
     bool willTerminate(IOService* provider, IOOptionBits options) override;
 

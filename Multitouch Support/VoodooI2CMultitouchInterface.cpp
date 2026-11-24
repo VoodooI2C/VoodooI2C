@@ -26,6 +26,20 @@ void VoodooI2CMultitouchInterface::handleInterruptReport(VoodooI2CMultitouchEven
     }
 }
 
+void VoodooI2CMultitouchInterface::handleTrackpointReport(VoodooI2CTrackpointEvent event, AbsoluteTime timestamp) {
+    int i, count;
+    VoodooI2CMultitouchEngine* engine;
+
+    for (i = 0, count = engines->getCount(); i < count; i++) {
+        engine = OSDynamicCast(VoodooI2CMultitouchEngine, engines->getObject(i));
+        if (!engine)
+            continue;
+
+        if (engine->handleTrackpointReport(event, timestamp) == MultitouchReturnBreak)
+            break;
+    }
+}
+
 bool VoodooI2CMultitouchInterface::handleOpen(IOService* forClient, IOOptionBits options, void* arg) {
     VoodooI2CMultitouchEngine* engine = OSDynamicCast(VoodooI2CMultitouchEngine, forClient);
 
