@@ -283,6 +283,11 @@ VoodooGPIO* VoodooI2CDeviceNub::getGPIOController() {
 
 IOReturn VoodooI2CDeviceNub::getInterruptType(int source, int* interrupt_type) {
     if (has_gpio_interrupts) {
+        // IOInterruptEventSource asks for the interrupt type (and decides whether to auto-disable
+        // the source) before it calls registerInterrupt(). Set the pin's type from the ACPI
+        // resource first, otherwise a level-triggered pin is reported as edge-triggered and
+        // interrupt delivery stalls.
+        gpio_controller->setInterruptTypeForPin(gpio_pin, gpio_irq);
         return gpio_controller->getInterruptType(gpio_pin, interrupt_type);
     } else {
         return acpi_device->getInterruptType(source, interrupt_type);
